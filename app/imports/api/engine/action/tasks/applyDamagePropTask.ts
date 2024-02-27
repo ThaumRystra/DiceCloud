@@ -5,10 +5,12 @@ import { applyTriggers } from '/imports/api/engine/action/functions/applyTaskGro
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 
 export default async function applyDamagePropTask(
   task: DamagePropTask, action: EngineAction, result: TaskResult, userInput
 ): Promise<number> {
+
   const prop = task.prop;
 
   if (task.targetIds.length > 1) {
@@ -22,7 +24,7 @@ export default async function applyDamagePropTask(
 
   // Set the scope properties
   result.pushScope = {};
-  if (prop.operation === 'increment') {
+  if (operation === 'increment') {
     if (value >= 0) {
       result.pushScope['~damage'] = { value };
     } else {
@@ -67,7 +69,7 @@ export default async function applyDamagePropTask(
       value: `${statName}${operation === 'set' ? ' set to' : ''}` +
         ` ${value}`,
       inline: true,
-      silenced: prop.silent,
+      ...prop.silent && { silenced: true },
     }, task.targetIds);
   }
 
@@ -98,7 +100,7 @@ export default async function applyDamagePropTask(
         name: title,
         value: `${getPropertyTitle(targetProp)} set to ${value}`,
         inline: true,
-        silenced: prop.silent,
+        ...prop.silent && { silenced: true },
       }]
     });
   } else if (operation === 'increment') {
@@ -120,10 +122,10 @@ export default async function applyDamagePropTask(
         type: targetProp.type,
       }],
       contents: [{
-        name: 'Attribute damage',
-        value: `${getPropertyTitle(targetProp)} ${value}`,
+        name: 'Attribute damaged',
+        value: `${numberToSignedString(-value)} ${getPropertyTitle(targetProp)}`,
         inline: true,
-        silenced: prop.silent,
+        ...prop.silent && { silenced: true },
       }]
     });
   }

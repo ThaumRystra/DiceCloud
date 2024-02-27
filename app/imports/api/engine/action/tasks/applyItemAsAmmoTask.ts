@@ -43,11 +43,13 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
       type: 'item',
     }],
     // Log the item name as a heading if it has child properties to apply
-    contents: itemChildren.length ? [{
-      name: getPropertyTitle(item) || 'Ammo',
-      inline: false,
-      silenced: prop.silent,
-    }] : undefined,
+    ...itemChildren.length && {
+      contents: [{
+        name: getPropertyTitle(item) || 'Ammo',
+        inline: false,
+        silenced: prop.silent,
+      }]
+    },
   });
 
   await applyTriggers(action, item, [action.creatureId], 'ammo.after', userInput);

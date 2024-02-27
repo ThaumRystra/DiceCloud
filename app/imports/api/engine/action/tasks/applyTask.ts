@@ -53,7 +53,7 @@ export default async function applyTask(
 
     // Create a result an push it to the action results, pass it to the apply function to modify
     const result = new TaskResult(task.prop._id, task.targetIds);
-    result.scope[`#${prop.type}`] = prop;
+    result.scope[`#${prop.type}`] = { _propId: prop._id };
     action.results.push(result);
 
     // Apply the property

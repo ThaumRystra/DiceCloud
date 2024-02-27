@@ -13,6 +13,8 @@
     "debug": "meteor --inspect",
     "bundle-viz": "meteor --extra-packages bundle-visualizer --production",
     "test": "meteor test --driver-package meteortesting:mocha --port 3001",
+    "test:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --driver-package meteortesting:mocha",
+    "test:watch:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
     "build": "meteor build ../build --architecture os.linux.x86_64"
   },
   "engines": {
@@ -68,6 +70,7 @@
   "devDependencies": {
     "@types/chai": "^4.3.11",
     "@types/mocha": "^10.0.6",
+    "@types/simpl-schema": "^1.12.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
     "@vue/compiler-dom": "^3.4.19",

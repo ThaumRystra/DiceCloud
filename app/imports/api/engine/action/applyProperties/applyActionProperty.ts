@@ -21,33 +21,36 @@ export default async function applyActionProperty(
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
   //Log the name and summary, check that the property has enough resources to fire
-  const content: LogContent = { name: getPropertyTitle(prop) };
   if (prop.summary?.text) {
     await recalculateInlineCalculations(prop.summary, action, 'reduce', userInput);
-    content.value = prop.summary.value;
   }
-  if (prop.silent) content.silenced = true;
-  result.appendLog(content, targetIds);
+  result.appendLog({
+    name: getPropertyTitle(prop),
+    ...prop.summary && { value: prop.summary.value },
+    ...prop.silent && { silenced: true },
+  }, targetIds);
 
   // Check Uses
   if (prop.usesLeft <= 0) {
-    if (!prop.silent) result.appendLog({
+    result.appendLog({
       name: 'Error',
-      value: `${prop.name || 'action'} does not have enough uses left`,
+      value: `${getPropertyTitle(prop)} does not have enough uses left`,
+      ...prop.silent && { silenced: true },
     }, targetIds);
     return;
   }
 
   // Check Resources
   if (prop.insufficientResources) {
-    if (!prop.silent) result.appendLog({
+    result.appendLog({
       name: 'Error',
       value: 'This creature doesn\'t have sufficient resources to perform this action',
+      ...prop.silent && { silenced: true },
     }, targetIds);
     return;
   }
 
-  spendResources(action, prop, targetIds, result, userInput);
+  await spendResources(action, prop, targetIds, result, userInput);
 
   const attack: CalculatedField = prop.attackRoll || prop.attackRollBonus;
 

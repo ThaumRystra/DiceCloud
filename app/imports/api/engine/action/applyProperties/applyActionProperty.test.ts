@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import {
+  allLogContent,
   allMutations,
   allUpdates,
   createTestCreature,
@@ -7,12 +8,13 @@ import {
   removeAllCreaturesAndProps,
   runActionById
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
-import { Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import { LogContent, Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
 
 const [
-  creatureId, targetCreatureId, targetCreature2Id,
-  emptyActionId, attackActionId, usesActionId, attackMissId,
+  creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,
+  usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId, consumeAmmoId,
+  consumeResourceId, noUsesActionId, insufficientResourcesActionId
 ] = randomIds;
 
 const actionTestCreature = {
@@ -22,6 +24,13 @@ const actionTestCreature = {
     {
       _id: emptyActionId,
       type: 'action',
+      summary: { text: 'Summary text 1 + 1 = {1 + 1}' }
+    },
+    // Attack that targets self
+    {
+      _id: selfActionId,
+      type: 'action',
+      target: 'self',
     },
     // Attack that hits
     {
@@ -34,6 +43,12 @@ const actionTestCreature = {
       _id: attackMissId,
       type: 'action',
       attackRoll: { calculation: '-5' },
+    },
+    // Attack that has no target
+    {
+      _id: attackNoTargetId,
+      type: 'action',
+      attackRoll: { calculation: '1' },
     },
     // Disable crits
     {
@@ -56,6 +71,57 @@ const actionTestCreature = {
       usesUsed: 1,
       reset: 'longRest',
     },
+    // Not enough uses
+    {
+      _id: noUsesActionId,
+      type: 'action',
+      uses: { calculation: '5' },
+      usesUsed: 5,
+      reset: 'longRest',
+    },
+    // Uses Resources
+    {
+      _id: ammoId,
+      type: 'item',
+      quantity: 12,
+      tags: ['ammo']
+    },
+    {
+      _id: resourceAttId,
+      type: 'attribute',
+      name: 'Resource Name',
+      attributeType: 'stat',
+      baseValue: { calculation: '7' },
+      variableName: 'resourceVar',
+    },
+    {
+      _id: usesResourcesActionId,
+      type: 'action',
+      resources: {
+        itemsConsumed: [{
+          _id: consumeAmmoId,
+          tag: 'ammo',
+          quantity: { calculation: '3' },
+          itemId: ammoId,
+        }],
+        attributesConsumed: [{
+          _id: consumeResourceId,
+          variableName: 'resourceVar',
+          quantity: { calculation: '2' },
+        }]
+      }
+    },
+    {
+      _id: insufficientResourcesActionId,
+      type: 'action',
+      resources: {
+        attributesConsumed: [{
+          _id: consumeResourceId,
+          variableName: 'resourceVar',
+          quantity: { calculation: '9001' },
+        }]
+      }
+    }
   ],
 }
 
@@ -106,10 +172,42 @@ describe('Apply Action Properties', function () {
     const action = await runActionById(emptyActionId);
     assert.exists(action);
     assert.deepEqual(allMutations(action), [{
-      contents: [{ name: 'Action' }],
+      contents: [{
+        name: 'Action',
+        value: 'Summary text 1 + 1 = 2',
+      }],
       targetIds: [],
     }]);
   });
+
+  it('should target self when set', async function () {
+    const action = await runActionById(selfActionId);
+    assert.exists(action);
+    assert.deepEqual(allMutations(action), [{
+      contents: [{
+        name: 'Action',
+      }],
+      targetIds: [creatureId],
+    }]);
+  });
+
+  it('should make attack rolls against no targets', async function () {
+    const action = await runActionById(attackNoTargetId, []);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: [],
+      }, {
+        contents: [{
+          name: 'To Hit',
+          value: '1d20 [10] + 1\n**11**',
+          inline: true,
+        }],
+        targetIds: [],
+      }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  })
 
   it('should make attack rolls against multiple creatures', async function () {
     const action = await runActionById(attackActionId, [
@@ -151,6 +249,19 @@ describe('Apply Action Properties', function () {
     assert.deepEqual(allUpdates(action), expectedUpdates);
   });
 
+  it('should fail to make attacks that have no uses left', async function () {
+    const action = await runActionById(noUsesActionId, [targetCreatureId]);
+    const expectedContent: LogContent[] = [
+      {
+        name: 'Action'
+      }, {
+        name: 'Error',
+        value: 'Action does not have enough uses left'
+      }
+    ]
+    assert.deepEqual(allLogContent(action), expectedContent);
+  });
+
   it('should make attack rolls that miss', async function () {
     const action = await runActionById(attackMissId, [targetCreatureId]);
     const expectedMutations: Mutation[] = [
@@ -165,6 +276,61 @@ describe('Apply Action Properties', function () {
         }],
         targetIds: [targetCreatureId],
       }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
+  it('actions should consume resources', async function () {
+    const action = await runActionById(usesResourcesActionId, []);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: []
+      },
+      {
+        contents: [{
+          inline: true,
+          name: 'Attribute damaged',
+          value: '−2 Resource Name',
+        }],
+        targetIds: [creatureId],
+        updates: [{
+          inc: {
+            damage: 2,
+            value: -2
+          },
+          propId: resourceAttId,
+          type: 'attribute'
+        }],
+      },
+      {
+        targetIds: [],
+        updates: [
+          {
+            inc: {
+              quantity: -3
+            },
+            propId: ammoId,
+            type: 'item',
+          }
+        ]
+      }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
+  it('should handle insufficient resources', async function () {
+    const action = await runActionById(insufficientResourcesActionId, []);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{
+          name: 'Action'
+        }, {
+          name: 'Error',
+          value: 'This creature doesn\'t have sufficient resources to perform this action',
+        }],
+        targetIds: [],
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });

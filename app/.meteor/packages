@@ -51,3 +51,5 @@ zodern:types
 zodern:fix-async-stubs
 typescript
 ecmascript
+lmieulet:meteor-legacy-coverage
+lmieulet:meteor-coverage

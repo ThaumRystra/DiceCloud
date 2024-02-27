@@ -1,4 +1,3 @@
-console.log('call.ts imports')
 import error from '/imports/parser/parseTree/error';
 import constant from '/imports/parser/parseTree/constant';
 import functions, { ParserFunction } from '/imports/parser/functions';
