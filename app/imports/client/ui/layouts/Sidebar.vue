@@ -1,5 +1,10 @@
 <template>
   <div class="sidebar">
+    <v-btn
+      @click="roll3dDice"
+    >
+      Roll some dice
+    </v-btn>
     <v-layout
       v-if="!signedIn"
       justify-center
@@ -70,6 +75,7 @@ import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolde
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
+import startOverlay from '/imports/client/ui/3d/startOverlay';
 
 const characterTransform = function (char) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
@@ -79,6 +85,17 @@ const characterTransform = function (char) {
 export default {
   components: {
     CreatureFolderList
+  },
+  data() { return {
+    reactLoaded: false,
+  }},
+  methods: {
+    roll3dDice() {
+      if (!this.reactLoaded) {
+        startOverlay()
+        this.reactLoaded = true;
+      }
+    }
   },
   // @ts-ignore
   meteor: {
@@ -149,3 +166,4 @@ export default {
   margin-bottom: 4px;
 }
 </style>
+../3d/App

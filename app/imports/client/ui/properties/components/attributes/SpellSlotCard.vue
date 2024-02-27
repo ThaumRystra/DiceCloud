@@ -32,7 +32,7 @@
 
 <script lang="js">
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
-import doCastSpell from '/imports/api/engine/actions/doCastSpell';
+//import doCastSpell from '/imports/api/engine/actions/doCastSpell';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {

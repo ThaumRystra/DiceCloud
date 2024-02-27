@@ -53,3 +53,4 @@ typescript
 ecmascript
 lmieulet:meteor-legacy-coverage
 lmieulet:meteor-coverage
+react-meteor-data
