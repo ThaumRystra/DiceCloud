@@ -39,7 +39,7 @@ const ComputedOnlyContainerSchema = createPropertySchema({
     type: 'computedOnlyInlineCalculationField',
     optional: true,
   },
-  // Weight of all the contents, zero if `contentsWeightless` is true
+  // Weight of all the contents.
   contentsWeight: {
     type: Number,
     optional: true,
