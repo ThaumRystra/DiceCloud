@@ -40,7 +40,7 @@
         >
           <v-col
             cols="12"
-            md="6"
+            md="4"
           >
             <smart-switch
               label="Can fill slots"
@@ -51,13 +51,24 @@
           </v-col>
           <v-col
             cols="12"
-            md="6"
+            md="4"
           >
             <smart-switch
               label="Searchable from character sheet"
               :value="model.searchable"
               :error-messages="errors.searchable"
               @change="(value, ack) => $emit('change', {path: ['searchable'], value, ack})"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="4"
+          >
+            <smart-switch
+              label="Ignores uniqueness requirements"
+              :value="model.slotIgnoreUniqueness"
+              :error-messages="errors.slotIgnoreUniqueness"
+              @change="(value, ack) => $emit('change', {path: ['slotIgnoreUniqueness'], value, ack})"
             />
           </v-col>
           <v-col

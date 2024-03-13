@@ -59,6 +59,12 @@ let LibraryNodeSchema = new SimpleSchema({
     optional: true,
     index: 1,
   },
+  // Will this property ignore uniqueness when being inserted into slots
+  slotIgnoreUniqueness: {
+    type: Boolean,
+    optional: true,
+    index: 1,
+  },
   libraryTags: {
     type: Array,
     optional: true,

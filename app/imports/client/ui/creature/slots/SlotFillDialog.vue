@@ -84,6 +84,7 @@
                     v-model="selectedNodeIds"
                     class="my-0 py-0"
                     hide-details
+                    :input-value="alreadyAdded.has(libraryNode._id)"
                     :color="libraryNode._disabledBySlotFillerCondition ? 'error' : ''"
                     :disabled="isDisabled(libraryNode)"
                     :value="libraryNode._id"
@@ -345,7 +346,7 @@ export default {
       });
     },
     isDisabled(node) {
-      return node._disabledByAlreadyAdded ||
+      return (node._disabledByAlreadyAdded && !node.slotIgnoreUniqueness) ||
         (
           node._disabledByQuantityFilled &&
           !this.selectedNodeIds.includes(node._id)
@@ -485,8 +486,9 @@ export default {
       if (!this.libraryNodeFilter) return [];
       if (!this.$subReady.slotFillers) return [];
       let nodes = LibraryNodes.find(this.libraryNodeFilter, {
-        sort: { name: 1, order: 1 }
-      }).fetch();
+        sort: { name: 1, order: 1 },
+        reactive:false
+      });
       let disabledNodeCount = 0;
       // Mark slotFillers whose condition isn't met or are too big to fit
       // the quantity to fill
@@ -524,7 +526,7 @@ export default {
           node._disabled = true;
           node._disabledByQuantityFilled = true;
         }
-        if (this.alreadyAdded.has(node._id)) {
+        if (this.alreadyAdded.has(node._id) && !node.slotIgnoreUniqueness) {
           node._disabled = true;
           node._disabledByAlreadyAdded = true;
         }
