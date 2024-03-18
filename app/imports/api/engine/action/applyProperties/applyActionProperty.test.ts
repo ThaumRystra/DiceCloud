@@ -10,11 +10,13 @@ import {
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
 import { LogContent, Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const [
   creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,
-  usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId, consumeAmmoId,
-  consumeResourceId, noUsesActionId, insufficientResourcesActionId
+  usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId,
+  consumeAmmoId, consumeResourceId, noUsesActionId, insufficientResourcesActionId,
+  attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId
 ] = randomIds;
 
 const actionTestCreature = {
@@ -43,6 +45,20 @@ const actionTestCreature = {
       _id: attackMissId,
       type: 'action',
       attackRoll: { calculation: '-5' },
+    },
+    // Attack that has Advantage
+    {
+      _id: advantageAttackId,
+      type: 'action',
+      attackRoll: { calculation: '0' },
+      tags: ['hasAdvantage'],
+    },
+    {
+      _id: advantageEffectId,
+      type: 'effect',
+      operation: 'advantage',
+      targetByTags: true,
+      targetTags: ['hasAdvantage'],
     },
     // Attack that has no target
     {
@@ -121,7 +137,24 @@ const actionTestCreature = {
           quantity: { calculation: '9001' },
         }]
       }
-    }
+    },
+    // Events and resetting attributes
+    {
+      _id: attributeResetByEventId,
+      type: 'attribute',
+      name: 'Attribute Reset By testEvent Event',
+      attributeType: 'stat',
+      baseValue: { calculation: '27' },
+      damage: 13,
+      variableName: 'resetByEventAtt',
+      reset: 'testEvent'
+    },
+    {
+      _id: eventActionId,
+      type: 'action',
+      actionType: 'event',
+      variableName: 'testEvent',
+    },
   ],
 }
 
@@ -280,6 +313,26 @@ describe('Apply Action Properties', function () {
     assert.deepEqual(allMutations(action), expectedMutations);
   });
 
+  it('should make attack rolls that roll with advantage', async function () {
+    const prop = await CreatureProperties.findOneAsync(advantageAttackId);
+    assert.equal(prop.attackRoll.advantage, 1, 'The attack roll should have advantage');
+    const action = await runActionById(advantageAttackId, [targetCreatureId]);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: [targetCreatureId],
+      }, {
+        contents: [{
+          inline: true,
+          name: 'Hit! (Advantage)',
+          value: '1d20 [ ~~10~~, 11 ] + 0\n**11**',
+        }],
+        targetIds: [targetCreatureId],
+      }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
   it('actions should consume resources', async function () {
     const action = await runActionById(usesResourcesActionId, []);
     const expectedMutations: Mutation[] = [
@@ -331,6 +384,39 @@ describe('Apply Action Properties', function () {
         }],
         targetIds: [],
       },
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
+  it('should reset attributes when events happen', async function () {
+    const action = await runActionById(eventActionId, []);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{
+          name: 'Action'
+        }],
+        targetIds: [],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Attribute damaged',
+            value: '+13 Attribute Reset By testEvent Event',
+          },
+        ],
+        targetIds: [creatureId],
+        updates: [
+          {
+            inc: {
+              damage: -13,
+              value: 13,
+            },
+            propId: attributeResetByEventId,
+            type: 'attribute',
+          },
+        ],
+      }
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });

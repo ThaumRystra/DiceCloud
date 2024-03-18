@@ -10,7 +10,7 @@ import { applyAfterChildrenTriggers, applyAfterTriggers, applyChildren } from '/
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import { getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getConstantValueFromScope, getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
 
@@ -100,6 +100,7 @@ async function applyAttackToTarget(
     result,
     criticalHit,
     criticalMiss,
+    advantage
   } = await rollAttack(attack, scope, taskResult.pushScope, userInput);
 
   const targetScope = getVariables(targetId);
@@ -109,9 +110,9 @@ async function applyAttackToTarget(
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
         result > targetArmor ? 'Hit!' : 'Miss!';
-    if (scope['~attackAdvantage']?.value === 1) {
+    if (advantage === 1) {
       name += ' (Advantage)';
-    } else if (scope['~attackAdvantage']?.value === -1) {
+    } else if (advantage === -1) {
       name += ' (Disadvantage)';
     }
 
@@ -187,10 +188,16 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
   });
 }
 
-async function rollAttack(attack, scope, resultPushScope, userInput: InputProvider) {
+async function rollAttack(attack, scope: any, resultPushScope, userInput: InputProvider) {
+  const advantage: 0 | 1 | -1 = await userInput.advantage(
+    (!!attack.advantage && !attack.disadvantage) ? 1 :
+      (!attack.advantage && !!attack.disadvantage) ? -1 :
+        0
+  );
   const rollModifierText = numberToSignedString(attack.value, true);
   let value, resultPrefix;
-  if (scope['~attackAdvantage']?.value === 1) {
+
+  if (advantage === 1) {
     const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
     if (a >= b) {
       value = a;
@@ -199,7 +206,7 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
       value = b;
       resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
     }
-  } else if (scope['~attackAdvantage']?.value === -1) {
+  } else if (advantage === -1) {
     const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
     if (a <= b) {
       value = a;
@@ -216,7 +223,7 @@ async function rollAttack(attack, scope, resultPushScope, userInput: InputProvid
   const result = value + attack.value;
   resultPushScope['~attackRoll'] = { value: result };
   const { criticalHit, criticalMiss } = applyCrits(value, scope, resultPushScope);
-  return { resultPrefix, result, value, criticalHit, criticalMiss };
+  return { resultPrefix, result, value, criticalHit, criticalMiss, advantage };
 }
 
 function applyCrits(value, scope, resultPushScope) {

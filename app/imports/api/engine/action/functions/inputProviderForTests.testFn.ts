@@ -10,10 +10,11 @@ const inputProviderForTests: InputProvider = {
     const result: number[][] = [];
     for (const diceRoll of dice) {
       const averageRoll = Math.round(diceRoll.diceSize / 2);
-      // Return an array full of averagely rolled dice
+      // Return an array full of averagely rolled dice, increasing by 1 for every dice
       result.push(
         new Array(diceRoll.number)
           .fill(averageRoll)
+          .map((value, index) => (value + index - 1) % diceRoll.diceSize + 1)
       )
     }
     return result;
@@ -28,6 +29,12 @@ const inputProviderForTests: InputProvider = {
       chosen.push(choices[i]._id);
     }
     return chosen;
+  },
+  /**
+   * For testing, always return the suggested advantage, as if the user never chose differently
+   */
+  async advantage(suggestedAdvantage) {
+    return suggestedAdvantage;
   }
 }
 
