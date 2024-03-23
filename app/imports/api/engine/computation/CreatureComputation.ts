@@ -8,12 +8,12 @@ interface CreatureProperty {
 }
 
 export default class CreatureComputation {
-  originalPropsById: object;
-  propsById: object;
-  propsWithTag: object;
-  scope: object;
+  originalPropsById: Record<string, CreatureProperty>;
+  propsById: Record<string, CreatureProperty>;
+  propsWithTag: Record<string, string[]>;
+  scope: Record<string, any>;
   props: Array<CreatureProperty>;
-  dependencyGraph: Graph;
+  dependencyGraph: Graph<any, string>;
   errors: Array<object>;
   creature: object;
   variables: object;

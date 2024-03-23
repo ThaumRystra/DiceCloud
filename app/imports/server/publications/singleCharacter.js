@@ -54,7 +54,7 @@ Meteor.publish('singleCharacter', function (creatureId) {
         _creatureId: creatureId,
       }),
       CreatureProperties.find({
-        'ancestors.id': creatureId,
+        'root.id': creatureId,
       }),
       CreatureLogs.find({
         creatureId,

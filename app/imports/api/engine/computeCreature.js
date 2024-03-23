@@ -30,7 +30,6 @@ async function computeComputation(computation, creatureId) {
       logError.location = e.stack.split('\n')[1];
     }
     console.error(logError);
-    throw e;
   } finally {
     checkPropertyCount(computation)
     writeErrors(creatureId, computation.errors);

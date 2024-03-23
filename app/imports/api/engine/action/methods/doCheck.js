@@ -24,6 +24,8 @@ const doCheck = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({ propId, scope }) {
+    console.warn('do check not implemented');
+    return;
     const prop = CreatureProperties.findOne(propId);
     if (!prop) throw new Meteor.Error('not-found', 'The property was not found');
     const creatureId = prop.root.id;

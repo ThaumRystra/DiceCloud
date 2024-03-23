@@ -42,7 +42,6 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Actions, { runAction } from '/imports/api/engine/actions/ActionEngine';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 
@@ -80,10 +79,7 @@ export default {
   },
   methods: {
     async apply(stepThrough) {
-      await runAction.callAsync({
-        actionId: this.actionId,
-        stepThrough
-      });
+      throw new Error('Not implemented')
     },
     cancel() {
       this.$store.dispatch('popDialogStack');

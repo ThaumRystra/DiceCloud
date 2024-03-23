@@ -52,7 +52,7 @@ export function getSingleProperty(creatureId: string, propertyId: string) {
   return prop;
 }
 
-export function getProperties(creatureId) {
+export function getProperties(creatureId: string): CreatureProperty[] {
   const creature = loadedCreatures.get(creatureId);
   if (creature) {
     const props = Array.from(creature.properties.values());
@@ -94,7 +94,7 @@ export function getPropertiesOfType(creatureId, propType) {
   return props;
 }
 
-export function getCreature(creatureId) {
+export function getCreature(creatureId: string) {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedCreatureDoc = loadedCreature?.creature;
   if (loadedCreatureDoc) {
@@ -106,7 +106,7 @@ export function getCreature(creatureId) {
   return creature;
 }
 
-export function getVariables(creatureId) {
+export function getVariables(creatureId: string) {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedVariables = loadedCreature?.variables;
   if (loadedVariables) {

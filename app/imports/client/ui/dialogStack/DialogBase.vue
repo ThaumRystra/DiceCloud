@@ -6,27 +6,27 @@
     <slot
       name="replace-toolbar"
       :flat="!offsetTop"
+    />
+    <v-toolbar
+      v-if="!$scopedSlots['replace-toolbar']"
+      :color="computedColor"
+      :dark="isDark"
+      :light="!isDark"
+      class="base-dialog-toolbar"
+      :flat="!offsetTop"
     >
-      <v-toolbar
-        :color="computedColor"
-        :dark="isDark"
-        :light="!isDark"
-        class="base-dialog-toolbar"
-        :flat="!offsetTop"
+      <v-btn
+        icon
+        @click="back"
       >
-        <v-btn
-          icon
-          @click="back"
-        >
-          <v-icon>mdi-arrow-left</v-icon>
-        </v-btn>
-        <slot name="toolbar" />
-        <slot
-          slot="extension"
-          name="toolbar-extension"
-        />
-      </v-toolbar>
-    </slot>
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
+      <slot name="toolbar" />
+      <slot
+        slot="extension"
+        name="toolbar-extension"
+      />
+    </v-toolbar>
     <div
       v-if="$slots['unwrapped-content']"
       id="base-dialog-body"

@@ -27,7 +27,7 @@ function isActive(prop: CreatureProperty): boolean {
   return true;
 }
 
-function childrenActive(prop): boolean {
+function childrenActive(prop: CreatureProperty): boolean {
   // Children of disabled properties are always inactive
   if (prop.disabled) return false;
   switch (prop.type) {

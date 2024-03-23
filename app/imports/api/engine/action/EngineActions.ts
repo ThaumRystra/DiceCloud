@@ -1,6 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import TaskResult from './tasks/TaskResult';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
+import { Mongo } from 'meteor/mongo';
 
 const EngineActions = new Mongo.Collection<EngineAction>('actions');
 

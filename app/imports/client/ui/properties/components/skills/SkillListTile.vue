@@ -58,11 +58,11 @@
 </template>
 
 <script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';
-import doCheck from '/imports/api/engine/actions/doCheck';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import doCheck from '/imports/api/engine/action/methods/doCheck';
 
 export default {
   components: {

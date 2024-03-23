@@ -8,8 +8,6 @@ import {
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
-import { doActionWork } from '/imports/api/engine/actions/doAction';
-import ActionContext from '/imports/api/engine/actions/ActionContext';
 
 // TODO Migrate this to the new action engine
 
@@ -48,6 +46,8 @@ const doAction = new ValidatedMethod({
     timeInterval: 5000,
   },
   run({ spellId, slotId, ritual, targetIds = [], scope = {} }) {
+    console.warn('Do cast spell not implemented');
+    return;
     // Get action context
     let spell = CreatureProperties.findOne(spellId);
     const creatureId = spell.root.id;

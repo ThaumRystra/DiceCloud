@@ -79,6 +79,8 @@ if (Meteor.isClient) {
 } else if (Meteor.isServer) {
   Meteor.startup(() => {
     if (!Docs.findOne()) {
+      console.warn('Default documents must be updated to new parenting format');
+      return;
       Assets.getText('docs/defaultDocs.json', (error, string) => {
         const docs = JSON.parse(string)
         docs.forEach(doc => Docs.insert(doc));

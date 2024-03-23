@@ -2,6 +2,7 @@ import { chain, reverse, set } from 'lodash';
 import { TreeDoc, treeDocFields, Reference } from '/imports/api/parenting/ChildSchema';
 import { getProperties } from '/imports/api/engine/loadCreatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { Mongo } from 'meteor/mongo';
 
 export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
   const collection = Mongo.Collection.get(name)
@@ -140,9 +141,9 @@ export function filterToForest(
     });
 
   // Get the doc ancestors
-  let ancestors: object[] = [];
+  let ancestors: FilteredDoc[] = [];
   if (filter && includeFilteredDocAncestors) {
-    ancestors = collection.find(getFilter.ancestorsOfAll(docs), collectionOptions).map(doc => {
+    ancestors = collection.find(getFilter.ancestorsOfAll(docs), collectionOptions).map((doc: FilteredDoc) => {
       // Mark that the nodes are ancestors of the found nodes
       doc._ancestorOfMatchedDocument = true;
       return doc;
@@ -172,7 +173,12 @@ export function filterToForest(
   return docsToForest(nodes);
 }
 
-type ForestAndOrphans = { forest: TreeNode<TreeDoc>[], orphanIds: string[] }
+export type Forest<T extends TreeDoc> = {
+  trees: TreeNode<T>[],
+  nodeIndex: { [_id: string]: TreeNode<T> },
+  orphanIds: string[],
+}
+
 /**
  * Takes a complete set of documents and builds a forest using just their `.parentIds`
  * Uses `.left` for sibling order within a parent only.
@@ -182,31 +188,35 @@ type ForestAndOrphans = { forest: TreeNode<TreeDoc>[], orphanIds: string[] }
  * @returns forest: An array of tree nodes that each contain a document and its children.
  * orphans: an array of the same, but their parents weren't in the input array
  */
-export function docsToForestByParentId(docs: TreeDoc[]): ForestAndOrphans {
+export function docsToForestByParentId<T extends TreeDoc>(docs: T[]): Forest<T> {
   // Collect all the docs in a dict by id
-  const nodesById = <{ [_id: string]: TreeNode<TreeDoc> }>{};
+  const nodeIndex = <{ [_id: string]: TreeNode<T> }>{};
   docs.forEach(doc => {
-    nodesById[doc._id] = { doc, children: [] };
+    nodeIndex[doc._id] = { doc, children: [] };
   });
   // Assign the docs to their parent or the forest or orphanage
-  const forest: TreeNode<TreeDoc>[] = [];
+  const trees: TreeNode<T>[] = [];
   const orphanIds: string[] = [];
   docs.forEach(doc => {
-    const node = nodesById[doc._id];
+    const node = nodeIndex[doc._id];
     if (!doc.parentId) {
       // Root is parent
-      forest.push(node);
-    } else if (nodesById[doc.parentId]) {
+      trees.push(node);
+    } else if (nodeIndex[doc.parentId]) {
       // Parent is found
-      nodesById[doc.parentId].children.push(node);
+      nodeIndex[doc.parentId].children.push(node);
     } else {
       // Parent is missing, unset it, and store orphan
       node.doc.parentId = undefined;
       orphanIds.push(node.doc._id);
-      forest.push(node);
+      trees.push(node);
     }
   });
-  return { forest, orphanIds };
+  return {
+    trees,
+    orphanIds,
+    nodeIndex
+  };
 }
 
 export const getFilter = {
@@ -700,7 +710,7 @@ export async function rebuildCreatureNestedSets(creatureId) {
  * @returns 
  */
 export function calculateNestedSetOperations(docs: TreeDoc[]) {
-  const { forest: stack, orphanIds } = docsToForestByParentId(reverse(docs));
+  const { trees: stack, orphanIds } = docsToForestByParentId(reverse(docs));
   const removeMissingParentsOp = orphanIds.length ? {
     updateMany: {
       filter: { _id: { $in: orphanIds } },
@@ -763,11 +773,12 @@ export function calculateNestedSetOperations(docs: TreeDoc[]) {
  * @param docs An array of documents that share a common root. Must already be sorted by `.left` in ascending order
  * @returns The documents as a forest of tree nodes
  */
-export function applyNestedSetProperties(docs: TreeDoc[]) {
+export function applyNestedSetProperties<T extends TreeDoc>(docs: T[]): Forest<T> {
   // Walk around the tree numbering left on the way down and right on the way up like so:
-  const { forest, orphanIds } = docsToForestByParentId(reverse([...docs]));
+  const forest = docsToForestByParentId<T>(reverse([...docs]));
+  const { trees, orphanIds } = forest;
 
-  const stack = [...forest];
+  const stack = [...trees];
   const visitedNodes = new Set();
   const visitedChildren = new Set();
   let count = 1;

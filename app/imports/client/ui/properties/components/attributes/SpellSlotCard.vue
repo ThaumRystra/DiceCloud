@@ -32,8 +32,8 @@
 
 <script lang="js">
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
-import doCastSpell from '/imports/api/engine/actions/doCastSpell';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import doCastSpell from '/imports/api/engine/action/methods/doCastSpell';
 
 export default {
   components: {

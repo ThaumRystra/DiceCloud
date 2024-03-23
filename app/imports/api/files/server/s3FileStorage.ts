@@ -2,9 +2,9 @@
 import { Meteor } from 'meteor/meteor';
 import { each, clone } from 'lodash';
 import { Random } from 'meteor/random';
-import { FilesCollection } from 'meteor/ostrio:files';
+import { FileObj, FileRef, FilesCollection, FilesCollectionConfig } from 'meteor/ostrio:files';
 import stream from 'stream';
-import S3 from 'aws-sdk/clients/s3';
+import { S3 } from '@aws-sdk/client-s3';
 
 /* See fs-extra and graceful-fs NPM packages */
 /* For better i/o performance */
@@ -21,26 +21,32 @@ Meteor.settings.useS3 = !!(
   s3Conf && s3Conf.key && s3Conf.secret && s3Conf.bucket && s3Conf.endpoint
 );
 
-const bound = Meteor.bindEnvironment((callback) => {
+const bound = Meteor.bindEnvironment((callback: () => any) => {
   return callback();
 });
 
 let createS3FilesCollection;
+
+type S3Metadata = {
+  pipePath: string,
+}
+
+type S3FilesCollection = FilesCollection<S3Metadata> & {
+  readJSONFile?: (file: FileObj<S3Metadata>) => Promise<any>
+};
 
 /* Check settings existence in `Meteor.settings` */
 /* This is the best practice for app security */
 if (Meteor.settings.useS3) {
   // Create a new S3 object
   const s3 = new S3({
-    accessKeyId: s3Conf.key,
-    secretAccessKey: s3Conf.secret,
+    credentials: {
+      accessKeyId: s3Conf.key,
+      secretAccessKey: s3Conf.secret,
+    },
     endpoint: s3Conf.endpoint,
-    sslEnabled: true, // optional
-    maxRetries: 10,
-    httpOptions: {
-      timeout: 12000,
-      agent: false
-    }
+    tls: true,
+    maxAttempts: 10,
   });
 
   createS3FilesCollection = function ({
@@ -50,8 +56,15 @@ if (Meteor.settings.useS3) {
     onAfterUpload,
     debug,// = !Meteor.isProduction,
     allowClientCode = false,
+  }: {
+    collectionName: string,
+    storagePath: string,
+    onBeforeUpload: (...args: any[]) => any,
+    onAfterUpload: (...args: any[]) => any,
+    debug: boolean,
+    allowClientCode?: boolean,
   }) {
-    const collection = new FilesCollection({
+    const filesCollection: S3FilesCollection = new FilesCollection<S3Metadata>({
       collectionName,
       storagePath,
       onBeforeUpload,
@@ -80,31 +93,35 @@ if (Meteor.settings.useS3) {
             Key: filePath,
             Body: fs.createReadStream(vRef.path),
             ContentType: vRef.type,
-          }, (error) => {
+          }, (error: Error) => {
             bound(() => {
               if (error) {
-                console.error(error);
-              } else {
-                // Update FilesCollection with link to the file at AWS
-                const upd = { $set: {} };
-                upd['$set']['versions.' + version + '.meta.pipePath'] = filePath;
-
-                this.collection.update({
-                  _id: fileRef._id
-                }, upd, (updError) => {
-                  if (updError) {
-                    console.error(updError);
-                  } else {
-                    // Unlink original files from FS after successful upload to AWS:S3
-                    this.unlink(this.collection.findOne(fileRef._id), version);
-                  }
-                });
+                return console.error(error);
               }
+              // Update FilesCollection with link to the file at AWS
+              // any should actually be Mongo.Modifier<FileObj<S3Metadata>>, but the types aren't quite set up
+              // Right for mongo modifiers on version.meta
+              const upd: any = {
+                $set: {
+                  [`versions.${version}.meta.pipePath`]: filePath
+                }
+              };
+
+              filesCollection.collection.update({
+                _id: fileRef._id
+              }, upd, undefined, (updError: any) => {
+                if (updError) {
+                  console.error(updError);
+                } else {
+                  // Unlink original files from FS after successful upload to AWS:S3
+                  filesCollection.unlink(filesCollection.findOne(fileRef._id), version);
+                }
+              });
             });
           });
         });
       },
-      interceptDownload(http, fileRef, version) {
+      interceptDownload(http: any, fileRef: FileRef<S3Metadata>, version: string) {
         // Intercept access to the file
         // And redirect request to AWS:S3
         let path;
@@ -122,20 +139,20 @@ if (Meteor.settings.useS3) {
           // and to keep original file name, content-type,
           // content-disposition, chunked "streaming" and cache-control
           // we're using low-level .serve() method
-          const opts = {
+          const opts: Parameters<typeof s3.getObject>[0] = {
             Bucket: s3Conf.bucket,
             Key: path
           };
 
           if (http.request.headers.range) {
             const vRef = fileRef.versions[version];
-            let range = clone(http.request.headers.range);
+            const range = clone(http.request.headers.range);
             const array = range.split(/bytes=([0-9]*)-([0-9]*)/);
             const start = parseInt(array[1]);
             let end = parseInt(array[2]);
             if (isNaN(end)) {
               // Request data from AWS:S3 by small chunks
-              end = (start + this.chunkSize) - 1;
+              end = (start + (this.chunkSize || 0)) - 1;
               if (end >= vRef.size) {
                 end = vRef.size - 1;
               }
@@ -173,8 +190,8 @@ if (Meteor.settings.useS3) {
       allowClientCode,
     });
     // Intercept FilesCollection's remove method to remove file from AWS:S3
-    const _origRemove = collection.remove;
-    collection.remove = function (search) {
+    const _origRemove = filesCollection.remove;
+    filesCollection.remove = function (search) {
       const cursor = this.collection.find(search);
       cursor.forEach((fileRef) => {
         each(fileRef.versions, (vRef) => {
@@ -183,7 +200,7 @@ if (Meteor.settings.useS3) {
             s3.deleteObject({
               Bucket: s3Conf.bucket,
               Key: vRef.meta.pipePath,
-            }, (error) => {
+            }, (error: any) => {
               bound(() => {
                 if (error) {
                   console.error(error);
@@ -195,18 +212,19 @@ if (Meteor.settings.useS3) {
       });
 
       //remove original file from database
-      _origRemove.call(this, search);
+      return _origRemove.call(this, search);
     };
 
-    collection.readJSONFile = async function (file) {
+    filesCollection.readJSONFile = async function (file: FileObj<S3Metadata>) {
       // If there is the pipepath, use s3 to get the file
       if (file?.versions?.original?.meta?.pipePath) {
         const path = file.versions.original.meta.pipePath;
         const data = await s3.getObject({
           Bucket: s3Conf.bucket,
           Key: path
-        }).promise();
-        return JSON.parse(data.Body.toString('utf-8'));
+        });
+        if (!data.Body) return;
+        return JSON.parse(data.Body.toString());
       } else {
         // Otherwise use the normal filesystem
         const fileString = await fsp.readFile(file.path, 'utf8');
@@ -214,7 +232,7 @@ if (Meteor.settings.useS3) {
       }
     };
 
-    return collection;
+    return filesCollection;
   }
 } else {
   createS3FilesCollection = function ({
@@ -224,8 +242,8 @@ if (Meteor.settings.useS3) {
     onAfterUpload,
     debug,// = !Meteor.isProduction,
     allowClientCode = false,
-  }) {
-    const collection = new FilesCollection({
+  }: FilesCollectionConfig<S3Metadata>) {
+    const collection: S3FilesCollection = new FilesCollection<S3Metadata>({
       collectionName,
       storagePath,
       onBeforeUpload,

@@ -1,7 +1,12 @@
 import walkDown from '/imports/api/engine/computation/utility/walkdown';
 import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies';
+import { Forest, TreeNode } from '/imports/api/parenting/parentingFunctions';
+import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureComputation from '/imports/api/engine/computation/CreatureComputation';
 
-export default function computeToggleDependencies(node, dependencyGraph, computation, forest) {
+export default function computeToggleDependencies(
+  node: TreeNode<CreatureProperty>, computation: CreatureComputation, forest: Forest<CreatureProperty>
+) {
   const prop = node.doc
   // Only for toggles
   if (prop.type !== 'toggle') return;
@@ -12,11 +17,11 @@ export default function computeToggleDependencies(node, dependencyGraph, computa
       const target = forest.nodeIndex[targetId];
       if (!target) return;
       target.doc._computationDetails.toggleAncestors.push(prop);
-      dependencyGraph.addLink(target.doc._id, prop._id, 'toggle');
+      computation.dependencyGraph.addLink(target.doc._id, prop._id, 'toggle');
       walkDown(target.children, child => {
         // The child nodes depend on the toggle
         child.doc._computationDetails.toggleAncestors.push(prop);
-        dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
+        computation.dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
       });
     });
   }
@@ -27,6 +32,6 @@ export default function computeToggleDependencies(node, dependencyGraph, computa
   walkDown(node.children, child => {
     // The child nodes depend on the toggle
     child.doc._computationDetails.toggleAncestors.push(prop);
-    dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
+    computation.dependencyGraph.addLink(child.doc._id, prop._id, 'toggle');
   });
 }

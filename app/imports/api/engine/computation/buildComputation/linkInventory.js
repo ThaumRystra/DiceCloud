@@ -4,7 +4,7 @@
  */
 export default function linkInventory(forest, dependencyGraph) {
   // The stack of properties to still navigate
-  const stack = [...forest];
+  const stack = [...forest.trees];
   // The current containers we are inside of
   const containerStack = [];
 

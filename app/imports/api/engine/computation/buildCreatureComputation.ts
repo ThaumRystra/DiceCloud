@@ -1,5 +1,5 @@
-import { applyNestedSetProperties, calculateNestedSetOperations } from '/imports/api/parenting/parentingFunctions';
-import { DenormalisedOnlyCreaturePropertySchema as denormSchema }
+import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
+import { CreatureProperty, DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex';
@@ -29,7 +29,7 @@ import removeSchemaFields from './buildComputation/removeSchemaFields';
  * computed toggles
  */
 
-export default function buildCreatureComputation(creatureId) {
+export default function buildCreatureComputation(creatureId: string) {
   const creature = getCreature(creatureId);
   const variables = getVariables(creatureId);
   const properties = getProperties(creatureId);
@@ -37,7 +37,9 @@ export default function buildCreatureComputation(creatureId) {
   return computation;
 }
 
-export function buildComputationFromProps(properties, creature, variables) {
+export function buildComputationFromProps(
+  properties: CreatureProperty[], creature, variables
+) {
 
   const computation = new CreatureComputation(properties, creature, variables);
   // Dependency graph where edge(a, b) means a depends on b
@@ -89,13 +91,13 @@ export function buildComputationFromProps(properties, creature, variables) {
   const forest = applyNestedSetProperties(properties);
 
   // Walk the property trees computing things that need to be inherited
-  walkDown(forest, node => {
+  walkDown(forest.trees, node => {
     computeInactiveStatus(node);
   });
   // Inactive status must be complete for the whole tree before toggle deps
   // are calculated
-  walkDown(forest, node => {
-    computeToggleDependencies(node, dependencyGraph, computation, forest);
+  walkDown(forest.trees, node => {
+    computeToggleDependencies(node, computation, forest);
     computeSlotQuantityFilled(node, dependencyGraph);
   });
 

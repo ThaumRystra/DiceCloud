@@ -30,7 +30,7 @@
       </v-icon>
       <span
         v-if="noLinks"
-        :key="prop._id"
+        :key="prop._id + '-no-links'"
       >
         <tree-node-view
           :model="prop"
@@ -53,8 +53,9 @@
 </template>
 
 <script lang="js">
-  import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
   import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { Mongo } from 'meteor/mongo';
 
   export default {
     components: {
@@ -75,11 +76,11 @@
       embedded: Boolean,
     },
     computed:{
-      props(){
-        return this.model.ancestors
-          .slice(1)
-          .map(ref => fetchDocByRef(ref))
-          .filter(prop => (this.collection !== 'creatureProperties' || prop.type !== 'propertySlot'));
+      props() {
+        return Mongo.Collection.get(this.collection).find({
+          ...getFilter.ancestors(this.model),
+          ...this.collection === 'creatureProperties' && { type: { $ne: 'propertySlot' } }
+        });
       },
     },
     methods: {

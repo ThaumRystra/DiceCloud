@@ -52,20 +52,21 @@
         />
       </v-fade-transition>
     </template>
-    <div
-      v-if="!embedded"
-      slot="actions"
-      class="layout"
-    >
-      <v-spacer />
-      <v-btn
-        text
-        color="accent"
-        @click="$store.dispatch('popDialogStack')"
+    <template #actions>
+      <div
+        v-if="!embedded"
+        class="layout"
       >
-        Close
-      </v-btn>
-    </div>
+        <v-spacer />
+        <v-btn
+          text
+          color="accent"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Close
+        </v-btn>
+      </div>
+    </template>
   </dialog-base>
 </template>
 
@@ -129,12 +130,7 @@ export default {
   computed: {
     creature(){
       if (!this.model) return;
-      let nearestCreatureAncestor = findLast(
-        this.model.ancestors,
-        ref => ref.collection === 'creatures'
-      );
-      if (!nearestCreatureAncestor) return;
-      return Creatures.findOne(nearestCreatureAncestor.id);
+      return Creatures.findOne(this.model.root.id);
     },
     creatureId(){
       return this.creature && this.creature._id;

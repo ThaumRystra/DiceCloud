@@ -151,7 +151,7 @@
             creatureId: this.creatureId,
             noBackdropClose: true,
           },
-          callback(result){
+          async callback(result){
             if (!result){
               return 'insert-creature-property-fab';
             }
@@ -164,7 +164,7 @@
               revealFab(fab);
               let creatureProperty = result;
               // Insert the property
-              let id = insertProperty.call({creatureProperty, parentRef});
+              let id = await insertProperty.callAsync({creatureProperty, parentRef});
               return forcedType ? id : `tree-node-${id}`;
             }
           }

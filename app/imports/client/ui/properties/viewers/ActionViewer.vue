@@ -125,7 +125,7 @@ import AttributeConsumedView from '/imports/client/ui/properties/components/acti
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
-import doCastSpell from '/imports/api/engine/actions/doCastSpell';
+import doCastSpell from '/imports/api/engine/action/methods/doCastSpell.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
@@ -254,4 +254,3 @@ export default {
   height: 40px;
 }
 </style>
-../../../../api/engine/action/methods/doCastSpell
