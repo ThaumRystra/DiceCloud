@@ -4,12 +4,12 @@
     :class="{
       'empty': !hasChildren,
     }"
-    :data-id="`tree-node-${node._id}`"
+    :data-id="`tree-node-${doc._id}`"
   >
     <div
       class="layout align-center justify-start tree-node-title"
       style="cursor: pointer;"
-      @click.stop="$emit('selected', node._id)"
+      @click.stop="$emit('selected', doc._id)"
     >
       <v-btn
         small
@@ -17,7 +17,7 @@
         class="expand-button"
         :class="{
           'rotate-90': showExpanded,
-          'accent--text': node._descendantCanFill || canFillWithMany
+          'accent--text': doc._descendantCanFill || canFillWithMany
         }"
         :disabled="!canExpand"
         @click.stop="expanded = !expanded"
@@ -29,7 +29,7 @@
       <div
         class="layout align-center justify-start pr-1"
       >
-        <!--{{node && node.order}}-->
+        <!--{{doc && doc.order}}-->
         <div
           v-if="isSlot"
           class="text-truncate"
@@ -40,25 +40,25 @@
               'accent--text': canFill,
             }"
           >
-            {{ node.name }}
+            {{ doc.name }}
           </span>
           <fill-slot-button
             v-if="canFillWithOne"
-            :model="node"
+            :model="doc"
           />
         </div>
         <template
           v-else
         >
           <tree-node-view
-            :model="node"
+            :model="doc"
           />
           <v-spacer />
           <v-btn
-            v-if="node.parent.id === parentSlotId"
+            v-if="doc.parent.id === parentSlotId"
             icon
             :disabled="context.editPermission === false"
-            @click.stop="remove(node)"
+            @click.stop="remove(doc)"
           >
             <v-icon>
               mdi-delete
@@ -68,13 +68,13 @@
         <template v-if="condenseChild">
           <span class="mr-4">:</span>
           <tree-node-view
-            :model="children[0].node"
+            :model="children[0].doc"
           />
           <v-spacer />
           <v-btn
             icon
             :disabled="context.editPermission === false"
-            @click.stop="remove(children[0].node)"
+            @click.stop="remove(children[0].doc)"
           >
             <v-icon>
               mdi-delete
@@ -109,7 +109,7 @@
         >
           <fill-slot-button
             class="ml-5"
-            :model="node"
+            :model="doc"
           />
         </div>
       </div>
@@ -147,7 +147,7 @@ export default {
       type: Number,
       default: 0,
     },
-    node: {
+    doc: {
       type: Object,
       required: true,
     },
@@ -163,42 +163,42 @@ export default {
   data(){return {
     expanded: this.depth <= 2,
     /* expand if there's a slot needing attention:
-      this.node._descendantCanFill || (
-        this.node.type === 'propertySlot' &&
+      this.doc._descendantCanFill || (
+        this.doc.type === 'propertySlot' &&
         this. node.quantityExpected?.value === 0 ||
-        (this.node.quantityExpected?.value > 1 && this.node.spaceLeft > 0)
+        (this.doc.quantityExpected?.value > 1 && this.doc.spaceLeft > 0)
       )
     */
   }},
   computed: {
     condenseChild(){
-      return this.node.type === 'propertySlot' &&
+      return this.doc.type === 'propertySlot' &&
       this.children.length === 1 &&
-      this.children[0].node.type !== 'propertySlot' &&
-      this.node.quantityExpected &&
-      this.node.quantityExpected.value === 1 &&
+      this.children[0].doc.type !== 'propertySlot' &&
+      this.doc.quantityExpected &&
+      this.doc.quantityExpected.value === 1 &&
       !this.canFill;
     },
     isSlot(){
-      return this.node.type === 'propertySlot';
+      return this.doc.type === 'propertySlot';
     },
     canFill(){
-      return !!this.node._canFill;
+      return !!this.doc._canFill;
     },
     canFillWithOne(){
       return this.isSlot &&
         this.canFill &&
-        this.node.quantityExpected &&
-        this.node.quantityExpected.value === 1 &&
-        this.node.spaceLeft === 1 &&
+        this.doc.quantityExpected &&
+        this.doc.quantityExpected.value === 1 &&
+        this.doc.spaceLeft === 1 &&
         !this.children?.length;
     },
     canFillWithMany(){
       return this.isSlot && this.canFill && (
-        !this.node.quantityExpected ||
-        this.node.quantityExpected.value === 0 ||
-        (this.node.quantityExpected.value > 1 && this.node.spaceLeft > 0) ||
-        (this.node.quantityExpected.value === 1 && this.children?.length) 
+        !this.doc.quantityExpected ||
+        this.doc.quantityExpected.value === 0 ||
+        (this.doc.quantityExpected.value > 1 && this.doc.spaceLeft > 0) ||
+        (this.doc.quantityExpected.value === 1 && this.children?.length) 
       );
     },
     hasChildren(){
@@ -215,14 +215,14 @@ export default {
     },
     computedSlotId() {
       if (this.condenseChild) {
-        if (this.children[0].node.type === 'propertySlot') {
-          return this.children[0].node._id;
+        if (this.children[0].doc.type === 'propertySlot') {
+          return this.children[0].doc._id;
         } else {
           return undefined;
         }
       } else {
-        if (this.node.type === 'propertySlot') {
-          return this.node._id;
+        if (this.doc.type === 'propertySlot') {
+          return this.doc._id;
         } else {
           return undefined;
         }
@@ -233,11 +233,11 @@ export default {
     },
   },
   watch: {
-    'node._ancestorOfMatchedDocument'(value){
-      this.expanded = !!value || isAncestor(this.node, this.selectedNode);
+    'doc._ancestorOfMatchedDocument'(value){
+      this.expanded = !!value || isAncestor(this.doc, this.selectedNode);
     },
     'selectedNode.parentId'(){
-      this.expanded = isAncestor(this.node, this.selectedNode) || this.expanded;
+      this.expanded = isAncestor(this.doc, this.selectedNode) || this.expanded;
     },
   },
   beforeCreate() {

@@ -27,7 +27,7 @@ Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
     if (!slot) return [];
 
     // Get all the ids of libraries the user can access
-    const creatureId = slot.ancestors[0].id;
+    const creatureId = slot.root.id;
     const libraryIds = getCreatureLibraryIds(creatureId, userId);
     const libraries = Libraries.find({
       $or: [
@@ -80,7 +80,7 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
     if (!slot) return [];
 
     // Get all the ids of libraries the user can access
-    const creatureId = slot.ancestors[0].id;
+    const creatureId = slot.root.id;
     const libraryIds = getCreatureLibraryIds(creatureId, userId);
     const libraries = Libraries.find({
       $or: [
@@ -166,7 +166,7 @@ Meteor.publish('classFillers', function (classId) {
     }
 
     // Get all the ids of libraries the user can access
-    const creatureId = classProp.ancestors[0].id;
+    const creatureId = classProp.root.id;
     const libraryIds = getCreatureLibraryIds(creatureId, userId);
     const libraries = Libraries.find({
       $or: [

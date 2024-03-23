@@ -40,7 +40,6 @@
           v-bind="$attrs"
         >
           <slot>
-            default slot content
             <template v-if="value !== undefined">
               {{ valueText }}
             </template>

@@ -141,7 +141,7 @@ import { Mongo } from 'meteor/mongo';
             component: 'creature-root-dialog',
             elementId: 'breadcrumb-root',
             data: {
-              _id: this.model.ancestors[0].id,
+              _id: this.model.root.id,
               startInEditTab: this.editing,
             },
           });

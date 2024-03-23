@@ -2,8 +2,8 @@
   <div class="build-tree-node-list">
     <build-tree-node
       v-for="child in children"
-      :key="child.node._id"
-      :node="child.node"
+      :key="child.doc._id"
+      :doc="child.doc"
       :children="child.children"
       :parent-slot-id="parentSlotId"
       :depth="depth + 1"

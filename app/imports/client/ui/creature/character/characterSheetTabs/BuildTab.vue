@@ -201,7 +201,7 @@
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
@@ -356,12 +356,12 @@ export default {
       }, {
         sort: { order: 1 },
       });
-      const tree = nodeArrayToTree([
+      const tree = docsToForest([
         ...slots.fetch(),
         ...slotChildren.fetch()
       ]);
       traverse(tree, (child, parents) => {
-        const model = child.node;
+        const model = child.doc;
         const isSlotWithSpace = model.type === 'propertySlot' && (
           model.spaceLeft > 0 || 
           !model.quantityExpected ||
@@ -370,7 +370,7 @@ export default {
         if(isSlotWithSpace) {
           model._canFill = true;
           parents.forEach(node => {
-            node.node._descendantCanFill = true;
+            node.doc._descendantCanFill = true;
           });
         }
       });

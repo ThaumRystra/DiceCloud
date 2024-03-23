@@ -180,7 +180,7 @@ export default {
     containersWithoutAncestorContainers() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.containers),
+        $nor: [getFilter.descendantsOfAll(this.containers)],
         parentId: {
           $nin: this.folderIds,
         },
@@ -194,7 +194,7 @@ export default {
     carriedItems() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.containers),
+        $nor: [getFilter.descendantsOfAll(this.containers)],
         parentId: {
           $nin: this.folderIds,
         },
