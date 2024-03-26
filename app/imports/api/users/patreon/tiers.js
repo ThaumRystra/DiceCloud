@@ -82,7 +82,7 @@ const PATREON_DISABLED_TIER = Object.freeze({
 
 export function getTierByEntitledCents(entitledCents = 0) {
   if (patreonDisabled) return PATREON_DISABLED_TIER;
-  return findLast(TIERS, tier => entitledCents >= tier.minimumEntitledCents);
+  return findLast(TIERS, tier => entitledCents >= tier.minimumEntitledCents) || TIERS[0];
 }
 
 export function getUserTier(user) {
