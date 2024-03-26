@@ -1,4 +1,4 @@
-import { getFilter } from "/imports/api/parenting/parentingFunctions";
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default function getSlotFillFilter({ slot, libraryIds }) {
 

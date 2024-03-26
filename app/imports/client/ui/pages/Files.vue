@@ -110,6 +110,8 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import migrateArchive from '/imports/migrations/archive/migrateArchive';
 
+// TODO Mark files that don't have versions.${version}.meta.pipePath set as broken links
+
 export default {
   components: {
     ArchiveFileCard,

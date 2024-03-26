@@ -27,7 +27,6 @@
       ]
     },
     "resolveJsonModule": true,
-    "types": ["node", "mocha"],
     "esModuleInterop": true,
   },
   "vueCompilerOptions": {
@@ -41,7 +40,8 @@
   ],
   "typeAcquisition": {
     "include": [
-      "meteor"
+      "meteor",
+      "node_modules/@types/meteor/globals/*"
     ]
   }
 }

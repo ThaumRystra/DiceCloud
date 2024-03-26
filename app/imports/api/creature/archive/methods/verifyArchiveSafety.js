@@ -1,7 +1,7 @@
 import { slice } from 'lodash';
-import PER_CREATURE_LOG_LIMIT from '/imports/api/creature/log/CreatureLogs';
+import { PER_CREATURE_LOG_LIMIT } from '/imports/api/creature/log/CreatureLogs';
 
-export default function verifyArchiveSafety({ meta, creature, properties, experiences, logs }) {
+export default function verifyArchiveSafety({ creature, properties, experiences, logs }) {
   const creatureId = creature._id;
 
   // Check lengths of arrays

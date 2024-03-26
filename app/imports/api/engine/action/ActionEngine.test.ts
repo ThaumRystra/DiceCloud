@@ -7,7 +7,7 @@ import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
-import { applyAction } from '/imports/api/engine/action/functions/applyAction';
+import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import inputProvider from '/imports/api/engine/action/functions/inputProviderForTests.testFn';
 

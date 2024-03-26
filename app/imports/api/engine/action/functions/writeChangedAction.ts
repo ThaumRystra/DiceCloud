@@ -1,5 +1,14 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import { isEmpty } from 'lodash'
+import EngineActions, { EngineAction, ActionSchema } from '/imports/api/engine/action/EngineActions';
 
-export async function writeChangedAction(originalAction: EngineAction, action: EngineAction) {
-  console.warn('writeChangedAction not implemented.');
+export default async function writeChangedAction(original: EngineAction, changed: EngineAction) {
+  const $set = {};
+  for (const key of ActionSchema.objectKeys()) {
+    if (!EJSON.equals(original[key], changed[key])) {
+      $set[key] = changed[key];
+    }
+  }
+  if (!isEmpty($set) && original._id) {
+    return EngineActions.updateAsync(original._id, { $set });
+  }
 }

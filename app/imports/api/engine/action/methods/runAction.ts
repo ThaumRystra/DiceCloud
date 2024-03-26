@@ -3,9 +3,8 @@ import SimpleSchema from 'simpl-schema';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { getCreature } from '/imports/api/engine/loadCreatures';
-import { EJSON } from 'meteor/ejson';
-import { applyAction } from '/imports/api/engine/action/functions/applyAction';
-import { writeChangedAction } from '../functions/writeChangedAction';
+import applyAction from '/imports/api/engine/action/functions/applyAction';
+import writeChangedAction from '../functions/writeChangedAction';
 
 export const runAction = new ValidatedMethod({
   name: 'actions.runAction',

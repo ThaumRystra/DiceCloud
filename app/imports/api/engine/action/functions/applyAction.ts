@@ -1,7 +1,6 @@
-import EngineActions, { EngineAction, ActionSchema } from '/imports/api/engine/action/EngineActions';
+import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyTask from '/imports/api/engine/action/tasks/applyTask'
-import { isEmpty } from 'lodash';
 import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 
 // TODO create a function to get the effective value of a property,
@@ -11,7 +10,7 @@ import InputProvider from '/imports/api/engine/action/functions/InputProvider';
 // This is run once as a simulation on the client awaiting all the various inputs or step through
 // clicks from the user, then it is run as part of the runAction method, where it is expected to
 // complete instantly on the client, and sent to the server as a method call
-export async function applyAction(action: EngineAction, userInput: InputProvider, options?: {
+export default async function applyAction(action: EngineAction, userInput: InputProvider, options?: {
   simulate?: boolean, stepThrough?: boolean
 }) {
   const { simulate, stepThrough } = options || {};
@@ -28,16 +27,4 @@ export async function applyAction(action: EngineAction, userInput: InputProvider
     targetIds: action.targetIds || [],
   }, userInput);
   return { action, userInput };
-}
-
-function writeChangedAction(original: EngineAction, changed: EngineAction) {
-  const $set = {};
-  for (const key of ActionSchema.objectKeys()) {
-    if (!EJSON.equals(original[key], changed[key])) {
-      $set[key] = changed[key];
-    }
-  }
-  if (!isEmpty($set) && original._id) {
-    return EngineActions.updateAsync(original._id, { $set });
-  }
 }
