@@ -57,7 +57,6 @@ export default {
   data() { return {
     tabName: 'actions',
   }},
-  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     actions() {
       const folderIds = CreatureProperties.find({

@@ -12,6 +12,7 @@
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
+    "noImplicitAny": false,
     "outDir": "build",
     "paths": {
       "/*": [

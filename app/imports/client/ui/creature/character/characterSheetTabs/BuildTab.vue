@@ -272,7 +272,6 @@ export default {
       return this.hiddenSlots.length + this.hiddenPointBuys.length;
     },
   },
-  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     creature(){
       return Creatures.findOne(this.creatureId);

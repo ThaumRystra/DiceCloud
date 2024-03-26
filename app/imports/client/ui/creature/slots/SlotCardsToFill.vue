@@ -36,7 +36,6 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SlotCard from '/imports/client/ui/creature/slots/SlotCard.vue';
 import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/PointBuyCard.vue';
-import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
@@ -44,7 +43,6 @@ export default {
   components: {
     SlotCard,
     PointBuyCard,
-    ColumnLayout,
   },
   inject: {
     context: { default: {} }
