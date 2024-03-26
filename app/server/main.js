@@ -16,3 +16,4 @@ import '/imports/constants/MAINTENANCE_MODE';
 import '/imports/api/creature/creatureProperties/methods/index';
 import '/imports/api/creature/archive/methods/index';
 import '/imports/api/creature/creatures/methods/index';
+import '/imports/api/engine/action/methods/index';

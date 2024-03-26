@@ -4,7 +4,7 @@ import EngineActions, { EngineAction, ActionSchema } from '/imports/api/engine/a
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { getCreature } from '/imports/api/engine/loadCreatures';
 
-export const insertAction: ValidatedMethod = new ValidatedMethod({
+export const insertAction = new ValidatedMethod({
   name: 'actions.insertAction',
   validate: new SimpleSchema({
     action: ActionSchema
@@ -16,6 +16,6 @@ export const insertAction: ValidatedMethod = new ValidatedMethod({
     EngineActions.removeAsync({ creatureId: action.creatureId });
     // Force a random id even if one was provided, we may use it later as the seed for PRNG
     delete action._id;
-    return await EngineActions.insertAsync(action);
+    return EngineActions.insertAsync(action);
   },
 });

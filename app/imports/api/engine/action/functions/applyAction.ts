@@ -20,6 +20,7 @@ export default async function applyAction(action: EngineAction, userInput: Input
   action._stepThrough = stepThrough;
   action._isSimulation = simulate;
   action.taskCount = 0;
+  console.log(JSON.stringify(action, null, 2));
   const prop = await getSingleProperty(action.creatureId, action.rootPropId);
   if (!prop) throw new Meteor.Error('Not found', 'Root action property could not be found');
   await applyTask(action, {

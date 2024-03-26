@@ -116,15 +116,14 @@
 
 <script lang="js">
 import { getPropertyName } from '/imports/constants/PROPERTIES';
-import numberToSignedString from '../../../../../api/utility/numberToSignedString';
-//TODO import doAction from '/imports/api/engine/actions/doAction';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';

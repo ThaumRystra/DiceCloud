@@ -1,7 +1,7 @@
 <template lang="html">
   <v-btn
-    :loading="doActionLoading"
     :disabled="context.editPermission === false"
+    :data-id="`event-btn-${model._id}`"
     outlined
     class="event-button"
     style="min-width: 160px; max-width: 100%;"
@@ -21,9 +21,8 @@
 </template>
 
 <script lang="js">
-//TODO import doAction from '/imports/api/engine/actions/doAction';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {
@@ -39,36 +38,12 @@ export default {
     },
   },
   data(){return {
-    activated: undefined,
-    doActionLoading: false,
     hovering: false,
   }},
   methods: {
-    click(e) {
-      this.$emit('click', e);
+    doAction() {
+      doAction(this.model, this.$store, `event-btn-${this.model._id}`);
     },
-    doAction({ advantage }) {
-      this.doActionLoading = true;
-      this.shwing();
-      doAction.call({
-        actionId: this.model._id,
-        scope: {
-          '~attackAdvantage': { value: advantage },
-        }
-      }, error => {
-        this.doActionLoading = false;
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason });
-        }
-      });
-    },
-    shwing() {
-      this.activated = true;
-      setTimeout(() => {
-        this.activated = undefined;
-      }, 150);
-    }
   }
 }
 </script>

@@ -1,4 +1,10 @@
+import Task from '/imports/api/engine/action/tasks/Task';
+
 type InputProvider = {
+  /**
+   * Show the user the next property or task to apply and wait for input to continue
+   */
+  nextStep?(task: Task): Promise<void>;
   /**
    * Roll dice
    * @param dice How many dice
@@ -20,7 +26,23 @@ type InputProvider = {
   /**
    * Get advantage, natural, or disadvantage for a d20 roll
    */
-  advantage(suggestedAdvantage: 0 | 1 | -1): Promise<0 | 1 | -1>;
+  advantage(suggestedAdvantage: Advantage): Promise<Advantage>;
+  /**
+   * Get the details of a check or save
+   */
+  check(suggestedParams: CheckParams): Promise<CheckParams>;
+}
+
+export type Advantage = 0 | 1 | -1;
+
+export type CheckParams = {
+  advantage: Advantage;
+  skillVariableName: string;
+  abilityVariableName: string;
+  dc: number | null;
+  contest?: true;
+  targetSkillVariableName?: string;
+  targetAbilityVariableName?: string;
 }
 
 export default InputProvider;

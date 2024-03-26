@@ -10,11 +10,11 @@
         {{ actionJson }}
       </code>
     </pre>
-    <tree-node-view
-      v-for="prop in taskProps"
-      :key="prop._id"
-      :model="prop"
-    />
+    <pre>
+      <code>
+        {{ resultJson }}
+      </code>
+    </pre>
     <v-btn
       slot="actions"
       text
@@ -26,7 +26,8 @@
     <v-btn
       slot="actions"
       text
-      @click="apply(true)"
+      :disabled="!ackNextStep"
+      @click="step"
     >
       Step
     </v-btn>
@@ -42,13 +43,12 @@
 
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import EngineActions from '/imports/api/engine/action/EngineActions';
+import applyAction from '/imports/api/engine/action/functions/applyAction';
 
 export default {
   components: {
     DialogBase,
-    TreeNodeView,
   },
   props: {
     actionId: {
@@ -59,27 +59,66 @@ export default {
   data() {
     return {
       loading: false,
-    }
-  },
-  meteor: { 
-    action() {
-      return Actions.findOne(this.actionId);
-    },
-    taskProps() { 
-      if (!this.action) return;
-      return this.action.taskQueue.map(task => {
-        return CreatureProperties.findOne(task.propId);
-      });
-    },
+      actionResult: undefined,
+      ackNextStep: undefined,
+    };
   },
   computed: {
     actionJson() {
       return JSON.stringify(this.action, null, 2);
     },
+    resultJson() {
+      return JSON.stringify(this.actionResult, null, 2);
+    }
+  },
+  mounted() {
+    const vueInstance = this;
+    this.inputProvider = {
+      ackNextStep: undefined,
+      async nextStep() {
+        return new Promise(resolve => {
+          console.log('ackNexStep set')
+          vueInstance.ackNextStep = () => {
+            vueInstance.ackNextStep = undefined;
+            resolve(undefined);
+          }
+        });
+      },
+      async advantage() {
+        return 0;
+      },
+      async rollDice(dice) {
+        const results = [];
+        for (const die of dice) {
+          const rolls = [];
+          for (let i = 0; i < die.number; i++){
+            rolls.push(1);
+          }
+          results.push(rolls);
+        }
+        return results;
+      }
+    }
+  },
+  meteor: {
+    action() {
+      return EngineActions.findOne(this.actionId);
+    },
   },
   methods: {
-    async apply(stepThrough) {
-      throw new Error('Not implemented')
+    async apply() {
+      this.actionResult = {
+        ...this.action,
+        _stepThrough: undefined,
+        _isSimulation: undefined, 
+        taskCount: undefined,
+      };
+      applyAction(
+        this.actionResult, this.inputProvider, { simulate: true, stepThrough: true }
+      )
+    },
+    step() {
+      this.ackNextStep();
     },
     cancel() {
       this.$store.dispatch('popDialogStack');
