@@ -44,6 +44,7 @@ if (Meteor.settings.useS3) {
       accessKeyId: s3Conf.key,
       secretAccessKey: s3Conf.secret,
     },
+    region: 'ENAM',
     endpoint: s3Conf.endpoint,
     tls: true,
     maxAttempts: 10,
@@ -96,6 +97,7 @@ if (Meteor.settings.useS3) {
           }, (error: Error) => {
             bound(() => {
               if (error) {
+                this.emit('s3Result', error, fileRef);
                 return console.error(error);
               }
               // Update FilesCollection with link to the file at AWS
@@ -111,10 +113,12 @@ if (Meteor.settings.useS3) {
                 _id: fileRef._id
               }, upd, undefined, (updError: any) => {
                 if (updError) {
+                  this.emit('s3Result', updError, fileRef);
                   console.error(updError);
                 } else {
                   // Unlink original files from FS after successful upload to AWS:S3
                   filesCollection.unlink(filesCollection.findOne(fileRef._id), version);
+                  this.emit('s3Result', undefined, fileRef)
                 }
               });
             });
@@ -126,7 +130,7 @@ if (Meteor.settings.useS3) {
         // And redirect request to AWS:S3
         let path;
 
-        if (fileRef && fileRef.versions && fileRef.versions[version] && fileRef.versions[version].meta && fileRef.versions[version].meta.pipePath) {
+        if (fileRef?.versions?.[version]?.meta?.pipePath) {
           path = fileRef.versions[version].meta.pipePath;
         }
 
@@ -195,7 +199,7 @@ if (Meteor.settings.useS3) {
       const cursor = this.collection.find(search);
       cursor.forEach((fileRef) => {
         each(fileRef.versions, (vRef) => {
-          if (vRef && vRef.meta && vRef.meta.pipePath) {
+          if (vRef?.meta?.pipePath) {
             // Remove the object from AWS:S3 first, then we will call the original FilesCollection remove
             s3.deleteObject({
               Bucket: s3Conf.bucket,
@@ -224,7 +228,7 @@ if (Meteor.settings.useS3) {
           Key: path
         });
         if (!data.Body) return;
-        return JSON.parse(data.Body.toString());
+        return JSON.parse(await data.Body.transformToString());
       } else {
         // Otherwise use the normal filesystem
         const fileString = await fsp.readFile(file.path, 'utf8');

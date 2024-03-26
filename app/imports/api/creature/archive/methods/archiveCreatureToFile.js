@@ -1,3 +1,4 @@
+import { Meteor } from 'meteor/meteor';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
@@ -32,7 +33,7 @@ export function getArchiveObj(creatureId) {
   return archiveCreature;
 }
 
-export function archiveCreature(creatureId) {
+export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creatureId, callback) {
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
   ArchiveCreatureFiles.write(buffer, {
@@ -44,14 +45,29 @@ export function archiveCreature(creatureId) {
       creatureId: archive.creature._id,
       creatureName: archive.creature.name,
     },
-  }, (error) => {
-    if (error) {
-      throw error;
+  }, (error, fileRef) => {
+    if (error || !Meteor.settings.useS3) {
+      // If there is an error, or we aren't using s3, just call the callback
+      callback(error);
     } else {
-      removeCreatureWork(creatureId);
+      // Wait for s3Result event that occurs when the s3 attempt to write ends.
+      // If it's successful, remove the creature, otherwise callback with error
+      const resultHandler = (s3Error, resultRef) => {
+        // This event is for a different file, ignore it
+        if (resultRef._id !== fileRef._id) return;
+        // Remove this handler, we are only running it once for this fileId
+        ArchiveCreatureFiles.off('s3Result', resultHandler);
+        // Remove the creature if there was no error
+        if (!s3Error) {
+          removeCreatureWork(creatureId);
+        }
+        // Alert the callback that we're done
+        callback(s3Error);
+      }
+      ArchiveCreatureFiles.on('s3Result', resultHandler);
     }
   }, true);
-}
+});
 
 const archiveCreatureToFile = new ValidatedMethod({
   name: 'Creatures.methods.archiveCreatureToFile',

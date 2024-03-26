@@ -273,6 +273,7 @@ const ComputedOnlyAttributeSchema = createPropertySchema({
     type: String,
   },
   'definitions.$.type': {
+    optional: true,
     type: String,
   },
   'definitions.$.row': {
