@@ -55,7 +55,7 @@
           />
           <v-spacer />
           <v-btn
-            v-if="doc.parent.id === parentSlotId"
+            v-if="doc.parentId === parentSlotId"
             icon
             :disabled="context.editPermission === false"
             @click.stop="remove(doc)"

@@ -346,20 +346,16 @@ export default {
         ],
         removed: {$ne: true},
         inactive: {$ne: true},
-      }, {
-        sort: {order: 1}
       });
       const slotIds = slots.map(s => s._id);
       const slotChildren = CreatureProperties.find({
-        'parent.id': {$in: slotIds},
+        'parentId': {$in: slotIds},
         removed: {$ne: true},
-      }, {
-        sort: { order: 1 },
       });
       const tree = docsToForest([
         ...slots.fetch(),
         ...slotChildren.fetch()
-      ]);
+      ].sort((a, b) => a.left - b.left));
       traverse(tree, (child, parents) => {
         const model = child.doc;
         const isSlotWithSpace = model.type === 'propertySlot' && (
