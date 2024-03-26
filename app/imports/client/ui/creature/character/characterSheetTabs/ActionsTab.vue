@@ -71,7 +71,7 @@ export default {
 
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        'parent.id': {
+        'parentId': {
           $nin: folderIds,
         },
         type: 'action',

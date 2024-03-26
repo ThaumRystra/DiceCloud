@@ -34,7 +34,7 @@ export default {
     properties() {
       const props = [];
       CreatureProperties.find({
-        'parent.id': this.model._id,
+        'parentId': this.model._id,
         removed: { $ne: true },
         overridden: { $ne: true },
         $or: [

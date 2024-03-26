@@ -156,7 +156,7 @@ export default {
     containers() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        'parent.id': {
+        'parend': {
           $nin: this.folderIds,
         },
         type: 'container',

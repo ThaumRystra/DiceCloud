@@ -97,7 +97,7 @@ export default {
       let currentDoc = undefined;
       this.path.split('/').forEach(urlName => {
         currentDoc = Docs.findOne({
-          urlName, 'parent.id': currentDoc?._id,
+          urlName, 'parentId': currentDoc?._id,
           removed: { $ne: true },
         })
         if (currentDoc) {
@@ -116,7 +116,7 @@ export default {
         sort: { order: 1 }
       });
       return Docs.find({
-        'parent.id': this.doc._id,
+        'parentId': this.doc._id,
         removed: { $ne: true },
       }, {
         sort: { order: 1 }
@@ -125,7 +125,7 @@ export default {
     siblingDocs() {
       if (!this.doc) return [];
       return Docs.find({
-        'parent.id': this.doc.parent?.id,
+        'parentId': this.doc.parent?.id,
         removed: { $ne: true },
       }, {
         sort: { order: 1 }

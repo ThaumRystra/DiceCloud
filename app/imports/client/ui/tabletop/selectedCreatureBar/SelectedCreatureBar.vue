@@ -297,7 +297,7 @@ export default {
       // Get the properties that need to be shown as an icon
       const filter = {
         'ancestors.id': this.creatureId,
-        'parent.id': {
+        'parentId': {
           $nin: folderIds,
         },
         $and: [

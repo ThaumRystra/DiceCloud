@@ -136,7 +136,7 @@ export default {
         sort: { order: 1 },
       }).map(c => {
         c.items = CreatureProperties.find({
-          'parent.id': c._id,
+          'parentId': c._id,
           type: { $in: ['item', 'container'] },
           removed: { $ne: true },
           equipped: { $ne: true },

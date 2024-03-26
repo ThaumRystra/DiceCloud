@@ -52,7 +52,7 @@ export default {
       });
       const slotIds = slots.map(s => s._id);
       const slotChildren = CreatureProperties.find({
-        'parent.id': { $in: slotIds },
+        'parentId': { $in: slotIds },
         removed: { $ne: true },
       }, {
         sort: { order: 1 },

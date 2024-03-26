@@ -204,7 +204,7 @@ export function getPropertyChildren(creatureId, property) {
     return cloneProps.sort((a, b) => a.left - b.left);
   } else {
     return CreatureProperties.find({
-      'parent.id': property._id,
+      'parentId': property._id,
       removed: { $ne: true },
     }, {
       sort: { order: 1 },

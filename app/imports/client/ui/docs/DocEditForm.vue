@@ -188,7 +188,7 @@ export default {
       const docName = this.doc.name;
       let parentHref = '/docs';
       if (this.doc.parent) {
-        const parent = Docs.findOne({ _id: this.doc.parent.id });
+        const parent = Docs.findOne({ _id: this.doc.parentId });
         parentHref = parent?.href || parentHref;
       }
       softRemoveDoc.call({ _id }, (error) => {

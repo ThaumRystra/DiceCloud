@@ -100,7 +100,7 @@ export default {
       // Get the properties that need to be shown as a health bar
       return CreatureProperties.find({
         'ancestors.id': this.model._id,
-        'parent.id': {
+        'parentId': {
           $nin: folderIds,
         },
         type: 'attribute',
