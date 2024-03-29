@@ -10,3 +10,4 @@ node_modules
 dump
 .idea/
 .cache
+.swp

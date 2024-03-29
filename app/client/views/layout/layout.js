@@ -60,13 +60,8 @@ Template.appDrawer.events({
 		let post = PatreonPosts.findOne({}, { sort: { date: -1 } });
 		let link = (post && post.link) || 'https://www.patreon.com/dicecloud';
 		Meteor.call('clickPatreonPost', link);
-		ga("send", "event", "externalLink", "patreon");
-	},
-	"click .github": function (event, instance) {
-		ga("send", "event", "externalLink", "github");
 	},
 	"click .version-2": function (event, instance) {
-		ga("send", "event", "externalLink", "version-2");
 		window.location = 'https://beta.dicecloud.com';
 	},
 });

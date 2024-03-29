@@ -11,17 +11,17 @@
   },
   "author": "Stefan Zermatten",
   "dependencies": {
-    "@babel/runtime": "^7.9.2",
+    "@babel/runtime": "^7.24.1",
     "@polymer/polymer": "^1.2.5-npm-test.2",
-    "bcrypt": "^5.0.0",
-    "bower": "^1.8.8",
+    "bcrypt": "^5.1.1",
+    "bower": "^1.8.14",
     "core-js": "^2.6.11",
     "file-saver": "^2.0.2",
     "meteor-node-stubs": "^0.3.3",
-    "qrcode": "^1.4.4",
+    "qrcode": "^1.5.3",
     "request": "^2.88.2",
-    "source-map-support": "^0.5.19",
-    "underscore": "^1.10.2"
+    "source-map-support": "^0.5.21",
+    "underscore": "^1.13.6"
   },
   "engines": {
     "node": "12",
