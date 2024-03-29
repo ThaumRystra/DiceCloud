@@ -5,6 +5,7 @@
         Action
       </v-toolbar-title>
     </template>
+    <!--
     <pre>
       <code>
         {{ actionJson }}
@@ -15,6 +16,15 @@
         {{ resultJson }}
       </code>
     </pre>
+    -->
+    <component
+      :is="activeInput"
+      v-if="activeInput"
+      v-model="userInput"
+      v-bind="activeInputParams"
+      @continue="continueAction"
+      @set-input-ready="setInputReady"
+    />
     <v-btn
       slot="actions"
       text
@@ -24,31 +34,35 @@
     </v-btn>
     <v-spacer slot="actions" />
     <v-btn
+      v-show="!actionDone"
       slot="actions"
       text
-      :disabled="!ackNextStep"
-      @click="step"
+      :disabled="!userInputReady || !resumeActionFn"
+      @click="stepAction"
     >
       Step
     </v-btn>
     <v-btn
       slot="actions"
       text
-      @click="apply()"
+      :disabled="actionBusy && !actionDone"
+      @click="startAction"
     >
-      Apply all
+      {{ actionDone ? 'Apply Results' : 'Start' }}
     </v-btn>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
+import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
 
 export default {
   components: {
     DialogBase,
+    AdvantageInput,
   },
   props: {
     actionId: {
@@ -59,8 +73,14 @@ export default {
   data() {
     return {
       loading: false,
+      actionBusy: false,
+      actionDone: false,
       actionResult: undefined,
-      ackNextStep: undefined,
+      resumeActionFn: () => this.startAction({ stepThrough: true }),
+      activeInput: undefined,
+      activeInputParams: {},
+      userInput: undefined,
+      userInputReady: true,
     };
   },
   computed: {
@@ -71,42 +91,14 @@ export default {
       return JSON.stringify(this.actionResult, null, 2);
     }
   },
-  mounted() {
-    const vueInstance = this;
-    this.inputProvider = {
-      ackNextStep: undefined,
-      async nextStep() {
-        return new Promise(resolve => {
-          console.log('ackNexStep set')
-          vueInstance.ackNextStep = () => {
-            vueInstance.ackNextStep = undefined;
-            resolve(undefined);
-          }
-        });
-      },
-      async advantage() {
-        return 0;
-      },
-      async rollDice(dice) {
-        const results = [];
-        for (const die of dice) {
-          const rolls = [];
-          for (let i = 0; i < die.number; i++){
-            rolls.push(1);
-          }
-          results.push(rolls);
-        }
-        return results;
-      }
-    }
-  },
   meteor: {
     action() {
       return EngineActions.findOne(this.actionId);
     },
   },
   methods: {
-    async apply() {
+    startAction({ stepThrough }) {
+      this.actionBusy = true;
       this.actionResult = {
         ...this.action,
         _stepThrough: undefined,
@@ -114,14 +106,64 @@ export default {
         taskCount: undefined,
       };
       applyAction(
-        this.actionResult, this.inputProvider, { simulate: true, stepThrough: true }
-      )
+        this.actionResult, this, { simulate: true, stepThrough }
+      ).then(() => {
+        this.actionDone = true
+      });
     },
-    step() {
-      this.ackNextStep();
+    stepAction() {
+      if (this.actionResult) {
+        this.actionResult._stepThrough = true;
+      }
+      this.resumeActionFn?.();
+    },
+    continueAction() {
+      if (this.actionResult) {
+        this.actionResult._stepThrough = false;
+      }
+      this.resumeActionFn?.();
+    },
+    promiseInput() {
+      return new Promise(resolve => {
+        this.resumeActionFn = () => {
+          this.resumeActionFn = undefined;
+          const savedInput = this.userInput;
+          this.userInput = undefined;
+          this.activeInput = undefined;
+          this.activeInputParams = {};
+          this.userInputReady = false;
+          resolve(savedInput);
+        }
+      });
+    },
+    setInputReady(val) {
+      this.userInputReady = val;
     },
     cancel() {
       this.$store.dispatch('popDialogStack');
+    },
+    // inputProvider methods
+    async rollDice(diceArray) {
+      console.log({diceArray});
+      return this.promiseInput();
+    },
+    async nextStep(task) {
+      console.log({task});
+      return this.promiseInput();
+    },
+    async choose(choices, quantity) {
+      console.log({choices, quantity});
+      return this.promiseInput();
+    },
+    async advantage(suggestedAdvantage) {
+      this.userInput = suggestedAdvantage;
+      this.activeInput = 'advantage-input';
+      this.userInputReady = true;
+      return this.promiseInput();
+    },
+    async check(suggestedParams) {
+      console.log({ suggestedParams })
+      return this.promiseInput();
     },
   }
 };

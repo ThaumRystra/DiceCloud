@@ -6,30 +6,7 @@
   >
     <div class="layout align-center px-3">
       <div class="avatar">
-        <roll-popup
-          v-if="rollBonus"
-          icon
-          outlined
-          style="font-size: 16px; letter-spacing: normal;"
-          class="mr-2"
-          :color="model.color || 'primary'"
-          :loading="doActionLoading"
-          :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
-          :roll-text="rollBonus"
-          :name="model.name"
-          :advantage="model.attackRoll && model.attackRoll.advantage"
-          @roll="doAction"
-        >
-          <template v-if="rollBonus && !rollBonusTooLong">
-            {{ rollBonus }}
-          </template>
-          <property-icon
-            v-else
-            :model="model"
-          />
-        </roll-popup>
         <v-btn
-          v-else
           icon
           outlined
           style="font-size: 16px; letter-spacing: normal;"
@@ -39,6 +16,9 @@
           :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
           @click.stop="doAction"
         >
+          <template v-if="rollBonus && !rollBonusTooLong">
+            {{ rollBonus }}
+          </template>
           <property-icon :model="model" />
         </v-btn>
       </div>
