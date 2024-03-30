@@ -1,6 +1,6 @@
 import '/imports/parser/parseTree/array';
 import factories from '/imports/parser/parseTree';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
 import rollDice from '/imports/parser/rollDice';
 import ResolveLevel from './types/ResolveLevel';

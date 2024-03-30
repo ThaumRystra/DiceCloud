@@ -2,7 +2,14 @@
   <div
     class="d-flex flex-column justify-center align-center"
     @click="rollDice"
-  />
+  >
+    <p
+      v-for="(die, index) in dice"
+      :key="index"
+    >
+      {{ die.number }}d{{ die.diceSize }}
+    </p>
+  </div>
 </template>
 
 <script lang="js">
@@ -18,10 +25,16 @@ export default {
       type: Array,
       required: true,
     },
+    deterministicDiceRoller: {
+      type: Function,
+      required: true,
+    }
   },
   methods: {
     rollDice() {
-      
+      const values = this.deterministicDiceRoller(this.dice);
+      this.emitInput(values);
+      this.$emit('continue');
     },
     emitInput(e) {
       e = e || 0;

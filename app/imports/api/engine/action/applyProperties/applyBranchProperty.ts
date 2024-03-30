@@ -1,6 +1,6 @@
 import { filter } from 'lodash';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { applyAfterPropTasksForSingleChild, applyAfterPropTasksForSomeChildren, applyAfterTasksSkipChildren, applyDefaultAfterPropTasks, applyTaskToEachTarget } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';

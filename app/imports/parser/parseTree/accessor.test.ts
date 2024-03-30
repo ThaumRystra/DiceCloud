@@ -1,4 +1,4 @@
-import inputProviderForTests from '/imports/api/engine/action/functions/inputProviderForTests.testFn';
+import inputProviderForTests from '../../api/engine/action/functions/userInput/inputProviderForTests.testFn';
 import { parse } from '/imports/parser/parser';
 import resolve from '/imports/parser/resolve';
 import toString from '/imports/parser/toString';

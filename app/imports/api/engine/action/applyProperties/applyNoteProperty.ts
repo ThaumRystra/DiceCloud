@@ -1,5 +1,5 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';

@@ -9,7 +9,7 @@ import resolve from '/imports/parser/resolve';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
 import { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 
 // TODO Redo the work of

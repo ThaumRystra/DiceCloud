@@ -5,18 +5,7 @@
         Action
       </v-toolbar-title>
     </template>
-    <!--
-    <pre>
-      <code>
-        {{ actionJson }}
-      </code>
-    </pre>
-    <pre>
-      <code>
-        {{ resultJson }}
-      </code>
-    </pre>
-    -->
+    <log-content :model="allLogContent" />
     <component
       :is="activeInput"
       v-if="activeInput"
@@ -43,12 +32,21 @@
       Step
     </v-btn>
     <v-btn
+      v-if="actionDone"
       slot="actions"
       text
-      :disabled="actionBusy && !actionDone"
+      @click="finishAction"
+    >
+      {{ 'Apply Results' }}
+    </v-btn>
+    <v-btn
+      v-else
+      slot="actions"
+      text
+      :disabled="actionBusy"
       @click="startAction"
     >
-      {{ actionDone ? 'Apply Results' : 'Start' }}
+      {{ 'Start' }}
     </v-btn>
   </dialog-base>
 </template>
@@ -58,11 +56,16 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
+import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
+import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
+import LogContent from '/imports/client/ui/log/LogContent.vue';
 
 export default {
   components: {
     DialogBase,
     AdvantageInput,
+    RollInput,
+    LogContent,
   },
   props: {
     actionId: {
@@ -89,12 +92,33 @@ export default {
     },
     resultJson() {
       return JSON.stringify(this.actionResult, null, 2);
-    }
+    },
+    allLogContent() {
+      const action = this.actionResult;
+      const contents = [];
+      action?.results?.forEach(result => {
+        result.mutations?.forEach(mutation => {
+          mutation.contents?.forEach(logContent => {
+            contents.push(logContent);
+          });
+        });
+      });
+      return contents;
+    },
   },
   meteor: {
     action() {
       return EngineActions.findOne(this.actionId);
     },
+  },
+  watch: {
+    resultAction(val) { 
+      console.log(val);
+    }
+  },
+  mounted() {
+    this.deterministicDiceRoller = getDeterministicDiceRoller(this.actionId);
+    this.startAction({ stepThrough: false });
   },
   methods: {
     startAction({ stepThrough }) {
@@ -108,6 +132,7 @@ export default {
       applyAction(
         this.actionResult, this, { simulate: true, stepThrough }
       ).then(() => {
+        console.log('action is done');
         this.actionDone = true
       });
     },
@@ -122,6 +147,9 @@ export default {
         this.actionResult._stepThrough = false;
       }
       this.resumeActionFn?.();
+    },
+    finishAction() {
+      this.$store.dispatch('popDialogStack');
     },
     promiseInput() {
       return new Promise(resolve => {
@@ -143,28 +171,38 @@ export default {
       this.$store.dispatch('popDialogStack');
     },
     // inputProvider methods
-    async rollDice(diceArray) {
-      console.log({diceArray});
+    async rollDice(dice) {
+      console.log('Waiting for dice roll');
+      this.activeInputParams = {
+        deterministicDiceRoller: this.deterministicDiceRoller,
+        dice
+      };
+      this.activeInput = 'roll-input';
       return this.promiseInput();
     },
     async nextStep(task) {
-      console.log({task});
+      console.log('waiting for next step');
+      console.log({ task });
       return this.promiseInput();
     },
     async choose(choices, quantity) {
+      console.log('Waiting for choice');
       console.log({choices, quantity});
       return this.promiseInput();
     },
     async advantage(suggestedAdvantage) {
+      console.log('Waiting for advantage');
       this.userInput = suggestedAdvantage;
       this.activeInput = 'advantage-input';
       this.userInputReady = true;
       return this.promiseInput();
     },
     async check(suggestedParams) {
+      console.log('Waiting for check');
       console.log({ suggestedParams })
       return this.promiseInput();
     },
   }
 };
 </script>
+../../../../api/engine/action/functions/userInput/getDeterministicDiceRoller

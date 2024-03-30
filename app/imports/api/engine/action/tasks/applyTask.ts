@@ -5,7 +5,7 @@ import applyDamagePropTask from '/imports/api/engine/action/tasks/applyDamagePro
 import applyItemAsAmmoTask from '/imports/api/engine/action/tasks/applyItemAsAmmoTask';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyProperties from '/imports/api/engine/action/applyProperties';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 // DamagePropTask promises a number of actual damage done
 export default async function applyTask(

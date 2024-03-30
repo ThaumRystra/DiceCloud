@@ -8,7 +8,7 @@ import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Mutation, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
-import inputProvider from '/imports/api/engine/action/functions/inputProviderForTests.testFn';
+import inputProvider from './userInput/inputProviderForTests.testFn';
 /**
  * Removes all creatures, properties, and creatureVariable documents from the database
  */

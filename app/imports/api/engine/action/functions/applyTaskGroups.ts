@@ -4,7 +4,7 @@ import { getPropertyChildren, getSingleProperty } from '/imports/api/engine/load
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import applyTask from '../tasks/applyTask';
 import { PropTask } from '../tasks/Task';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 /**
  * Get all the child tasks of a given property

@@ -30,7 +30,7 @@ type InputProvider = {
   /**
    * Get the details of a check or save
    */
-  check(suggestedParams: CheckParams): Promise<CheckParams>;
+  //check(suggestedParams: CheckParams): Promise<CheckParams>;
 }
 
 export type Advantage = 0 | 1 | -1;

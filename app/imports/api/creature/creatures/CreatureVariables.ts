@@ -3,7 +3,7 @@ import ParseNode from '/imports/parser/parseTree/ParseNode';
 import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 import resolve from '/imports/parser/resolve';
-import InputProvider from '/imports/api/engine/action/functions/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import Context from '/imports/parser/types/Context';
 
 //set up the collection for creature variables
