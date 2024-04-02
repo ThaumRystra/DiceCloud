@@ -4,7 +4,7 @@ import EngineActions from '/imports/api/engine/action/EngineActions';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { getCreature } from '/imports/api/engine/loadCreatures';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
-import writeChangedAction from '../functions/writeChangedAction';
+import writeActionResults from '../functions/writeActionResults';
 import getReplayChoicesInputProvider from '/imports/api/engine/action/functions/userInput/getReplayChoicesInputProvider';
 
 export const runAction = new ValidatedMethod({
@@ -22,16 +22,13 @@ export const runAction = new ValidatedMethod({
       blackbox: true,
     },
   }).validator(),
-  run: async function ({ actionId, decisions }: { actionId: string, decisions: any[] }) {
+  run: async function ({ actionId, decisions = [] }: { actionId: string, decisions?: any[] }) {
     // Get the action
     const action = await EngineActions.findOneAsync(actionId);
     if (!action) throw new Meteor.Error('not-found', 'Action not found');
 
     // Permissions
     assertEditPermission(getCreature(action.creatureId), this.userId);
-
-    // Keep a copy of the original so that a diff can be done later to store what changed
-    const originalAction = EJSON.clone(action);
 
     // Replay the user's decisions as user input
     const userInput = getReplayChoicesInputProvider(actionId, decisions);
@@ -40,7 +37,7 @@ export const runAction = new ValidatedMethod({
     applyAction(action, userInput);
 
     // Persist changes
-    const writePromise = writeChangedAction(originalAction, action);
+    const writePromise = writeActionResults(action);
     return writePromise;
   },
 });

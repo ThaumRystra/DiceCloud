@@ -19,12 +19,14 @@ export default async function applyTask(
 
 export default async function applyTask(
   action: EngineAction, task: Task, inputProvider: InputProvider
+): Promise<void | number>
+
+export default async function applyTask(
+  action: EngineAction, task: Task, inputProvider: InputProvider
 ): Promise<void | number> {
 
   // Pause and wait for the user if the action is being stepped through
-  console.log('applying task', action, inputProvider)
   if (action._isSimulation && action._stepThrough && inputProvider.nextStep) {
-    console.log('waiting for next step resolution', task)
     await inputProvider.nextStep(task);
   }
 

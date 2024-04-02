@@ -9,7 +9,6 @@ import { parse, prettifyParseError } from '/imports/parser/parser';
 import resolve from '/imports/parser/resolve';
 import toString from '/imports/parser/toString';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { assertUserInTabletop } from '/imports/api/tabletop/methods/shared/tabletopPermissions.js';
 
 const PER_CREATURE_LOG_LIMIT = 100;
 
@@ -39,16 +38,19 @@ let CreatureLogSchema = new SimpleSchema({
     },
     index: 1,
   },
+  // The acting creature initiating the logged events
   creatureId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
     index: 1,
   },
-  tabletopId: {
-    type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    index: 1,
+  // creatures targeted by any of the logged events
+  targetIds: {
+    type: Array,
     optional: true,
+  },
+  'targetIds.$': {
+    type: String,
+    index: 1,
   },
   creatureName: {
     type: String,
@@ -137,7 +139,7 @@ const insertCreatureLog = new ValidatedMethod({
   },
 });
 
-export function insertCreatureLogWork({ log, creature, tabletopId, method }) {
+export function insertCreatureLogWork({ log, creature, method }) {
   // Build the new log
   if (typeof log === 'string') {
     log = { content: [{ value: log }] };
@@ -151,7 +153,6 @@ export function insertCreatureLogWork({ log, creature, tabletopId, method }) {
     }
   });
   log.date = new Date();
-  if (tabletopId) log.tabletopId = tabletopId;
   if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
   // Insert it
   let id = CreatureLogs.insert(log);
@@ -186,20 +187,15 @@ const logRoll = new ValidatedMethod({
     roll: {
       type: String,
     },
-    tabletopId: {
-      type: String,
-      regEx: SimpleSchema.RegEx.Id,
-      optional: true,
-    },
     creatureId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
       optional: true,
     },
   }).validator(),
-  async run({ roll, tabletopId, creatureId }) {
-    if (!creatureId && !tabletopId) throw new Meteor.Error('no-id',
-      'A creature id or tabletop id must be given'
+  async run({ roll, creatureId }) {
+    if (!creatureId) throw new Meteor.Error('no-id',
+      'A creature id must be given'
     );
     let creature;
     if (creatureId) {
@@ -214,9 +210,6 @@ const logRoll = new ValidatedMethod({
         }
       });
       assertEditPermission(creature, this.userId);
-    }
-    if (tabletopId) {
-      assertUserInTabletop(tabletopId, this.userId);
     }
     const variables = CreatureVariables.findOne({ _creatureId: creatureId }) || {};
     let logContent = []
@@ -259,7 +252,7 @@ const logRoll = new ValidatedMethod({
       date: new Date(),
     };
 
-    let id = insertCreatureLogWork({ log, creature, tabletopId, method: this });
+    let id = insertCreatureLogWork({ log, creature, method: this });
 
     return id;
   },

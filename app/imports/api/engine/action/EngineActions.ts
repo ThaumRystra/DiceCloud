@@ -1,7 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import TaskResult from './tasks/TaskResult';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
-import { Mongo } from 'meteor/mongo';
 
 const EngineActions = new Mongo.Collection<EngineAction>('actions');
 
@@ -33,11 +32,6 @@ const ActionSchema = new SimpleSchema({
   'targetIds.$': {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
-  },
-  userInputNeeded: {
-    type: Object,
-    optional: true,
-    blackbox: true,
   },
 
   // Applied properties

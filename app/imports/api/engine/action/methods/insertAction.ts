@@ -9,13 +9,13 @@ export const insertAction = new ValidatedMethod({
   validate: new SimpleSchema({
     action: ActionSchema
   }).validator({ clean: true }),
-  run: async function ({ action }: { action: EngineAction }) {
+  run: function ({ action }: { action: EngineAction }) {
     assertEditPermission(getCreature(action.creatureId), this.userId);
     // First remove all other actions on this creature
     // only do one action at a time, don't wait for this to finish
-    EngineActions.removeAsync({ creatureId: action.creatureId });
+    EngineActions.remove({ creatureId: action.creatureId });
     // Force a random id even if one was provided, we may use it later as the seed for PRNG
     delete action._id;
-    return EngineActions.insertAsync(action);
+    return EngineActions.insert(action);
   },
 });

@@ -62,6 +62,13 @@ let LogContentSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  targetIds: {
+    type: Array,
+    optional: true,
+  },
+  'targetIds.$': {
+    type: String,
+  }
 });
 
 export default LogContentSchema;
