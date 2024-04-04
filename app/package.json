@@ -1,6 +1,6 @@
 {
   "name": "dicecloud",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Unofficial Online Realtime D&D 5e App",
   "scripts": {
     "postinstall": "bower install"
@@ -24,7 +24,7 @@
     "underscore": "^1.13.6"
   },
   "engines": {
-    "node": "12",
+    "node": "14",
     "npm": "6"
   }
 }
