@@ -1,16 +1,20 @@
 Template.attackEditList.helpers({
-	attacks: function() {
-		var cursor = Attacks.find({"parent.id": this.parentId, charId: this.charId});
+	attacks: function () {
+		var cursor = Attacks.find({
+			"parent.id": this.parentId,
+			charId: this.charId,
+			removed: { $ne: true },
+		});
 		return cursor;
 	}
 });
 
 Template.attackEditList.events({
-	"tap #addAttackButton": function() {
+	"tap #addAttackButton": function () {
 		if (typeof this.isSpell !== 'undefined' && this.isSpell) {
-			var parentSpell = Spells.findOne({"_id": this.parentId})
+			var parentSpell = Spells.findOne({ "_id": this.parentId })
 			if (parentSpell && parentSpell.parent.collection == "SpellLists") {
-				var spellList = SpellLists.findOne({"_id":parentSpell.parent.id});
+				var spellList = SpellLists.findOne({ "_id": parentSpell.parent.id });
 				if (spellList && spellList.attackBonus) {
 					Attacks.insert({
 						charId: this.charId,

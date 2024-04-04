@@ -1,22 +1,30 @@
-getCharacterForComputation = function(charId){
+getCharacterForComputation = function (charId) {
 	const character = Characters.findOne(charId);
-	const classes = Classes.find({charId}).fetch();
-	const effects = Effects.find({charId, enabled: true}).fetch();
+	const classes = Classes.find({
+		charId,
+		removed: { $ne: true },
+	}).fetch();
+	const effects = Effects.find({
+		charId,
+		enabled: true,
+		removed: { $ne: true },
+	}).fetch();
 	const proficiencies = Proficiencies.find({
 		charId,
 		enabled: true,
-		type: {$in: ["skill", "save"]},
+		type: { $in: ["skill", "save"] },
+		removed: { $ne: true },
 	}).fetch();
-	return {character, classes, effects, proficiencies};
+	return { character, classes, effects, proficiencies };
 }
 
-computeCharacter = function({character, classes, effects, proficiencies}){
+computeCharacter = function ({ character, classes, effects, proficiencies }) {
 	var charId = character._id;
 	let computedClasses = computeCharacterClasses(charId, classes);
 	let changed = false;
 	computedCharacter = {};
 	let i;
-	for (i = 0; i < 15; i++){
+	for (i = 0; i < 15; i++) {
 		[computedCharacter, changed] = compute({
 			classes: computedClasses,
 			oldChar: computedCharacter,
@@ -42,16 +50,16 @@ var ensureWritePermissions = (character, userId) => {
 		userId &&
 		userId !== character.owner &&
 		!_.contains(character.writers, userId)
-	){
+	) {
 		throw new Meteor.Error("Character write denied",
 			"You don't have permission to recompute this character");
 	}
 };
 
-var computeCharacterClasses = function(charId, classes){
+var computeCharacterClasses = function (charId, classes) {
 	let computedClasses = {};
 	_.each(classes, (cls) => {
-		if (computedClasses[cls.name]){
+		if (computedClasses[cls.name]) {
 			computedClasses[cls.name].level += cls.level;
 		} else {
 			computedClasses[cls.name] = cls;
@@ -60,9 +68,9 @@ var computeCharacterClasses = function(charId, classes){
 	return computedClasses;
 }
 
-var compute = function({
+var compute = function ({
 	charId, oldChar, character, classes, effects, proficiencies,
-}){
+}) {
 	let newChar = {};
 	_.each(effects, (effect, index) => {
 		if (!effect.stat || effect.operation === "conditional") return;
@@ -113,36 +121,36 @@ var compute = function({
 		if (value > stat.proficiency) stat.proficiency = value;
 	});
 	let changed = false;
-	_.each(ATTRIBUTES, function(statName) {
+	_.each(ATTRIBUTES, function (statName) {
 		if (!newChar[statName]) newChar[statName] = defaultStat();
 		let stat = newChar[statName];
 		stat.value = (stat.base + stat.add) * stat.mul;
 		if (stat.value < stat.min) stat.value = stat.min;
 		if (stat.value > stat.max) stat.value = stat.max;
-		if (!_.isEqual(stat.value, oldChar[statName] && oldChar[statName].value)){
+		if (!_.isEqual(stat.value, oldChar[statName] && oldChar[statName].value)) {
 			changed = true;
 		}
 	});
-	_.each(ALL_SKILLS, function(statName) {
+	_.each(ALL_SKILLS, function (statName) {
 		if (!newChar[statName]) newChar[statName] = defaultStat();
 		let stat = newChar[statName];
 		stat.value = characterAbilityMod(
 			oldChar, character[statName] && character[statName].ability
 		);
 		stat.value += stat.base + stat.add;
-		stat.value += stat.proficiency  *
+		stat.value += stat.proficiency *
 			characterFieldValue(oldChar, "proficiencyBonus");
 		stat.value *= stat.mul;
 		if (stat.value < stat.min) stat.value = stat.min;
 		if (stat.value > stat.max) stat.value = stat.max;
-		if (!_.isEqual(stat.value, oldChar[statName] && oldChar[statName].value)){
+		if (!_.isEqual(stat.value, oldChar[statName] && oldChar[statName].value)) {
 			changed = true;
 		}
 	});
 	return [newChar, changed];
 };
 
-var defaultStat = function(){
+var defaultStat = function () {
 	return {
 		base: 0,
 		proficiency: 0,
@@ -157,32 +165,32 @@ var defaultStat = function(){
 	}
 }
 
-var computeEffect = function(string, character, classes){
+var computeEffect = function (string, character, classes) {
 	if (!string) return string;
-	string = string.replace(/\b[a-z][\w]+/gi, function(sub){
+	string = string.replace(/\b[a-z][\w]+/gi, function (sub) {
 		//fields
-		if (character[sub]){
+		if (character[sub]) {
 			return characterFieldValue(character, sub);
 		}
 		//ability modifiers
-		if (_.contains(ABILITY_MODS, sub)){
+		if (_.contains(ABILITY_MODS, sub)) {
 			var slice = sub.slice(0, -3);
 			return getMod(
 				character[slice] ? characterFieldValue(character, slice) : 0
 			);
 		}
 		//class levels
-		if (/\w+levels?\b/gi.test(sub)){
+		if (/\w+levels?\b/gi.test(sub)) {
 			//strip out "level"
 			var className = sub.replace(/levels?\b/gi, "");
 			return characterClassLevel(classes, className)
 		}
 		//character level
-		if (sub.toUpperCase()  === "LEVEL"){
+		if (sub.toUpperCase() === "LEVEL") {
 			return characterTotalLevel(classes);
 		}
 		// exclude math functions
-		if (math[sub]){
+		if (math[sub]) {
 			return sub;
 		}
 		return 0;
@@ -190,33 +198,33 @@ var computeEffect = function(string, character, classes){
 	try {
 		var result = math.eval(string);
 		return result;
-	} catch (e){
+	} catch (e) {
 		return string;
 	}
 };
 
-var characterFieldValue = function(character, field){
-	if (_.isNumber(character[field] && character[field].value)){
+var characterFieldValue = function (character, field) {
+	if (_.isNumber(character[field] && character[field].value)) {
 		return character[field].value;
 	} else {
 		return field;
 	}
 };
 
-var characterClassLevel = function(classes, className){
-	if (_.isNumber(classes[className] && classes[className].level)){
+var characterClassLevel = function (classes, className) {
+	if (_.isNumber(classes[className] && classes[className].level)) {
 		return classes[className].level;
 	} else {
 		return className;
 	}
 };
 
-var characterTotalLevel = function(classes){
+var characterTotalLevel = function (classes) {
 	return _.reduce(classes, (memo, cls) => memo + cls.level, 0);
 };
 
-var characterAbilityMod = function(character, abilityName){
-	if (_.isNumber(character[abilityName] && character[abilityName].value)){
+var characterAbilityMod = function (character, abilityName) {
+	if (_.isNumber(character[abilityName] && character[abilityName].value)) {
 		return getMod(character[abilityName].value);
 	} else {
 		return 0;

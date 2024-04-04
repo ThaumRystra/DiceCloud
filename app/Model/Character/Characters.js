@@ -206,6 +206,7 @@ var attributeBase = preventLoop(function (charId, statName) {
 			enabled: true,
 			operation: "mul",
 			value: 0,
+			removed: { $ne: true },
 		}).count();
 		if (invulnerabilityCount) return 0;
 		var resistCount = Effects.find({
@@ -214,6 +215,7 @@ var attributeBase = preventLoop(function (charId, statName) {
 			enabled: true,
 			operation: "mul",
 			value: 0.5,
+			removed: { $ne: true },
 		}).count();
 		var vulnCount = Effects.find({
 			charId: charId,
@@ -221,6 +223,7 @@ var attributeBase = preventLoop(function (charId, statName) {
 			enabled: true,
 			operation: "mul",
 			value: 2,
+			removed: { $ne: true },
 		}).count();
 		if (!resistCount && !vulnCount) {
 			return 1;
@@ -244,6 +247,7 @@ var attributeBase = preventLoop(function (charId, statName) {
 		stat: statName,
 		enabled: true,
 		operation: { $in: ["base", "add", "mul", "min", "max"] },
+		removed: { $ne: true },
 	}).forEach(function (effect) {
 		value = evaluateEffect(charId, effect);
 		if (effect.operation === "base") {
@@ -370,6 +374,7 @@ Characters.calculate = {
 			stat: skillName,
 			enabled: true,
 			operation: { $in: ["base", "add", "mul", "min", "max"] },
+			removed: { $ne: true },
 		}).forEach(function (effect) {
 			value = evaluateEffect(charId, effect);
 			if (effect.operation === "add") {
@@ -400,7 +405,13 @@ Characters.calculate = {
 		var mod = +Characters.calculate.skillMod(charId, skillName);
 		var value = 10 + mod;
 		Effects.find(
-			{ charId: charId, stat: skillName, enabled: true, operation: "passiveAdd" }
+			{
+				charId: charId,
+				stat: skillName,
+				enabled: true,
+				operation: "passiveAdd",
+				removed: { $ne: true },
+			}
 		).forEach(function (effect) {
 			value += evaluateEffect(charId, effect);
 		});
@@ -410,10 +421,16 @@ Characters.calculate = {
 	}),
 	advantage: memoize(function (charId, skillName) {
 		var advantage = Effects.find(
-			{ charId: charId, stat: skillName, enabled: true, operation: "advantage" }
+			{
+				charId: charId,
+				stat: skillName,
+				enabled: true,
+				operation: "advantage",
+				removed: { $ne: true },
+			}
 		).count();
 		var disadvantage = Effects.find(
-			{ charId: charId, stat: skillName, enabled: true, operation: "disadvantage" }
+			{ charId: charId, stat: skillName, enabled: true, operation: "disadvantage", removed: { $ne: true } }
 		).count();
 		if (advantage && !disadvantage) return 1;
 		if (disadvantage && !advantage) return -1;
@@ -440,7 +457,7 @@ Characters.calculate = {
 	},
 	level: memoize(function (charId) {
 		var level = 0;
-		Classes.find({ charId: charId }).forEach(function (cls) {
+		Classes.find({ charId: charId, removed: { $ne: true } }).forEach(function (cls) {
 			level += cls.level;
 		});
 		return level;
@@ -448,7 +465,7 @@ Characters.calculate = {
 	experience: memoize(function (charId) {
 		var xp = 0;
 		Experiences.find(
-			{ charId: charId },
+			{ charId: charId, removed: { $ne: true } },
 			{ fields: { value: 1 } }
 		).forEach(function (e) {
 			xp += e.value;

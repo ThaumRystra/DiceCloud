@@ -1,10 +1,11 @@
 Template.proficiencyEditList.helpers({
-	proficiencies: function(){
+	proficiencies: function () {
 		var selector = {
 			"parent.id": this.parentId,
 			"charId": this.charId,
+			removed: { $ne: true },
 		};
-		if (this.parentGroup){
+		if (this.parentGroup) {
 			selector["parent.group"] = this.parentGroup;
 		}
 		return Proficiencies.find(selector);
@@ -12,7 +13,7 @@ Template.proficiencyEditList.helpers({
 });
 
 Template.proficiencyEditList.events({
-	"tap #addProficiencyButton": function(){
+	"tap #addProficiencyButton": function () {
 		if (!_.isBoolean(this.enabled)) {
 			this.enabled = true;
 		}

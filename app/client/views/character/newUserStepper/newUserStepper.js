@@ -1,11 +1,14 @@
-Template.newUserStepper.onRendered(function(){
+Template.newUserStepper.onRendered(function () {
 	Session.set("newUserExperienceStep", 0);
 	let stepper = this.find("paper-stepper");
 	_.defer(() => {
 		this.autorun((c) => {
 			var step = Session.get("newUserExperienceStep");
-			var hasFeatures = Features.find({charId: this.data._id}).count() > 1;
-			if (step === 0 && hasFeatures){
+			var hasFeatures = Features.find({
+				charId: this.data._id,
+				removed: { $ne: true },
+			}).count() > 1;
+			if (step === 0 && hasFeatures) {
 				stepper.continue();
 			}
 		});
@@ -16,15 +19,16 @@ Template.newUserStepper.onRendered(function(){
 				stat: "speed",
 				"parent.group": "racial",
 				operation: "base",
-				value: {$gt: 0},
+				value: { $gt: 0 },
+				removed: { $ne: true },
 			}).count();
-			if (step === 1 && hasEffect){
+			if (step === 1 && hasEffect) {
 				stepper.continue();
 			}
 		});
 		this.autorun((c) => {
 			var step = Session.get("newUserExperienceStep");
-			if (step === 2 && Session.get("viewedSpeed")){
+			if (step === 2 && Session.get("viewedSpeed")) {
 				Session.set("viewedSpeed", undefined);
 				stepper.continue();
 			}
@@ -33,29 +37,29 @@ Template.newUserStepper.onRendered(function(){
 });
 
 Template.newUserStepper.events({
-	"paper-stepper-progressed paper-stepper": function(event, template){
+	"paper-stepper-progressed paper-stepper": function (event, template) {
 		const step = template.find("paper-stepper").selected;
 		Session.set("newUserExperienceStep", step);
 	},
-	"paper-stepper-completed paper-stepper": function(event, template){
+	"paper-stepper-completed paper-stepper": function (event, template) {
 		Session.set("newUserExperienceStep", undefined);
 		Session.set("showNewUserExperience", undefined);
-		Characters.update(this._id, {$unset: {"settings.newUserExperience": 1}});
+		Characters.update(this._id, { $unset: { "settings.newUserExperience": 1 } });
 	},
-	"click .done-button": function(event, instance){
+	"click .done-button": function (event, instance) {
 		const stepper = instance.find("paper-stepper");
 		stepper.continue();
 	},
-	"click .skip-button": function(event, instance){
+	"click .skip-button": function (event, instance) {
 		const stepper = instance.find("paper-stepper");
 		stepper.continue();
 	},
 });
 
 Template.stats.events({
-	"click .stat-card": function(event, instance){
+	"click .stat-card": function (event, instance) {
 		var step = Session.get("newUserExperienceStep");
-		if (this.stat === "speed" && step === 2){
+		if (this.stat === "speed" && step === 2) {
 			Session.set("viewedSpeed", true);
 		}
 	}

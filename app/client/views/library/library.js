@@ -1,38 +1,42 @@
 const librarySubs = new SubsManager();
 
-Template.library.onCreated(function(){
+Template.library.onCreated(function () {
   this.searchTerm = new ReactiveVar("");
 });
 
 Template.library.helpers({
-  items(){
+  items() {
     let search = Template.instance().searchTerm.get();
-    if (search){
+    if (search) {
       return LibraryItems.find(
         {
           library: this._id,
           $or: [
             {
-              name: {$regex: new RegExp(".*" + search + ".*", "gi")}
+              name: { $regex: new RegExp(".*" + search + ".*", "gi") }
             },
             {
-              libraryname: {$regex: new RegExp(".*" + search + ".*", "gi")}
+              libraryname: { $regex: new RegExp(".*" + search + ".*", "gi") }
             },
           ],
+          removed: { $ne: true },
         },
-        {sort: {name: 1}},
+        { sort: { name: 1 } },
       );
     } else {
       return LibraryItems.find(
-        {library: this._id},
-        {sort: {name: 1}},
+        {
+          library: this._id,
+          removed: { $ne: true },
+        },
+        { sort: { name: 1 } },
       );
     }
   },
-  displayName(){
+  displayName() {
     return this.libraryName || this.name;
   },
-  canUserSubscribe(){
+  canUserSubscribe() {
     let user = Meteor.user();
     let userId = user._id;
     return !(
@@ -42,7 +46,7 @@ Template.library.helpers({
       _.contains(user.profile.librarySubscriptions, this._id)
     );
   },
-  canUserUnsubscribe(){
+  canUserUnsubscribe() {
     let user = Meteor.user();
     let userId = user._id;
     return (
@@ -50,7 +54,7 @@ Template.library.helpers({
       _.contains(this.readers, userId)
     );
   },
-  canUserEdit(){
+  canUserEdit() {
     let userId = Meteor.userId();
     return (
       _.contains(this.writers, userId) ||
@@ -60,60 +64,60 @@ Template.library.helpers({
 });
 
 Template.library.events({
-  "input .search-input, change .search-input": function(event, template){
-		const value = event.currentTarget.value;
-		template.searchTerm.set(value);
-	},
-  "click #edit": function(event, instance){
+  "input .search-input, change .search-input": function (event, template) {
+    const value = event.currentTarget.value;
+    template.searchTerm.set(value);
+  },
+  "click #edit": function (event, instance) {
     event.stopPropagation();
-		var libraryId = this._id;
-		pushDialogStack({
-			template: "libraryDialog",
-			data:     {libraryId},
-			element: event.currentTarget.parentElement.parentElement,
-      callback(data){
-        if (data && data.delete){
+    var libraryId = this._id;
+    pushDialogStack({
+      template: "libraryDialog",
+      data: { libraryId },
+      element: event.currentTarget.parentElement.parentElement,
+      callback(data) {
+        if (data && data.delete) {
           Router.go('/library');
-          Tracker.afterFlush(function(){
+          Tracker.afterFlush(function () {
             Libraries.remove(libraryId);
           });
         }
       },
-		});
-	},
-  "click #addLibraryItem": function(event, instance){
-    event.stopPropagation();
-		var libraryId = this._id;
-    var itemId = LibraryItems.insert({
-			name: "New Library Item",
-			library: libraryId,
-		});
-		pushDialogStack({
-			template: "libraryItemDialog",
-			data:     {itemId},
-			element: event.currentTarget,
-			returnElement: () => instance.find(`.item[data-id='${itemId}']`),
-		});
-	},
-  "click .item": function(event, instance){
-    event.stopPropagation();
-		var itemId = this._id;
-		pushDialogStack({
-			template: "libraryItemDialog",
-			data:     {itemId},
-			element: event.currentTarget,
-			returnElement: () => instance.find(`.item[data-id='${itemId}']`),
-		});
-	},
-  "click #subscribe": function(event, instance){
-    Meteor.users.update(Meteor.userId(), {
-      $addToSet: {"profile.librarySubscriptions": this._id},
     });
   },
-  "click #unsubscribe": function(event, instance){
+  "click #addLibraryItem": function (event, instance) {
+    event.stopPropagation();
+    var libraryId = this._id;
+    var itemId = LibraryItems.insert({
+      name: "New Library Item",
+      library: libraryId,
+    });
+    pushDialogStack({
+      template: "libraryItemDialog",
+      data: { itemId },
+      element: event.currentTarget,
+      returnElement: () => instance.find(`.item[data-id='${itemId}']`),
+    });
+  },
+  "click .item": function (event, instance) {
+    event.stopPropagation();
+    var itemId = this._id;
+    pushDialogStack({
+      template: "libraryItemDialog",
+      data: { itemId },
+      element: event.currentTarget,
+      returnElement: () => instance.find(`.item[data-id='${itemId}']`),
+    });
+  },
+  "click #subscribe": function (event, instance) {
+    Meteor.users.update(Meteor.userId(), {
+      $addToSet: { "profile.librarySubscriptions": this._id },
+    });
+  },
+  "click #unsubscribe": function (event, instance) {
     let userId = Meteor.userId();
     Meteor.users.update(userId, {
-      $pull: {"profile.librarySubscriptions": this._id},
+      $pull: { "profile.librarySubscriptions": this._id },
     });
     Meteor.call("unshareLibraryWithMe", this._id);
   },

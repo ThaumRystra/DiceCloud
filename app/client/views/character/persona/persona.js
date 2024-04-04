@@ -7,9 +7,9 @@ var colorMap = {
 	backstory: "j",
 };
 
-var removeDuplicateProficiencies = function(proficiencies) {
+var removeDuplicateProficiencies = function (proficiencies) {
 	dict = {};
-	proficiencies.forEach(function(prof) {
+	proficiencies.forEach(function (prof) {
 		if (prof.name in dict) { //if we have already gone over another proficiency for the same thing
 			if (dict[prof.name].value < prof.value) {
 				dict[prof.name] = prof; //then take the new one if it's higher, otherwise leave it
@@ -19,25 +19,25 @@ var removeDuplicateProficiencies = function(proficiencies) {
 		}
 	});
 	profs = []
-	_.forEach(dict, function(prof) {
+	_.forEach(dict, function (prof) {
 		profs.push(prof);
 	})
 	return profs;
 };
 
 Template.persona.helpers({
-	characterDetails: function(){
+	characterDetails: function () {
 		var char = Characters.findOne(
 			this._id,
-			{fields: {name: 1, gender: 1, alignment: 1, race:1, picture: 1}}
+			{ fields: { name: 1, gender: 1, alignment: 1, race: 1, picture: 1 } }
 		);
 		char.field = "details";
 		char.title = char.name;
 		char.color = "d";
 		return char;
 	},
-	characterField: function(field, title){
-		var fieldSelector = {fields: {}};
+	characterField: function (field, title) {
+		var fieldSelector = { fields: {} };
 		fieldSelector.fields[field] = 1;
 		var char = Characters.findOne(this._id, fieldSelector);
 		var color = colorMap[field];
@@ -50,19 +50,23 @@ Template.persona.helpers({
 			topClass: "characterField",
 		};
 	},
-	languages: function(){
-		var profs = Proficiencies.find({charId: this._id, type: "language"});
+	languages: function () {
+		var profs = Proficiencies.find({
+			charId: this._id,
+			type: "language",
+			removed: { $ne: true },
+		});
 		return removeDuplicateProficiencies(profs);
 	},
 });
 
 Template.persona.events({
-	"click .characterField": function(event){
-		if (this.field == "details"){
+	"click .characterField": function (event) {
+		if (this.field == "details") {
 			this.charId = Template.parentData()._id;
 			pushDialogStack({
 				template: "personaDetailsDialog",
-				data:     this,
+				data: this,
 				element: event.currentTarget.parentElement,
 			});
 		} else {

@@ -1,11 +1,12 @@
 Template.effectsEditList.helpers({
-	effects: function(){
+	effects: function () {
 		var selector = {
 			"parent.id": this.parentId,
 			"parent.collection": this.parentCollection,
 			"charId": this.charId,
+			removed: { $ne: true },
 		};
-		if (this.parentGroup){
+		if (this.parentGroup) {
 			selector["parent.group"] = this.parentGroup;
 		}
 		var effects = Effects.find(selector).fetch();
@@ -14,7 +15,7 @@ Template.effectsEditList.helpers({
 });
 
 Template.effectsEditList.events({
-	"tap #addEffectButton": function(event, instance){
+	"tap #addEffectButton": function (event, instance) {
 		if (!_.isBoolean(this.enabled)) {
 			this.enabled = true;
 		}
@@ -31,15 +32,15 @@ Template.effectsEditList.events({
 		});
 		pushDialogStack({
 			template: "effectEdit",
-			data: {id: effectId},
+			data: { id: effectId },
 			element: event.currentTarget,
 			returnElement: () => instance.find(`tr.effect[data-id='${effectId}']`),
 		});
 	},
-	"tap .edit-effect": function(event, template){
+	"tap .edit-effect": function (event, template) {
 		pushDialogStack({
 			template: "effectEdit",
-			data: {id: this._id},
+			data: { id: this._id },
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},

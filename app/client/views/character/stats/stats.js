@@ -1,23 +1,27 @@
 Template.stats.helpers({
-	conditions: function() {
-		return Conditions.find({charId: this._id});
+	conditions: function () {
+		return Conditions.find({
+			charId: this._id,
+			removed: { $ne: true },
+		});
 	},
-	buffs: function() {
+	buffs: function () {
 		var selector = {
 			"charId": this._id,
+			removed: { $ne: true },
 		};
 		return Buffs.find(selector);
 	},
 	// New user experience
-	shouldSpeedBounce: function(){
+	shouldSpeedBounce: function () {
 		return Session.get("newUserExperienceStep") === 2;
 	},
 })
 
 Template.stats.events({
-	"click .stat-card": function(event, instance){
+	"click .stat-card": function (event, instance) {
 		var charId = instance.data._id;
-		if (this.isSkill){
+		if (this.isSkill) {
 			pushDialogStack({
 				template: "skillDialog",
 				data: {
@@ -41,7 +45,7 @@ Template.stats.events({
 			});
 		}
 	},
-	"click .ability-mini-card": function(event, instance){
+	"click .ability-mini-card": function (event, instance) {
 		var charId = Template.parentData()._id;
 		var template = "attributeDialog";
 		if (this.ability === "strength") template = "strengthDialog";
@@ -56,7 +60,7 @@ Template.stats.events({
 			element: event.currentTarget,
 		});
 	},
-	"tap .skill-row": function(event, instance){
+	"tap .skill-row": function (event, instance) {
 		var skill = this.skill;
 		var charId = instance.data._id;
 		pushDialogStack({
@@ -69,7 +73,7 @@ Template.stats.events({
 			element: event.currentTarget,
 		});
 	},
-	"tap .hitPointTitle": function(event, instance) {
+	"tap .hitPointTitle": function (event, instance) {
 		pushDialogStack({
 			template: "attributeDialog",
 			data: {
@@ -81,7 +85,7 @@ Template.stats.events({
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
-	"click #addCondition": function(event, template){
+	"click #addCondition": function (event, template) {
 		pushDialogStack({
 			template: "conditionLibraryDialog",
 			element: event.currentTarget,

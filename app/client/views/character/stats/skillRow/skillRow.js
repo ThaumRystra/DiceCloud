@@ -1,12 +1,12 @@
 Template.skillRow.helpers({
-	skillMod: function() {
+	skillMod: function () {
 		return signedString(
 			Characters.calculate.skillMod(
 				Template.parentData()._id, this.skill
 			)
 		);
 	},
-	profIcon: function(){
+	profIcon: function () {
 		var charId = Template.parentData()._id;
 		var prof = Characters.calculate.proficiency(charId, this.skill);
 		if (prof > 0 && prof < 1) return "image:brightness-2";
@@ -14,39 +14,42 @@ Template.skillRow.helpers({
 		if (prof > 1) return "av:album";
 		return "radio-button-unchecked";
 	},
-	failSkill: function(){
+	failSkill: function () {
 		var charId = Template.parentData()._id;
 		return Effects.find({
 			charId: charId,
 			stat: this.skill,
 			enabled: true,
 			operation: "fail",
+			removed: { $ne: true },
 		}).count();
 	},
-	advantage: function(){
+	advantage: function () {
 		var charId = Template.parentData()._id;
 		var advantage = Characters.calculate.advantage(charId, this.skill);
 		if (advantage > 0) return "advantage";
 		if (advantage < 0) return "disadvantage";
 	},
-	conditionalCount: function(){
+	conditionalCount: function () {
 		var charId = Template.parentData()._id;
 		return Effects.find({
 			charId: charId,
 			stat: this.skill,
 			enabled: true,
 			operation: "conditional",
+			removed: { $ne: true },
 		}).count();
 	},
-	isPassiveShown: function(){
+	isPassiveShown: function () {
 		if (this.showPassive === "forced") return true;
-		if (this.showPassive === "ifNeeded"){
+		if (this.showPassive === "ifNeeded") {
 			var charId = Template.parentData()._id;
 			return Effects.find({
 				charId,
 				stat: this.skill,
 				operation: "passiveAdd",
 				enabled: true,
+				removed: { $ne: true },
 			}).count();
 		}
 	},

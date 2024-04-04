@@ -1,4 +1,4 @@
-improvedInitiativeJson = function(charId, options){
+improvedInitiativeJson = function (charId, options) {
 	options = options || {
 		features: true,
 		attacks: true,
@@ -6,10 +6,10 @@ improvedInitiativeJson = function(charId, options){
 	};
 	var char = Characters.findOne(charId);
 	if (!char) return;
-	var baseValue = function(attributeName){
+	var baseValue = function (attributeName) {
 		return Characters.calculate.attributeBase(charId, attributeName);
 	};
-	var skillMod = function(skillName){
+	var skillMod = function (skillName) {
 		return Characters.calculate.skillMod(charId, skillName);
 	};
 	var damageMods = getDamageMods(charId);
@@ -41,12 +41,12 @@ improvedInitiativeJson = function(charId, options){
 		"DamageImmunities": damageMods.immunities,
 		"ConditionImmunities": [],
 		"Saves": [
-			{"Name": "Str", "Modifier": skillMod("strengthSave")},
-			{"Name": "Dex", "Modifier": skillMod("dexteritySave")},
-			{"Name": "Con", "Modifier": skillMod("constitutionSave")},
-			{"Name": "Int", "Modifier": skillMod("intelligenceSave")},
-			{"Name": "Wis", "Modifier": skillMod("wisdomSave")},
-			{"Name": "Cha", "Modifier": skillMod("charismaSave")},
+			{ "Name": "Str", "Modifier": skillMod("strengthSave") },
+			{ "Name": "Dex", "Modifier": skillMod("dexteritySave") },
+			{ "Name": "Con", "Modifier": skillMod("constitutionSave") },
+			{ "Name": "Int", "Modifier": skillMod("intelligenceSave") },
+			{ "Name": "Wis", "Modifier": skillMod("wisdomSave") },
+			{ "Name": "Cha", "Modifier": skillMod("charismaSave") },
 		],
 		"Skills": getSkills(charId),
 		"Senses": [
@@ -64,12 +64,12 @@ improvedInitiativeJson = function(charId, options){
 	}, null, 2);
 }
 
-var getHitDiceString = function(charId){
-	var d6  = Characters.calculate.attributeBase(charId, "d6HitDice");
-	var d8  = Characters.calculate.attributeBase(charId, "d8HitDice");
+var getHitDiceString = function (charId) {
+	var d6 = Characters.calculate.attributeBase(charId, "d6HitDice");
+	var d8 = Characters.calculate.attributeBase(charId, "d8HitDice");
 	var d10 = Characters.calculate.attributeBase(charId, "d10HitDice");
 	var d12 = Characters.calculate.attributeBase(charId, "d12HitDice");
-	var con = Characters.calculate.abilityMod(charId,"constitution");
+	var con = Characters.calculate.abilityMod(charId, "constitution");
 	var string = "" +
 		(d6 ? `${d6}d6 + ` : "") +
 		(d8 ? `${d8}d8 + ` : "") +
@@ -78,12 +78,13 @@ var getHitDiceString = function(charId){
 		con;
 }
 
-var getArmorString = function(charId){
+var getArmorString = function (charId) {
 	var bases = Effects.find({
 		charId: charId,
 		stat: "armor",
 		operation: "base",
 		enabled: true,
+		removed: { $ne: true },
 	}).map(e => ({
 		ame: e.name,
 		value: evaluateEffect(charId, e),
@@ -92,30 +93,31 @@ var getArmorString = function(charId){
 	var effects = Effects.find({
 		charId: charId,
 		stat: "armor",
-		operation: {$ne: "base"},
+		operation: { $ne: "base" },
 		enabled: true,
+		removed: { $ne: true },
 	}).map(e => e.name);
 	var strings = base ? [base] : [];
 	strings = strings.concat(effects);
 	return strings.join(", ");
 }
 
-var getDamageMods = function(charId){
+var getDamageMods = function (charId) {
 	// jscs:disable maximumLineLength
 	var multipliers = [
-		{name: "Acid",        value: Characters.calculate.attributeValue(charId, "acidMultiplier")},
-		{name: "Bludgeoning", value: Characters.calculate.attributeValue(charId, "bludgeoningMultiplier")},
-		{name: "Cold",        value: Characters.calculate.attributeValue(charId, "coldMultiplier")},
-		{name: "Fire",        value: Characters.calculate.attributeValue(charId, "fireMultiplier")},
-		{name: "Force",       value: Characters.calculate.attributeValue(charId, "forceMultiplier")},
-		{name: "Lightning",   value: Characters.calculate.attributeValue(charId, "lightningMultiplier")},
-		{name: "Necrotic",    value: Characters.calculate.attributeValue(charId, "necroticMultiplier")},
-		{name: "Piercing",    value: Characters.calculate.attributeValue(charId, "piercingMultiplier")},
-		{name: "Poison",      value: Characters.calculate.attributeValue(charId, "poisonMultiplier")},
-		{name: "Psychic",     value: Characters.calculate.attributeValue(charId, "psychicMultiplier")},
-		{name: "Radiant",     value: Characters.calculate.attributeValue(charId, "radiantMultiplier")},
-		{name: "Slashing",    value: Characters.calculate.attributeValue(charId, "slashingMultiplier")},
-		{name: "Thunder",     value: Characters.calculate.attributeValue(charId, "thunderMultiplier")},
+		{ name: "Acid", value: Characters.calculate.attributeValue(charId, "acidMultiplier") },
+		{ name: "Bludgeoning", value: Characters.calculate.attributeValue(charId, "bludgeoningMultiplier") },
+		{ name: "Cold", value: Characters.calculate.attributeValue(charId, "coldMultiplier") },
+		{ name: "Fire", value: Characters.calculate.attributeValue(charId, "fireMultiplier") },
+		{ name: "Force", value: Characters.calculate.attributeValue(charId, "forceMultiplier") },
+		{ name: "Lightning", value: Characters.calculate.attributeValue(charId, "lightningMultiplier") },
+		{ name: "Necrotic", value: Characters.calculate.attributeValue(charId, "necroticMultiplier") },
+		{ name: "Piercing", value: Characters.calculate.attributeValue(charId, "piercingMultiplier") },
+		{ name: "Poison", value: Characters.calculate.attributeValue(charId, "poisonMultiplier") },
+		{ name: "Psychic", value: Characters.calculate.attributeValue(charId, "psychicMultiplier") },
+		{ name: "Radiant", value: Characters.calculate.attributeValue(charId, "radiantMultiplier") },
+		{ name: "Slashing", value: Characters.calculate.attributeValue(charId, "slashingMultiplier") },
+		{ name: "Thunder", value: Characters.calculate.attributeValue(charId, "thunderMultiplier") },
 	];
 	// jscs:enable maximumLineLength
 	multipliers = _.groupBy(multipliers, "value");
@@ -127,50 +129,54 @@ var getDamageMods = function(charId){
 	};
 }
 
-var getSkills = function(charId){
+var getSkills = function (charId) {
 	var allSkills = [
-		{name: "acrobatics", attribute: "dexterity"},
-		{name: "animalHandling", attribute: "wisdom"},
-		{name: "arcana", attribute: "intelligence"},
-		{name: "athletics", attribute: "strength"},
-		{name: "deception", attribute: "charisma"},
-		{name: "history", attribute: "intelligence"},
-		{name: "insight", attribute: "wisdom"},
-		{name: "intimidation", attribute: "charisma"},
-		{name: "investigation", attribute: "intelligence"},
-		{name: "medicine", attribute: "wisdom"},
-		{name: "nature", attribute: "intelligence"},
-		{name: "perception", attribute: "wisdom"},
-		{name: "performance", attribute: "charisma"},
-		{name: "persuasion", attribute: "charisma"},
-		{name: "religion", attribute: "intelligence"},
-		{name: "sleightOfHand", attribute: "dexterity"},
-		{name: "stealth", attribute: "dexterity"},
-		{name: "survival", attribute: "wisdom"},
+		{ name: "acrobatics", attribute: "dexterity" },
+		{ name: "animalHandling", attribute: "wisdom" },
+		{ name: "arcana", attribute: "intelligence" },
+		{ name: "athletics", attribute: "strength" },
+		{ name: "deception", attribute: "charisma" },
+		{ name: "history", attribute: "intelligence" },
+		{ name: "insight", attribute: "wisdom" },
+		{ name: "intimidation", attribute: "charisma" },
+		{ name: "investigation", attribute: "intelligence" },
+		{ name: "medicine", attribute: "wisdom" },
+		{ name: "nature", attribute: "intelligence" },
+		{ name: "perception", attribute: "wisdom" },
+		{ name: "performance", attribute: "charisma" },
+		{ name: "persuasion", attribute: "charisma" },
+		{ name: "religion", attribute: "intelligence" },
+		{ name: "sleightOfHand", attribute: "dexterity" },
+		{ name: "stealth", attribute: "dexterity" },
+		{ name: "survival", attribute: "wisdom" },
 	];
 	var skills = [];
 	_.each(allSkills, skill => {
 		var value = Characters.calculate.skillMod(charId, skill.name);
 		var mod = Characters.calculate.abilityMod(charId, skill.attribute);
-		if (value !== mod){
-			skills.push({Name: skill.name, Modifier: value});
+		if (value !== mod) {
+			skills.push({ Name: skill.name, Modifier: value });
 		}
 	});
 	return skills;
 };
 
-var getLanguages = function(charId){
+var getLanguages = function (charId) {
 	return Proficiencies.find({
 		charId,
 		enabled: true,
 		type: "language",
+		removed: { $ne: true },
 	}).map(l => l.name);
 };
 
-var getTraits = function(charId){
+var getTraits = function (charId) {
 	return Features.find(
-		{charId: charId},
-		{sort: {color: 1, name: 1}}
+		{
+			charId: charId,
+			removed: { $ne: true },
+		},
+		{ sort: { color: 1, name: 1 } }
 	).map(f => ({
 		Name: f.name,
 		// evaluateShortString helper
@@ -181,10 +187,14 @@ var getTraits = function(charId){
 	}));
 }
 
-var getActions = function(charId){
+var getActions = function (charId) {
 	return Attacks.find(
-		{charId, enabled: true},
-		{sort: {color: 1, name: 1}}
+		{
+			charId,
+			enabled: true,
+			removed: { $ne: true },
+		},
+		{ sort: { color: 1, name: 1 } }
 	).map(a => ({
 		Name: a.name,
 		Content: `+${evaluate(charId, a.attackBonus)} to hit, ` +

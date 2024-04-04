@@ -2,58 +2,61 @@ const standardLibraryIds = [
 	"SRDLibraryGA3XWsd",
 ];
 
-Meteor.publish("standardLibraries", function(){
-	return Libraries.find({_id: {$in: standardLibraryIds}});
+Meteor.publish("standardLibraries", function () {
+	return Libraries.find({ _id: { $in: standardLibraryIds } });
 });
 
-Meteor.publish("standardLibraryItems", function(categoryKey){
+Meteor.publish("standardLibraryItems", function (categoryKey) {
 	return LibraryItems.find({
-		library: {$in: standardLibraryIds},
+		library: { $in: standardLibraryIds },
 		"settings.category": categoryKey,
+		removed: { $ne: true },
 	}, {
-		sort: {name: 1},
+		sort: { name: 1 },
 	});
 });
 
-Meteor.publish("standardLibrarySpells", function(level){
+Meteor.publish("standardLibrarySpells", function (level) {
 	return LibrarySpells.find({
-		library: {$in: standardLibraryIds},
+		library: { $in: standardLibraryIds },
 		level,
+		removed: { $ne: true },
 	}, {
-		sort: {name: 1},
+		sort: { name: 1 },
 	});
 });
 
-Meteor.publish("customLibraries", function(){
+Meteor.publish("customLibraries", function () {
 	const userId = this.userId;
 	let user = Meteor.user()
 	let subs = user && user.profile && user.profile.librarySubscriptions;
 	return Libraries.find({
 		$or: [
-			{readers: userId},
-			{writers: userId},
-			{owner: userId},
-			{public: true, _id: {$in: subs || []}},
+			{ readers: userId },
+			{ writers: userId },
+			{ owner: userId },
+			{ public: true, _id: { $in: subs || [] } },
 		],
 	});
 });
 
-Meteor.publish("singleLibrary", function(id){
+Meteor.publish("singleLibrary", function (id) {
 	const userId = this.userId;
 	return Libraries.find({
 		_id: id,
 		$or: [
-			{readers: userId},
-			{writers: userId},
-			{owner: userId},
-			{public: true},
+			{ readers: userId },
+			{ writers: userId },
+			{ owner: userId },
+			{ public: true },
 		],
 	});
 });
 
-Meteor.publish("libraryItems", function(libraryId){
+Meteor.publish("libraryItems", function (libraryId) {
 	return LibraryItems.find({
-		library: libraryId
+		library: libraryId,
+		removed: { $ne: true },
 	}, {
 		fields: {
 			name: 1,
@@ -63,13 +66,14 @@ Meteor.publish("libraryItems", function(libraryId){
 	});
 });
 
-Meteor.publish("fullLibraryItems", function(libraryId){
+Meteor.publish("fullLibraryItems", function (libraryId) {
 	return LibraryItems.find({
-		library: libraryId
+		library: libraryId,
+		removed: { $ne: true },
 	});
 });
 
-Meteor.publish("libraryItem", function(itemId){
+Meteor.publish("libraryItem", function (itemId) {
 	let cursor = LibraryItems.find(itemId);
 	let item = cursor.fetch()[0];
 	let userId = Meteor.userId();

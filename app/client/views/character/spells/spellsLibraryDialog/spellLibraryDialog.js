@@ -1,19 +1,19 @@
 const librarySubs = new SubsManager();
 
 const categories = [
-	{name: "Cantrips", key: 0},
-	{name: "Level 1", key: 1},
-	{name: "Level 2", key: 2},
-	{name: "Level 3", key: 3},
-	{name: "Level 4", key: 4},
-	{name: "Level 5", key: 5},
-	{name: "Level 6", key: 6},
-	{name: "Level 7", key: 7},
-	{name: "Level 8", key: 8},
-	{name: "Level 9", key: 9},
+	{ name: "Cantrips", key: 0 },
+	{ name: "Level 1", key: 1 },
+	{ name: "Level 2", key: 2 },
+	{ name: "Level 3", key: 3 },
+	{ name: "Level 4", key: 4 },
+	{ name: "Level 5", key: 5 },
+	{ name: "Level 6", key: 6 },
+	{ name: "Level 7", key: 7 },
+	{ name: "Level 8", key: 8 },
+	{ name: "Level 9", key: 9 },
 ];
 
-Template.spellLibraryDialog.onCreated(function(){
+Template.spellLibraryDialog.onCreated(function () {
 	this.selectedSpells = new ReactiveVar([]); //this holds an array of the selected spells by ID
 	this.searchTerm = new ReactiveVar();
 	this.categoriesOpen = new ReactiveVar([]);
@@ -31,7 +31,7 @@ Template.spellLibraryDialog.onCreated(function(){
 	});
 	this.autorun(() => {
 		// If we are searching, subscibe to all categories
-		if (this.searchTerm.get()){
+		if (this.searchTerm.get()) {
 			let handles = _.map(categories, category =>
 				librarySubs.subscribe("standardLibrarySpells", category.key)
 			);
@@ -44,39 +44,40 @@ Template.spellLibraryDialog.onCreated(function(){
 });
 
 Template.spellLibraryDialog.helpers({
-	ready(key){
+	ready(key) {
 		return Template.instance().readyDict.get(key);
 	},
-	categories(){
+	categories() {
 		return categories;
 	},
-	spellsInCategory(categoryKey){
+	spellsInCategory(categoryKey) {
 		return LibrarySpells.find({
 			library: "SRDLibraryGA3XWsd",
 			level: categoryKey,
+			removed: { $ne: true },
 		}, {
-			sort: {name: 1},
+			sort: { name: 1 },
 		});
 	},
-	isSelected(spell){
+	isSelected(spell) {
 		const selected = Template.instance().selectedSpells.get();
 		return _.contains(selected, spell._id);
 	},
-	selectedCount(){
+	selectedCount() {
 		const selected = Template.instance().selectedSpells.get();
 		return selected && selected.length;
 	},
-	isOpen(key){
+	isOpen(key) {
 		const cats = Template.instance().categoriesOpen.get();
 		return _.contains(cats, key);
 	},
-	searchTerm(){
+	searchTerm() {
 		return Template.instance().searchTerm.get();
 	},
-	searchReady(){
+	searchReady() {
 		return Template.instance().searchReady.get();
 	},
-	searchSpells(){
+	searchSpells() {
 		const searchTerm = Template.instance().searchTerm.get();
 		if (!searchTerm) return;
 		return LibrarySpells.find({
@@ -84,15 +85,16 @@ Template.spellLibraryDialog.helpers({
 			name: {
 				$regex: new RegExp(".*" + searchTerm + ".*", "gi")
 			},
+			removed: { $ne: true },
 		});
 	},
 });
 
 Template.spellLibraryDialog.events({
-	"click .cancelButton": function(event, template){
+	"click .cancelButton": function (event, template) {
 		popDialogStack();
 	},
-	"click .okButton": function(event, template){
+	"click .okButton": function (event, template) {
 		const selectedIds = template.selectedSpells.get();
 		var returnSpells = [];
 		_.each(selectedIds, (id) => {
@@ -103,32 +105,32 @@ Template.spellLibraryDialog.events({
 		});
 		popDialogStack(returnSpells);
 	},
-	"click .library-spell": function(event, template){
+	"click .library-spell": function (event, template) {
 		let selected = template.selectedSpells.get();
 		const spellId = this.spell._id;
 		// Toggle whether this spellId is in the array or not
-		if (_.contains(selected, spellId)){
+		if (_.contains(selected, spellId)) {
 			selected = _.without(selected, spellId);
 		} else {
 			selected.push(spellId);
 		}
 		template.selectedSpells.set(selected);
 	},
-	"click #backButton": function(event, template){
+	"click #backButton": function (event, template) {
 		popDialogStack();
 	},
-	"click .category-header": function(event, template){
+	"click .category-header": function (event, template) {
 		let cats = template.categoriesOpen.get();
 		const key = this.key;
 		// Toggle whether this key is in the array or not
-		if (_.contains(cats, key)){
+		if (_.contains(cats, key)) {
 			cats = _.without(cats, key);
 		} else {
 			cats.push(key);
 		}
 		template.categoriesOpen.set(cats);
 	},
-	"input .search-input, change .search-input": function(event, template){
+	"input .search-input, change .search-input": function (event, template) {
 		const value = event.currentTarget.value;
 		template.searchTerm.set(value);
 	},

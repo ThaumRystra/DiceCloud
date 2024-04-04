@@ -1,10 +1,10 @@
 const librarySubs = new SubsManager();
 
 const categories = [
-	{name: "Weapons", key: "weapons"},
-	{name: "Armor", key: "armor"},
-	{name: "Adventuring Gear", key: "adventuringGear"},
-	{name: "Tools", key: "tools"},
+	{ name: "Weapons", key: "weapons" },
+	{ name: "Armor", key: "armor" },
+	{ name: "Adventuring Gear", key: "adventuringGear" },
+	{ name: "Tools", key: "tools" },
 ];
 
 const categoryKeys = [
@@ -14,7 +14,7 @@ const categoryKeys = [
 	"tools",
 ];
 
-Template.itemLibraryDialog.onCreated(function(){
+Template.itemLibraryDialog.onCreated(function () {
 	this.selectedItem = new ReactiveVar();
 	this.searchTerm = new ReactiveVar();
 	this.categoriesOpen = new ReactiveVar([]);
@@ -27,7 +27,7 @@ Template.itemLibraryDialog.onCreated(function(){
 		// Subscribe to all open categories
 		_.each(this.categoriesOpen.get(), (key) => {
 			let handle;
-			if (_.contains(categoryKeys, key)){
+			if (_.contains(categoryKeys, key)) {
 				handle = librarySubs.subscribe("standardLibraryItems", key);
 			} else {
 				handle = librarySubs.subscribe("fullLibraryItems", key);
@@ -39,7 +39,7 @@ Template.itemLibraryDialog.onCreated(function(){
 	});
 	this.autorun(() => {
 		// If we are searching, subscibe to all categories
-		if (this.searchTerm.get()){
+		if (this.searchTerm.get()) {
 			let handles = _.map(categories, category =>
 				librarySubs.subscribe("standardLibraryItems", category.key)
 			);
@@ -52,108 +52,111 @@ Template.itemLibraryDialog.onCreated(function(){
 });
 
 Template.itemLibraryDialog.helpers({
-	ready(key){
+	ready(key) {
 		return Template.instance().readyDict.get(key);
 	},
-	categories(){
+	categories() {
 		return categories;
 	},
-	itemsInCategory(categoryKey){
+	itemsInCategory(categoryKey) {
 		return LibraryItems.find({
 			library: "SRDLibraryGA3XWsd",
 			"settings.category": categoryKey,
+			removed: { $ne: true },
 		}, {
-			sort: {name: 1},
+			sort: { name: 1 },
 		});
 	},
-	isSelected(item){
+	isSelected(item) {
 		const selected = Template.instance().selectedItem.get();
 		return selected && selected._id === item._id;
 	},
-	isOpen(key){
+	isOpen(key) {
 		const cats = Template.instance().categoriesOpen.get();
 		return _.contains(cats, key);
 	},
-	searchTerm(){
+	searchTerm() {
 		return Template.instance().searchTerm.get();
 	},
-	searchReady(){
+	searchReady() {
 		return Template.instance().searchReady.get();
 	},
-	searchItems(){
+	searchItems() {
 		const searchTerm = Template.instance().searchTerm.get();
 		if (!searchTerm) return;
 		return LibraryItems.find({
 			name: {
 				$regex: new RegExp(".*" + searchTerm + ".*", "gi")
 			},
+			removed: { $ne: true },
 		});
 	},
-	customLibraries(){
+	customLibraries() {
 		let userId = Meteor.userId();
 		let user = Meteor.user()
 		let subs = user && user.profile && user.profile.librarySubscriptions;
-    return Libraries.find({
-      $or: [
-  			{readers: userId},
-  			{writers: userId},
-  			{owner: userId},
-				{public: true, _id: {$in: subs || []}},
-  		],
-    });
+		return Libraries.find({
+			$or: [
+				{ readers: userId },
+				{ writers: userId },
+				{ owner: userId },
+				{ public: true, _id: { $in: subs || [] } },
+			],
+		});
 	},
-	itemsInLibrary(libraryId){
+	itemsInLibrary(libraryId) {
 		return LibraryItems.find({
 			library: libraryId,
+			removed: { $ne: true },
 		}, {
-			sort: {name: 1},
+			sort: { name: 1 },
 		});
 	},
 
 });
 
 Template.itemLibraryDialog.events({
-	"click .cancelButton": function(event, template){
+	"click .cancelButton": function (event, template) {
 		popDialogStack();
 	},
-	"click .okButton": function(event, template){
+	"click .okButton": function (event, template) {
 		popDialogStack(template.selectedItem.get());
 	},
-	"click .library-item": function(event, template){
+	"click .library-item": function (event, template) {
 		template.selectedItem.set(this.item);
 	},
-	"click #backButton": function(event, template){
+	"click #backButton": function (event, template) {
 		popDialogStack();
 	},
-	"click .category-header": function(event, template){
+	"click .category-header": function (event, template) {
 		let cats = template.categoriesOpen.get();
 		const key = this.key || this._id;
 		// Toggle whether this key is in the array or not
-		if (_.contains(cats, key)){
+		if (_.contains(cats, key)) {
 			cats = _.without(cats, key);
 		} else {
 			cats.push(key);
 		}
 		template.categoriesOpen.set(cats);
 	},
-	"input .search-input, change .search-input": function(event, template){
+	"input .search-input, change .search-input": function (event, template) {
 		const value = event.currentTarget.value;
 		template.searchTerm.set(value);
 	},
 });
 
 Template.libraryItem.helpers({
-	itemName: function(){
+	itemName: function () {
 		return this.item.libraryName || this.item.name;
 	},
-	itemWeight: function(){
+	itemWeight: function () {
 		if (this.item.quantity) {
 			return this.item.weight * this.item.quantity;
 		} else {
 			return this.item.weight;
 		}
 	},
-	itemValue: function(){
+	itemValue: function () {
 		if (this.item.quantity) {
 			return this.item.value * this.item.quantity;
 		} else {

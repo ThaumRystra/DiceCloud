@@ -25,7 +25,10 @@ Template.healthCard.onRendered(function () {
 
 Template.healthCard.helpers({
 	extraHitPoints: function () {
-		return TemporaryHitPoints.find({ charId: this._id });
+		return TemporaryHitPoints.find({
+			charId: this._id,
+			removed: { $ne: true },
+		});
 	},
 	showDeathSave: function () {
 		return Characters.calculate.attributeValue(this._id, "hitPoints") <= 0;

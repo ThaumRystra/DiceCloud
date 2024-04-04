@@ -1,10 +1,11 @@
 Template.proficiencyViewList.helpers({
-	proficiencies: function(){
+	proficiencies: function () {
 		var selector = {
 			"parent.id": this.parentId,
 			"charId": this.charId,
+			removed: { $ne: true },
 		};
-		if (this.parentGroup){
+		if (this.parentGroup) {
 			selector["parent.group"] = this.parentGroup;
 		}
 		return Proficiencies.find(selector);

@@ -1,15 +1,16 @@
 Template.customBuffEditList.helpers({
-	buffs: function(){
+	buffs: function () {
 		var selector = {
 			"parent.id": this.parentId,
 			"charId": this.charId,
+			removed: { $ne: true },
 		};
 		return CustomBuffs.find(selector);
 	}
 });
 
 Template.customBuffEditList.events({
-	"tap #addBuffButton": function(event, instance){
+	"tap #addBuffButton": function (event, instance) {
 		if (!_.isBoolean(this.enabled)) {
 			this.enabled = true;
 		}
@@ -23,7 +24,7 @@ Template.customBuffEditList.events({
 		});
 		pushDialogStack({
 			template: "customBuffEdit",
-			data: {customBuffId},
+			data: { customBuffId },
 			element: event.currentTarget,
 			returnElement: () => instance.find(`tr.buff[data-id='${customBuffId}']`),
 		});
@@ -31,10 +32,10 @@ Template.customBuffEditList.events({
 });
 
 Template.customBuffEditListItem.events({
-	"tap .edit-buff": function(event, template){
+	"tap .edit-buff": function (event, template) {
 		pushDialogStack({
 			template: "customBuffEdit",
-			data: {customBuffId: this.buff._id},
+			data: { customBuffId: this.buff._id },
 			element: event.currentTarget.parentElement.parentElement,
 		});
 	},
