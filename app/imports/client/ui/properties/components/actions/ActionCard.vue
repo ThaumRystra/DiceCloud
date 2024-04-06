@@ -19,7 +19,10 @@
           <template v-if="rollBonus && !rollBonusTooLong">
             {{ rollBonus }}
           </template>
-          <property-icon :model="model" />
+          <property-icon
+            v-else
+            :model="model"
+          />
         </v-btn>
       </div>
       <div
@@ -87,6 +90,7 @@
         start-expanded
         show-external-details
         :children="children"
+        :root="model.root"
         @selected="e => $emit('sub-click', e)"
       />
     </div>

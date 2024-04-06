@@ -22,6 +22,10 @@ export default async function applyDamagePropTask(
   const { title, operation } = task.params;
   let targetProp = task.params.targetProp;
 
+  console.log({ task, action, result, userInput });
+
+  if (!targetProp) throw new Meteor.Error('not-found', 'Target property is required')
+
   // Set the scope properties
   result.pushScope = {};
   if (operation === 'increment') {

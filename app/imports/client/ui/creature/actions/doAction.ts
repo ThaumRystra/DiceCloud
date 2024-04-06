@@ -56,17 +56,17 @@ export default async function doAction(
         data: {
           actionId,
         },
-        async callback(action, decisions) {
-          resolve(await callActionMethod(action, decisions));
+        async callback(action: EngineAction) {
+          resolve(await callActionMethod(action));
         },
       });
     })
   }
 }
 
-const callActionMethod = (action: EngineAction, decisions?: any[]) => {
+const callActionMethod = (action: EngineAction) => {
   if (!action._id) throw new Meteor.Error('type-error', 'Action must have and _id');
-  return runAction.call({ actionId: action._id, decisions });
+  return runAction.callAsync({ actionId: action._id, decisions: action._decisions });
 }
 
 const throwInputRequestedError = () => {

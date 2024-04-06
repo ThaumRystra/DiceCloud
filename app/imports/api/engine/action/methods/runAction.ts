@@ -10,12 +10,12 @@ import getReplayChoicesInputProvider from '/imports/api/engine/action/functions/
 export const runAction = new ValidatedMethod({
   name: 'actions.runAction',
   validate: new SimpleSchema({
-    action: {
-      type: Object,
-      blackbox: true,
+    actionId: {
+      type: String,
     },
     decisions: {
       type: Array,
+      optional: true,
     },
     'decisions.$': {
       type: Object,

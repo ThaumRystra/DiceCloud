@@ -4,8 +4,8 @@ import { getVariables } from '/imports/api/engine/loadCreatures';
 // Combine all the action results into the scope at present
 export async function getEffectiveActionScope(action: EngineAction) {
   const scope = await getVariables(action.creatureId);
-  delete scope._id;
-  delete scope._creatureId;
+  // delete scope._id;
+  // delete scope._creatureId;
   // Combine the applied results
   for (const result of action.results) {
     // Pop keys that are not longer used by a busy property

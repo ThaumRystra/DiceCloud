@@ -8,7 +8,7 @@ export interface EngineAction {
   _id?: string;
   _isSimulation?: boolean;
   _stepThrough?: boolean;
-  _choices?: any[],
+  _decisions?: any[],
   creatureId: string;
   rootPropId: string;
   targetIds?: string[];

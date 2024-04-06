@@ -149,7 +149,7 @@ export default {
       this.resumeActionFn?.();
     },
     finishAction() {
-      this.$store.dispatch('popDialogStack');
+      this.$store.dispatch('popDialogStack', this.actionResult);
     },
     promiseInput() {
       return new Promise(resolve => {
