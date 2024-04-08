@@ -396,7 +396,7 @@ Characters.calculate = {
 	proficiency: memoize(function (charId, skillName) {
 		//return largest value in proficiency array
 		var prof = Proficiencies.findOne(
-			{ charId: charId, name: skillName, enabled: true },
+			{ charId: charId, name: skillName, enabled: true, removed: { $ne: true } },
 			{ sort: { value: -1 } }
 		);
 		return prof && prof.value || 0;

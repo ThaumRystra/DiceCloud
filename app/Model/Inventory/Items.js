@@ -1,17 +1,17 @@
 Items = new Mongo.Collection("items");
 
 Schemas.Item = new SimpleSchema({
-	name:       {type: String, optional: true, trim: false, defaultValue: "New Item"},
-	plural:		{type: String, optional: true, trim: false},
-	description:{type: String, optional: true, trim: false},
-	charId:     {type: String, regEx: SimpleSchema.RegEx.Id, index: 1}, //id of owner
-	quantity:	{type: Number, min: 0, defaultValue: 1},
-	weight:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	value:		{type: Number, min: 0, defaultValue: 0, decimal: true},
-	enabled:    {type: Boolean, defaultValue: false},
-	requiresAttunement: {type: Boolean, defaultValue: false},
-	"settings.showIncrement": {type: Boolean, defaultValue: false},
-	color:      {
+	name: { type: String, optional: true, trim: false, defaultValue: "New Item" },
+	plural: { type: String, optional: true, trim: false },
+	description: { type: String, optional: true, trim: false },
+	charId: { type: String, regEx: SimpleSchema.RegEx.Id, index: 1 }, //id of owner
+	quantity: { type: Number, min: 0, defaultValue: 1 },
+	weight: { type: Number, min: 0, defaultValue: 0, decimal: true },
+	value: { type: Number, min: 0, defaultValue: 0, decimal: true },
+	enabled: { type: Boolean, defaultValue: false },
+	requiresAttunement: { type: Boolean, defaultValue: false },
+	"settings.showIncrement": { type: Boolean, defaultValue: false },
+	color: {
 		type: String,
 		allowedValues: _.pluck(colorOptions, "key"),
 		defaultValue: "q",
@@ -20,53 +20,53 @@ Schemas.Item = new SimpleSchema({
 
 Items.attachSchema(Schemas.Item);
 
-var checkMovePermission = function(itemId, parent) {
+var checkMovePermission = function (itemId, parent) {
 	var item = Items.findOne(itemId);
 	if (!item)
 		throw new Meteor.Error("No such item",
-		"An item could not be found to move");
+			"An item could not be found to move");
 	//handle permissions
 	var permission = Meteor.call("canWriteCharacter", item.charId);
-	if (!permission){
+	if (!permission) {
 		throw new Meteor.Error("Access denied",
-		"Not permitted to move items from this character");
+			"Not permitted to move items from this character");
 	}
-	if (parent.collection === "Characters"){
+	if (parent.collection === "Characters") {
 		permission = Meteor.call("canWriteCharacter", parent.id);
-		if (!permission){
+		if (!permission) {
 			throw new Meteor.Error("Access denied",
-			"Not permitted to move items to this character");
+				"Not permitted to move items to this character");
 		}
 	} else {
 		var parentCollectionObject = global[parent.collection];
 		var parentObject = null;
 		if (parentCollectionObject)
 			parentObject = parentCollectionObject.findOne(
-				parent.id, {fields: {_id: 1, charId: 1}}
+				parent.id, { fields: { _id: 1, charId: 1 } }
 			);
 		if (!parentObject) throw new Meteor.Error(
 			"Invalid parent",
 			"The destination parent " + parent.id +
 			" does not exist in the collection " + parent.collection
 		);
-		if (parentObject.charId){
+		if (parentObject.charId) {
 			permission = Meteor.call("canWriteCharacter", parentObject.charId);
-			if (!permission){
+			if (!permission) {
 				throw new Meteor.Error("Access denied",
-				"Not permitted to move items to this character");
+					"Not permitted to move items to this character");
 			}
 		}
 	}
 };
 
-var moveItem = function(itemId, enable, parentCollection, parentId) {
+var moveItem = function (itemId, enable, parentCollection, parentId) {
 	var item = Items.findOne(itemId);
 	if (!item) return;
 	parentCollection = parentCollection || item.parent.collection;
 	parentId = parentId || item.parent.id;
 
 	if (Meteor.isServer) {
-		checkMovePermission(itemId, {collection: parentCollection, id: parentId});
+		checkMovePermission(itemId, { collection: parentCollection, id: parentId });
 	}
 
 	//update the item provided the update will actually change something
@@ -74,59 +74,61 @@ var moveItem = function(itemId, enable, parentCollection, parentId) {
 		item.parent.collection !== parentCollection ||
 		item.parent.id !== parentId ||
 		item.enabled !== enable
-	){
+	) {
 		Items.update(
 			itemId,
-			{$set: {
-				"parent.collection": parentCollection,
-				"parent.id": parentId,
-				enabled: enable,
-			}}
+			{
+				$set: {
+					"parent.collection": parentCollection,
+					"parent.id": parentId,
+					enabled: enable,
+				}
+			}
 		);
 	}
 };
 
 Meteor.methods({
-	moveItemToParent: function(itemId, parent) {
+	moveItemToParent: function (itemId, parent) {
 		check(itemId, String);
-		check(parent, {collection: String, id: String});
+		check(parent, { collection: String, id: String });
 		moveItem(itemId, false, parent.collection, parent.id);
 	},
-	moveItemToCharacter: function(itemId, charId) {
+	moveItemToCharacter: function (itemId, charId) {
 		check(itemId, String);
 		check(charId, String);
 		moveItem(itemId, false, "Characters", charId);
 	},
-	moveItemToContainer: function(itemId, containerId) {
+	moveItemToContainer: function (itemId, containerId) {
 		check(itemId, String);
 		check(containerId, String);
 		moveItem(itemId, false, "Containers", containerId);
 	},
-	equipItem: function(itemId, charId){
+	equipItem: function (itemId, charId) {
 		check(itemId, String);
 		check(charId, String);
 		moveItem(itemId, true, "Characters", charId);
 	},
-	unequipItem: function(itemId, charId){
+	unequipItem: function (itemId, charId) {
 		check(itemId, String);
 		check(charId, String);
 		moveItem(itemId, false, "Characters", charId);
 	},
-	splitItemToParent: function(itemId, moveQuantity, parent){
+	splitItemToParent: function (itemId, moveQuantity, parent) {
 		check(itemId, String);
 		check(moveQuantity, Number);
-		check(parent, {id: String, collection: String});
+		check(parent, { id: String, collection: String });
 
 		//get the item
 		var item = Items.findOne(itemId);
 		if (!item) return;
 
 		//don't bother moving nothing
-		if (moveQuantity <= 0 || item.quantity <= 0){
+		if (moveQuantity <= 0 || item.quantity <= 0) {
 			return;
 		}
 		//ensure we are only moving up to the current stack size
-		if (item.quantity < moveQuantity){
+		if (item.quantity < moveQuantity) {
 			moveQuantity = this.quantity;
 		}
 
@@ -143,42 +145,43 @@ Meteor.methods({
 		var query = _.omit(newStack, ["parent", "quantity"]);
 		query["parent.collection"] = newStack.parent.collection;
 		query["parent.id"] = newStack.parent.id;
-		query._id = {$ne: itemId}; //make sure we don't join it to itself
+		query._id = { $ne: itemId }; //make sure we don't join it to itself
+		query.removed = { $ne: true }; // make sure the new stack isn't removed already
 		var existingStack = Items.findOne(query);
-		if (existingStack){
+		if (existingStack) {
 			//increase the existing stack's size
 			Items.update(
 				existingStack._id,
-				{$inc: {quantity: moveQuantity}}
+				{ $inc: { quantity: moveQuantity } }
 			);
 		} else {
 			//insert the new stack
-			Items.insert(newStack, function(err, id){
+			Items.insert(newStack, function (err, id) {
 				if (err) throw err;
 				//copy the children also
-				Meteor.call("cloneChildren", item._id, {collection: "Items", id: id});
+				Meteor.call("cloneChildren", item._id, { collection: "Items", id: id });
 			});
 		}
 
 		//reduce the old stack's size
 		var oldQuantity = item.quantity - moveQuantity;
-		if (oldQuantity === 0){
+		if (oldQuantity === 0) {
 			Items.remove(itemId);
 		} else {
-			Items.update(itemId, {$set: {quantity: oldQuantity}});
+			Items.update(itemId, { $set: { quantity: oldQuantity } });
 		}
 	},
 });
 
 Items.helpers({
-	totalValue: function(){
+	totalValue: function () {
 		return this.value * this.quantity;
 	},
-	totalWeight: function(){
+	totalWeight: function () {
 		return this.weight * this.quantity;
 	},
-	pluralName: function(){
-		if (this.plural && this.quantity !== 1){
+	pluralName: function () {
+		if (this.plural && this.quantity !== 1) {
 			return this.plural;
 		} else {
 			return this.name;
@@ -186,14 +189,14 @@ Items.helpers({
 	},
 });
 
-Items.before.update(function(userId, doc, fieldNames, modifier, options){
+Items.before.update(function (userId, doc, fieldNames, modifier, options) {
 	if (
 		modifier && modifier.$set && modifier.$set.enabled && //we are equipping this item
 		!(
 			modifier.$set["parent.collection"] === "Characters" &&
 			modifier.$set["parent.id"]
 		) //and we haven"t specified a character to equip to
-	){
+	) {
 		//equip it to the current character
 		modifier.$set["parent.collection"] = "Characters";
 		modifier.$set["parent.id"] = doc.charId;
@@ -207,8 +210,8 @@ makeParent(Items, ["name", "enabled"]); //parents of effects and attacks
 Items.allow(CHARACTER_SUBSCHEMA_ALLOW);
 
 //give characters default items
-Characters.after.insert(function(userId, char) {
-	if (Meteor.isServer){
+Characters.after.insert(function (userId, char) {
+	if (Meteor.isServer) {
 		var containerId = Containers.insert({
 			name: "Coin Pouch",
 			charId: char._id,

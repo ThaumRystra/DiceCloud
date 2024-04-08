@@ -250,7 +250,7 @@ Template.spells.events({
 	},
 	"click .addSpell": function (event, instance) {
 		var charId = this._id;
-		var list = SpellLists.findOne({ charId });
+		var list = SpellLists.findOne({ charId, removed: { $ne: true } });
 		var listId = list && list._id
 		if (!listId) {
 			listId = SpellLists.insert({
@@ -279,7 +279,7 @@ Template.spells.events({
 	"click .librarySpell": function (event, instance) {
 		var charId = this._id;
 		var spellId = Random.id();
-		var list = SpellLists.findOne({ charId });
+		var list = SpellLists.findOne({ charId, removed: { $ne: true } });
 		var listId = list && list._id
 		pushDialogStack({
 			template: "spellLibraryDialog",

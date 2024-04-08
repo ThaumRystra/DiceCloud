@@ -141,7 +141,7 @@ var moveSpell = function (spellId, targetCollection, targetId) {
 	}
 
 	if (targetCollection == "Characters") { //then we are copying the spell to a different character.
-		targetList = SpellLists.findOne({ "charId": targetId });
+		targetList = SpellLists.findOne({ "charId": targetId, removed: { $ne: true } });
 		targetListId = targetList && targetList._id;
 		if (!targetListId) {
 			targetListId = SpellLists.insert({ //create a spell list if we don't already have one
@@ -194,7 +194,7 @@ var copySpell = function (spellId, targetCollection, targetId) {
 
 
 	if (targetCollection == "Characters") { //then we are copying the spell to a different character.
-		targetList = SpellLists.findOne({ "charId": targetId });
+		targetList = SpellLists.findOne({ "charId": targetId, removed: { $ne: true } });
 		targetListId = targetList && targetList._id;
 		if (!targetListId) {
 			targetListId = SpellLists.insert({ //create a spell list if we don't already have one
