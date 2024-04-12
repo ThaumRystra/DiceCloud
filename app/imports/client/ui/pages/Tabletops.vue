@@ -58,7 +58,10 @@ export default {
     addTabletop(){
       this.addTabletopLoading = true;
       insertTabletop.call(error => {
-        if (error) snackbar(error.message);
+        if (error) {
+          console.error(error)
+          snackbar({ text: error.reason || error.message || error.toString() });
+        }
         this.addTabletopLoading = false;
       });
     }

@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import { assertDocEditPermission, assertEditPermission } from '/imports/api/sharing/sharingPermissions.js';
 import { compact } from 'lodash';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import { fetchDocByRefAsync, getCollectionByName, moveDocBetweenRoots, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions';
 
 const moveBetweenRoots = new ValidatedMethod({

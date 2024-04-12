@@ -5,6 +5,7 @@
     "blackbox",
     "Crits",
     "cyrb",
+    "denormalized",
     "EJSON",
     "healthbar",
     "healthbars",
@@ -13,6 +14,7 @@
     "ngraph",
     "ostrio",
     "snackbars",
+    "Spellcasting",
     "uncomputed",
     "walkdown"
   ]

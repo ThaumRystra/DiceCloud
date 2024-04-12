@@ -1,13 +1,65 @@
 import SimpleSchema from 'simpl-schema';
-import deathSaveSchema from '/imports/api/properties/subSchemas/DeathSavesSchema'
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
-import SharingSchema from '/imports/api/sharing/SharingSchema';
+import ColorSchema, { Colored } from '/imports/api/properties/subSchemas/ColorSchema';
+import SharingSchema, { Shared } from '/imports/api/sharing/SharingSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
-//set up the collection for creatures
-let Creatures = new Mongo.Collection('creatures');
+export type Creature = Colored & Shared & {
+  // Strings
+  _id: string,
+  name?: string,
+  alignment?: string,
+  gender?: string,
+  picture?: string,
+  avatarPicture?: string,
 
-let CreatureSettingsSchema = new SimpleSchema({
+  // Libraries
+  allowedLibraries: string[],
+  allowedLibraryCollections: string[],
+
+  // Stats that are computed and denormalized outside of recomputation
+  denormalizedStats: {
+    xp: number,
+    milestoneLevels: number,
+  },
+  propCount: number,
+  // Does the character need a recompute?
+  dirty?: boolean,
+  // Version of computation engine that was last used to compute this creature
+  computeVersion?: string,
+  type: 'pc' | 'npc' | 'monster',
+  computeErrors: {
+    type: string,
+    details?: any,
+  }[],
+
+  // Tabletop
+  tabletopId?: string,
+  initiativeRoll?: number,
+  tabletopSettings?: {
+    iconGroups: {
+      name?: string,
+      iconIds: string[],
+    }[],
+  },
+
+  settings: {
+    useVariantEncumbrance?: true,
+    hideSpellcasting?: true,
+    hideRestButtons?: true,
+    swapStatAndModifier?: true,
+    hideUnusedStats?: true,
+    showTreeTab?: true,
+    hideSpellsTab?: true,
+    hideCalculationErrors?: true,
+    hitDiceResetMultiplier?: number,
+    discordWebhook?: string,
+  },
+};
+
+//set up the collection for creatures
+const Creatures = new Mongo.Collection<Creature>('creatures');
+
+const CreatureSettingsSchema = new SimpleSchema({
   //slowed down by carrying too much?
   useVariantEncumbrance: {
     type: Boolean,
@@ -62,7 +114,7 @@ let CreatureSettingsSchema = new SimpleSchema({
   },
 });
 
-let IconGroupSchema = new SimpleSchema({
+const IconGroupSchema = new SimpleSchema({
   name: {
     type: String,
     max: STORAGE_LIMITS.name,
@@ -79,7 +131,7 @@ let IconGroupSchema = new SimpleSchema({
   },
 });
 
-let CreatureTabletopSettingsSchema = new SimpleSchema({
+const CreatureTabletopSettingsSchema = new SimpleSchema({
   iconGroups: {
     type: Array,
     defaultValue: [],
@@ -90,7 +142,7 @@ let CreatureTabletopSettingsSchema = new SimpleSchema({
   },
 });
 
-let CreatureSchema = new SimpleSchema({
+const CreatureSchema = new SimpleSchema({
   // Strings
   name: {
     type: String,
@@ -139,11 +191,6 @@ let CreatureSchema = new SimpleSchema({
     regEx: SimpleSchema.RegEx.Id,
   },
 
-  // Mechanics
-  deathSave: {
-    type: deathSaveSchema,
-    defaultValue: {},
-  },
   // Stats that are computed and denormalised outside of recomputation
   denormalizedStats: {
     type: Object,
@@ -156,6 +203,10 @@ let CreatureSchema = new SimpleSchema({
   },
   // Sum of all levels granted by milestone XP
   'denormalizedStats.milestoneLevels': {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  },
+  propCount: {
     type: SimpleSchema.Integer,
     defaultValue: 0,
   },
@@ -174,11 +225,6 @@ let CreatureSchema = new SimpleSchema({
     defaultValue: 'pc',
     allowedValues: ['pc', 'npc', 'monster'],
   },
-  damageMultipliers: {
-    type: Object,
-    blackbox: true,
-    defaultValue: {}
-  },
   computeErrors: {
     type: Array,
     optional: true,
@@ -196,9 +242,9 @@ let CreatureSchema = new SimpleSchema({
   },
 
   // Tabletop
-  tabletop: {
+  tabletopId: {
     type: String,
-    regEx: SimpleSchema.RegEx.id,
+    regEx: SimpleSchema.RegEx.Id,
     optional: true,
   },
   initiativeRoll: {
@@ -220,6 +266,7 @@ let CreatureSchema = new SimpleSchema({
 CreatureSchema.extend(ColorSchema);
 CreatureSchema.extend(SharingSchema);
 
+//@ts-expect-error attachSchema not defined
 Creatures.attachSchema(CreatureSchema);
 
 

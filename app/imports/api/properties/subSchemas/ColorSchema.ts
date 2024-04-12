@@ -1,5 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 
+export interface Colored {
+  color?: string,
+}
+
 const ColorSchema = new SimpleSchema({
   color: {
     type: String,

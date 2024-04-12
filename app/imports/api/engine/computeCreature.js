@@ -2,7 +2,7 @@ import buildCreatureComputation from './computation/buildCreatureComputation';
 import computeCreatureComputation from './computation/computeCreatureComputation';
 import writeAlteredProperties from './computation/writeComputation/writeAlteredProperties';
 import writeScope from './computation/writeComputation/writeScope';
-import writeErrors from './computation/writeComputation/writeErrors';
+import writeErrorsAndPropCount from './computation/writeComputation/writeErrorsAndPropCount';
 
 export default async function computeCreature(creatureId) {
   if (Meteor.isClient) return;
@@ -32,7 +32,7 @@ async function computeComputation(computation, creatureId) {
     console.error(logError);
   } finally {
     checkPropertyCount(computation)
-    writeErrors(creatureId, computation.errors);
+    writeErrorsAndPropCount(creatureId, computation.errors, computation.props.length);
   }
 }
 

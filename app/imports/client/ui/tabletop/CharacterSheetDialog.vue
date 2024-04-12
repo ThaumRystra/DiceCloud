@@ -59,7 +59,7 @@
 <script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import CharacterSheet from '/imports/client/ui/creature/character/CharacterSheet.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 
 export default {
 	components: {

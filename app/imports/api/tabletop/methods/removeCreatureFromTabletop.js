@@ -10,10 +10,7 @@ const addCreaturesToTabletop = new ValidatedMethod({
   name: 'tabletops.addCreatures',
 
   validate: new SimpleSchema({
-    'creatureIds': {
-      type: Array,
-    },
-    'creatureIds.$': {
+    creatureId: {
       type: String,
       regEx: SimpleSchema.RegEx.Id,
     },
@@ -40,13 +37,12 @@ const addCreaturesToTabletop = new ValidatedMethod({
 
     Creatures.update({
       _id: { $in: creatureIds },
-      // You must have write permission for the creatures you
       $or: [
         { writers: this.userId },
         { owner: this.userId },
       ],
     }, {
-      $set: { tabletopId },
+      $set: { tabletop: tabletopId },
     }, {
       multi: true,
     });

@@ -68,6 +68,36 @@
           </v-btn>
         </div>
       </v-row>
+      <div class="d-flex flex-column align-start ml-2">
+        <div class="d-flex flex-column">
+          <tabletop-creature-list-item
+            v-for="creature in creatures"
+            :key="creature._id"
+            :model="creature"
+            :title="creature.name"
+            :active="activeCreatureId === creature._id"
+            :targeted="targets.includes(creature._id)"
+            :show-target-btn="targets.includes(creature._id) || moreTargets"
+            v-on="(!activeActionId || (targets.includes(creature._id) || moreTargets)) ? {
+              click: () => {
+                if (activeActionId) {
+                  if (targets.includes(creature._id)) {
+                    untarget(creature._id)
+                  } else {
+                    if (moreTargets) targets.push(creature._id);
+                  }
+                } else {
+                  activeCreatureId = creature._id;
+                  targets = [];
+                  activeActionId = undefined;
+                }
+              }
+            } : {}"
+            @target="targets.push(creature._id)"
+            @untarget="untarget(creature._id)"
+          />
+        </div>
+      </div>
     </v-container>
     <v-footer
       inset
@@ -96,13 +126,14 @@
 import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop';
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures.js';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import MiniCharacterSheet from '/imports/client/ui/creature/character/MiniCharacterSheet.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
+import TabletopCreatureListItem from '/imports/client/ui/tabletop/TabletopCreatureListItem.vue';
 
 const getProperties = function (creatureId, selector = {}) {
   return CreatureProperties.find({
@@ -129,6 +160,7 @@ export default {
     ActionCard,
     MiniCharacterSheet,
     SelectedCreatureBar,
+    TabletopCreatureListItem,
   },
   props: {
     model: {
@@ -159,7 +191,7 @@ export default {
       },
     },
     creatures(){
-      return Creatures.find({ tabletop: this.model._id });
+      return Creatures.find({ tabletopId: this.model._id });
     },
     actions(){
       return getProperties(this.activeCreatureId, { type: 'action', actionType: { $ne: 'event'} });
@@ -196,7 +228,10 @@ export default {
             tabletopId: this.model._id,
             creatureIds: charIds,
           }, error => {
-            if (error) snackbar(error.message);
+            if (error) {
+              console.error(error)
+              snackbar({ text: error.message || error.toString() });
+            }
           });
         },
       });

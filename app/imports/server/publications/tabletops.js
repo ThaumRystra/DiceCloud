@@ -12,8 +12,10 @@ Meteor.publish('tabletops', function () {
   }
   return Tabletops.find({
     $or: [
+      { owner: userId },
       { players: userId },
-      { gameMaster: userId },
+      { gameMasters: userId },
+      { spectators: userId },
     ],
   });
 });
@@ -24,12 +26,15 @@ Meteor.publish('tabletop', function (tabletopId) {
     return [];
   }
   this.autorun(function () {
+    if (!userId) return [];
     const self = this;
     let tabletopCursor = Tabletops.find({
       _id: tabletopId,
       $or: [
+        { owner: userId },
         { players: userId },
-        { gameMaster: userId },
+        { gameMasters: userId },
+        { spectators: userId },
       ]
     });
     let tabletop = tabletopCursor.fetch()[0];
@@ -41,17 +46,19 @@ Meteor.publish('tabletop', function (tabletopId) {
     // read permission of this specific creature, so publish as few fields as
     // possible
     let creatureSummaries = Creatures.find({
-      tabletop: tabletopId,
+      tabletopId,
     }, {
       fields: {
         _id: 1,
         name: 1,
         picture: 1,
         avatarPicture: 1,
-        tabletop: 1,
+        tabletopId: 1,
         initiativeRoll: 1,
         settings: 1,
+        propCount: 1,
       },
+      limit: 110,
     });
     const creatureIds = creatureSummaries.map(c => c._id);
     creatureIds.forEach(creatureId => {
@@ -59,10 +66,14 @@ Meteor.publish('tabletop', function (tabletopId) {
     });
     const variables = CreatureVariables.find({
       _creatureId: { $in: creatureIds }
+    }, {
+      limit: 110,
     });
     let properties = CreatureProperties.find({
       'ancestors.id': { $in: creatureIds },
       removed: { $ne: true },
+    }, {
+      limit: 10_000,
     });
     const logs = CreatureLogs.find({
       tabletopId,

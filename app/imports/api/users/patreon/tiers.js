@@ -9,6 +9,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 0,
     invites: 0,
     characterSlots: 5,
+    tabletopSlots: 0,
     fileStorage: 50,
     paidBenefits: false,
   }, {
@@ -16,6 +17,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 100,
     invites: 0,
     characterSlots: 5,
+    tabletopSlots: 0,
     fileStorage: 50,
     paidBenefits: false,
   }, {
@@ -23,6 +25,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 300,
     invites: 0,
     characterSlots: 5,
+    tabletopSlots: 0,
     fileStorage: 50,
     paidBenefits: false,
   }, {
@@ -31,6 +34,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 500,
     invites: 0,
     characterSlots: 20,
+    tabletopSlots: 4,
     fileStorage: 200,
     paidBenefits: true,
   }, {
@@ -39,6 +43,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 1000,
     invites: 2,
     characterSlots: 50,
+    tabletopSlots: 10,
     fileStorage: 500,
     paidBenefits: true,
   }, {
@@ -47,6 +52,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 2000,
     invites: 5,
     characterSlots: 120,
+    tabletopSlots: 24,
     fileStorage: 1000,
     paidBenefits: true,
   }, {
@@ -55,6 +61,7 @@ const TIERS = Object.freeze([
     minimumEntitledCents: 5000,
     invites: 15,
     characterSlots: -1, // Unlimited characters
+    tabletopSlots: -1, // Unlimited tabletops
     fileStorage: 2000,
     paidBenefits: true,
   },
@@ -66,6 +73,7 @@ const GUEST_TIER = Object.freeze({
   guest: true,
   invites: 0,
   characterSlots: 20,
+  tabletopSlots: 4,
   fileStorage: 200,
   paidBenefits: true,
 });
@@ -76,6 +84,7 @@ const PATREON_DISABLED_TIER = Object.freeze({
   name: 'Outlander',
   invites: 0,
   characterSlots: -1, // Can have infinitely many characters
+  tabletopSlots: -1, // Infinite tabletops
   fileStorage: 1000000, // 1TB file storage
   paidBenefits: true,
 });

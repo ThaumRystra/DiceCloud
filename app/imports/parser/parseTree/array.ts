@@ -1,5 +1,5 @@
 import { serialMap } from '/imports/api/utility/asyncMap';
-import constant, { ConstantValueType } from '/imports/parser/parseTree/constant';
+import constant from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
 import ResolveFunction from '/imports/parser/types/ResolveFunction';
 import MapFunction from '/imports/parser/types/MapFunction';

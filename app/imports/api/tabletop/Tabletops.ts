@@ -1,6 +1,23 @@
 import SimpleSchema from 'simpl-schema';
 
-let Tabletops = new Mongo.Collection('tabletops');
+export type Tabletop = {
+  name?: string,
+  description?: string,
+  imageUrl?: string,
+  owner: string,
+  gameMasters: string[],
+  players: string[],
+  spectators: string[],
+  public?: true,
+  initiative: {
+    active: boolean,
+    roundNumber: number,
+    initiativeNumber?: number,
+    activeCreature?: string,
+  },
+}
+
+const Tabletops = new Mongo.Collection<Tabletop>('tabletops');
 
 const InitiativeSchema = new SimpleSchema({
   active: {
@@ -23,7 +40,7 @@ const InitiativeSchema = new SimpleSchema({
 });
 
 // All creatures in a tabletop have a shared time and space.
-let TabletopSchema = new SimpleSchema({
+const TabletopSchema = new SimpleSchema({
   // Details
   name: {
     type: String,
@@ -43,13 +60,38 @@ let TabletopSchema = new SimpleSchema({
   owner: String,
   // The owner will need to included in one of these arrays for specific permissions
   // A user should not appear in more than one of the following arrays
-  gameMasters: [String],
-  players: [String],
-  spectators: [String],
+  gameMasters: {
+    type: Array,
+    defaultValue: [],
+  },
+  'gameMasters.$': {
+    type: String,
+    //@ts-expect-error Index not defined in simpl-schema package
+    index: 1,
+  },
+  players: {
+    type: Array,
+    defaultValue: [],
+  },
+  'players.$': {
+    type: String,
+    //@ts-expect-error Index not defined in simpl-schema package
+    index: 1,
+  },
+  spectators: {
+    type: Array,
+    defaultValue: [],
+  },
+  'spectators.$': {
+    type: String,
+    //@ts-expect-error Index not defined in simpl-schema package
+    index: 1,
+  },
   // Does everyone else have the spectator permission?
   public: {
     type: Boolean,
-    defaultValue: false,
+    optional: true,
+    //@ts-expect-error Index not defined in simpl-schema package
     index: 1,
   },
 
@@ -61,10 +103,12 @@ let TabletopSchema = new SimpleSchema({
 
 });
 
+//@ts-expect-error attachSchema not defined in simpl-schema package
 Tabletops.attachSchema(TabletopSchema);
 
 import '/imports/api/tabletop/methods/removeTabletop';
 import '/imports/api/tabletop/methods/insertTabletop';
+import '/imports/api/tabletop/methods/updateTabletop';
 import '/imports/api/tabletop/methods/addCreaturesToTabletop';
 
 export default Tabletops;
