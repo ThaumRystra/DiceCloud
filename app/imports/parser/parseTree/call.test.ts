@@ -9,7 +9,7 @@ describe('Call Node', function () {
     const callNode = parse('min( unknownVariable, 1 + 2, 3d30 )');
     const { result, context } = await resolve('compile', callNode, undefined, undefined, inputProviderForTests);
     assert.isEmpty(context.errors)
-    assert.equal(toString(result), 'min(unknownVariable, 3, 3d30)');
+    assert.equal(toString(result), 'min(0, 3, 3d30)');
   });
   it('reduces', async function () {
     const callNode = parse('min( unknownVariable, 1 + 2, 3d30 )');

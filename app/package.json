@@ -9,13 +9,13 @@
   },
   "author": "Thaum Rystra",
   "scripts": {
-    "run": "meteor",
+    "serve": "meteor run --raw-logs",
     "debug": "meteor --inspect",
     "bundle-viz": "meteor --extra-packages bundle-visualizer --production",
     "lint": "eslint .",
-    "test": "meteor test --driver-package meteortesting:mocha --port 3001",
-    "test:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --driver-package meteortesting:mocha",
-    "test:watch:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --driver-package meteortesting:mocha",
+    "test": "meteor test --driver-package meteortesting:mocha --port 3001 --raw-logs",
+    "test:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --raw-logs --driver-package meteortesting:mocha",
+    "test:watch:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --raw-logs --driver-package meteortesting:mocha",
     "build": "meteor build ../build --architecture os.linux.x86_64"
   },
   "engines": {

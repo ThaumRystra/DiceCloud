@@ -1,5 +1,5 @@
 import { serialMap } from '/imports/api/utility/asyncMap';
-import constant from '/imports/parser/parseTree/constant';
+import constant, { ConstantValueType } from '/imports/parser/parseTree/constant';
 import ParseNode from '/imports/parser/parseTree/ParseNode';
 import ResolveFunction from '/imports/parser/types/ResolveFunction';
 import MapFunction from '/imports/parser/types/MapFunction';
@@ -29,17 +29,15 @@ const arrayFactory: ArrayFactory = {
   },
   fromConstantArray(constantArray) {
     const values = constantArray.map(value => {
-      const valueType = typeof value;
       if (
-        valueType === 'string' ||
-        valueType === 'number' ||
-        valueType === 'boolean' ||
-        valueType === 'undefined'
+        typeof value === 'string' ||
+        typeof value === 'number' ||
+        typeof value === 'boolean'
       ) {
         return constant.create({ value });
       } else {
         // Gracefully create an empty constant in the array for unsupported types
-        return constant.create({ value: undefined });
+        return constant.create({ value: 0, isUndefined: true });
       }
     });
     return arrayFactory.create({ values });

@@ -87,6 +87,15 @@ const accessor: AccessorFactory = {
       };
     }
     if (valueType === 'undefined') {
+      // Replace unknown variables with zero marked isUndefined
+      return {
+        result: constant.create({
+          value: 0,
+          isUndefined: true,
+        }),
+        context
+      };
+      // Old Behavior
       // We are only at compile, if it isn't defined in the scope, return a copy of the accessor
       return {
         result: accessor.create({

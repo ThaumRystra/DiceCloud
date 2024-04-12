@@ -16,8 +16,8 @@ describe('Accessor Node', function () {
     assert.isEmpty(context.errors);
     assert.equal(
       toString(result),
-      'unknownVariable + 8',
-      'Only known variables should be substituted during compilation step'
+      '8',
+      'Unknown variables should be be substituted with zero during compilation step'
     );
   });
   it('reduces', async function () {
@@ -44,8 +44,8 @@ describe('Accessor Node', function () {
     );
     assert.isEmpty(compileContext.errors, 'compiling unknown variables should not have errors');
     assert.deepEqual(
-      compileResult, { parseType: 'accessor', name: 'unknownVariable', isUndefined: true },
-      'Unknown variables should be marked as inUndefined in compile step'
+      compileResult, { parseType: 'constant', value: 0, valueType: 'number', isUndefined: true },
+      'Unknown variables should be zero and marked as inUndefined in compile step'
     );
 
     // At reduce step
