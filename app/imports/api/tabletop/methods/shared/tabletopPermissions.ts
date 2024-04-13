@@ -12,9 +12,9 @@ export function assertUserInTabletop(tabletopId, userId) {
     fields: { gameMasters: 1, players: 1 }
   });
   assertTabletopExists(tabletop);
-  if (tabletop.gameMasters.includes(userId) && !tabletop.players.includes(userId)) {
+  if (!tabletop.gameMasters.includes(userId) && !tabletop.players.includes(userId)) {
     throw new Meteor.Error('Not in tabletop',
-      'The user is not the gamemaster or a player in the given tabletop');
+      'The user is not a game master or a player in the given tabletop');
   }
 }
 
