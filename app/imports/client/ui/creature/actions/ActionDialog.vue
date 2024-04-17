@@ -56,6 +56,7 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
+import CheckInput from '/imports/client/ui/creature/actions/input/CheckInput.vue';
 import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
@@ -64,12 +65,17 @@ export default {
   components: {
     DialogBase,
     AdvantageInput,
+    CheckInput,
     RollInput,
     LogContent,
   },
   props: {
     actionId: {
       type: String,
+      default: undefined,
+    },
+    task: {
+      type: Object,
       default: undefined,
     },
   },
@@ -111,11 +117,6 @@ export default {
       return EngineActions.findOne(this.actionId);
     },
   },
-  watch: {
-    resultAction(val) { 
-      console.log(val);
-    }
-  },
   mounted() {
     this.deterministicDiceRoller = getDeterministicDiceRoller(this.actionId);
     this.startAction({ stepThrough: false });
@@ -130,9 +131,8 @@ export default {
         taskCount: undefined,
       };
       applyAction(
-        this.actionResult, this, { simulate: true, stepThrough }
+        this.actionResult, this, { simulate: true, stepThrough, task: this.task}
       ).then(() => {
-        console.log('action is done');
         this.actionDone = true
       });
     },
@@ -172,7 +172,6 @@ export default {
     },
     // inputProvider methods
     async rollDice(dice) {
-      console.log('Waiting for dice roll');
       this.activeInputParams = {
         deterministicDiceRoller: this.deterministicDiceRoller,
         dice
@@ -181,25 +180,20 @@ export default {
       return this.promiseInput();
     },
     async nextStep(task) {
-      console.log('waiting for next step');
-      console.log({ task });
       return this.promiseInput();
     },
     async choose(choices, quantity) {
-      console.log('Waiting for choice');
-      console.log({choices, quantity});
       return this.promiseInput();
     },
     async advantage(suggestedAdvantage) {
-      console.log('Waiting for advantage');
       this.userInput = suggestedAdvantage;
       this.activeInput = 'advantage-input';
       this.userInputReady = true;
       return this.promiseInput();
     },
     async check(suggestedParams) {
-      console.log('Waiting for check');
-      console.log({ suggestedParams })
+      this.userInput = suggestedParams;
+      this.activeInput = 'check-input';
       return this.promiseInput();
     },
   }

@@ -1,11 +1,12 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import Task, { DamagePropTask, ItemAsAmmoTask, PropTask } from './Task';
+import Task, { CheckTask, DamagePropTask, ItemAsAmmoTask, PropTask } from './Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import applyDamagePropTask from '/imports/api/engine/action/tasks/applyDamagePropTask';
 import applyItemAsAmmoTask from '/imports/api/engine/action/tasks/applyItemAsAmmoTask';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyProperties from '/imports/api/engine/action/applyProperties';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import applyCheckTask from '/imports/api/engine/action/tasks/applyCheckTask';
 
 // DamagePropTask promises a number of actual damage done
 export default async function applyTask(
@@ -14,7 +15,7 @@ export default async function applyTask(
 
 // Other tasks promise nothing
 export default async function applyTask(
-  action: EngineAction, task: PropTask | ItemAsAmmoTask, inputProvider: InputProvider
+  action: EngineAction, task: PropTask | ItemAsAmmoTask | CheckTask, inputProvider: InputProvider
 ): Promise<void>
 
 export default async function applyTask(
@@ -42,6 +43,8 @@ export default async function applyTask(
         return applyDamagePropTask(task, action, result, inputProvider);
       case 'consumeItemAsAmmo':
         return applyItemAsAmmoTask(task, action, result, inputProvider);
+      case 'check':
+        return applyCheckTask(task, action, result, inputProvider);
     }
   } else {
     // Get property

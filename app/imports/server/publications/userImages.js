@@ -1,4 +1,4 @@
-import UserImages from '/imports/api/files/UserImages';
+import UserImages from '/imports/api/files/userImages/UserImages';
 
 Meteor.publish('userImages', function () {
   return UserImages.find({

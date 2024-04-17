@@ -6,17 +6,14 @@
   >
     <v-list-item-content class="py-0">
       <v-list-item-title class="d-flex align-center">
-        <roll-popup
+        <v-btn
           v-if="!hideModifier"
-          class="prof-mod mr-1 flex-shrink-0"
-          button-class="pl-3 pr-2"
           text
-          :roll-text="displayedModifier"
-          :name="model.name"
-          :advantage="model.advantage"
-          :loading="checkLoading"
+          tile
           :disabled="!context.editPermission"
-          @roll="check"
+          :data-id="`check-btn-${model._id}`"
+          class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
+          @click.stop="check"
         >
           <proficiency-icon
             :value="model.proficiency"
@@ -37,7 +34,7 @@
           >
             mdi-chevron-double-down
           </v-icon>
-        </roll-popup>
+        </v-btn>
         <proficiency-icon
           v-else
           :value="model.proficiency"
@@ -59,15 +56,12 @@
 
 <script lang="js">
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
-import RollPopup from '/imports/client/ui/components/RollPopup.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import doCheck from '/imports/api/engine/action/methods/doCheck';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 
 export default {
   components: {
     ProficiencyIcon,
-    RollPopup,
   },
   inject: {
     context: {
@@ -106,20 +100,18 @@ export default {
     click(e) {
       this.$emit('click', e);
     },
-    check({ advantage }) {
-      this.checkLoading = true;
-      doCheck.call({
-        propId: this.model._id,
-        scope: {
-          '~checkAdvantage': { value: advantage },
-        },
-      }, error => {
-        this.checkLoading = false;
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason });
-        }
-      });
+    check() {
+      doAction(this.model, this.$store, `check-btn-${this.model._id}`, {
+        subtaskFn: 'check',
+        prop: this.model,
+        targetIds: [this.model.root.id],
+        advantage: this.model.advantage,
+        skillVariableName: this.model.variableName,
+        abilityVariableName: this.model.ability,
+        dc: null,
+      }).catch(e => {
+        console.error(e);
+      })
     },
   }
 }
@@ -138,4 +130,3 @@ export default {
   color: rgba(0, 0, 0, 0.54) !important;
 }
 </style>
-../../../../../api/engine/action/methods/doCheck

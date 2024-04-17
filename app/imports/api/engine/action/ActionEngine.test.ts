@@ -266,7 +266,7 @@ function allLogContent(action: EngineAction) {
 
 let note1Id, folderId, ifTruthyBranchId, ifFalsyBranchId, indexBranchId, choiceBranchId,
   adjustedStatId, adjustmentIncrementId, adjustmentSetId, rollId, buffId,
-  removeParentBuffId, removeTaggedBuffsId, removeOneTaggedBuffId, taggedBuffId, secondTaggedBuffId, buffAttChildId;
+  removeParentBuffId, removeTaggedBuffsId, removeOneTaggedBuffId, taggedBuffId, secondTaggedBuffId;
 
 const propForest = [
   // Apply a simple note
@@ -363,7 +363,7 @@ const propForest = [
     target: 'self',
     children: [
       {
-        _id: buffAttChildId = Random.id(),
+        _id: Random.id(),
         type: 'attribute',
         attributeType: 'stat',
         variableName: 'buffStat',

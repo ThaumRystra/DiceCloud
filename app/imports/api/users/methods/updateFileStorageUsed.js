@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
-import UserImages from '/imports/api/files/UserImages';
+import UserImages from '/imports/api/files/userImages/UserImages';
 const fileCollections = [ArchiveCreatureFiles, UserImages];
 
 const updateFileStorageUsed = new ValidatedMethod({

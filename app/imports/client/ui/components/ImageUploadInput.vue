@@ -12,7 +12,7 @@
 </template>
 
 <script lang="js">
-import UserImages from '/imports/api/files/UserImages';
+import UserImages from '/imports/api/files/userImages/UserImages';
 
 export default {
   data(){return {

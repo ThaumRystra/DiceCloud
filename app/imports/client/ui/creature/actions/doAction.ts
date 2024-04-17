@@ -46,7 +46,7 @@ export default async function doAction(
     const finishedAction = await applyAction(
       action, errorOnInputRequest, { simulate: true, task }
     );
-    return callActionMethod(finishedAction);
+    return callActionMethod(finishedAction, task);
   } catch (e) {
     if (e !== 'input-requested') throw e;
     return new Promise(resolve => {
@@ -55,18 +55,21 @@ export default async function doAction(
         elementId,
         data: {
           actionId,
+          task,
         },
-        async callback(action: EngineAction) {
-          resolve(await callActionMethod(action));
+        callback(action: EngineAction) {
+          resolve(callActionMethod(action, task));
+          return elementId;
         },
       });
     })
   }
 }
 
-const callActionMethod = (action: EngineAction) => {
+const callActionMethod = (action: EngineAction, task?: Task) => {
   if (!action._id) throw new Meteor.Error('type-error', 'Action must have and _id');
-  return runAction.callAsync({ actionId: action._id, decisions: action._decisions });
+  //@ts-expect-error callAsync not defined in types
+  return runAction.callAsync({ actionId: action._id, decisions: action._decisions, task });
 }
 
 const throwInputRequestedError = () => {
@@ -78,4 +81,5 @@ const errorOnInputRequest: InputProvider = {
   rollDice: throwInputRequestedError,
   choose: throwInputRequestedError,
   advantage: throwInputRequestedError,
+  check: throwInputRequestedError,
 }

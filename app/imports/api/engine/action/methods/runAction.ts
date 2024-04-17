@@ -6,23 +6,12 @@ import { getCreature } from '/imports/api/engine/loadCreatures';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import writeActionResults from '../functions/writeActionResults';
 import getReplayChoicesInputProvider from '/imports/api/engine/action/functions/userInput/getReplayChoicesInputProvider';
+import Task from '/imports/api/engine/action/tasks/Task';
 
 export const runAction = new ValidatedMethod({
   name: 'actions.runAction',
-  validate: new SimpleSchema({
-    actionId: {
-      type: String,
-    },
-    decisions: {
-      type: Array,
-      optional: true,
-    },
-    'decisions.$': {
-      type: Object,
-      blackbox: true,
-    },
-  }).validator(),
-  run: async function ({ actionId, decisions = [] }: { actionId: string, decisions?: any[] }) {
+  validate: null, //TODO validate this
+  run: async function ({ actionId, decisions = [], task }: { actionId: string, decisions?: any[], task?: Task }) {
     // Get the action
     const action = await EngineActions.findOneAsync(actionId);
     if (!action) throw new Meteor.Error('not-found', 'Action not found');
@@ -34,7 +23,7 @@ export const runAction = new ValidatedMethod({
     const userInput = getReplayChoicesInputProvider(actionId, decisions);
 
     // Apply the action
-    applyAction(action, userInput);
+    await applyAction(action, userInput, { task });
 
     // Persist changes
     const writePromise = writeActionResults(action);

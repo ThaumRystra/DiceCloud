@@ -1,17 +1,19 @@
-type Task = PropTask | DamagePropTask | ItemAsAmmoTask;
+import { CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
+
+type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask;
 
 export default Task;
 
-interface BaseTask {
+type BaseTask = {
   prop: { [key: string]: any };
   targetIds: string[];
 }
 
-export interface PropTask extends BaseTask {
+export type PropTask = BaseTask & {
   subtaskFn?: undefined,
 }
 
-export interface DamagePropTask extends BaseTask {
+export type DamagePropTask = BaseTask & {
   subtaskFn: 'damageProp';
   params: {
     /**
@@ -24,10 +26,14 @@ export interface DamagePropTask extends BaseTask {
   };
 }
 
-export interface ItemAsAmmoTask extends BaseTask {
+export type ItemAsAmmoTask = BaseTask & {
   subtaskFn: 'consumeItemAsAmmo';
   params: {
     value: number;
     item: any;
   };
+}
+
+export type CheckTask = BaseTask & CheckParams & {
+  subtaskFn: 'check';
 }

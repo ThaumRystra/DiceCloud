@@ -5,6 +5,7 @@ import getDeterministicDiceRoller from '/imports/api/engine/action/functions/use
 // Dice rolls are done fresh, no cheating
 export default function getReplayChoicesInputProvider(actionId: string, decisions: any[]):
   InputProvider {
+  const decisionStack = [...decisions].reverse();
   const dRoller = getDeterministicDiceRoller(actionId);
   const replaySavedInput: InputProvider = {
     nextStep() {
@@ -12,15 +13,18 @@ export default function getReplayChoicesInputProvider(actionId: string, decision
     },
     // To roll dice, ignore the user and use the deterministic dice roller again
     rollDice(dice) {
-      decisions.pop();
+      decisionStack.pop();
       return dRoller(dice);
     },
     choose() {
-      return Promise.resolve(decisions.pop());
+      return Promise.resolve(decisionStack.pop());
     },
     advantage() {
-      return Promise.resolve(decisions.pop());
-    }
+      return Promise.resolve(decisionStack.pop());
+    },
+    check() {
+      return Promise.resolve(decisionStack.pop());
+    },
   }
   return replaySavedInput;
 }

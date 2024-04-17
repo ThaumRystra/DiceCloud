@@ -35,6 +35,9 @@ const inputProviderForTests: InputProvider = {
    */
   async advantage(suggestedAdvantage) {
     return suggestedAdvantage;
+  },
+  async check(suggestedParams) {
+    return suggestedParams;
   }
 }
 

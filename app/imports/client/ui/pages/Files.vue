@@ -100,7 +100,7 @@
 
 <script lang="js">
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
-import UserImages from '/imports/api/files/UserImages';
+import UserImages from '/imports/api/files/userImages/UserImages';
 import prettyBytes from 'pretty-bytes';
 import ArchiveFileCard from '/imports/client/ui/files/ArchiveFileCard.vue';
 import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';

@@ -43,7 +43,7 @@ export default async function applyAction(action: EngineAction, userInput: Input
   if (!task) {
     const prop = await getSingleProperty(action.creatureId, action.rootPropId);
     if (!prop) throw new Meteor.Error('Not found', 'Root action property could not be found');
-    task = options?.task || {
+    task = {
       prop,
       targetIds: action.targetIds || [],
     }

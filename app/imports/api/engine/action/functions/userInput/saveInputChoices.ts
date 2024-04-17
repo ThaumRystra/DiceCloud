@@ -16,9 +16,9 @@ export default function saveInputChoices(action: EngineAction, userInput: InputP
   for (const key in userInput) {
     const oldFn = userInput[key];
     // Make a new function that does the same thing, but saves the result to action._decisions
-    const newFn = (...args) => {
-      const result = oldFn(...args);
-      action._decisions.push(result);
+    const newFn = async (...args) => {
+      const result = await oldFn(...args);
+      action._decisions?.push(result);
       return result;
     }
     newInputProvider[key] = newFn;
