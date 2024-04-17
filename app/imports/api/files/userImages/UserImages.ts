@@ -1,3 +1,5 @@
+
+import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 let createS3FilesCollection;
 if (Meteor.isServer) {
   createS3FilesCollection = require('/imports/api/files/server/s3FileStorage').createS3FilesCollection
@@ -18,6 +20,9 @@ const UserImages = createS3FilesCollection({
       return 'Please upload an image file only';
     }
     return true
+  },
+  onAfterUpload(file) {
+    if (Meteor.isServer) incrementFileStorageUsed(file.userId, file.size);
   }
 });
 

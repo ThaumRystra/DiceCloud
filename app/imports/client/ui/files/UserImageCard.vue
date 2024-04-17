@@ -34,6 +34,7 @@
 </template>
 
 <script lang="js">
+import removeUserImage from '/imports/api/files/UserImages/methods/removeUserImage';
 
 export default {
   props: {
@@ -50,7 +51,9 @@ export default {
   },
   methods: {
     remove() {
-
+      removeUserImage.call({ fileId: this.model._id }, (error) => {
+        if (error) console.error(error);
+      });
     },
   },
 }
