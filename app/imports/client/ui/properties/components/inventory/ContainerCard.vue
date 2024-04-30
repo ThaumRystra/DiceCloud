@@ -101,7 +101,7 @@ export default {
         deactivatedByAncestor: { $ne: true },
         deactivatedByToggle: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
     },
   }

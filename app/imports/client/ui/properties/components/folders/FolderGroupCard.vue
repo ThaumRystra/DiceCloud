@@ -61,7 +61,7 @@ export default {
           { hideWhenValueZero: true, value: 0 },
         ],
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       }).forEach(prop => {
         if (propComponents[prop.type]) {
           props.push(prop);

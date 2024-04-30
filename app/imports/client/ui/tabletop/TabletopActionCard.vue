@@ -248,7 +248,7 @@ export default {
         'ancestors.id': this.model._id,
         'removed': { $ne: true },
       }, {
-        sort: {order: 1}
+        sort: {left: 1}
       }).map(prop => {
         // Get all the props we don't want to show the decendants of and
         // where they might appear in the ancestor list

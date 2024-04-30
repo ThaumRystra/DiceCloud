@@ -111,7 +111,7 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
     },
     creature() {
@@ -133,7 +133,7 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       }).map(c => {
         c.items = CreatureProperties.find({
           'parentId': c._id,
@@ -143,7 +143,7 @@ export default {
           deactivatedByAncestor: { $ne: true },
           deactivatedByToggle: { $ne: true },
         }, {
-          sort: { order: 1 },
+          sort: { left: 1 },
         }).fetch();
         return c;
       });
@@ -158,7 +158,7 @@ export default {
         deactivatedByAncestor: { $ne: true },
         deactivatedByToggle: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
     },
     equippedItems() {
@@ -169,7 +169,7 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
     },
     equipmentParentRef() {

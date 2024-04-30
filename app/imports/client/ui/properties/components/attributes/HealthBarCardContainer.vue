@@ -51,7 +51,7 @@ export default {
         filter.hide = { $ne: true };
       }
       return CreatureProperties.find(filter, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
   },

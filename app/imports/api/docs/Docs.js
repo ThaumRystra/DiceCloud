@@ -103,7 +103,7 @@ const insertDoc = new ValidatedMethod({
 
     doc.parentId = parentId;
 
-    const lastOrder = Docs.find({}, { sort: { order: -1 } }).fetch()[0]?.order || 0;
+    const lastOrder = Docs.find({}, { sort: { left: -1 } }).fetch()[0]?.order || 0;
     doc.order = lastOrder + 1;
     doc.urlName = 'new-doc-' + (lastOrder + 1);
 

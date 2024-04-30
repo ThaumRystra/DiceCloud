@@ -212,7 +212,7 @@ export default {
         removed: {$ne: true},
         inactive: {$ne: true},
       }, {
-        sort: {order: 1}
+        sort: {left: 1}
       }).fetch();
     },
     classLevels() {
@@ -224,7 +224,7 @@ export default {
         removed: {$ne: true},
         inactive: {$ne: true},
       }, {
-        sort: {order: 1}
+        sort: {left: 1}
       });
     },
     editPermission() {

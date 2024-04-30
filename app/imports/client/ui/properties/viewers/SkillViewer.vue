@@ -193,7 +193,7 @@ export default {
       return CreatureProperties.find({
           _id: {$in: this.model.proficiencyIds},
       }, {
-        sort: {order: 1}
+        sort: {left: 1}
       }).fetch();
     },
     ability() {

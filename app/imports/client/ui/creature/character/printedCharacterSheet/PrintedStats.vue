@@ -363,7 +363,7 @@ import { uniqBy } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 const getProperties = function (creature, filter, options = {
-  sort: { order: 1 }
+  sort: { left: 1 }
 }) {
   if (!creature) return;
   if (creature.settings.hideUnusedStats) {
@@ -434,7 +434,7 @@ export default {
         deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
     healthBars() {

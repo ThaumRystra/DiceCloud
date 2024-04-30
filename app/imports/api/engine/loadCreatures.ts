@@ -207,7 +207,7 @@ export function getPropertyChildren(creatureId, property) {
       'parentId': property._id,
       removed: { $ne: true },
     }, {
-      sort: { order: 1 },
+      sort: { left: 1 },
     }).fetch();
   }
 }
@@ -238,7 +238,7 @@ class LoadedCreature {
         'root.id': creatureId,
         removed: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       }).observeChanges({
         added(id, fields) {
           fields._id = id;

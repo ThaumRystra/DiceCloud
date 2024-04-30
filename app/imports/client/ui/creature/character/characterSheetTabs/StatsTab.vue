@@ -557,7 +557,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } }).fetch();
+      const allProps = CreatureProperties.find(filter, { sort: { left: -1 } }).fetch();
       const forest = docsToForest(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
@@ -593,7 +593,7 @@ export default {
         deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
   },

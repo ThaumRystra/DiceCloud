@@ -58,7 +58,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
-      sort: { order: 1 },
+      sort: { left: 1 },
     }).fetch();
 
     if (decendants.length > DUPLICATE_CHILDREN_LIMIT) {
