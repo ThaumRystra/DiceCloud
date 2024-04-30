@@ -14,19 +14,16 @@
       </v-toolbar-title>
     </v-toolbar>
     <div class="action-dialog-content">
-      <div class="layout d-flex">
-        <div
-          class="input d-flex justify-center align-center"
-        >
-          <component
-            :is="activeInput"
-            v-if="activeInput"
-            v-model="userInput"
-            v-bind="activeInputParams"
-            @continue="continueAction"
-            @set-input-ready="setInputReady"
-          />
-        </div>
+      <div class="action-dialog-layout d-flex">
+        <component
+          :is="activeInput"
+          v-if="activeInput"
+          v-model="userInput"
+          class="action-input"
+          v-bind="activeInputParams"
+          @continue="continueAction"
+          @set-input-ready="setInputReady"
+        />
         <div
           class="log-preview card-raised-background d-flex flex-column align-end justify-end"
           style="flex-basis: 256px;"
@@ -80,22 +77,25 @@
 </template>
 
 <script lang="js">
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
+import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
+
 import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
 import CheckInput from '/imports/client/ui/creature/actions/input/CheckInput.vue';
-import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
-import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
+import ChoiceInput from '/imports/client/ui/creature/actions/input/ChoiceInput.vue';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import EngineActions from '/imports/api/engine/action/EngineActions';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
+import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 
 export default {
   components: {
-    DialogBase,
     AdvantageInput,
     CheckInput,
-    RollInput,
+    ChoiceInput,
+    DialogBase,
     LogContent,
+    RollInput,
   },
   props: {
     actionId: {
@@ -218,6 +218,12 @@ export default {
       return this.promiseInput();
     },
     async choose(choices, quantity) {
+      this.userInput = [];
+      this.activeInputParams = {
+        choices,
+        quantity
+      };
+      this.activeInput = 'choice-input'
       return this.promiseInput();
     },
     async advantage(suggestedAdvantage) {
@@ -247,11 +253,11 @@ export default {
   overflow: auto;
 }
 
-.action-dialog-content, .layout {
+.action-dialog-content, .action-dialog-layout {
   height: 100%;
 }
 
-.input {
+.action-input {
   flex-grow: 1;
   height: 100%;
   overflow-y: auto;
@@ -264,10 +270,10 @@ export default {
 }
 
 @container (max-width: 600px) {
-  .layout {
+  .action-dialog-layout {
     flex-direction: column;
   }
-  .input {
+  .action-input {
     height: unset;
   }
   .log-preview {

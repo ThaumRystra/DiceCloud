@@ -1,6 +1,6 @@
 <template lang="html">
   <tree-node-list
-    v-if="model"
+    v-if="model && model.root"
     :children="children"
     :group="group"
     :organize="organize"
@@ -41,6 +41,7 @@ export default {
   },
   meteor: {
     children() {
+      if (!this.model?.root) return [];
       const collection = getCollectionByName(this.collection);
       const docs = collection.find({
         removed: { $ne: true },
