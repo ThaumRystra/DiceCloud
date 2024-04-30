@@ -5,6 +5,7 @@ import recalculateCalculation from '/imports/api/engine/action/functions/recalcu
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import applyTask from '/imports/api/engine/action/tasks/applyTask';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
+import { hasAncestorRelationship } from '/imports/api/parenting/parentingFunctions';
 
 export default async function spendResources(
   action: EngineAction, prop, targetIds: string[], result: TaskResult, userInput
@@ -69,6 +70,9 @@ export default async function spendResources(
         params: {
           value: quantity,
           item,
+          // If the item is an ancestor or descendant of this prop, skip the item's children to avoid
+          // an infinite loop
+          skipChildren: hasAncestorRelationship(item, prop),
         },
       }, userInput);
     }

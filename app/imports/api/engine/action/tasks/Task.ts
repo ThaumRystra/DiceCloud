@@ -31,6 +31,7 @@ export type ItemAsAmmoTask = BaseTask & {
   params: {
     value: number;
     item: any;
+    skipChildren: boolean;
   };
 }
 
