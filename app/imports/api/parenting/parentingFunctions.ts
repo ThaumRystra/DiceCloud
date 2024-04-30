@@ -93,16 +93,16 @@ type FilteredDoc = {
 export function filterToForest(
   collection: Mongo.Collection<TreeDoc>,
   rootId: string,
-  filter?: Mongo.Query<TreeDoc>,
+  filter?: Mongo.Selector<TreeDoc>,
   {
-    options = <Mongo.Options<object>>{},
+    options = <Mongo.Options<TreeDoc>>{},
     includeFilteredDocAncestors = false,
     includeFilteredDocDescendants = false
   } = {}
 ): TreeNode<FilteredDoc>[] {
   if (!Meteor.isClient) throw 'Only available on the client';
   // Setup the filter
-  let collectionFilter: Mongo.Query<TreeDoc> = {
+  let collectionFilter: Mongo.Selector<TreeDoc> = {
     'root.id': rootId,
     'removed': { $ne: true },
   };
@@ -113,16 +113,17 @@ export function filterToForest(
     }
   }
   // Set up the options
-  let collectionSort = {
+  let collectionSort: Mongo.Options<TreeDoc>['sort'] = {
     left: 1
   };
-  if (options && options.sort) {
+  if (options.sort) {
     collectionSort = {
       ...collectionSort,
+      // @ts-expect-error go home typescript you're drunk
       ...options.sort,
     }
   }
-  let collectionOptions: Mongo.Options<object> = {
+  let collectionOptions: Mongo.Options<TreeDoc> = {
     sort: collectionSort,
   }
   if (options) {
@@ -671,8 +672,8 @@ export function setDocToLastOrder(collection: Mongo.Collection<TreeDoc>, doc: Tr
   doc.left = Number.MAX_SAFE_INTEGER;
 }
 
-export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId: string) {
-  const docs = await collection.find({
+export function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId: string) {
+  const docs = collection.find({
     'root.id': rootId,
     removed: { $ne: true }
   }, {
@@ -681,13 +682,13 @@ export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, r
       //Reverse sorting so that arrays can be used as stacks with the first item on top
       left: 1,
     },
-  }).fetchAsync();
+  }).fetch();
 
   const operations = calculateNestedSetOperations(docs);
   return writeBulkOperations(collection, operations);
 }
 
-export async function rebuildCreatureNestedSets(creatureId) {
+export function rebuildCreatureNestedSets(creatureId) {
   const docs = getProperties(creatureId);
   const operations = calculateNestedSetOperations(docs);
   return writeBulkOperations(CreatureProperties as Mongo.Collection<TreeDoc, TreeDoc>, operations);
@@ -823,8 +824,9 @@ export function applyNestedSetProperties<T extends TreeDoc>(docs: T[]): Forest<T
  * @param operations An array of bulk operations to write
  * @returns Promise<undefined>
  */
-async function writeBulkOperations(collection: Mongo.Collection<TreeDoc>, operations) {
-  if (Meteor.isServer && operations.length) {
+function writeBulkOperations(collection: Mongo.Collection<TreeDoc>, operations) {
+  if (Meteor.isServer) {
+    if (!operations.length) return Promise.resolve();
     return new Promise((resolve, reject) => {
       collection.rawCollection().bulkWrite(
         operations,
@@ -841,20 +843,19 @@ async function writeBulkOperations(collection: Mongo.Collection<TreeDoc>, operat
   } else {
     // Don't do latency compensation if there are too many operations, it just causes client
     // lag without much benefit
-    const promises = operations.map(op => {
+    operations.forEach(op => {
       if (op.updateOne) {
-        return collection.updateAsync(
+        collection.update(
           op.updateOne.filter,
           op.updateOne.update,
         );
       } else if (op.updateMany) {
-        return collection.updateAsync(
+        collection.update(
           op.updateMany.filter,
           op.updateMany.update,
           { multi: true },
         )
       }
     });
-    return Promise.all(promises);
   }
 }

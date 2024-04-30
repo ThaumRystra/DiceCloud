@@ -167,10 +167,11 @@
           style="width: 100%"
           class="pa-2 no-hover"
         >
-          <creature-properties-tree
+          <descendant-properties-tree
             style="width: 100%;"
             organize
-            :root="{collection, id: model._id}"
+            :model="model"
+            :root="model.root"
             :collection="collection"
             @selected="e => $emit('select-sub-property', e)"
           />
@@ -225,7 +226,7 @@ import InlineComputationField from '/imports/client/ui/properties/forms/shared/I
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
 import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
 import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
-import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -243,7 +244,7 @@ export default {
     FormSection,
     FormSections,
     IconColorMenu,
-    CreaturePropertiesTree,
+    DescendantPropertiesTree,
     OutlinedInput,
     ...propertyFormIndex,
   },

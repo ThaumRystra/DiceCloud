@@ -5,8 +5,8 @@
 @font-face {
 	font-family: "game-icons";
 	src: url("/fonts/game-icons.eot?817af6e52c83163eb30ece54d9f7d16d?#iefix") format("embedded-opentype"),
-url("/fonts/game-icons.woff?817af6e52c83163eb30ece54d9f7d16d") format("woff"),
-url("/fonts/game-icons.ttf?817af6e52c83163eb30ece54d9f7d16d") format("truetype");
+			 url("/fonts/game-icons.woff?817af6e52c83163eb30ece54d9f7d16d") format("woff"),
+			 url("/fonts/game-icons.ttf?817af6e52c83163eb30ece54d9f7d16d") format("truetype");
 }
 
 .game-icon {
