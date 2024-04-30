@@ -52,7 +52,6 @@ export default {
   methods: {
     emitInput(e) {
       e = e || 0;
-      console.log(e);
       this.$emit('input', e)
     }
   }
