@@ -106,7 +106,6 @@ import ActionConditionView from '/imports/client/ui/properties/components/action
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
@@ -121,7 +120,6 @@ export default {
     ItemConsumedView,
     MarkdownText,
     PropertyIcon,
-    RollPopup,
     CardHighlight,
     TreeNodeList,
   },
@@ -225,7 +223,12 @@ export default {
       this.$emit('click', e);
     },
     doAction() {
-      doAction(this.model, this.$store, this.model._id);
+      this.doActionLoading = true;
+      doAction(this.model, this.$store, this.model._id).catch((e) => {
+        console.error(e);
+      }).finally(() => {
+        this.doActionLoading = false;
+      });
     },
   }
 }
