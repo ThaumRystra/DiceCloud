@@ -5,6 +5,7 @@ import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineAc
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { runAction } from '/imports/api/engine/action/methods/runAction';
+import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
 
 /**
  * Apply an action on the client that first creates the action on both the client and server, then 
@@ -44,7 +45,7 @@ export default async function doAction(
   // Either way, call the action method afterwards
   try {
     const finishedAction = await applyAction(
-      action, errorOnInputRequest, { simulate: true, task }
+      action, getErrorOnInputRequestProvider(action._id), { simulate: true, task }
     );
     return callActionMethod(finishedAction, task);
   } catch (e) {
@@ -76,10 +77,13 @@ const throwInputRequestedError = () => {
   throw 'input-requested';
 }
 
-const errorOnInputRequest: InputProvider = {
-  nextStep: throwInputRequestedError,
-  rollDice: throwInputRequestedError,
-  choose: throwInputRequestedError,
-  advantage: throwInputRequestedError,
-  check: throwInputRequestedError,
+function getErrorOnInputRequestProvider(actionId) {
+  const errorOnInputRequest: InputProvider = {
+    nextStep: throwInputRequestedError,
+    rollDice: getDeterministicDiceRoller(actionId),
+    choose: throwInputRequestedError,
+    advantage: throwInputRequestedError,
+    check: throwInputRequestedError,
+  }
+  return errorOnInputRequest;
 }
