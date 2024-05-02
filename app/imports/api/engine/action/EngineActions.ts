@@ -10,7 +10,7 @@ export interface EngineAction {
   _stepThrough?: boolean;
   _decisions?: any[],
   creatureId: string;
-  rootPropId: string;
+  rootPropId?: string;
   targetIds?: string[];
   results: TaskResult[];
   taskCount: number;

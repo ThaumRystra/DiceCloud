@@ -13,6 +13,7 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
 
 export default async function applyActionProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
@@ -72,7 +73,12 @@ export default async function applyActionProperty(
     await applyChildren(action, prop, targetIds, userInput);
   }
   if (prop.actionType === 'event' && prop.variableName) {
-    resetProperties(action, prop, result, userInput);
+    await applyResetTask({
+      subtaskFn: 'reset',
+      prop,
+      eventName: prop.variableName,
+      targetIds: [action.creatureId],
+    }, action, result, userInput);
   }
 
   // Finish
@@ -243,47 +249,4 @@ function applyCrits(value, scope, resultPushScope) {
     resultPushScope['~criticalMiss'] = { value: true };
   }
   return { criticalHit, criticalMiss };
-}
-
-async function resetProperties(action: EngineAction, prop: any, result: TaskResult, userInput: InputProvider) {
-  const attributes = getPropertiesOfType(action.creatureId, 'attribute');
-  for (const att of attributes) {
-    if (att.removed || att.inactive) continue;
-    if (att.reset !== prop.variableName) continue;
-    if (!att.damage) continue;
-    applyTask(action, {
-      prop: att,
-      targetIds: [action.creatureId],
-      subtaskFn: 'damageProp',
-      params: {
-        title: getPropertyTitle(att),
-        operation: 'increment',
-        value: -att.damage ?? 0,
-        targetProp: att,
-      },
-    }, userInput)
-  }
-  const actions = [
-    ...getPropertiesOfType(action.creatureId, 'action'),
-    ...getPropertiesOfType(action.creatureId, 'spell'),
-  ]
-  for (const act of actions) {
-    if (act.removed || act.inactive) continue;
-    if (act.reset !== prop.variableName) continue;
-    if (!act.usesUsed) continue;
-    result.mutations.push({
-      targetIds: [action.creatureId],
-      updates: [{
-        propId: act._id,
-        set: { usesUsed: 0 },
-        type: act.type,
-      }],
-      contents: [{
-        name: getPropertyTitle(act),
-        value: act.usesUsed >= 0 ? `Restored ${act.usesUsed} uses` : `Removed ${-act.usesUsed} uses`,
-        inline: true,
-        ...prop.silent && { silenced: true },
-      }]
-    });
-  }
 }

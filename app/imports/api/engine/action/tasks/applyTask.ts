@@ -7,6 +7,7 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import applyProperties from '/imports/api/engine/action/applyProperties';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import applyCheckTask from '/imports/api/engine/action/tasks/applyCheckTask';
+import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
 
 // DamagePropTask promises a number of actual damage done
 export default async function applyTask(
@@ -45,6 +46,10 @@ export default async function applyTask(
         return applyItemAsAmmoTask(task, action, result, inputProvider);
       case 'check':
         return applyCheckTask(task, action, result, inputProvider);
+      case 'reset':
+        return applyResetTask(task, action, result, inputProvider);
+      default:
+        throw 'No case defined for the given subtaskFn';
     }
   } else {
     // Get property

@@ -94,6 +94,36 @@ export function getPropertiesOfType(creatureId, propType) {
   return props;
 }
 
+/**
+ * Get the properties of a creature that matches the filters given
+ * @param creatureId The id of the creature
+ * @param filterFn A function that returns true if the given prop matches the filter
+ * @param mongoFilter A mongo selector that is exactly equal to the above function
+ */
+export function getPropertiesByFilter(creatureId, filterFn: (any) => boolean, mongoFilter: Mongo.Selector<object>) {
+  const creature = loadedCreatures.get(creatureId);
+  if (creature) {
+    const props: CreatureProperty[] = []
+    for (const prop of creature.properties.values()) {
+      if (filterFn(prop)) {
+        props.push(prop);
+      }
+    }
+    props.sort((a, b) => a.left - b.left);
+    return EJSON.clone(props);
+  }
+  // console.time(`Cache miss on creature properties: ${creatureId}`)
+  const props = CreatureProperties.find({
+    'root.id': creatureId,
+    'removed': { $ne: true },
+    ...mongoFilter
+  }, {
+    sort: { left: 1 },
+  }).fetch();
+  // console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
+  return props;
+}
+
 export function getCreature(creatureId: string) {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedCreatureDoc = loadedCreature?.creature;
