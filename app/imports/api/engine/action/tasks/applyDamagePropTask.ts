@@ -124,8 +124,8 @@ export default async function applyDamagePropTask(
         type: targetProp.type,
       }],
       contents: [{
-        name: 'Attribute damaged',
-        value: `${numberToSignedString(-value)} ${getPropertyTitle(targetProp)}`,
+        name: increment >= 0 ? 'Attribute damaged' : 'Attribute restored',
+        value: `${numberToSignedString(-increment)} ${getPropertyTitle(targetProp)}`,
         inline: true,
         ...prop.silent && { silenced: true },
       }]
