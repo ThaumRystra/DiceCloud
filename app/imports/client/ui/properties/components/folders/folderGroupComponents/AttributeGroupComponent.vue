@@ -13,7 +13,7 @@
         v-else-if="model.attributeType === 'hitDice'"
         :model="model"
         @click="$emit('click')"
-        @change="({ type, value }) => damageProperty({type, value: -value})"
+        @change="damageProperty"
       />
       <health-bar
         v-else-if="model.attributeType === 'healthBar'"
@@ -30,7 +30,7 @@
         v-else-if="model.attributeType === 'resource'"
         :model="model"
         @click="$emit('click')"
-        @change="({ type, value, ack }) => damageProperty({type, value: -value, ack})"
+        @change="damageProperty"
         @mouseover="hover = true"
         @mouseleave="hover = false"
       />
@@ -62,8 +62,9 @@ import ResourceCardContent from '/imports/client/ui/properties/components/attrib
 import AttributeCardContent from '/imports/client/ui/properties/components/attributes/AttributeCardContent.vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import FolderGroupChildren from '/imports/client/ui/properties/components/folders/folderGroupComponents/FolderGroupChildren.vue';
-
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
+import doAction from '/imports/client/ui/creature/actions/doAction';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
 export default {
   components: {
@@ -91,20 +92,30 @@ export default {
     hover: false,
   }},
   methods: {
-    damageProperty(change) {
-      damageProperty.call({
-        _id: this.model._id,
-        operation: change.type,
-        value: change.value
-      }, e => {
-        console.log(change);
-        change.ack?.(e);
+    damageProperty({value, type, ack}) {
+      const model = this.model;
+      if (type === 'increment') value = -value;
+      doAction(model, this.$store, model._id, {
+        subtaskFn: 'damageProp',
+        prop: model,
+        targetIds: [model.root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
+        }
+      }).then(() =>{
+        ack?.();
+      }).catch((error) => {
+        if (ack) {
+          ack(error);
+        } else  {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }
       });
     },
-    log({_id}) {
-      console.log(...arguments)
-      this.$emit('click-property', { _id });
-    }
   }
 }
 </script>

@@ -64,9 +64,10 @@
 </template>
 
 <script lang="js">
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import doAction from '/imports/client/ui/creature/actions/doAction';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
 export default {
   inject: {
@@ -97,14 +98,24 @@ export default {
       // return true
       return false;
     },
-    damageProperty({type, value, ack}) {
-      damageProperty.call({
-        _id: this.model._id,
-        operation: type,
-        value: value
-      }, error => {
-        if (ack) ack(error);
-        if (error) {
+    damageProperty({ type, value, ack }) {
+      const model = this.model;
+      doAction(model, this.$store, model._id, {
+        subtaskFn: 'damageProp',
+        prop: model,
+        targetIds: [model.root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
+        }
+      }).then(() =>{
+        ack?.();
+      }).catch((error) => {
+        if (ack) {
+          ack(error);
+        } else  {
           snackbar({ text: error.reason || error.message || error.toString() });
           console.error(error);
         }

@@ -12,7 +12,7 @@
           v-for="healthBar in properties.attribute.healthBar"
           :key="healthBar._id"
           :model="healthBar"
-          @change="({ type, value }) => incrementChange(healthBar._id, { type, value: -value })"
+          @change="({ type, value }) => incrementChange(healthBar._id, { type, value })"
           @click="clickProperty({_id: healthBar._id})"
         />
       </v-card>
@@ -614,6 +614,7 @@ export default {
     },
     incrementChange(_id, { type, value, ack }) {
       const model = CreatureProperties.findOne(_id);
+      if (type === 'increment') value = -value;
       doAction(model, this.$store, model._id, {
         subtaskFn: 'damageProp',
         prop: model,
@@ -621,7 +622,7 @@ export default {
         params: {
           title: getPropertyTitle(model),
           operation: type,
-          value: -value,
+          value,
           targetProp: model,
         }
       }).then(() =>{

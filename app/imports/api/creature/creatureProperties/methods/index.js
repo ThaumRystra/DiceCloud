@@ -1,6 +1,5 @@
 import '/imports/api/creature/creatureProperties/methods/adjustQuantity';
 import '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary';
-import '/imports/api/creature/creatureProperties/methods/damageProperty';
 import '/imports/api/creature/creatureProperties/methods/duplicateProperty';
 import '/imports/api/creature/creatureProperties/methods/equipItem';
 import '/imports/api/creature/creatureProperties/methods/insertProperty';

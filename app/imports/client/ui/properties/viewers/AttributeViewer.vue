@@ -141,12 +141,13 @@
   import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
   import numberToSignedString from '../../../../api/utility/numberToSignedString';
   import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
-  import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
   import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
   import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
   import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
   import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
   import sortEffects from '/imports/client/ui/utility/sortEffects';
+import doAction from '/imports/client/ui/creature/actions/doAction';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
   export default {
     components: {
@@ -208,18 +209,24 @@
           data: {_id: id},
         });
       },
-      damageProperty({type, value}) {
+      damageProperty({ type, value }) {
+        const model = this.model;
         this.damagePropertyLoading = true;
-        damageProperty.call({
-          _id: this.model._id,
-          operation: type,
-          value: value
-        }, error => {
-          this.damagePropertyLoading = false;
-          if (error){
-            snackbar({text: error.reason});
-            console.error(error);
+        doAction(model, this.$store, model._id, {
+          subtaskFn: 'damageProp',
+          prop: model,
+          targetIds: [model.root.id],
+          params: {
+            title: getPropertyTitle(model),
+            operation: type,
+            value,
+            targetProp: model,
           }
+        }).catch((error) => {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }).finally(() => {
+          this.damagePropertyLoading = false;
         });
       },
     },

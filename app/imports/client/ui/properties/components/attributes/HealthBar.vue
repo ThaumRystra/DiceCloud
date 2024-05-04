@@ -151,8 +151,9 @@ export default {
     cancelEdit() {
       this.editing = false;
     },
-    changeIncrementMenu(e) {
-      this.$emit('change', e);
+    changeIncrementMenu({ type, value }) {
+      if (type === 'increment') value = -value;
+      this.$emit('change', { type, value });
       this.editing = false;
     }
   },
