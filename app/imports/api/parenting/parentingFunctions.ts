@@ -5,7 +5,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { Mongo } from 'meteor/mongo';
 
 export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
-  const collection = Mongo.Collection.get(name)
+  const collection: Mongo.Collection<TreeDoc> = Mongo.Collection.get(name)
   if (!collection) {
     throw new Meteor.Error('bad-collection-reference',
       `Parent references collection ${name}, which does not exist`
