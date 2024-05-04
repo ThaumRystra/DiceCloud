@@ -37,8 +37,8 @@ export type Advantage = 0 | 1 | -1;
 
 export type CheckParams = {
   advantage: Advantage;
-  skillVariableName: string;
-  abilityVariableName: string;
+  skillVariableName?: string;
+  abilityVariableName?: string;
   dc: number | null;
   contest?: true;
   targetSkillVariableName?: string;

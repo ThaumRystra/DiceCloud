@@ -10,6 +10,7 @@
           v-if="!hideModifier"
           text
           tile
+          :loading="checkLoading"
           :disabled="!context.editPermission"
           :data-id="`check-btn-${model._id}`"
           class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
@@ -58,6 +59,7 @@
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {
@@ -101,6 +103,7 @@ export default {
       this.$emit('click', e);
     },
     check() {
+      this.checkLoading = true;
       doAction(this.model, this.$store, `check-btn-${this.model._id}`, {
         subtaskFn: 'check',
         prop: this.model,
@@ -109,9 +112,12 @@ export default {
         skillVariableName: this.model.variableName,
         abilityVariableName: this.model.ability,
         dc: null,
-      }).catch(e => {
-        console.error(e);
-      })
+      }).catch(error => {
+        snackbar({ text: error.reason || error.message || error.toString() });
+        console.error(error);
+      }).finally(() => {
+        this.checkLoading = false;
+      });
     },
   }
 }

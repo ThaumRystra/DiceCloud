@@ -4,7 +4,6 @@ import InputProvider from '/imports/api/engine/action/functions/userInput/InputP
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
-import { applyUnresolvedEffects } from '/imports/api/engine/action/methods/doCheck';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { getVariables } from '/imports/api/engine/loadCreatures';
@@ -64,11 +63,8 @@ export default async function applySavingThrowProperty(
       applyDefaultAfterPropTasks(action, prop, [targetId], inputProvider);
     }
 
-    let rollModifierText = numberToSignedString(save.value, true);
-    let rollModifier = save.value
-    const { effectBonus, effectString } = applyUnresolvedEffects(save, scope)
-    rollModifierText += effectString;
-    rollModifier += effectBonus;
+    const rollModifierText = numberToSignedString(save.value, true);
+    const rollModifier = save.value;
 
     let value, resultPrefix;
     if (save.advantage === 1) {

@@ -7,16 +7,14 @@
       class="ma-0"
       style="min-width: 40px;"
     >
-      <roll-popup
-        button-class="mr-4 py-2"
+      <v-btn
+        class="mr-4 py-2"
         text
         height="82"
-        :roll-text="numberToSignedString(model.modifier)"
-        :name="model.name"
-        :advantage="model.advantage"
+        :data-id="`check-btn-${model._id}`"
         :loading="checkLoading"
         :disabled="!context.editPermission"
-        @roll="check"
+        @click.stop="check"
       >
         <div>
           <div class="text-h4 mod">
@@ -40,7 +38,7 @@
             </template>
           </div>
         </div>
-      </roll-popup>
+      </v-btn>
     </v-list-item-action>
 
     <v-list-item-content>
@@ -64,15 +62,11 @@
 </template>
 
 <script lang="js">
-import doCheck from '/imports/api/engine/action/methods/doCheck';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 
 export default {
-  components: {
-    RollPopup,
-  },
   inject: {
     context: {
       default: {},
@@ -96,19 +90,21 @@ export default {
     click(e) {
       this.$emit('click', e);
     },
-    check({ advantage }) {
+    check() {
       this.checkLoading = true;
-      doCheck.call({
-        propId: this.model._id,
-        scope: {
-          '~checkAdvantage': { value: advantage },
-        },
-      }, error => {
+      doAction(this.model, this.$store, `check-btn-${this.model._id}`, {
+        subtaskFn: 'check',
+        prop: this.model,
+        targetIds: [this.model.root.id],
+        advantage: this.model.advantage,
+        skillVariableName: undefined,
+        abilityVariableName: this.model.variableName,
+        dc: null,
+      }).catch(error => {
+        snackbar({ text: error.reason || error.message || error.toString() });
+        console.error(error);
+      }).finally(() => {
         this.checkLoading = false;
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason });
-        }
       });
     },
   },
@@ -153,4 +149,3 @@ export default {
   min-width: 42px;
 }
 </style>
-../../../../../api/engine/action/methods/doCheck
