@@ -47,7 +47,7 @@ export default {
       return Session.get('editingDocs');
     },
     docs() {
-      const docs = Docs.find({ removed: {$ne: true} }, { sort: {order: 1} }).fetch();
+      const docs = Docs.find({ removed: {$ne: true} }, { sort: {left: 1} }).fetch();
       return docsToForest(docs);
     },
   },

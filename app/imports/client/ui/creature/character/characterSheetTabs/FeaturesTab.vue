@@ -76,7 +76,7 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
   },

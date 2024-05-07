@@ -10,36 +10,7 @@
         class="avatar"
         :style="{ opacity: active ? '' : '0.5'}"
       >
-        <roll-popup
-          v-if="rollBonus"
-          :icon="!active"
-          :outlined="!active"
-          :fab="active"
-          style="letter-spacing: normal;"
-          class="mr-2"
-          :no-click="!active"
-          :style="{
-            fontSize: active ? '24px' : '16px'
-          }"
-          :large="active"
-          :color="model.color || 'primary'"
-          :loading="doActionLoading"
-          :disabled="model.insufficientResources || !context.editPermission || !!targetingError"
-          :roll-text="rollBonus"
-          :name="model.name"
-          :advantage="model.attackRoll && model.attackRoll.advantage"
-          @roll="doAction"
-        >
-          <template v-if="rollBonus && !rollBonusTooLong">
-            {{ rollBonus }}
-          </template>
-          <property-icon
-            v-else
-            :model="model"
-          />
-        </roll-popup>
         <v-btn
-          v-else
           :icon="!active"
           :outlined="!active"
           :fab="active"
@@ -157,7 +128,6 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
@@ -172,7 +142,6 @@ export default {
     ItemConsumedView,
     MarkdownText,
     PropertyIcon,
-    RollPopup,
     CardHighlight,
     TreeNodeList,
   },
@@ -248,7 +217,7 @@ export default {
         'ancestors.id': this.model._id,
         'removed': { $ne: true },
       }, {
-        sort: {order: 1}
+        sort: {left: 1}
       }).map(prop => {
         // Get all the props we don't want to show the decendants of and
         // where they might appear in the ancestor list

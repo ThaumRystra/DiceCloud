@@ -134,9 +134,9 @@
         name="Child properties"
         :cols="{cols: 12}"
       >
-        <creature-properties-tree
+        <descendant-properties-tree
           style="width: 100%;"
-          :root="{collection, id: model._id}"
+          :model="model"
           :collection="collection"
           @length="childrenLength = $event"
           @selected="selectSubProperty"
@@ -155,14 +155,14 @@ import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperti
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
 
 export default {
   components: {
     ...propertyViewerIndex,
     CreaturePropertiesTree,
     PropertyField,
-    TreeNodeView,
+    DescendantPropertiesTree,
   },
   props: {
     model: {

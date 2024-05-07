@@ -149,7 +149,7 @@ const getProperties = function (creatureId, selector = {}) {
     ],
     ...selector,
   }, {
-    sort: { order: 1 }
+    sort: { left: 1 }
   });
 }
 

@@ -1,6 +1,6 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import {
-  applyDefaultAfterPropTasks, applyTriggers
+  applyDefaultAfterPropTasks, applyAfterTasksSkipChildren, applyTriggers
 } from '/imports/api/engine/action/functions/applyTaskGroups';
 import {
   getEffectiveActionScope
@@ -31,7 +31,7 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
   };
   value = scope['~ammoConsumed']?.value || 0;
 
-  const itemChildren = await getPropertyChildren(action.creatureId, item);
+  const itemChildren = task.params.skipChildren ? [] : await getPropertyChildren(action.creatureId, item);
 
   // Do the quantity adjustment
   // Check if property has quantity
@@ -53,5 +53,10 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
   });
 
   await applyTriggers(action, item, [action.creatureId], 'ammo.after', userInput);
-  return applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
+
+  if (task.params.skipChildren) {
+    return applyAfterTasksSkipChildren(action, item, task.targetIds, userInput);
+  } else {
+    return applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
+  }
 }

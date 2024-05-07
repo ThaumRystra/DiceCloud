@@ -72,7 +72,6 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty';
 import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
@@ -94,6 +93,7 @@ import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcru
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 
 export default {
   components: {
@@ -177,7 +177,27 @@ export default {
       updateCreatureProperty.call({_id: this.currentId, path, value}, ack);
     },
     damage({operation, value, ack}){
-      damageProperty.call({_id: this.currentId, operation, value}, ack);
+      const model = this.model;
+      doAction(model, this.$store, model._id, {
+        subtaskFn: 'damageProp',
+        prop: model,
+        targetIds: [model.root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: operation,
+          value,
+          targetProp: model,
+        }
+      }).then(() =>{
+        ack?.();
+      }).catch((error) => {
+        if (ack) {
+          ack(error);
+        } else  {
+          snackbar({ text: error.reason || error.message || error.toString() });
+          console.error(error);
+        }
+      });
     },
     push({path, value, ack}){
       pushToProperty.call({_id: this.currentId, path, value}, ack);

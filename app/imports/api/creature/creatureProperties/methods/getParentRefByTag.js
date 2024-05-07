@@ -8,7 +8,7 @@ export default function getParentRefByTag(creatureId, tag) {
     inactive: { $ne: true },
     tags: tag,
   }, {
-    sort: { order: 1 },
+    sort: { left: 1 },
   });
   return prop && { id: prop._id, collection: 'creatureProperties' };
 }

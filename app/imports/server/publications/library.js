@@ -243,7 +243,7 @@ Meteor.publish('libraryNodes', function (libraryId, extraFields) {
       LibraryNodes.find({
         'root.id': libraryId,
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
         fields,
       }),
     ];
@@ -288,7 +288,7 @@ Meteor.publish('softRemovedLibraryNodes', function (libraryId) {
         removed: true,
         removedWith: { $exists: false },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       }),
     ];
   });
@@ -309,7 +309,7 @@ Meteor.publish('descendantLibraryNodes', function (nodeId) {
       LibraryNodes.find({
         'ancestors.id': nodeId,
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       }),
     ];
   });

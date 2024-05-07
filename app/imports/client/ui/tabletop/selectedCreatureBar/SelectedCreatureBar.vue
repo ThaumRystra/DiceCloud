@@ -327,7 +327,7 @@ export default {
       const propsById = {};
       const props = [];
       CreatureProperties.find(filter, {
-        sort: { order: -1 },
+        sort: { left: -1 },
         fields: { _id: 1, type: 1 },
       }).forEach(prop => {
         props.push(prop);

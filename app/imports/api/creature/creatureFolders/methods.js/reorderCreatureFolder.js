@@ -31,7 +31,7 @@ const reorderCreatureFolder = new ValidatedMethod({
       owner: userId
     }, {
       fields: { order: 1, },
-      sort: { order: -1 }
+      sort: { left: -1 }
     }).forEach((folder, index) => {
       if (folder.order !== index) {
         CreatureFolders.update(_id, { $set: { order: index } })

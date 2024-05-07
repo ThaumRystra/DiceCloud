@@ -90,7 +90,7 @@ export default {
         ...getFilter.descendantsOfRoot(this.creatureId),
         $nor: [getFilter.descendantsOfAll(allNotes)],
       }, {
-        sort: {order: 1},
+        sort: {left: 1},
       });
     },
     creature(){

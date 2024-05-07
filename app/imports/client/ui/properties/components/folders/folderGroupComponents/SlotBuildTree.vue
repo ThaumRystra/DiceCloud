@@ -48,14 +48,14 @@ export default {
         removed: { $ne: true },
         inactive: { $ne: true },
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
       const slotIds = slots.map(s => s._id);
       const slotChildren = CreatureProperties.find({
         'parentId': { $in: slotIds },
         removed: { $ne: true },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
       const tree = nodeArrayToTree([
         ...slots.fetch(),

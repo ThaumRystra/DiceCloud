@@ -112,7 +112,7 @@ export default {
       const userId = Meteor.userId();
       let folders = CreatureFolders.find(
         { owner: userId, archived: { $ne: true } },
-        { sort: { order: 1 } },
+        { sort: { left: 1 } },
       ).map(folder => {
         folder.creatures = Creatures.find(
           {

@@ -15,7 +15,7 @@ export default function createListOfProperties(filter = {}, getNamesWithValues) 
       });
     }
   }
-  let options = { sort: { order: 1, variableName: 1 } }
+  let options = { sort: { left: 1, variableName: 1 } }
   CreatureProperties.find(filter, options).forEach(addUniquePropertys);
   LibraryNodes.find(filter, options).forEach(addUniquePropertys);
   if (getNamesWithValues) return propertyList;

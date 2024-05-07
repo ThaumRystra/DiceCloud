@@ -113,13 +113,13 @@ export default {
         'parent': undefined,
         removed: { $ne: true },
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
       return Docs.find({
         'parentId': this.doc._id,
         removed: { $ne: true },
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       })
     },
     siblingDocs() {
@@ -128,7 +128,7 @@ export default {
         'parentId': this.doc.parent?.id,
         removed: { $ne: true },
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
     editing() {

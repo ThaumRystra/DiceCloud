@@ -23,7 +23,7 @@ const softRemoveProperty = new ValidatedMethod({
     assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    softRemove({ _id, collection: CreatureProperties });
+    softRemove(CreatureProperties, property);
   }
 });
 

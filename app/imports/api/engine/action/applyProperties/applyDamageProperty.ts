@@ -42,7 +42,7 @@ export default async function applyDamageProperty(
 
   // roll the dice only and store that string
   recalculateCalculation(prop.amount, action, 'compile', inputProvider);
-  const { result: rolled } = await resolve('roll', prop.amount.valueNode, scope, context);
+  const { result: rolled } = await resolve('roll', prop.amount.valueNode, scope, context, inputProvider);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
   }
@@ -52,7 +52,7 @@ export default async function applyDamageProperty(
   context.errors = [];
 
   // Resolve the roll to a final value
-  const { result: reduced } = await resolve('reduce', rolled, scope, context);
+  const { result: reduced } = await resolve('reduce', rolled, scope, context, inputProvider);
   result.appendParserContextErrors(context, damageTargets);
 
   // Store the result
@@ -102,11 +102,11 @@ export default async function applyDamageProperty(
       recalculateCalculation(prop.save.damageFunction, action, 'compile', inputProvider);
       context.errors = [];
       const { result: saveDamageRolled } = await resolve(
-        'roll', prop.save.damageFunction.valueNode, scope, context
+        'roll', prop.save.damageFunction.valueNode, scope, context, inputProvider
       );
       saveRoll = toString(saveDamageRolled);
       const { result: saveDamageResult } = await resolve(
-        'reduce', saveDamageRolled, scope, context
+        'reduce', saveDamageRolled, scope, context, inputProvider
       );
       result.appendParserContextErrors(context, damageTargets);
       // If we didn't end up with a constant of finite amount, give up

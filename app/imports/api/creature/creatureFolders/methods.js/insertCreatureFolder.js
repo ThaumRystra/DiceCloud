@@ -22,7 +22,7 @@ const insertCreatureFolder = new ValidatedMethod({
       owner: userId
     }, {
       fields: { order: 1 },
-      sort: { order: -1 }
+      sort: { left: -1 }
     });
     if (existingFolders.count() >= 50) {
       throw new Meteor.Error('creatureFolders.methods.insert.denied',

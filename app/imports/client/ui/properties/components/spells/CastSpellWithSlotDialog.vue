@@ -159,20 +159,7 @@
       >
         Cancel
       </v-btn>
-      <roll-popup
-        v-if="selectedSpell && selectedSpell.attackRoll"
-        text
-        color="primary"
-        class="mx-2"
-        :disabled="!canCast"
-        :name="selectedSpell.name"
-        :advantage="selectedSpell.attackRoll && selectedSpell.attackRoll.advantage"
-        @roll="cast"
-      >
-        Cast
-      </roll-popup>
       <v-btn
-        v-else
         text
         :disabled="!canCast"
         class="mx-2 px-4"
@@ -192,7 +179,6 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
-import RollPopup from '/imports/client/ui/components/RollPopup.vue';
 import { find } from 'lodash';
 
 const slotFilter = {
@@ -207,7 +193,6 @@ const slotFilter = {
 export default {
   components: {
     DialogBase,
-    RollPopup,
     SplitListLayout,
     SpellSlotListTile,
     SpellListTile,
@@ -403,7 +388,7 @@ export default {
         };
       }
       return CreatureProperties.find(filter, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
     spellSlots() {

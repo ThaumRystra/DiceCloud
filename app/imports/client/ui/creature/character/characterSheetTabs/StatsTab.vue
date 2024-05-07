@@ -12,7 +12,7 @@
           v-for="healthBar in properties.attribute.healthBar"
           :key="healthBar._id"
           :model="healthBar"
-          @change="({ type, value }) => incrementChange(healthBar._id, { type, value: -value })"
+          @change="({ type, value }) => incrementChange(healthBar._id, { type, value })"
           @click="clickProperty({_id: healthBar._id})"
         />
       </v-card>
@@ -392,7 +392,6 @@
 <script lang="js">
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
-import damageProperty from '/imports/api/creature/creatureProperties/methods/damageProperty';
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
 import AttributeCard from '/imports/client/ui/properties/components/attributes/AttributeCard.vue';
 import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
@@ -412,6 +411,8 @@ import FolderGroupCard from '/imports/client/ui/properties/components/folders/Fo
 import { get, set, uniqBy } from 'lodash';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import doAction from '/imports/client/ui/creature/actions/doAction';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
 function walkDown(forest, callback){
   let stack = [...forest];
@@ -517,7 +518,6 @@ export default {
       return uniqBy(conditionals, '_id');
     },
   },
-  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     properties() {
       const creature = this.creature;
@@ -557,7 +557,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { order: -1 } }).fetch();
+      const allProps = CreatureProperties.find(filter, { sort: { left: -1 } }).fetch();
       const forest = docsToForest(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
@@ -593,7 +593,7 @@ export default {
         deactivatedByToggle: { $ne: true },
         showUI: true,
       }, {
-        sort: { order: 1 }
+        sort: { left: 1 }
       });
     },
   },
@@ -613,14 +613,24 @@ export default {
       });
     },
     incrementChange(_id, { type, value, ack }) {
-      damageProperty.call({
-        _id,
-        operation: type,
-        value: -value
-      }, error => {
+      const model = CreatureProperties.findOne(_id);
+      if (type === 'increment') value = -value;
+      doAction(model, this.$store, model._id, {
+        subtaskFn: 'damageProp',
+        prop: model,
+        targetIds: [model.root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
+        }
+      }).then(() =>{
+        ack?.();
+      }).catch((error) => {
         if (ack) {
           ack(error);
-        } else if (error) {
+        } else  {
           snackbar({ text: error.reason || error.message || error.toString() });
           console.error(error);
         }
@@ -637,7 +647,3 @@ export default {
   },
 };
 </script>
-
-<style lang="css" scoped>
-
-</style>

@@ -190,7 +190,7 @@ export default {
         removed: true,
         removedWith: { $exists: false },
       }, {
-        sort: { order: 1 },
+        sort: { left: 1 },
       });
     },
     isOwner() {

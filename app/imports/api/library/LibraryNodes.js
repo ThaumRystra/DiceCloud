@@ -284,7 +284,7 @@ const softRemoveLibraryNode = new ValidatedMethod({
   run({ _id }) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
-    softRemove({ _id, collection: LibraryNodes });
+    softRemove(LibraryNodes, node);
   }
 });
 
@@ -303,7 +303,7 @@ const restoreLibraryNode = new ValidatedMethod({
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
     // Do work
-    restore(LibraryNodes, _id);
+    restore(LibraryNodes, node);
   }
 });
 

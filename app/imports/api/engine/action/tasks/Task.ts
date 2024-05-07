@@ -1,6 +1,6 @@
 import { CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
 
-type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask;
+type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask | ResetTask;
 
 export default Task;
 
@@ -31,9 +31,17 @@ export type ItemAsAmmoTask = BaseTask & {
   params: {
     value: number;
     item: any;
+    skipChildren: boolean;
   };
 }
 
 export type CheckTask = BaseTask & CheckParams & {
   subtaskFn: 'check';
+}
+
+export type ResetTask = BaseTask & {
+  subtaskFn: 'reset',
+  eventName: string;
+  // One and only one target
+  targetIds: [string];
 }

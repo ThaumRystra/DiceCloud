@@ -159,7 +159,7 @@ function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
       ...getFilter.descendants(referencedNode),
       removed: { $ne: true },
     }, {
-      sort: { order: 1 },
+      sort: { left: 1 },
     }).fetch();
 
     // We are adding the referenced node and its descendants

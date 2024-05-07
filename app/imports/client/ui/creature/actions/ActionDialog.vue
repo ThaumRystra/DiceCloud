@@ -1,73 +1,101 @@
 <template lang="html">
-  <dialog-base>
-    <template slot="toolbar">
+  <div class="d-flex flex-column">
+    <v-toolbar
+      class="base-dialog-toolbar"
+    >
+      <v-btn
+        icon
+        @click="cancel"
+      >
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-btn>
       <v-toolbar-title>
         Action
       </v-toolbar-title>
-    </template>
-    <log-content :model="allLogContent" />
-    <component
-      :is="activeInput"
-      v-if="activeInput"
-      v-model="userInput"
-      v-bind="activeInputParams"
-      @continue="continueAction"
-      @set-input-ready="setInputReady"
-    />
-    <v-btn
-      slot="actions"
-      text
-      @click="cancel"
-    >
-      Cancel
-    </v-btn>
-    <v-spacer slot="actions" />
-    <v-btn
-      v-show="!actionDone"
-      slot="actions"
-      text
-      :disabled="!userInputReady || !resumeActionFn"
-      @click="stepAction"
-    >
-      Step
-    </v-btn>
-    <v-btn
-      v-if="actionDone"
-      slot="actions"
-      text
-      @click="finishAction"
-    >
-      {{ 'Apply Results' }}
-    </v-btn>
-    <v-btn
-      v-else
-      slot="actions"
-      text
-      :disabled="actionBusy"
-      @click="startAction"
-    >
-      {{ 'Start' }}
-    </v-btn>
-  </dialog-base>
+    </v-toolbar>
+    <div class="action-dialog-content">
+      <div class="action-dialog-layout d-flex">
+        <component
+          :is="activeInput"
+          v-if="activeInput"
+          v-model="userInput"
+          class="action-input"
+          v-bind="activeInputParams"
+          @continue="continueAction"
+          @set-input-ready="setInputReady"
+        />
+        <div
+          class="log-preview card-raised-background d-flex flex-column align-end justify-end"
+          style="flex-basis: 256px;"
+        >
+          <v-card
+            v-if="allLogContent && allLogContent.length"
+            class="ma-2 log-entry"
+          >
+            <v-card-text
+              class="pa-2"
+            >
+              <log-content :model="allLogContent" />
+            </v-card-text>
+          </v-card>
+        </div>
+      </div>
+    </div>
+    <v-card-actions>
+      <v-btn
+        text
+        @click="cancel"
+      >
+        Cancel
+      </v-btn>
+      <v-spacer slot="actions" />
+      <v-btn
+        v-show="!actionDone"
+        text
+        :disabled="!userInputReady || !resumeActionFn"
+        @click="stepAction"
+      >
+        Step
+      </v-btn>
+      <v-btn
+        v-if="actionDone"
+        text
+        @click="finishAction"
+      >
+        {{ 'Apply Results' }}
+      </v-btn>
+      <v-btn
+        v-else
+        text
+        :disabled="actionBusy"
+        @click="startAction"
+      >
+        {{ 'Start' }}
+      </v-btn>
+    </v-card-actions>
+  </div>
 </template>
 
 <script lang="js">
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
+import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
+
 import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
 import CheckInput from '/imports/client/ui/creature/actions/input/CheckInput.vue';
-import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
-import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
+import ChoiceInput from '/imports/client/ui/creature/actions/input/ChoiceInput.vue';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import EngineActions from '/imports/api/engine/action/EngineActions';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
+import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 
 export default {
   components: {
-    DialogBase,
     AdvantageInput,
     CheckInput,
-    RollInput,
+    ChoiceInput,
+    DialogBase,
     LogContent,
+    RollInput,
   },
   props: {
     actionId: {
@@ -133,7 +161,11 @@ export default {
       applyAction(
         this.actionResult, this, { simulate: true, stepThrough, task: this.task}
       ).then(() => {
-        this.actionDone = true
+        this.actionDone = true;
+        // If we aren't stepping through close the dialog and apply the action
+        if (!this.actionResult._stepThrough) {
+          this.$store.dispatch('popDialogStack', this.actionResult);
+        }
       });
     },
     stepAction() {
@@ -172,17 +204,26 @@ export default {
     },
     // inputProvider methods
     async rollDice(dice) {
+      return Promise.resolve(this.deterministicDiceRoller(dice));
+      /* Dice Animation and user control goes here:
       this.activeInputParams = {
         deterministicDiceRoller: this.deterministicDiceRoller,
         dice
       };
       this.activeInput = 'roll-input';
       return this.promiseInput();
+      */
     },
     async nextStep(task) {
       return this.promiseInput();
     },
     async choose(choices, quantity) {
+      this.userInput = [];
+      this.activeInputParams = {
+        choices,
+        quantity
+      };
+      this.activeInput = 'choice-input'
       return this.promiseInput();
     },
     async advantage(suggestedAdvantage) {
@@ -199,3 +240,45 @@ export default {
   }
 };
 </script>
+
+<style lang="css" scoped>
+.base-dialog-toolbar {
+  z-index: 2;
+  border-radius: 2px 2px 0 0;
+}
+
+.action-dialog-content {
+  container-type: size;
+  flex-grow: 1;
+  overflow: auto;
+}
+
+.action-dialog-content, .action-dialog-layout {
+  height: 100%;
+}
+
+.action-input {
+  flex-grow: 1;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.log-preview {
+  flex-basis: 256px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+@container (max-width: 600px) {
+  .action-dialog-layout {
+    flex-direction: column;
+  }
+  .action-input {
+    height: unset;
+  }
+  .log-preview {
+    flex-basis: 300px;
+  }
+}
+
+</style>

@@ -23,13 +23,7 @@ const restoreProperty = new ValidatedMethod({
     assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    restore({
-      _id,
-      collection: CreatureProperties,
-      extraUpdates: {
-        $set: { dirty: true }
-      },
-    });
+    restore(CreatureProperties, property, { $set: { dirty: true } });
   }
 });
 
