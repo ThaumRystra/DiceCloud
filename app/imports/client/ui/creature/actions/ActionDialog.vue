@@ -51,7 +51,7 @@
   </dialog-base>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
@@ -85,7 +85,7 @@ export default {
       actionBusy: false,
       actionDone: false,
       actionResult: undefined,
-      resumeActionFn: () => this.startAction({ stepThrough: true }),
+      resumeActionFn: undefined,
       activeInput: undefined,
       activeInputParams: {},
       userInput: undefined,
