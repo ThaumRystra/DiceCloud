@@ -10,6 +10,7 @@ import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineAc
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import inputProvider from './functions/userInput/inputProviderForTests.testFn';
+import { removeAllCreaturesAndProps } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
 
 const creatureId = Random.id();
 const targetId = Random.id();
@@ -19,11 +20,8 @@ describe('Interrupt action system', function () {
   this.timeout(8000);
   before(async function () {
     // Remove old data
-    await Promise.all([
-      CreatureProperties.removeAsync({}),
-      Creatures.removeAsync({}),
-      CreatureVariables.removeAsync({}),
-    ]);
+    await removeAllCreaturesAndProps();
+
     // Add creatures
     await Promise.all([
       Creatures.insertAsync({

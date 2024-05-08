@@ -34,7 +34,7 @@
 </template>
 
 <script lang="js">
-import removeUserImage from '/imports/api/files/userImages/UserImages/methods/removeUserImage';
+import removeUserImage from '/imports/api/files/userImages/methods/removeUserImage';
 
 export default {
   props: {

@@ -119,7 +119,7 @@ export default {
     },
     numPrepared() {
       return CreatureProperties.find({
-        'ancestors.id': this.model._id,
+        ...getFilter.descendants(this.model),
         type: 'spell',
         removed: { $ne: true },
         prepared: true,

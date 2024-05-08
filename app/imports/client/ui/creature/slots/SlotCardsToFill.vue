@@ -38,6 +38,7 @@ import SlotCard from '/imports/client/ui/creature/slots/SlotCard.vue';
 import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/PointBuyCard.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   components: {
@@ -74,7 +75,7 @@ export default {
   meteor: {
     slots() {
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.context.creatureId,
+        ...getFilter.descendantsOfRoot(this.context.creatureId),
         type: 'folder',
         hideStatsGroup: true,
         removed: { $ne: true },
@@ -82,10 +83,8 @@ export default {
       }, { fields: { _id: 1 } }).map(folder => folder._id);
 
       return CreatureProperties.find({
-        'ancestors.id': {
-          $eq: this.context.creatureId,
-          $nin: folderIds,
-        },
+        ...getFilter.descendantsOfRoot(this.context.creatureId),
+        'parentId': { $nin: folderIds },
         type: 'propertySlot',
         ignored: { $ne: true },
         $and: [
@@ -108,8 +107,8 @@ export default {
     },
     pointBuys(){
       return CreatureProperties.find({
+        ...getFilter.descendantsOfRoot(this.context.creatureId),
         type: 'pointBuy',
-        'ancestors.id': this.context.creatureId,
         ignored: { $ne: true },       
         removed: {$ne: true},
         inactive: {$ne: true},

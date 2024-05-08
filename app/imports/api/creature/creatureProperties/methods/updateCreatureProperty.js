@@ -15,6 +15,8 @@ const updateCreatureProperty = new ValidatedMethod({
       case 'parent':
       case 'ancestors':
       case 'root':
+      case 'left':
+      case 'right':
       case 'parentId':
       case 'damage':
         throw new Meteor.Error('Permission denied',

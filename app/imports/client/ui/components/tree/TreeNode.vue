@@ -149,8 +149,7 @@ export default {
   },
   watch: {
     'node._ancestorOfMatchedDocument'(value) {
-      this.expanded = !!value ||
-        some(this.selectedNode?.ancestors, ref => ref.id === this.node._id);
+      this.expanded = !!value || isAncestor(this.node, this.selectedNode);
     },
     'selectedNode.parentId'() {
       this.expanded = isAncestor(this.node, this.selectedNode) || this.expanded;

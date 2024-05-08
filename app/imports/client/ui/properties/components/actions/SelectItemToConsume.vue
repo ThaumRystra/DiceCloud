@@ -23,6 +23,7 @@ import ItemTreeNode from '/imports/client/ui/properties/treeNodeViews/ItemTreeNo
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem';
 import { findIndex } from 'lodash';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 export default {
   components: {
     ItemTreeNode
@@ -40,7 +41,7 @@ export default {
   meteor: {
     items(){
       return CreatureProperties.find({
-        'ancestors.id': this.action.ancestors[0].id,
+        ...getFilter.descendantsOfRoot(this.action.root.id),
         type: 'item',
         tags: this.itemConsumed.tag,
         removed: {$ne: true},

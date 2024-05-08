@@ -5,7 +5,7 @@ import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileS
 import UserImages from '/imports/api/files/userImages/UserImages';
 
 const removeArchiveCreature = new ValidatedMethod({
-  name: 'ArchiveCreatureFiles.methods.removeArchiveCreature',
+  name: 'ArchiveCreatureFiles.methods.removeUserImage',
   validate: new SimpleSchema({
     'fileId': {
       type: String,

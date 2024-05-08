@@ -180,6 +180,7 @@ import spellsWithSubheaders from '/imports/client/ui/properties/components/spell
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
 import { find } from 'lodash';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 const slotFilter = {
   type: 'attribute',
@@ -360,7 +361,7 @@ export default {
   meteor: {
     spells() {
       let filter = {
-        'ancestors.id': this.creatureId,
+        ...getFilter.descendantsOfRoot(this.creatureId),
         removed: { $ne: true },
         inactive: { $ne: true },
         $or: [

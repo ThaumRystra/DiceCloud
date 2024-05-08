@@ -2,10 +2,11 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 function getFolders(creatureId, tab, location) {
   return CreatureProperties.find({
-    'ancestors.id': creatureId,
+    ...getFilter.descendantsOfRoot(creatureId),
     groupStats: true,
     inactive: { $ne: true },
     removed: { $ne: true },
@@ -13,7 +14,7 @@ function getFolders(creatureId, tab, location) {
     location,
   }, {
     sort: {
-      order: 1,
+      left: 1,
     }
   });
 }

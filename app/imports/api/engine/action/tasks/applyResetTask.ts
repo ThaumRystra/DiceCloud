@@ -17,20 +17,15 @@ export default async function applyResetTask(
     throw new Meteor.Error('wrong-number-of-targets', `Must reset the properties of a single creature at a time, ${task.targetIds.length} targets were provided`)
   }
 
-  // Print a title for the event
-  let name: string;
+  // Print a title for rest events
   switch (task.eventName) {
     case 'shortRest':
-      name = 'Short Rest';
+      result.appendLog({ name: 'Short Rest' }, task.targetIds);
       break;
     case 'longRest':
-      name = 'Long Rest';
-      break;
-    default:
-      name = task.eventName;
+      result.appendLog({ name: 'Long Rest' }, task.targetIds);
       break;
   }
-  result.appendLog({ name }, task.targetIds);
 
   // Reset the properties by this event name
   await resetProperties(task, action, result, userInput);

@@ -13,11 +13,17 @@ import inputProvider from './userInput/inputProviderForTests.testFn';
  * Removes all creatures, properties, and creatureVariable documents from the database
  */
 export async function removeAllCreaturesAndProps() {
-  return Promise.all([
-    CreatureProperties.removeAsync({}),
-    Creatures.removeAsync({}),
-    CreatureVariables.removeAsync({}),
-  ]);
+  if (Meteor.isServer) {
+    return Promise.all([
+      CreatureProperties.removeAsync({}),
+      Creatures.removeAsync({}),
+      CreatureVariables.removeAsync({}),
+    ]);
+  } else {
+    CreatureProperties.find({}).forEach(doc => CreatureProperties.remove(doc._id));
+    Creatures.find({}).forEach(doc => Creatures.remove(doc._id));
+    CreatureVariables.find({}).forEach((doc: any) => CreatureVariables.remove(doc._id));
+  }
 }
 
 /**

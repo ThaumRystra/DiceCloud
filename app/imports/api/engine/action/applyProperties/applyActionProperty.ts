@@ -1,8 +1,7 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { PropTask } from '../tasks/Task';
 import TaskResult, { LogContent } from '../tasks/TaskResult';
-import { getPropertiesOfType, getVariables } from '/imports/api/engine/loadCreatures';
-import applyTask from '/imports/api/engine/action/tasks/applyTask';
+import { getVariables } from '/imports/api/engine/loadCreatures';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
 import spendResources from '/imports/api/engine/action/functions/spendResources';
@@ -115,7 +114,7 @@ async function applyAttackToTarget(
   if (targetArmor !== undefined) {
     let name = criticalHit ? 'Critical Hit!' :
       criticalMiss ? 'Critical Miss!' :
-        result > targetArmor ? 'Hit!' : 'Miss!';
+        result >= targetArmor ? 'Hit!' : 'Miss!';
     if (advantage === 1) {
       name += ' (Advantage)';
     } else if (advantage === -1) {
@@ -170,18 +169,19 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
     result,
     criticalHit,
     criticalMiss,
+    advantage,
   } = await rollAttack(attack, scope, taskResult.pushScope, userInput);
   let name = criticalHit ? 'Critical Hit!' : criticalMiss ? 'Critical Miss!' : 'To Hit';
-  if (scope['~attackAdvantage']?.value === 1) {
+  if (advantage === 1) {
     name += ' (Advantage)';
-  } else if (scope['~attackAdvantage']?.value === -1) {
+  } else if (advantage === -1) {
     name += ' (Disadvantage)';
   }
   if (!criticalMiss) {
-    scope['~attackHit'] = { value: true }
+    taskResult.pushScope['~attackHit'] = { value: true }
   }
   if (!criticalHit) {
-    scope['~attackMiss'] = { value: true };
+    taskResult.pushScope['~attackMiss'] = { value: true };
   }
   taskResult.mutations.push({
     contents: [{

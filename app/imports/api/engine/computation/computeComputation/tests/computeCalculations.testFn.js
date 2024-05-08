@@ -55,7 +55,6 @@ var testProperties = [
   clean({
     _id: 'attackAction',
     type: 'action',
-    ancestors: [{ id: 'charId' }],
     attackRoll: {
       calculation: '3'
     },
@@ -86,7 +85,6 @@ var testProperties = [
   clean({
     _id: 'attackAction2',
     type: 'action',
-    ancestors: [{ id: 'charId' }],
     attackRoll: {
       calculation: '3'
     },

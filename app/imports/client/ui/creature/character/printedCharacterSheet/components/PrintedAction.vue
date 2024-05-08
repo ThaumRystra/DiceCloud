@@ -88,7 +88,7 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import { getFilter, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 
@@ -169,32 +169,31 @@ export default {
   },
   meteor: {
     children() {
-      throw 'TODO: rewrite with nested sets'
-      const indicesOfTerminatingProps = [];
-      const decendants = CreatureProperties.find({
-        'ancestors.id': this.model._id,
+      const rangesToExclude = [];
+      const descendants = CreatureProperties.find({
+        ...getFilter.descendants(this.model),
         'removed': { $ne: true },
       }, {
         sort: {left: 1}
       }).map(prop => {
-        // Get all the props we don't want to show the decendants of and
+        // Get all the props we don't want to show the descendants of and
         // where they might appear in the ancestor list
         if (prop.type === 'buff' || prop.type === 'folder') {
-          indicesOfTerminatingProps.push({
-            id: prop._id,
-            ancestorIndex: prop.ancestors.length,
+          rangesToExclude.push({
+            left: prop.left,
+            right: prop.right,
           });
         }
         return prop;
       }).filter(prop => {
         // Filter out folders entirely
         if (prop.type === 'folder') return false;
-        // Filter out decendants of terminating props
-        return !some(indicesOfTerminatingProps, buffIndex => {
-          return prop.ancestors[buffIndex.ancestorIndex]?.id === buffIndex.id;
+        // Filter out descendants of terminating props
+        return !some(rangesToExclude, range => {
+          return prop.left > range.left && prop.right < range.right;
         });
       });
-      return nodeArrayToTree(decendants);
+      return nodeArrayToTree(descendants);
     },
   },
 }

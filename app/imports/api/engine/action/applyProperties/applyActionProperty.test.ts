@@ -16,7 +16,7 @@ const [
   creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,
   usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId,
   consumeAmmoId, consumeResourceId, noUsesActionId, insufficientResourcesActionId,
-  attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId
+  attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId, disadvantageAttackId, disadvantageEffectId,
 ] = randomIds;
 
 const actionTestCreature = {
@@ -59,6 +59,20 @@ const actionTestCreature = {
       operation: 'advantage',
       targetByTags: true,
       targetTags: ['hasAdvantage'],
+    },
+    // Attack that has Disadvantage
+    {
+      _id: disadvantageAttackId,
+      type: 'action',
+      attackRoll: { calculation: '0' },
+      tags: ['hasDisadvantage'],
+    },
+    {
+      _id: disadvantageEffectId,
+      type: 'effect',
+      operation: 'disadvantage',
+      targetByTags: true,
+      targetTags: ['hasDisadvantage'],
     },
     // Attack that has no target
     {
@@ -333,6 +347,26 @@ describe('Apply Action Properties', function () {
     assert.deepEqual(allMutations(action), expectedMutations);
   });
 
+  it('should make attack rolls that roll with disadvantage', async function () {
+    const prop = await CreatureProperties.findOneAsync(disadvantageAttackId);
+    assert.equal(prop.attackRoll.disadvantage, 1, 'The attack roll should have disadvantage');
+    const action = await runActionById(disadvantageAttackId, [targetCreatureId]);
+    const expectedMutations: Mutation[] = [
+      {
+        contents: [{ name: 'Action' }],
+        targetIds: [targetCreatureId],
+      }, {
+        contents: [{
+          inline: true,
+          name: 'Hit! (Disadvantage)',
+          value: '1d20 [ 10, ~~11~~ ] + 0\n**10**',
+        }],
+        targetIds: [targetCreatureId],
+      }
+    ];
+    assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
   it('actions should consume resources', async function () {
     const action = await runActionById(usesResourcesActionId, []);
     const expectedMutations: Mutation[] = [
@@ -401,7 +435,7 @@ describe('Apply Action Properties', function () {
         contents: [
           {
             inline: true,
-            name: 'Attribute damaged',
+            name: 'Attribute restored',
             value: '+13 Attribute Reset By testEvent Event',
           },
         ],
