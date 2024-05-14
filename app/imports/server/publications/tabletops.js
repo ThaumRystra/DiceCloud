@@ -20,6 +20,26 @@ Meteor.publish('tabletops', function () {
   });
 });
 
+Meteor.publish('tabletopUsers', function (tabletopId) {
+  if (!tabletopId) return [];
+  const tabletop = Tabletops.findOne(tabletopId);
+  if (!tabletop) return [];
+  const userIds = [
+    tabletop.owner,
+    ...tabletop.gameMasters,
+    ...tabletop.players,
+    ...tabletop.spectators,
+  ]
+  return Meteor.users.find({
+    _id: { $in: userIds },
+  }, {
+    fields: {
+      username: 1,
+    },
+    limit: 500,
+  });
+})
+
 Meteor.publish('tabletop', function (tabletopId) {
   var userId = this.userId;
   if (!userId) {

@@ -1,6 +1,7 @@
 <template lang="html">
   <v-container
     v-if="!$subReady.tabletop"
+    key="Tabletop"
     fluid
     class="fill-height"
     align="center"

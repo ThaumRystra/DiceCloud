@@ -2,9 +2,9 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Tabletops from '../Tabletops';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
-import { assertUserIsTabletopOwner } from './shared/tabletopPermissions';
+import { assertCanEditTabletop } from './shared/tabletopPermissions';
 
-const removeTabletop = new ValidatedMethod({
+const updateTabletop = new ValidatedMethod({
 
   name: 'tabletops.update',
 
@@ -15,6 +15,7 @@ const removeTabletop = new ValidatedMethod({
       'name',
       'description',
       'imageUrl',
+      'public',
     ];
     if (!allowedFields.includes(path[0])) {
       throw new Meteor.Error('tabletops.update.denied',
@@ -31,11 +32,11 @@ const removeTabletop = new ValidatedMethod({
 
   run({ _id, path, value }) {
     if (!this.userId) {
-      throw new Meteor.Error('tabletops.remove.denied',
-        'You need to be logged in to remove a tabletop');
+      throw new Meteor.Error('tabletops.update.denied',
+        'You need to be logged in to update a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
-    assertUserIsTabletopOwner(_id, this.userId);
+    assertCanEditTabletop(_id, this.userId);
 
     if (value === undefined || value === null) {
       Tabletops.update(_id, {
@@ -50,4 +51,4 @@ const removeTabletop = new ValidatedMethod({
 
 });
 
-export default removeTabletop;
+export default updateTabletop;

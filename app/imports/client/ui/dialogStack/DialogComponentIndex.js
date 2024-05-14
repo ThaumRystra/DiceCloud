@@ -32,6 +32,7 @@ const LibraryNodeDialog = () => import('/imports/client/ui/library/LibraryNodeDi
 const MoveLibraryNodeDialog = () => import('/imports/client/ui/library/MoveLibraryNodeDialog.vue');
 const SelectCreaturesDialog = () => import('/imports/client/ui/tabletop/SelectCreaturesDialog.vue');
 const ShareDialog = () => import('/imports/client/ui/sharing/ShareDialog.vue');
+const TabletopDialog = () => import('/imports/client/ui/tabletop/TabletopDialog.vue');
 const UsernameDialog = () => import('/imports/client/ui/user/UsernameDialog.vue');
 
 export default {
@@ -66,5 +67,6 @@ export default {
   SlotFillDialog,
   TierTooLowDialog,
   TransferOwnershipDialog,
+  TabletopDialog,
   UsernameDialog,
 };

@@ -50,7 +50,7 @@
     </v-app-bar>
     <v-main>
       <connection-banner />
-      <v-fade-transition mode="out-in">
+      <v-fade-transition hide-on-leave>
         <router-view />
       </v-fade-transition>
     </v-main>

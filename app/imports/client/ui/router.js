@@ -207,6 +207,9 @@ RouterFactory.configure(router => {
     name: 'tabletops',
     component: Tabletops,
     beforeEnter: ensureLoggedIn,
+    meta: {
+      title: 'Tabletops',
+    },
   }, {
     path: '/tabletop/:id',
     name: 'tabletop',
