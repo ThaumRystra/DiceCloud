@@ -5,7 +5,7 @@ type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask | ResetTask;
 export default Task;
 
 type BaseTask = {
-  prop: { [key: string]: any };
+  prop: { type: string, [key: string]: any };
   targetIds: string[];
 }
 

@@ -25,6 +25,7 @@ export default function writeAlteredProperties(computation) {
       'left',
       'right',
       'parentId',
+      'triggerIds',
       ...schema.objectKeys(),
     ];
     op = addChangedKeysToOp(op, keys, original, changed);

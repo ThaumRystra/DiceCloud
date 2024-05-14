@@ -134,7 +134,7 @@ const ComputedOnlyTriggerSchema = createPropertySchema({
   },
 });
 
-const ComputedTriggerSchema = new SimpleSchema()
+const ComputedTriggerSchema = new SimpleSchema({})
   .extend(TriggerSchema)
   .extend(ComputedOnlyTriggerSchema);
 

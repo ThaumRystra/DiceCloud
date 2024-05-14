@@ -54,9 +54,9 @@ type TestCreature = {
 }
 
 /**
- * A list of 100 random Ids
+ * get a list of random Ids
  */
-export const randomIds = new Array(100).fill(undefined).map(() => Random.id());
+export const getRandomIds = (count) => new Array(count).fill(undefined).map(() => Random.id());
 
 /**
  * Creates a new Engine Action and applies the specified creature property

@@ -4,7 +4,7 @@ import {
   allMutations,
   allUpdates,
   createTestCreature,
-  randomIds,
+  getRandomIds,
   removeAllCreaturesAndProps,
   runActionById
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
@@ -17,7 +17,7 @@ const [
   usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId,
   consumeAmmoId, consumeResourceId, noUsesActionId, insufficientResourcesActionId,
   attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId, disadvantageAttackId, disadvantageEffectId,
-] = randomIds;
+] = getRandomIds(100);
 
 const actionTestCreature = {
   _id: creatureId,
