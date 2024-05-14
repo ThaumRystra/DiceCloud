@@ -6,9 +6,10 @@ import { getPropertiesOfType, getPropertyAncestors } from '/imports/api/engine/l
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
-export default function applyBuffRemoverProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput
+export default async function applyBuffRemoverProperty(
+  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ) {
   const prop = task.prop;
 
@@ -55,7 +56,7 @@ export default function applyBuffRemoverProperty(
       }
     }
   }
-  applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
+  return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
 }
 
 function removeBuff(buff: any, prop, result: TaskResult) {

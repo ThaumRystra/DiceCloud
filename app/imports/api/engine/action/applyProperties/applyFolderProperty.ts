@@ -4,7 +4,7 @@ import { PropTask } from '/imports/api/engine/action/tasks/Task';
 
 
 export default async function applyFolderProperty(
-  task: PropTask, action: EngineAction, userInput
+  task: PropTask, action: EngineAction, result, userInput
 ): Promise<void> {
   const prop = task.prop;
   return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
