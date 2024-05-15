@@ -19,12 +19,18 @@ export default function bulkWrite(bulkWriteOps, collection): void | Promise<any>
 // latency compensation and causes flickering
 function writePropertiesSequentially(bulkWriteOps: any[], collection: Mongo.Collection<any>) {
   bulkWriteOps.forEach(op => {
+    const insertOne = op.insertOne;
+    if (insertOne) {
+      collection.insert(insertOne);
+    }
     const updateOneOrMany = op.updateOne || op.updateMany;
-    collection.update(updateOneOrMany.filter, updateOneOrMany.update, {
-      // The bulk code is bypassing validation, so do the same here
-      // @ts-expect-error Collection 2 has no typescript support
-      bypassCollection2: true,
-    });
+    if (updateOneOrMany) {
+      collection.update(updateOneOrMany.filter, updateOneOrMany.update, {
+        // The bulk code is bypassing validation, so do the same here
+        // @ts-expect-error Collection 2 has no typescript support
+        bypassCollection2: true,
+      });
+    }
   });
 }
 

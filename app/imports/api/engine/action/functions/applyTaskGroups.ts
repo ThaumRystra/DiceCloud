@@ -131,7 +131,7 @@ export async function applyAfterPropTasksForSomeChildren(
 export async function applyTriggers(
   action: EngineAction, prop, targetIds: string[], triggerPath: string, inputProvider: InputProvider
 ) {
-  const triggerIds = get(prop?.triggers, triggerPath);
+  const triggerIds = get(prop?.triggerIds, triggerPath);
   if (!triggerIds) return;
   for (const triggerId of triggerIds) {
     const trigger = await getSingleProperty(action.creatureId, triggerId);

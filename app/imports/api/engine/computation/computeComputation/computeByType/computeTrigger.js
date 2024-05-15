@@ -8,17 +8,32 @@ export default function computeTrigger(computation, node) {
   if (prop.inactive) return;
 
   // Link triggers to all the properties that would fire them when applied
-  if (prop.event === 'doActionProperty') {
-    getEffectTagTargets(prop, computation).forEach(targetId => {
-      const targetProp = computation.propsById[targetId];
-      // Only apply if the trigger matches this property type
-      if (targetProp.type !== prop.actionPropertyType) return;
-      let triggerIdArray = get(targetProp, `triggerIds.${prop.timing}`);
-      if (!triggerIdArray) {
-        triggerIdArray = [];
-        set(targetProp, `triggerIds.${prop.timing}`, triggerIdArray);
-      }
-      triggerIdArray.push(prop._id);
-    });
+  const tagTargets = getEffectTagTargets(prop, computation);
+  switch (prop.event) {
+    case 'doActionProperty':
+      tagTargets.forEach(targetId => {
+        const targetProp = computation.propsById[targetId];
+        // Only apply if the trigger matches this property type
+        if (targetProp.type !== prop.actionPropertyType) return;
+        setTrigger(prop, targetProp);
+      });
+      break;
+    case 'damageProperty':
+      tagTargets.forEach(targetId => {
+        const targetProp = computation.propsById[targetId];
+        // Only apply to attributes
+        if (targetProp.type !== 'attribute') return;
+        setTrigger(prop, targetProp);
+      });
+      break;
   }
+}
+
+function setTrigger(prop, targetProp) {
+  let triggerIdArray = get(targetProp, `triggerIds.${prop.timing}`);
+  if (!triggerIdArray) {
+    triggerIdArray = [];
+    set(targetProp, `triggerIds.${prop.timing}`, triggerIdArray);
+  }
+  triggerIdArray.push(prop._id);
 }

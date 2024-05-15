@@ -15,7 +15,7 @@ export default async function applyAdjustmentProperty(
   const damageTargetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
   if (damageTargetIds.length > 1) {
-    return await applyTaskToEachTarget(action, task, damageTargetIds, userInput);
+    return applyTaskToEachTarget(action, task, damageTargetIds, userInput);
   }
 
   // Get the operation and value and push the damage hooks to the queue

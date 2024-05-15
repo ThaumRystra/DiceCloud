@@ -10,7 +10,6 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString';
 export default async function applyDamagePropTask(
   task: DamagePropTask, action: EngineAction, result: TaskResult, userInput
 ): Promise<number> {
-
   const prop = task.prop;
 
   if (task.targetIds.length > 1) {
@@ -43,7 +42,11 @@ export default async function applyDamagePropTask(
   }
 
   // Run the before triggers which may change scope properties
-  await applyTriggers(action, targetProp, [action.creatureId], 'damageProperty.before', userInput);
+  await applyTriggers(action, targetProp, [action.creatureId], 'before', userInput);
+
+  // Create a new result after triggers have run
+  result = new TaskResult(task.prop._id, task.targetIds);
+  action.results.push(result);
 
   // Refetch the scope properties
   const scope = await getEffectiveActionScope(action);
@@ -105,6 +108,7 @@ export default async function applyDamagePropTask(
         ...prop.silent && { silenced: true },
       }]
     });
+    setScope(result, targetProp, newValue, damage);
   } else if (operation === 'increment') {
     const currentValue = targetProp.value || 0;
     const currentDamage = targetProp.damage || 0;
@@ -130,7 +134,28 @@ export default async function applyDamagePropTask(
         ...prop.silent && { silenced: true },
       }]
     });
+    setScope(result, targetProp, newValue, damage);
   }
-  await applyTriggers(action, prop, [action.creatureId], 'damageProperty.after', userInput);
+  await applyTriggers(action, targetProp, [action.creatureId], 'after', userInput);
+  await applyTriggers(action, targetProp, [action.creatureId], 'afterChildren', userInput);
   return increment;
+}
+
+// Update the scope with the attribute, but updated to the new value
+// TODO ideally we re-write the getEffectiveActionScope code to be more
+// getSomethingFromScope which does the same work, but for a single key, and includes all
+// updates to the doc returned that are already applied in the result array
+function setScope(result, targetProp, newValue, damage) {
+  // This isn't the defining property, don't bother
+  if (targetProp.overridden) return;
+  const key = targetProp.variableName;
+  // No variable name can't set scope
+  if (!key) return;
+  // Make sure scope is defined
+  if (!result.scope) result.scope = {};
+  result.scope[key] = {
+    ...EJSON.clone(targetProp),
+    value: newValue,
+    damage,
+  };
 }

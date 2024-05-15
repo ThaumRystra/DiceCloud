@@ -41,7 +41,7 @@ export default async function applyDamageProperty(
   const logName = prop.damageType === 'healing' ? 'Healing' : 'Damage';
 
   // roll the dice only and store that string
-  recalculateCalculation(prop.amount, action, 'compile', inputProvider);
+  await recalculateCalculation(prop.amount, action, 'compile', inputProvider);
   const { result: rolled } = await resolve('roll', prop.amount.valueNode, scope, context, inputProvider);
   if (rolled.parseType !== 'constant') {
     logValue.push(toString(rolled));
@@ -99,7 +99,7 @@ export default async function applyDamageProperty(
   let damageOnSave, saveProp, saveRoll;
   if (prop.save) {
     if (prop.save.damageFunction?.calculation) {
-      recalculateCalculation(prop.save.damageFunction, action, 'compile', inputProvider);
+      await recalculateCalculation(prop.save.damageFunction, action, 'compile', inputProvider);
       context.errors = [];
       const { result: saveDamageRolled } = await resolve(
         'roll', prop.save.damageFunction.valueNode, scope, context, inputProvider
