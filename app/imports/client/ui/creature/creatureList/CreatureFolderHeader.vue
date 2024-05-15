@@ -13,7 +13,7 @@
         regular
         hide-details
         dense
-        :value="model.name"
+        :value="newName"
         @change="renameFolder"
         @click.native.stop=""
         @input.native.stop=""
@@ -66,28 +66,32 @@
     },
     data(){return {
       renaming: false,
+      newName: this.model?.name,
     }},
     watch: {
       renaming(value){
-        if (!value) return;
-        Vue.nextTick(() => {
-          this.$refs['name-input'].focus();
-        });
+        if (value) {
+          Vue.nextTick(() => {
+            this.$refs['name-input'].focus();
+          });
+        } else if (this.newName && this.newName !== this.model.name) {
+          updateCreatureFolderName.call({
+            _id: this.model._id,
+            name: this.newName
+          }, error => {
+            if (!error) return;
+            console.error(error);
+            snackbar({
+              text: error.reason,
+            });
+          });
+        }
       },
     },
     methods:{
       renameFolder(name, ack){
-        updateCreatureFolderName.call({
-          _id: this.model._id,
-          name
-        }, error => {
-          ack(error);
-          if (!error) return;
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        });
+        this.newName = name;
+        ack();
       },
       removeFolder(){
         removeCreatureFolder.call({

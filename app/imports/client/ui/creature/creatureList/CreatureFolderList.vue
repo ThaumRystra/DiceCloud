@@ -12,29 +12,34 @@
       :dense="dense"
       @creature-selected="id => $emit('creature-selected', id)"
     />
-    <v-list-group
-      v-for="folder in folders"
-      :key="folder._id"
-      v-model="openFolders[folder._id]"
-      :dense="dense"
+    <v-slide-x-transition
+      group
+      leave-absolute
     >
-      <template #activator>
-        <creature-folder-header
-          :open="openFolders[folder._id]"
-          :model="folder"
-          :selection="selection"
-          :dense="dense"
-        />
-      </template>
-      <creature-list
-        :creatures="folder.creatures"
-        :folder-id="folder._id"
-        :selection="selection"
-        :selected-creature="selectedCreature"
+      <v-list-group
+        v-for="folder in folders"
+        :key="folder._id"
+        v-model="openFolders[folder._id]"
         :dense="dense"
-        @creature-selected="id => $emit('creature-selected', id)"
-      />
-    </v-list-group>
+      >
+        <template #activator>
+          <creature-folder-header
+            :open="openFolders[folder._id]"
+            :model="folder"
+            :selection="selection"
+            :dense="dense"
+          />
+        </template>
+        <creature-list
+          :creatures="folder.creatures"
+          :folder-id="folder._id"
+          :selection="selection"
+          :selected-creature="selectedCreature"
+          :dense="dense"
+          @creature-selected="id => $emit('creature-selected', id)"
+        />
+      </v-list-group>
+    </v-slide-x-transition>
   </v-list>
 </template>
 
