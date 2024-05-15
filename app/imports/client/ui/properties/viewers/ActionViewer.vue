@@ -127,6 +127,7 @@ import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue'
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import doCastSpell from '/imports/api/engine/action/methods/doCastSpell.js';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 
 export default {
   components: {
@@ -187,50 +188,14 @@ export default {
     },
   },
   methods: {
-    
     doAction() {
-      this.$store.commit('pushDialogStack', {
-        component: 'action-dialog',
-        elementId: 'do-action-button',
-        data: {
-          propId: this.model._id,
-        },
+      this.doActionLoading = true;
+      doAction(this.model, this.$store, this.model._id).catch((e) => {
+        console.error(e);
+        snackbar({ text: e.message || e.reason || e.toString() });
+      }).finally(() => {
+        this.doActionLoading = false;
       });
-      return;
-      if (this.model.type === 'action') {
-        this.doActionLoading = true;
-        doAction.call({ actionId: this.model._id }, error => {
-          this.doActionLoading = false;
-          if (error) {
-            snackbar({ text: error.reason });
-            console.error(error);
-          }
-        });
-      } else if (this.model.type === 'spell') {
-        this.$store.commit('pushDialogStack', {
-          component: 'cast-spell-with-slot-dialog',
-          elementId: 'do-action-button',
-          data: {
-            creatureId: this.context.creatureId,
-            spellId: this.model._id,
-          },
-          callback({ spellId, slotId, advantage, ritual } = {}) {
-            if (!spellId) return;
-            doCastSpell.call({
-              spellId,
-              slotId,
-              ritual,
-              scope: {
-                '~attackAdvantage': { value: advantage },
-              },
-            }, error => {
-              if (!error) return;
-              snackbar({ text: error.reason });
-              console.error(error);
-            });
-          },
-        });
-      }
     },
     resetUses() {
       updateCreatureProperty.call({
