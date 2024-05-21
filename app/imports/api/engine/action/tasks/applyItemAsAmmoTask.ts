@@ -22,7 +22,11 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
   result.pushScope = { ['~ammoConsumed']: { value } };
 
   // Apply the before triggers
-  await applyTriggers(action, item, [action.creatureId], 'ammo.before', userInput);
+  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.before', userInput);
+
+  // Create a new result after before triggers have run
+  result = new TaskResult(task.prop._id, task.targetIds);
+  action.results.push(result);
 
   // Refetch the scope properties
   const scope = await getEffectiveActionScope(action);
@@ -52,11 +56,12 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
     },
   });
 
-  await applyTriggers(action, item, [action.creatureId], 'ammo.after', userInput);
+  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.after', userInput);
 
   if (task.params.skipChildren) {
-    return applyAfterTasksSkipChildren(action, item, task.targetIds, userInput);
+    await applyAfterTasksSkipChildren(action, item, task.targetIds, userInput);
   } else {
-    return applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
+    await applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
   }
+  return applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.afterChildren', userInput);
 }

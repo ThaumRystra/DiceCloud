@@ -1,10 +1,10 @@
-import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
+import { applyTriggers } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { CheckTask } from '/imports/api/engine/action/tasks/Task';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { getVariables } from '/imports/api/engine/loadCreatures';
-import InputProvider, { CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 
@@ -37,6 +37,17 @@ export default async function applyCheckTask(
 
     const ability = checkParams.abilityVariableName && getFromScope(checkParams.abilityVariableName, scope) || null;
     const abilityModifier = ability?.modifier || 0;
+
+
+    // Run the before triggers which may change scope properties
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.before', userInput);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.before', userInput);
+
+    if (skill || ability) {
+      // Create a new result after before triggers have run
+      result = new TaskResult(task.prop._id, task.targetIds);
+      action.results.push(result);
+    }
 
     const totalModifier = skillBonus + abilityModifier;
     const rollModifierText = numberToSignedString(totalModifier);
@@ -100,9 +111,15 @@ export default async function applyCheckTask(
       inline: true,
       ...prop?.silent && { silenced: prop.silent }
     }, [targetId]);
-  }
 
-  return applyDefaultAfterPropTasks(action, prop, targetIds, userInput);
+    // After check triggers
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.after', userInput);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.after', userInput);
+
+    // After children check triggers
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.afterChildren', userInput);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.afterChildren', userInput);
+  }
 }
 
 // TODO set these and potentially read them again if triggers can change them

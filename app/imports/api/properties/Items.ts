@@ -68,16 +68,46 @@ const ItemSchema = createPropertySchema({
     type: Boolean,
     optional: true,
   },
+  // Triggers that fire when this property is used as ammo
+  'ammoTriggerIds': {
+    type: Object,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'ammoTriggerIds.before': {
+    type: Array,
+    optional: true,
+  },
+  'ammoTriggerIds.before.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'ammoTriggerIds.after': {
+    type: Array,
+    optional: true,
+  },
+  'ammoTriggerIds.after.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'ammoTriggerIds.afterChildren': {
+    type: Array,
+    optional: true,
+  },
+  'ammoTriggerIds.afterChildren.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
 });
 
-let ComputedOnlyItemSchema = createPropertySchema({
+const ComputedOnlyItemSchema = createPropertySchema({
   description: {
     type: 'computedOnlyInlineCalculationField',
     optional: true,
   },
 });
 
-const ComputedItemSchema = new SimpleSchema()
+const ComputedItemSchema = new SimpleSchema({})
   .extend(ItemSchema)
   .extend(ComputedOnlyItemSchema);
 

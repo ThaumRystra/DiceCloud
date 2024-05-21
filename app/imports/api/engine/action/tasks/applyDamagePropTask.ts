@@ -42,7 +42,7 @@ export default async function applyDamagePropTask(
   }
 
   // Run the before triggers which may change scope properties
-  await applyTriggers(action, targetProp, [action.creatureId], 'before', userInput);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.before', userInput);
 
   // Create a new result after triggers have run
   result = new TaskResult(task.prop._id, task.targetIds);
@@ -136,8 +136,8 @@ export default async function applyDamagePropTask(
     });
     setScope(result, targetProp, newValue, damage);
   }
-  await applyTriggers(action, targetProp, [action.creatureId], 'after', userInput);
-  await applyTriggers(action, targetProp, [action.creatureId], 'afterChildren', userInput);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.after', userInput);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.afterChildren', userInput);
   return increment;
 }
 

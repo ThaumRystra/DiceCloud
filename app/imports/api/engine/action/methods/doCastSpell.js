@@ -7,7 +7,6 @@ import {
 } from '/imports/api/engine/loadCreatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
-import { damagePropertyWork } from '/imports/api/creature/creatureProperties/methods/damageProperty';
 
 // TODO Migrate this to the new action engine
 

@@ -280,9 +280,69 @@ const ComputedOnlyAttributeSchema = createPropertySchema({
     type: Number,
     optional: true,
   },
+  // Triggers that fire when this property is damaged
+  'damageTriggerIds': {
+    type: Object,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'damageTriggerIds.before': {
+    type: Array,
+    optional: true,
+  },
+  'damageTriggerIds.before.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'damageTriggerIds.after': {
+    type: Array,
+    optional: true,
+  },
+  'damageTriggerIds.after.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'damageTriggerIds.afterChildren': {
+    type: Array,
+    optional: true,
+  },
+  'damageTriggerIds.afterChildren.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  // Triggers that fire when this property is used to make a check
+  'checkTriggerIds': {
+    type: Object,
+    optional: true,
+    removeBeforeCompute: true,
+  },
+  'checkTriggerIds.before': {
+    type: Array,
+    optional: true,
+  },
+  'checkTriggerIds.before.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'checkTriggerIds.after': {
+    type: Array,
+    optional: true,
+  },
+  'checkTriggerIds.after.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
+  'checkTriggerIds.afterChildren': {
+    type: Array,
+    optional: true,
+  },
+  'checkTriggerIds.afterChildren.$': {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+  },
 });
 
-const ComputedAttributeSchema = new SimpleSchema()
+const ComputedAttributeSchema = new SimpleSchema({})
   .extend(ComputedOnlyAttributeSchema)
   .extend(AttributeSchema);
 
