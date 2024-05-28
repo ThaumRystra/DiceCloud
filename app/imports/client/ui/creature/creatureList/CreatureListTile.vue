@@ -99,6 +99,7 @@ export default {
       // Create the undo function
       const oldOrder = item.order;
       const oldParent = item.parent;
+      // TODO organize doc needs to be replaced with organize between roots
       const undo = () => organizeDoc.callAsync({
         docRef,
         parentRef: oldParent,
@@ -111,7 +112,7 @@ export default {
         }
       });
 
-      // Move the doc
+      // TODO organize doc needs to be replaced with organize between roots
       organizeDoc.callAsync({
         docRef,
         parentRef: { collection: 'creatures', id: this.model._id },
@@ -122,7 +123,7 @@ export default {
           snackbar({ text: error.reason || error.message || error.toString() });
         } else {
           snackbar({
-            text: `\u{1F36A} Moved ${item.name || 'item'} to ${this.model.name || 'another character'}`,
+            text: `Moved ${item.name || 'item'} to ${this.model.name || 'another character'}`,
             callbackName: 'undo',
             callback: undo,
           });
