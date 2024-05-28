@@ -99,7 +99,6 @@
           </v-layout>
           <v-layout
             align-center
-            :class="{'mb-2': model.attuned}"
           >
             <v-icon
               class="mr-2"
@@ -128,7 +127,18 @@
         </v-icon>
         <span class="ml-1">Equipped</span>
       </property-field>
-      <property-field v-if="model.requiresAttunement">
+      <property-field
+        v-if="model.requiresAttunement && context.creatureId"
+        name="Requires attunement"
+      >
+        <smart-switch
+          class="ml-4"
+          label="Attuned"
+          :value="model.attuned"
+          @change="(value, ack) => $emit('change', { path: ['attuned'], value, ack })"
+        />
+      </property-field>
+      <property-field v-if="model.requiresAttunement && !context.creatureId">
         <template v-if="model.attuned">
           <v-icon
             style="overflow: hidden;"

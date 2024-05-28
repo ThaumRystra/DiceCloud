@@ -53,6 +53,7 @@
       class="property-viewer"
       :model="model"
       @select-sub-property="id => selectSubProperty(id)"
+      @change="e => $emit('change', e)"
       @remove="$emit('remove')"
     />
     <v-row dense>

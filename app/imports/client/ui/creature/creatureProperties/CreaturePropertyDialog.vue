@@ -50,6 +50,7 @@
           :model="model"
           @select-sub-property="selectSubProperty"
           @remove="remove"
+          @change="change"
         />
       </v-fade-transition>
     </template>
