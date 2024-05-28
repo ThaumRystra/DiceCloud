@@ -6,6 +6,8 @@
 </template>
 
 <script lang="js">
+import Docs from '/imports/api/docs/Docs';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default {
   props: {
@@ -17,24 +19,27 @@ export default {
   computed: {
     items() {
       const items = [{
-        text: 'Home',
+        text: 'Docs',
         to: '/docs',
         exact: true,
       }];
-      if (!this.doc?.ancestors) return items;
-      const address = ['/docs']
-      this.doc.ancestors?.forEach(a => {
-        address.push(a.urlName);
+      if (!this.doc) return items;
+
+      const ancestors = Docs.find({
+        ...getFilter.ancestors(this.doc)
+      }).fetch();
+      
+      ancestors.forEach(a => {
         items.push({
           text: a.name,
-          to: address.join('/'),
+          to: a.href,
           exact: true,
         });
       });
-      address.push(this.doc.urlName);
+      
       items.push({
         text: this.doc.name,
-        to: address.join('/'),
+        to: this.doc.href,
         exact: true,
       });
       return items;

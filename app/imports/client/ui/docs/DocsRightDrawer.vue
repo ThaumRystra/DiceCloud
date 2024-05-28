@@ -10,20 +10,18 @@
       :children="docs"
       :organize="true"
       :selected-node="undefined"
+      :root="{collection: 'docs', id: 'DDDDDDDDDDDDDDDDD'}"
       group="docs"
+      @move-within-root="moveWithinRoot"
       @selected="selected"
-      @reordered="reordered"
-      @reorganized="reorganized"
     />
   </v-navigation-drawer>
 </template>
 
 <script lang="js">
+import Docs, { organizeDoc } from '/imports/api/docs/Docs';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { organizeDoc, reorderDoc } from '/imports/api/docs/Docs.js';
-import Docs from '/imports/api/docs/Docs.js';
-
 export default {
   components: {
     TreeNodeList,
@@ -47,7 +45,7 @@ export default {
       return Session.get('editingDocs');
     },
     docs() {
-      const docs = Docs.find({ removed: {$ne: true} }, { sort: {left: 1} }).fetch();
+      const docs = Docs.find({ removed: { $ne: true } }, { sort: { left: 1 } }).fetch();
       return docsToForest(docs);
     },
   },
@@ -55,25 +53,12 @@ export default {
     selected(docId) {
       const doc = Docs.findOne(docId);
       if (!doc) return;
-      console.log(doc.href);
       this.$router.push(doc.href);
     },
-    reordered({ doc, newIndex }) {
-      reorderDoc.callAsync({
-        docId: doc._id,
-        order: newIndex,
-      });
-    },
-    reorganized({ doc, parent, newIndex }) {
-      if (!parent) {
-        this.refreshTree += 1;
-        console.error('Moving docs to root level isn\'t implemented');
-        return;
-      }
+    moveWithinRoot({ doc, newPosition }) {
       organizeDoc.callAsync({
         docId: doc._id,
-        parentId: parent?._id,
-        order: newIndex,
+        newPosition,
       });
     },
   }

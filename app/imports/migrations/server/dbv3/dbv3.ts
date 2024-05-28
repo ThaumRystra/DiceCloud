@@ -1,12 +1,15 @@
 import { Migrations } from 'meteor/percolate:migrations';
 import Libraries from '/imports/api/library/Libraries';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import Docs, { DOC_ROOT_ID } from '/imports/api/docs/Docs';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import { TreeDoc } from '/imports/api/parenting/ChildSchema';
 
 // Git version 2.0.59
 // Database version 3
 Migrations.add({
   version: 3,
-  name: 'Separates creature property tags from library tags',
+  name: 'Changes parenting from array of ancestors to nested sets',
   up: Meteor.wrapAsync(async (_, next) => {
     console.log('migrating up library nodes 2 -> 3');
     migrateCollection('libraryNodes');
@@ -16,12 +19,21 @@ Migrations.add({
     migrateCollection('docs');
     console.log('New schema fields added, if it was done correctly remove the old fields manually');
 
-    console.log('Rebuilding nested sets for all libraries');
-    const libraryIds = await Mongo.Collection.get('libraries').find().mapAsync((library) => library._id);
+    console.log('Rebuilding nested sets for all libraries'); // Characters rebuild themselves on recompute
+    const libraryIds = await Libraries.find().mapAsync((library) => library._id);
     for (const [index, libraryId] of libraryIds.entries()) {
       console.log('Rebuilding nested sets for library', index + 1, 'of', libraryIds.length);
-      await rebuildNestedSets(Mongo.Collection.get('libraryNodes'), libraryId);
+      await rebuildNestedSets(LibraryNodes as Mongo.Collection<TreeDoc>, libraryId);
     }
+
+    console.log('Removing all docs and replacing them with default docs');
+    Docs.remove({});
+    Assets.getText('docs/defaultDocs.json', (error, string) => {
+      const docs = JSON.parse(string)
+      docs.forEach(doc => Docs.insert(doc));
+    });
+    rebuildNestedSets(Docs, DOC_ROOT_ID);
+
     next();
   }),
 
@@ -32,7 +44,6 @@ Migrations.add({
 });
 
 export function migrateCollection(collectionName: string) {
-  // @ts-expect-error Collection.get is not defined
   const collection = Mongo.Collection.get(collectionName);
   // Copy the parent id field and the root ancestor to the new structure
   // Using the mongo aggregation API

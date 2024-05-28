@@ -110,7 +110,7 @@ export default {
     },
     childDocs() {
       if (!this.doc) return Docs.find({
-        'parent': undefined,
+        'parentId': undefined,
         removed: { $ne: true },
       }, {
         sort: { left: 1 }
@@ -125,7 +125,7 @@ export default {
     siblingDocs() {
       if (!this.doc) return [];
       return Docs.find({
-        'parentId': this.doc.parent?.id,
+        'parentId': this.doc.parentId,
         removed: { $ne: true },
       }, {
         sort: { left: 1 }

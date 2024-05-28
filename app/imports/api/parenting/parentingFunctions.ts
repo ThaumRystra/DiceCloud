@@ -1,11 +1,10 @@
-import { chain, reverse, set } from 'lodash';
+import { chain, reverse } from 'lodash';
 import { TreeDoc, treeDocFields, Reference } from '/imports/api/parenting/ChildSchema';
 import { getProperties } from '/imports/api/engine/loadCreatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { Mongo } from 'meteor/mongo';
 
 export function getCollectionByName(name: string): Mongo.Collection<TreeDoc> {
-  const collection: Mongo.Collection<TreeDoc> = Mongo.Collection.get(name)
+  const collection = Mongo.Collection.get<TreeDoc>(name)
   if (!collection) {
     throw new Meteor.Error('bad-collection-reference',
       `Parent references collection ${name}, which does not exist`
@@ -119,7 +118,6 @@ export function filterToForest(
   if (options.sort) {
     collectionSort = {
       ...collectionSort,
-      // @ts-expect-error go home typescript you're drunk
       ...options.sort,
     }
   }

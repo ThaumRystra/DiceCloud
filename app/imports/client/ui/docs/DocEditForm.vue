@@ -183,7 +183,7 @@ export default {
         parentId: this.docId,
       }, ack);
     },
-    remove({ ack } = {}) {
+    remove({ ack }) {
       const _id = this.docId;
       const docName = this.doc.name;
       let parentHref = '/docs';
