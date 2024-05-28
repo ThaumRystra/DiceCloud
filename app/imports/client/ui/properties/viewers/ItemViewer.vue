@@ -21,6 +21,22 @@
         />
       </property-field>
       <property-field
+        name="Delete"
+        center
+      >
+        <v-btn
+          outlined
+          style="font-size: 18px;"
+          class="ma-2"
+          :color="'primary'"
+          icon
+          :disabled="!context.editPermission"
+          @click="$emit('remove')"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </property-field>
+      <property-field
         v-if="model.value !== undefined"
         name="value"
       >

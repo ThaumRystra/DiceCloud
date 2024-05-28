@@ -49,6 +49,7 @@
           :key="_id"
           :model="model"
           @select-sub-property="selectSubProperty"
+          @remove="remove"
         />
       </v-fade-transition>
     </template>
