@@ -21,6 +21,7 @@
         />
       </property-field>
       <property-field
+        v-if="context.creatureId"
         name="Delete"
         center
       >
