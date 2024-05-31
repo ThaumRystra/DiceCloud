@@ -4,16 +4,6 @@
     class="selected-creature-bar d-flex pa-3  align-end"
     style="gap: 8px;"
   >
-    <!--
-    <tabletop-buff-icons
-      creature-id="creatureId"
-      @select-icon="selectIcon"
-    />
-    <tabletop-portrait
-      creature-id="creatureId"
-      @select-icon="selectIcon"
-    />
-    -->
     <v-menu
       v-model="menuOpen"
       v-click-outside="{
@@ -125,12 +115,6 @@
         </template>
       </div>
     </v-card>
-    <!--<tabletop-actions
-      creature-id="creatureId"
-      @select-icon="selectIcon"
-    />
-    <tabletop-detail-popover />
-    -->
   </div>
 </template>
 

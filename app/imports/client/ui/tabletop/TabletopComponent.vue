@@ -19,7 +19,7 @@
       <v-row
         dense
         class="initiative-row flex-grow-0"
-        style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 50px;"
+        style="flex-wrap: nowrap; overflow-x: azuto; padding-bottom: 50px; min-width: 200px;"
         @wheel="transformScroll($event)"
       >
         <tabletop-creature-card
@@ -48,7 +48,7 @@
           @untarget="untarget(creature._id)"
         />
         <div
-          class="layout column ma-1 flex-grow-0"
+          class="layout column ma-1 flex-grow-0 flex-shrink-0"
         >
           <v-btn
             data-id="select-creatures"
@@ -68,36 +68,6 @@
           </v-btn>
         </div>
       </v-row>
-      <div class="d-flex flex-column align-start ml-2">
-        <div class="d-flex flex-column">
-          <tabletop-creature-list-item
-            v-for="creature in creatures"
-            :key="creature._id"
-            :model="creature"
-            :title="creature.name"
-            :active="activeCreatureId === creature._id"
-            :targeted="targets.includes(creature._id)"
-            :show-target-btn="targets.includes(creature._id) || moreTargets"
-            v-on="(!activeActionId || (targets.includes(creature._id) || moreTargets)) ? {
-              click: () => {
-                if (activeActionId) {
-                  if (targets.includes(creature._id)) {
-                    untarget(creature._id)
-                  } else {
-                    if (moreTargets) targets.push(creature._id);
-                  }
-                } else {
-                  activeCreatureId = creature._id;
-                  targets = [];
-                  activeActionId = undefined;
-                }
-              }
-            } : {}"
-            @target="targets.push(creature._id)"
-            @untarget="untarget(creature._id)"
-          />
-        </div>
-      </div>
     </v-container>
     <v-footer
       inset
