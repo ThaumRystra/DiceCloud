@@ -43,13 +43,10 @@ let CreatureLogSchema = new SimpleSchema({
     type: String,
     index: 1,
   },
-  // creatures targeted by any of the logged events
-  targetIds: {
-    type: Array,
-    optional: true,
-  },
-  'targetIds.$': {
+  // The tabletops this log is associated with
+  tabletopId: {
     type: String,
+    optional: true,
     index: 1,
   },
   creatureName: {

@@ -26,7 +26,7 @@ export default async function writeActionResults(action: EngineAction) {
   const logPromise = CreatureLogs.insertAsync({
     content: logContents,
     creatureId: action.creatureId,
-    targetIds: allTargetIds,
+    tabletopId: action.tabletopId,
   });
 
   // Write the bulk updates

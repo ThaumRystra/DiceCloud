@@ -6,10 +6,10 @@
     <v-slide-y-reverse-transition
       group
       hide-on-leave
-      class="card-raised-background flex layout column reverse align-end pa-3"
+      class="card-raised-background flex layout column reverse align-end py-3 px-1"
       style="overflow: auto;"
     >
-      <log-entry
+      <tabletop-log-entry
         v-for="log in logs"
         :key="log._id"
         :model="log"
@@ -43,18 +43,14 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import { parse, prettifyParseError } from '/imports/parser/parser';
 import resolve from '/imports/parser/resolve';
 import toString from '/imports/parser/toString';
-import LogEntry from '/imports/client/ui/log/LogEntry.vue';
+import TabletopLogEntry from '/imports/client/ui/log/TabletopLogEntry.vue';
 import { Tracker } from 'meteor/tracker'
 
 export default {
   components: {
-    LogEntry,
+    TabletopLogEntry,
   },
   props: {
-    creatureId: {
-      type: String,
-      default: undefined,
-    },
     tabletopId: {
       type: String,
       default: undefined,
@@ -67,6 +63,7 @@ export default {
     history: [],
     historyIndex: 1,
     submitLoading: false,
+    creatureId: undefined,
   }},
   watch: {
     input(value){
@@ -81,6 +78,11 @@ export default {
         this.input = this.history[i];
       }
     }
+  },
+  mounted() {
+    this.$root.$on('active-tabletop-character-change', (id) => {
+      this.creatureId = id;
+    });
   },
   methods: {
     submit() {

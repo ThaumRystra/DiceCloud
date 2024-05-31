@@ -10,7 +10,7 @@
 </template>
 
 <script lang="js">
-import TabletopLog from '/imports/client/ui/tabletop/TabletopLog.vue';
+import TabletopLog from '/imports/client/ui/log/TabletopLog.vue';
 export default {
   components: {
     TabletopLog,

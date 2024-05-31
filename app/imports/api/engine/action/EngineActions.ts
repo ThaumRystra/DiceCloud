@@ -11,6 +11,7 @@ export interface EngineAction {
   _decisions?: any[],
   creatureId: string;
   rootPropId?: string;
+  tabletopId: string;
   targetIds?: string[];
   results: TaskResult[];
   taskCount: number;
@@ -20,10 +21,17 @@ const ActionSchema = new SimpleSchema({
   creatureId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+    index: 1,
   },
   rootPropId: {
     type: String,
     regEx: SimpleSchema.RegEx.Id,
+  },
+  tabletopId: {
+    type: String,
+    regEx: SimpleSchema.RegEx.Id,
+    optional: true,
+    index: 1,
   },
   targetIds: {
     type: Array,
