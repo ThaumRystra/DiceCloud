@@ -17,17 +17,17 @@ export type Creature = Colored & Shared & {
   allowedLibraryCollections: string[],
 
   // Stats that are computed and denormalized outside of recomputation
-  denormalizedStats: {
+  denormalizedStats?: {
     xp: number,
     milestoneLevels: number,
   },
-  propCount: number,
+  propCount?: number,
   // Does the character need a recompute?
   dirty?: boolean,
   // Version of computation engine that was last used to compute this creature
   computeVersion?: string,
   type: 'pc' | 'npc' | 'monster',
-  computeErrors: {
+  computeErrors?: {
     type: string,
     details?: any,
   }[],

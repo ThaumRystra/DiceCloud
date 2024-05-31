@@ -77,7 +77,7 @@ export default {
     },
     doc() {
       const doc = Docs.findOne(this.path);
-      return doc && doc.text;
+      return doc && doc.description;
     },
   },
   watch: {
