@@ -15,7 +15,7 @@ import SimpleSchema from 'simpl-schema';
 const insertCreature = new ValidatedMethod({
   name: 'creatures.insertCreature',
   mixins: [RateLimiterMixin, simpleSchemaMixin],
-  schema: CreatureSchema.pick(
+  validate: CreatureSchema.pick(
     'name',
     'gender',
     'alignment',
@@ -26,7 +26,7 @@ const insertCreature = new ValidatedMethod({
       type: SimpleSchema.Integer,
       min: 0,
     },
-  }),
+  }).validator(),
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
@@ -48,8 +48,13 @@ const insertCreature = new ValidatedMethod({
       name,
       gender,
       alignment,
+      type: 'pc',
       allowedLibraries,
       allowedLibraryCollections,
+      settings: {},
+      readers: [],
+      writers: [],
+      public: false,
     });
 
     // Insert experience to get character to starting level
@@ -61,7 +66,6 @@ const insertCreature = new ValidatedMethod({
           creatureId
         },
         creatureId,
-        userId,
       });
     }
 
@@ -96,7 +100,6 @@ function insertDefaultRuleset(creatureId, baseId, userId, slot) {
     insertPropertyFromLibraryNode.call({
       nodeIds: [ruleset._id],
       parentRef: { id: baseId, collection: 'creatureProperties' },
-      order: 0.5,
     });
   }
 }
