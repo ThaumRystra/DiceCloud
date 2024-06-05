@@ -80,7 +80,7 @@
                   </div>
                 </v-layout>
                 <div class="text-caption text-no-wrap text-truncate">
-                  {{ libraryNames[libraryNode.ancestors[0].id ] }}
+                  {{ libraryNames[libraryNode.root.id ] }}
                 </div>
               </v-layout>
               <div
@@ -225,31 +225,6 @@ export default {
     name: 'context',
     include: ['creatureId'],
   },
-  computed: {
-    tagsSearched() {
-      let or = [];
-      let not = [];
-      if (this.model.slotTags && this.model.slotTags.length) {
-        or.push(this.model.slotTags);
-      }
-      this.model.extraTags?.forEach(extras => {
-        if (extras.tags?.length) {
-          if (extras.operation === 'OR') {
-            or.push(extras.tags);
-          } else if (extras.operation === 'NOT') {
-            not.push(extras.tags);
-          }
-        }
-      });
-      return { or, not };
-    },
-    slotPropertyTypeName() {
-      if (!this.model) return;
-      if (!this.model.slotType) return 'Property';
-      let propName = getPropertyName(this.model.slotType);
-      return propName;
-    },
-  },
   watch: {
     activeCount(val) {
       // Still loading fillers
@@ -291,7 +266,8 @@ export default {
         )
     },
     insertCustomFiller() {
-      if (!this.model) return;
+      //TODO
+      return;
       const prop = getDefaultSlotFiller(this.model);
       const parentRef = { id: this.slotId, collection: 'creatureProperties' };
       const order = this.model.order + 0.5;
@@ -337,29 +313,11 @@ export default {
   meteor: {
     $subscribe: {
       'creatureTemplates'() {
-        return [this.slotId || this.dummySlot?._id, this.searchValue || undefined, !!this.dummySlot]
-      },
-      'selectedFillers'() {
-        return [this.slotId || this.dummySlot?._id, this.selectedNodeIds, !!this.dummySlot]
+        return [this.searchValue || undefined]
       },
     },
     searchLoading() {
       return !!this.searchValue && !this.$subReady.creatureTemplates;
-    },
-    model() {
-      if (this.slotId) {
-        return CreatureProperties.findOne(this.slotId);
-      } else if (this.dummySlot) {
-        let model = clone(this.dummySlot)
-        if (!model.quantityExpected) model.quantityExpected = {};
-        model.quantityExpected.value = +model.quantityExpected.calculation;
-        model.spaceLeft = model.quantityExpected.value;
-        return model;
-      }
-    },
-    variables() {
-      if (!this.creatureId) return {};
-      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
     },
     currentLimit() {
       return this._subs['creatureTemplates'].data('limit') || 50;
@@ -375,45 +333,6 @@ export default {
       const filterString = this._subs['creatureTemplates'].data('libraryNodeFilter');
       if (!filterString) return;
       return EJSON.parse(filterString);
-    },
-    alreadyAdded() {
-      let added = new Set();
-      if (!this.model.unique) return added;
-      let ancestorId;
-      if (this.model.unique === 'uniqueInSlot') {
-        ancestorId = this.model._id;
-      } else if (this.model.unique === 'uniqueInCreature') {
-        ancestorId = this.creatureId;
-      }
-      CreatureProperties.find({
-        'ancestors.id': ancestorId,
-        libraryNodeId: { $exists: true },
-        removed: { $ne: true },
-      }, {
-        fields: { libraryNodeId: 1 },
-      }).forEach(prop => {
-        added.add(prop.libraryNodeId);
-      });
-      return added;
-    },
-    totalQuantitySelected() {
-      let quantitySelected = 0;
-      LibraryNodes.find({
-        _id: { $in: this.selectedNodeIds }
-      }, {
-        fields: { slotQuantityFilled: 1 },
-      }).forEach(node => {
-        if (Number.isFinite(node.slotQuantityFilled)) {
-          quantitySelected += node.slotQuantityFilled;
-        } else {
-          quantitySelected += 1;
-        }
-      });
-      return quantitySelected;
-    },
-    spaceLeft() {
-      if (!this.model.quantityExpected || this.model.quantityExpected.value === 0) return undefined;
-      return this.model.spaceLeft - this.totalQuantitySelected;
     },
     libraryNames() {
       let names = {};

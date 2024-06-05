@@ -159,11 +159,6 @@ export default {
     }
   },
   meteor: {
-    $subscribe: {
-      'tabletop'() {
-        return [this.model._id];
-      },
-    },
     creatures(){
       return Creatures.find({ tabletopId: this.model._id });
     },

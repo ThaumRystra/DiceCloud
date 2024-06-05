@@ -8,6 +8,7 @@ import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { getFilter, renewDocIds } from '/imports/api/parenting/parentingFunctions';
 import { reifyNodeReferences, storeLibraryNodeReferences } from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 
 const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
 
@@ -58,14 +59,25 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         }
       }
 
+      // Insert the creature
       const creatureId = Creatures.insert({
         ...creatureNode,
+        _id: Random.id(),
         type: 'monster',
         tabletopId,
         owner: this.userId,
+        readers: [],
         writers: [this.userId],
+        public: false,
         dirty: true,
+        settings: {},
       });
+
+      // Insert the creature variables
+      CreatureVariables.insert({
+        _creatureId: creatureId,
+      });
+
       insertSubProperties(creatureNode, creatureId);
     }
   },
@@ -98,7 +110,7 @@ function insertSubProperties(node, creatureId: string) {
 
   // Insert the creature properties
   // @ts-expect-error Batch insert not defined
-  CreatureProperties.batchInsert(nodes);
+  if (nodes.length) CreatureProperties.batchInsert(nodes);
   return node;
 }
 

@@ -1,5 +1,6 @@
 import '/imports/server/publications/publicationRateLimit';
 import '/imports/server/publications/characterList';
+import '/imports/server/publications/creatureTemplates';
 import '/imports/server/publications/library';
 import '/imports/server/publications/singleCharacter';
 import '/imports/server/publications/experiences';
