@@ -13,8 +13,8 @@ export type Creature = Colored & Shared & {
   avatarPicture?: string,
 
   // Libraries
-  allowedLibraries: string[],
-  allowedLibraryCollections: string[],
+  allowedLibraries?: string[],
+  allowedLibraryCollections?: string[],
 
   // Stats that are computed and denormalized outside of recomputation
   denormalizedStats?: {

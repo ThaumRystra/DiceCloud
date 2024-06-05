@@ -7,12 +7,19 @@ import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 const COMPUTE_DEBOUNCE_TIME = 100; // ms
 export const loadedCreatures: Map<string, LoadedCreature> = new Map(); // creatureId => {creature, properties, etc.}
-// TODO: migrate to nested sets
+
+// function logLoadedCreatures() {
+//   let creatureLoadString = '';
+//   for (const [key, value] of loadedCreatures.entries()) {
+//     creatureLoadString += `${key}: ${value.subs.size}\n`;
+//   }
+//   console.log(creatureLoadString);
+// }
 
 export function loadCreature(creatureId: string, subscription: Tracker.Computation) {
   if (!creatureId) throw 'creatureId is required';
   let creature = loadedCreatures.get(creatureId);
-  if (!creature || !creature.subs.has(subscription)) {
+  if (!creature?.subs.has(subscription)) {
     subscription.onStop(() => {
       unloadCreature(creatureId, subscription);
     });
@@ -23,6 +30,7 @@ export function loadCreature(creatureId: string, subscription: Tracker.Computati
     creature = new LoadedCreature(subscription, creatureId);
     loadedCreatures.set(creatureId, creature);
   }
+  // logLoadedCreatures()
 }
 
 function unloadCreature(creatureId, subscription) {
@@ -34,6 +42,7 @@ function unloadCreature(creatureId, subscription) {
     creature.stop();
     loadedCreatures.delete(creatureId);
   }
+  // logLoadedCreatures()
 }
 
 export function getSingleProperty(creatureId: string, propertyId: string) {
@@ -266,9 +275,6 @@ class LoadedCreature {
       // Observe all creature properties which are needed for computation
       self.propertyObserver = CreatureProperties.find({
         'root.id': creatureId,
-        removed: { $ne: true },
-      }, {
-        sort: { left: 1 },
       }).observeChanges({
         added(id, fields) {
           fields._id = id;
