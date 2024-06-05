@@ -123,6 +123,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';
+import { compact } from 'lodash';
 
 //import TabletopPortrait from '/imports/client/ui/tabletop/selectedCreatureBar/TabletopPortrait.vue';
 //import TabletopBuffIcons from '/imports/client/ui/tabletop/selectedCreatureBar/TabletopBuffIcons.vue';
@@ -221,10 +222,10 @@ export default {
       this.menuOpen = false;
     },
     menuClickOutsideInclude() {
-      return [
+      return compact([
         document.querySelector('.selected-creature-bar'),
         document.querySelector('.tabletop-prop-menu')
-      ];
+      ]);
     },
     openCharacterSheet(tab, elementId) {
       this.$store.commit(
