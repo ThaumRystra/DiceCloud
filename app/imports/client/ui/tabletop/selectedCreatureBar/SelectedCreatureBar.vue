@@ -270,7 +270,7 @@ export default {
 
       // Get the folders that could hide a property
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.creatureId,
+        'root.id': this.creatureId,
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -280,7 +280,7 @@ export default {
 
       // Get the properties that need to be shown as an icon
       const filter = {
-        'ancestors.id': this.creatureId,
+        'root.id': this.creatureId,
         'parentId': {
           $nin: folderIds,
         },

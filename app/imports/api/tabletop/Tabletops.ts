@@ -111,5 +111,6 @@ import '/imports/api/tabletop/methods/insertTabletop';
 import '/imports/api/tabletop/methods/updateTabletop';
 import '/imports/api/tabletop/methods/addCreaturesToTabletop';
 import '/imports/api/tabletop/methods/updateTabletopSharing';
+import '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 
 export default Tabletops;

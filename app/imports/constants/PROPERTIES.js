@@ -71,6 +71,14 @@ const PROPERTIES = Object.freeze({
     examples: 'Coin pouch, backpack',
     suggestedParents: ['folder'],
   },
+  creature: {
+    icon: 'mdi-account',
+    name: 'Creature',
+    docsPath: 'property/creature',
+    helpText: 'A creature is a template for a creature that might become a real creature once added to a tabletop or summoned by a character',
+    examples: 'Monsters, raised undead',
+    suggestedParents: [],
+  },
   damage: {
     icon: '$vuetify.icons.damage',
     name: 'Damage',

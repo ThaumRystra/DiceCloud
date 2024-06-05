@@ -8,6 +8,7 @@ import ClassForm from '/imports/client/ui/properties/forms/ClassForm.vue';
 import ClassLevelForm from '/imports/client/ui/properties/forms/ClassLevelForm.vue';
 import ConstantForm from '/imports/client/ui/properties/forms/ConstantForm.vue';
 import ContainerForm from '/imports/client/ui/properties/forms/ContainerForm.vue';
+import CreatureTemplateForm from '/imports/client/ui/properties/forms/CreatureTemplateForm.vue';
 import DamageForm from '/imports/client/ui/properties/forms/DamageForm.vue';
 import DamageMultiplierForm from '/imports/client/ui/properties/forms/DamageMultiplierForm.vue';
 import EffectForm from '/imports/client/ui/properties/forms/EffectForm.vue';
@@ -38,6 +39,7 @@ export default {
   container: ContainerForm,
   class: ClassForm,
   classLevel: ClassLevelForm,
+  creature: CreatureTemplateForm,
   damage: DamageForm,
   damageMultiplier: DamageMultiplierForm,
   effect: EffectForm,

@@ -10,6 +10,7 @@ import { ComputedClassSchema } from '/imports/api/properties/Classes';
 import { ComputedClassLevelSchema } from '/imports/api/properties/ClassLevels';
 import { ConstantSchema } from '/imports/api/properties/Constants';
 import { ComputedContainerSchema } from '/imports/api/properties/Containers';
+import { ComputedCreatureTemplateSchema } from '/imports/api/properties/CreatureTemplates';
 import { ComputedDamageSchema } from '/imports/api/properties/Damages';
 import { DamageMultiplierSchema } from '/imports/api/properties/DamageMultipliers';
 import { ComputedEffectSchema } from '/imports/api/properties/Effects';
@@ -33,17 +34,20 @@ const propertySchemasIndex = {
   action: ComputedActionSchema,
   adjustment: ComputedAdjustmentSchema,
   attribute: ComputedAttributeSchema,
+  branch: ComputedBranchSchema,
   buff: ComputedBuffSchema,
   buffRemover: ComputedBuffRemoverSchema,
-  branch: ComputedBranchSchema,
   class: ComputedClassSchema,
   classLevel: ComputedClassLevelSchema,
   constant: ConstantSchema,
+  container: ComputedContainerSchema,
+  creature: ComputedCreatureTemplateSchema,
   damage: ComputedDamageSchema,
   damageMultiplier: DamageMultiplierSchema,
   effect: ComputedEffectSchema,
   feature: ComputedFeatureSchema,
   folder: ComputedFolderSchema,
+  item: ComputedItemSchema,
   note: ComputedNoteSchema,
   pointBuy: ComputedPointBuySchema,
   proficiency: ProficiencySchema,
@@ -52,12 +56,10 @@ const propertySchemasIndex = {
   roll: ComputedRollSchema,
   savingThrow: ComputedSavingThrowSchema,
   skill: ComputedSkillSchema,
-  spellList: ComputedSpellListSchema,
   spell: ComputedSpellSchema,
+  spellList: ComputedSpellListSchema,
   toggle: ComputedToggleSchema,
   trigger: ComputedTriggerSchema,
-  container: ComputedContainerSchema,
-  item: ComputedItemSchema,
   any: new SimpleSchema({}),
 };
 

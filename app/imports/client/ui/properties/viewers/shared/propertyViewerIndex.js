@@ -8,6 +8,7 @@ import ContainerViewer from '/imports/client/ui/properties/viewers/ContainerView
 import ClassViewer from '/imports/client/ui/properties/viewers/ClassViewer.vue';
 import ClassLevelViewer from '/imports/client/ui/properties/viewers/ClassLevelViewer.vue';
 import ConstantViewer from '/imports/client/ui/properties/viewers/ConstantViewer.vue';
+import CreatureTemplateViewer from '/imports/client/ui/properties/viewers/CreatureTemplateViewer.vue';
 import DamageViewer from '/imports/client/ui/properties/viewers/DamageViewer.vue';
 import DamageMultiplierViewer from '/imports/client/ui/properties/viewers/DamageMultiplierViewer.vue';
 import EffectViewer from '/imports/client/ui/properties/viewers/EffectViewer.vue';
@@ -38,6 +39,7 @@ export default {
   class: ClassViewer,
   classLevel: ClassLevelViewer,
   constant: ConstantViewer,
+  creature: CreatureTemplateViewer,
   damage: DamageViewer,
   damageMultiplier: DamageMultiplierViewer,
   effect: EffectViewer,

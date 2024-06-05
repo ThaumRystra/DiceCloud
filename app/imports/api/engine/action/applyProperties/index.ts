@@ -8,6 +8,7 @@ import adjustment from './applyAdjustmentProperty';
 import branch from './applyBranchProperty';
 import buff from './applyBuffProperty';
 import buffRemover from './applyBuffRemoverProperty';
+import creature from './applyCreatureTemplateProperty';
 import damage from './applyDamageProperty';
 import folder from './applyFolderProperty';
 import note from './applyNoteProperty';
@@ -24,6 +25,7 @@ const applyPropertyByType: {
   branch,
   buff,
   buffRemover,
+  creature,
   damage,
   folder,
   note,

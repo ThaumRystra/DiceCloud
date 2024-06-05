@@ -60,7 +60,10 @@
             </v-icon>
             Add Character
           </v-btn>
-          <v-btn disabled>
+          <v-btn
+            data-id="creatures-from-library"
+            @click="addCreatureFromLibrary"
+          >
             <v-icon left>
               mdi-plus
             </v-icon>
@@ -104,6 +107,7 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
 import TabletopCreatureListItem from '/imports/client/ui/tabletop/TabletopCreatureListItem.vue';
+import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 
 const getProperties = function (creatureId, selector = {}) {
   return CreatureProperties.find({
@@ -201,6 +205,25 @@ export default {
             if (error) {
               console.error(error)
               snackbar({ text: error.message || error.toString() });
+            }
+          });
+        },
+      });
+    },
+    addCreatureFromLibrary(){
+      this.$store.commit('pushDialogStack', {
+        component: 'creature-from-library-dialog',
+        elementId: 'creatures-from-library',
+        data: {},
+        callback: (libraryNodeIds) => {
+          if (!libraryNodeIds) return;
+          addCreaturesFromLibraryToTabletop.call({
+            tabletopId: this.model._id,
+            libraryNodeIds,
+          }, error => {
+            if (error) {
+              console.error(error)
+              snackbar({ text: error.reason || error.message || error.toString() });
             }
           });
         },

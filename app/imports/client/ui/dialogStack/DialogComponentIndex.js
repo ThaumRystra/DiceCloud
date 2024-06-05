@@ -21,6 +21,7 @@ import LibraryBrowserDialog from '/imports/client/ui/library/LibraryBrowserDialo
 
 // Lazily load less common dialogs
 const ArchiveDialog = () => import('/imports/client/ui/creature/archive/ArchiveDialog.vue');
+const CreatureFromLibraryDialog = () => import('/imports/client/ui/tabletop/CreatureFromLibraryDialog.vue');
 const DeleteUserAccountDialog = () => import('/imports/client/ui/user/DeleteUserAccountDialog.vue');
 const DependencyGraphDialog = () => import('/imports/client/ui/creature/dependencyGraph/DependencyGraphDialog.vue');
 const InviteDialog = () => import('/imports/client/ui/user/InviteDialog.vue');
@@ -43,6 +44,7 @@ export default {
   CharacterCreationDialog,
   CharacterSheetDialog,
   CreatureFormDialog,
+  CreatureFromLibraryDialog,
   CreaturePropertyDialog,
   CreaturePropertyFromLibraryDialog,
   CreatureRootDialog,
