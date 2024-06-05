@@ -101,7 +101,7 @@
                     </div>
                   </v-layout>
                   <div class="text-caption text-no-wrap text-truncate">
-                    {{ libraryNames[libraryNode.ancestors[0].id ] }}
+                    {{ libraryNames[libraryNode.root.id ] }}
                   </div>
                 </v-layout>
                 <div
@@ -440,14 +440,14 @@ export default {
     alreadyAdded() {
       let added = new Set();
       if (!this.model.unique) return added;
-      let ancestorId;
+      let rootId;
       if (this.model.unique === 'uniqueInSlot') {
-        ancestorId = this.model._id;
+        rootId = this.model._id;
       } else if (this.model.unique === 'uniqueInCreature') {
-        ancestorId = this.creatureId;
+        rootId = this.creatureId;
       }
       CreatureProperties.find({
-        'ancestors.id': ancestorId,
+        'root.id': rootId,
         libraryNodeId: { $exists: true },
         removed: { $ne: true },
       }, {
