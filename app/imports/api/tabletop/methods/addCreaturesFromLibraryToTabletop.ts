@@ -9,6 +9,8 @@ import { getFilter, renewDocIds } from '/imports/api/parenting/parentingFunction
 import { reifyNodeReferences, storeLibraryNodeReferences } from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import Tabletops from '/imports/api/tabletop/Tabletops';
+import { assertTabletopHasPropSpace } from '/imports/api/tabletop/methods/shared/tabletopLimits'
 
 const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
 
@@ -40,7 +42,9 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         'You need to be logged in to remove a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
-    assertUserInTabletop(tabletopId, this.userId);
+    const tabletop = Tabletops.findOne(tabletopId);
+    assertUserInTabletop(tabletop, this.userId);
+    assertTabletopHasPropSpace(tabletop);
 
     for (const nodeId of libraryNodeIds) {
       const creatureNode = LibraryNodes.findOne({

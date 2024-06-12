@@ -44,6 +44,19 @@
       </v-card>
     </v-menu>
     <v-card
+      class="delete-card"
+    >
+      <div
+        class="d-flex"
+      >
+        <creature-bar-icon
+          icon="mdi-delete"
+          data-id="trashIcon"
+          @click="$emit('remove')"
+        />
+      </div>
+    </v-card>
+    <v-card
       v-if="iconGroups.buffs"
       class="buffs-card"
     >

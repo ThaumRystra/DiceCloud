@@ -243,6 +243,7 @@ const CreatureSchema = new SimpleSchema({
 
   // Tabletop
   tabletopId: {
+    index: 1,
     type: String,
     regEx: SimpleSchema.RegEx.Id,
     optional: true,

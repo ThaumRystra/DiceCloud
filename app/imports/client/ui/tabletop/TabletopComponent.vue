@@ -90,6 +90,7 @@
           :key="activeCreatureId"
           :creature-id="activeCreatureId"
           @active-action-change="activeActionId = $event"
+          @remove="removeCreature(activeCreatureId)"
         />
       </v-slide-y-reverse-transition>
     </v-footer>
@@ -109,6 +110,7 @@ import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
 import TabletopCreatureListItem from '/imports/client/ui/tabletop/TabletopCreatureListItem.vue';
 import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
+import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 
 const getProperties = function (creatureId, selector = {}) {
   return CreatureProperties.find({
@@ -254,6 +256,17 @@ export default {
       if (index > -1) {
         this.targets.splice(index, 1);
       }
+    },
+    removeCreature(creatureId) {
+      if (this.activeCreatureId === creatureId) this.activeCreatureId = undefined;
+      removeCreatureFromTabletop.call({
+        tabletopId: this.model._id,
+        creatureIds: [creatureId]
+      }, error => {
+        if (!error) return;
+        console.error(error);
+        snackbar({ text: error.message || error.toString() });
+      });
     }
   },
 }

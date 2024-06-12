@@ -15,6 +15,7 @@ export type Tabletop = {
     initiativeNumber?: number,
     activeCreature?: string,
   },
+  propCount: number,
 }
 
 const Tabletops = new Mongo.Collection<Tabletop>('tabletops');
@@ -101,6 +102,17 @@ const TabletopSchema = new SimpleSchema({
     defaultValue: {},
   },
 
+  // Denormalized fields
+  // Number of properties on all creatures in this tabletop
+  propCount: {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  },
+  // Number of creatures in this tabletop
+  creatureCount: {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+  },
 });
 
 //@ts-expect-error attachSchema not defined in simpl-schema package
@@ -112,5 +124,6 @@ import '/imports/api/tabletop/methods/updateTabletop';
 import '/imports/api/tabletop/methods/addCreaturesToTabletop';
 import '/imports/api/tabletop/methods/updateTabletopSharing';
 import '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
+import '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 
 export default Tabletops;
