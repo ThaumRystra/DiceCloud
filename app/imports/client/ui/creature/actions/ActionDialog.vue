@@ -206,7 +206,6 @@ export default {
     },
     // inputProvider methods
     async targetIds(target) {
-      console.log('input provider UI targetIds')
       this.userInput = [];
       this.activeInputParams = {
         target,

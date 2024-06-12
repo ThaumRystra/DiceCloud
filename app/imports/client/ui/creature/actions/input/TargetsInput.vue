@@ -1,13 +1,41 @@
 <template>
   <div class="choice-input">
-    <creature-list-tile
+    <v-list-item
       v-for="creature in creatures"
       :key="creature._id"
-      :model="creature"
-      selection
-      :selected="value.includes(creature._id)"
+      :class="{
+        'primary--text v-list-item--active': value.includes(creature._id),
+      }"
+      dense
       @click="selectCreature(creature._id)"
-    />
+    >
+      <v-list-item-avatar
+        :color="value.includes(creature._id) ? 'red darken-1' : creature.color || 'grey'"
+        class="white--text"
+        style="transition: background 0.3s;"
+      >
+        <v-fade-transition leave-absolute>
+          <v-icon v-if="value.includes(creature._id)">
+            mdi-check
+          </v-icon>
+          <img
+            v-else-if="creature.avatarPicture"
+            :src="creature.avatarPicture"
+            :alt="creature.name"
+          >
+          <template v-else>
+            <span>
+              {{ creature.initial }}
+            </span>
+          </template>
+        </v-fade-transition>
+      </v-list-item-avatar>
+      <v-list-item-content>
+        <v-list-item-title>
+          {{ creature.name }}
+        </v-list-item-title>
+      </v-list-item-content>
+    </v-list-item>
     <v-btn
       @click="$emit('continue');"
     >
@@ -17,13 +45,9 @@
 </template>
 
 <script lang="js">
-import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 
 export default {
-  components: {
-    CreatureListTile
-  },
   props: {
     value: {
       type: Array,

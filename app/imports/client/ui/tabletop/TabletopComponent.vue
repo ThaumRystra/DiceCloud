@@ -159,7 +159,10 @@ export default {
   watch: {
     activeCreatureId(id) {
       this.$root.$emit('active-tabletop-character-change', id);
-    }
+    },
+    activeActionId(id) {
+      this.targets = [];
+    },
   },
   meteor: {
     creatures(){
@@ -170,7 +173,6 @@ export default {
     },
     moreTargets(){
       const activeAction = CreatureProperties.findOne(this.activeActionId);
-      console.log(this.activeActionId, activeAction)
       if (!activeAction) return;
       if (activeAction.target === 'singleTarget') {
         return this.targets.length === 0;

@@ -217,6 +217,9 @@ export default {
       'singleCharacter'() {
         return [this.creatureId];
       },
+      'otherTabletopCreatures'() {
+        return [this.creatureId];
+      },
     },
     creature() {
       return Creatures.findOne(this.creatureId, {

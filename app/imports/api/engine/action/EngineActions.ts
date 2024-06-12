@@ -11,7 +11,7 @@ export interface EngineAction {
   _decisions?: any[],
   creatureId: string;
   rootPropId?: string;
-  tabletopId: string;
+  tabletopId?: string;
   targetIds?: string[];
   results: TaskResult[];
   taskCount: number;

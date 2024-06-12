@@ -78,22 +78,6 @@ Meteor.publish('singleCharacter', function (creatureId) {
           username: 1,
         },
       }),
-      // Also publish summaries of creatures in the same tabletop
-      Creatures.find({
-        tabletopId: permissionCreature?.tabletopId,
-      }, {
-        fields: {
-          _id: 1,
-          name: 1,
-          picture: 1,
-          avatarPicture: 1,
-          tabletopId: 1,
-          initiativeRoll: 1,
-          settings: 1,
-          propCount: 1,
-        },
-        limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
-      }),
     ];
   });
 });

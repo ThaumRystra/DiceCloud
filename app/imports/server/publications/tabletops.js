@@ -5,6 +5,7 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions from '/imports/api/engine/action/EngineActions';
+import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
 
 Meteor.publish('tabletops', function () {
   var userId = this.userId;
@@ -39,7 +40,38 @@ Meteor.publish('tabletopUsers', function (tabletopId) {
     },
     limit: 500,
   });
-})
+});
+
+Meteor.publish('otherTabletopCreatures', function (creatureId) {
+  const permissionCreature = Creatures.findOne({
+    _id: creatureId,
+  }, {
+    fields: {
+      owner: 1,
+      readers: 1,
+      writers: 1,
+      public: 1,
+      computeVersion: 1,
+      tabletopId: 1,
+    }
+  });
+  assertViewPermission(creatureId, this.userId);
+  return Creatures.find({
+    tabletopId: permissionCreature?.tabletopId,
+  }, {
+    fields: {
+      _id: 1,
+      name: 1,
+      picture: 1,
+      avatarPicture: 1,
+      tabletopId: 1,
+      initiativeRoll: 1,
+      settings: 1,
+      propCount: 1,
+    },
+    limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
+  });
+});
 
 Meteor.publish('tabletop', function (tabletopId) {
   var userId = this.userId;
