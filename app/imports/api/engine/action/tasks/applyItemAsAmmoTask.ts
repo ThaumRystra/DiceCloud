@@ -47,7 +47,7 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
       type: 'item',
     }],
     // Log the item name as a heading if it has child properties to apply
-    ...itemChildren.length && {
+    ...itemChildren.length && !task.params.skipChildren && {
       contents: [{
         name: getPropertyTitle(item) || 'Ammo',
         inline: false,

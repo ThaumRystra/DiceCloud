@@ -216,6 +216,7 @@ export default {
     },
     doAction() {
       this.doActionLoading = true;
+      this.$emit('close-menu')
       doAction(this.model, this.$store, this.model._id).catch((e) => {
         console.error(e);
         snackbar({ text: e.message || e.reason || e.toString() });

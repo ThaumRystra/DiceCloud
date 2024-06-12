@@ -16,7 +16,7 @@
       class="creature"
       :model="creature"
       :selection="selection"
-      :is-selected="selectedCreature === creature._id"
+      :is-selected="selectedCreature === creature._id || selectedCreatures.has(creature._id)"
       v-bind="selection ? {} : {to: creature.url}"
       :dense="dense"
       :data-id="dense ? undefined : creature._id"
@@ -49,6 +49,10 @@
       selectedCreature: {
         type: String,
         default: undefined,
+      },
+      selectedCreatures: {
+        type: Set,
+        default: () => new Set(),
       },
       dense: Boolean,
     },

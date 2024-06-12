@@ -86,7 +86,8 @@ import ChoiceInput from '/imports/client/ui/creature/actions/input/ChoiceInput.v
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
-import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
+//import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
+import TargetsInput from '/imports/client/ui/creature/actions/input/TargetsInput.vue';
 
 export default {
   components: {
@@ -95,7 +96,8 @@ export default {
     ChoiceInput,
     DialogBase,
     LogContent,
-    RollInput,
+    //RollInput,
+    TargetsInput,
   },
   props: {
     actionId: {
@@ -203,6 +205,16 @@ export default {
       this.$store.dispatch('popDialogStack');
     },
     // inputProvider methods
+    async targetIds(target) {
+      console.log('input provider UI targetIds')
+      this.userInput = [];
+      this.activeInputParams = {
+        target,
+        tabletopId: this.action.tabletopId,
+      };
+      this.activeInput = 'targets-input'
+      return this.promiseInput();
+    },
     async rollDice(dice) {
       return Promise.resolve(this.deterministicDiceRoller(dice));
       /* Dice Animation and user control goes here:

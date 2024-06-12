@@ -2,6 +2,10 @@ import Task from '/imports/api/engine/action/tasks/Task';
 
 type InputProvider = {
   /**
+   * Get the ids of the creatures being targeted
+   */
+  targetIds(target: 'singleTarget' | 'multipleTargets', currentTargetIds?: string[]): Promise<string[]>;
+  /**
    * Show the user the next property or task to apply and wait for input to continue
    */
   nextStep?(task: Task): Promise<void>;

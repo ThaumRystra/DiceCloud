@@ -651,8 +651,12 @@ export function hasAncestorRelationship(propA: TreeDoc, propB: TreeDoc): boolean
   if (propA.root.id !== propB.root.id) {
     return false;
   }
-  // Return if there is an ancestor relationship in either direction
-  return isAncestor(propA, propB) || isAncestor(propB, propA);
+  // Return if there is an parent relationship in either direction
+  return propA.parentId === propB._id
+    || propB.parentId === propA._id
+    // or an ancestor relationship in either direction
+    || isAncestor(propA, propB)
+    || isAncestor(propB, propA);
 }
 
 /**
@@ -856,4 +860,5 @@ function writeBulkOperations(collection: Mongo.Collection<TreeDoc>, operations) 
       }
     });
   }
+  return Promise.resolve();
 }

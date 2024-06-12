@@ -89,6 +89,7 @@
         <selected-creature-bar
           :key="activeCreatureId"
           :creature-id="activeCreatureId"
+          @active-action-change="activeActionId = $event"
         />
       </v-slide-y-reverse-transition>
     </v-footer>
@@ -167,6 +168,7 @@ export default {
     },
     moreTargets(){
       const activeAction = CreatureProperties.findOne(this.activeActionId);
+      console.log(this.activeActionId, activeAction)
       if (!activeAction) return;
       if (activeAction.target === 'singleTarget') {
         return this.targets.length === 0;

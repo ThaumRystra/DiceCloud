@@ -40,14 +40,28 @@ export default async function applyAction(action: EngineAction, userInput: Input
   action._isSimulation = simulate;
   action.taskCount = 0;
   let task = options?.task;
+  console.log('task', task, action.targetIds)
   if (!task) {
     const prop = await getSingleProperty(action.creatureId, action.rootPropId);
     if (!prop) throw new Meteor.Error('Not found', 'Root action property could not be found');
+
+    // If the target ids weren't already set, get them from the user
+    console.log(action.targetIds, prop);
+    if (!action.targetIds && (
+      prop.target === 'singleTarget' ||
+      prop.target === 'multipleTargets'
+    )) {
+      console.log('getting targetIds');
+      action.targetIds = await (userInput.targetIds(prop.targets));
+      console.log('got targetIds', action.targetIds);
+    }
+
     task = {
       prop,
       targetIds: action.targetIds || [],
     }
   }
+
   await applyTask(action, task, userInput);
   return action;
 }

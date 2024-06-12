@@ -1,6 +1,6 @@
 <template lang="html">
   <v-card
-    :style="`height: ${height}px; width: ${width}px; overflow: hidden;`"
+    :style="`height: ${height}px; width: ${width}px;`"
     class="tabletop-creature-card"
     :class="{ active }"
     :hover="hasClickListener"
@@ -31,7 +31,6 @@
         style="opacity: 0.7; margin-top: 2px"
       />
     </v-img>
-    <card-highlight :active="hover" />
     <div class="d-flex justify-center">
       <v-scale-transition>
         <v-btn
@@ -40,7 +39,7 @@
           :elevation="targeted ? 8 : 2"
           fab
           small
-          @click.stop="targeted ? $emit('untarget') : $emit('target')"
+          @click.stop.prevent="targeted ? $emit('untarget') : $emit('target')"
         >
           <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
         </v-btn>

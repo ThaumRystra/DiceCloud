@@ -29,6 +29,7 @@
           transition: 'opacity 0.2s ease',
         }"
         :model="selectedProp"
+        @close-menu="menuOpen = false"
       />
       <v-card
         v-else-if="activeIcon && activeIcon.tab"
@@ -180,6 +181,12 @@ export default {
         this.selectedIcon = undefined;
       }
     },
+    selectedIcon: {
+      immediate: true,
+      handler: function ({ propId } = {}) {
+        this.$emit('active-action-change', propId)
+      }
+    }
   },
   methods: {
     log(e) {
@@ -217,15 +224,17 @@ export default {
       this.menuX = x;
       this.selectedIcon = icon;
       this.menuOpen = true;
-    },
+    }, 
     clickOutsideMenu () {
       this.menuOpen = false;
     },
     menuClickOutsideInclude() {
-      return compact([
+      const outside = compact([
         document.querySelector('.selected-creature-bar'),
-        document.querySelector('.tabletop-prop-menu')
+        ...document.querySelectorAll('.tabletop-creature-card'),
+        document.querySelector('.tabletop-prop-menu'),
       ]);
+      return outside;
     },
     openCharacterSheet(tab, elementId) {
       this.$store.commit(

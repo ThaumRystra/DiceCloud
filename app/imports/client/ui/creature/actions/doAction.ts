@@ -79,6 +79,7 @@ const throwInputRequestedError = () => {
 
 function getErrorOnInputRequestProvider(actionId) {
   const errorOnInputRequest: InputProvider = {
+    targetIds: throwInputRequestedError,
     nextStep: throwInputRequestedError,
     rollDice: getDeterministicDiceRoller(actionId),
     choose: throwInputRequestedError,

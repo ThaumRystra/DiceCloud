@@ -1,6 +1,9 @@
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 const inputProviderForTests: InputProvider = {
+  async targetIds(target, currentTargetIds = []) {
+    return currentTargetIds;
+  },
   /**
    * For testing, randomness is hard to deal with
    * rollDice function returns the average roll for every dice rolled

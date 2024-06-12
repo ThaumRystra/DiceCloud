@@ -63,6 +63,7 @@ export default async function spendResources(
         !quantity ||
         !isFinite(quantity)
       ) continue;
+
       await applyTask(action, {
         prop,
         targetIds,

@@ -35,7 +35,7 @@ const ActionSchema = new SimpleSchema({
   },
   targetIds: {
     type: Array,
-    defaultValue: [],
+    optional: true,
   },
   'targetIds.$': {
     type: String,
