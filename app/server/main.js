@@ -7,6 +7,7 @@ import '/imports/server/config/simpleSchemaDebug';
 import '/imports/server/config/SyncedCronConfig';
 import '/imports/server/config/redisCaching';
 import '/imports/server/publications/index';
+import '/imports/server/config/publicationStrategies';
 import '/imports/server/cron/deleteSoftRemovedDocuments';
 import '/imports/api/parenting/organizeMethods';
 import '/imports/api/users/patreon/updatePatreonOnLogin';
