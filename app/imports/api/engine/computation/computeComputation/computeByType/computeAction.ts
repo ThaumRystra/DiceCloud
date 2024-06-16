@@ -19,12 +19,12 @@ export default function computeAction(computation: CreatureComputation, node: No
     }
   });
   prop.resources.itemsConsumed?.forEach(itemConsumed => {
-    if (!itemConsumed.itemId || itemConsumed.available < itemConsumed.quantity?.value) {
+    if (!itemConsumed?.itemId || itemConsumed.available < itemConsumed.quantity?.value) {
       prop.insufficientResources = true;
     }
   });
   prop.resources.attributesConsumed?.forEach(attConsumed => {
-    if (!attConsumed.variableName) return;
+    if (!attConsumed?.variableName) return;
     if (!(attConsumed.available >= attConsumed.quantity?.value)) {
       prop.insufficientResources = true;
     }
@@ -37,7 +37,7 @@ function computeResources(computation, node) {
   resources.attributesConsumed.forEach(attConsumed => {
     if (!attConsumed.variableName) return;
     const att = computation.scope[attConsumed.variableName];
-    if (!att._id) return;
+    if (!att?._id) return;
     attConsumed.available = att.value;
     attConsumed.statName = att.name;
   });
