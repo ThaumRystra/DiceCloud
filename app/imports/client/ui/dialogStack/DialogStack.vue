@@ -197,7 +197,7 @@
         // If the source and the hidden Element are different
         // hide the source and reveal the hidden element
         let originalSourceTransition = source.style.transition;
-        if (hiddenElement !== source){
+        if (hiddenElement && hiddenElement !== source){
           source.style.transition = 'none';
           source.style.opacity = '0';
           hiddenElement.style.opacity = null;
