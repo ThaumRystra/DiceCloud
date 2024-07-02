@@ -46,7 +46,7 @@ simple:rest-json-error-handler
 littledata:synced-cron
 #mdg:meteor-apm-agent
 seba:minifiers-autoprefixer
-mixmax:smart-disconnect
+#mixmax:smart-disconnect
 zodern:types
 zodern:fix-async-stubs
 typescript@4.9.5
