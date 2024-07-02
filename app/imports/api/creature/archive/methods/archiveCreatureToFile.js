@@ -15,6 +15,7 @@ import { getFilter } from '/imports/api/parenting/parentingFunctions';
 export function getArchiveObj(creatureId) {
   // Build the archive document
   const creature = Creatures.findOne(creatureId);
+  if (!creature) throw new Meteor.Error('creature-not-found', 'Creature not found');
   const properties = CreatureProperties.find({ ...getFilter.descendantsOfRoot(creatureId) }).fetch();
   const experiences = Experiences.find({ creatureId }).fetch();
   const logs = CreatureLogs.find({ creatureId }).fetch();
@@ -46,9 +47,13 @@ export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creat
       creatureName: archive.creature.name,
     },
   }, (error, fileRef) => {
-    if (error || !Meteor.settings.useS3) {
-      // If there is an error, or we aren't using s3, just call the callback
+    if (error) {
+      // If there is an error already, just call the callback
       callback(error);
+    } else if (!Meteor.settings.useS3) {
+      // If we aren't using s3, remove the creature and call the callback
+      removeCreatureWork(creatureId);
+      callback();
     } else {
       // Wait for s3Result event that occurs when the s3 attempt to write ends.
       // If it's successful, remove the creature, otherwise callback with error
