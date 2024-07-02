@@ -43,6 +43,8 @@ Meteor.publish('tabletopUsers', function (tabletopId) {
 });
 
 Meteor.publish('otherTabletopCreatures', function (creatureId) {
+  const userId = this.userId;
+  if (!userId) return [];
   const permissionCreature = Creatures.findOne({
     _id: creatureId,
   }, {

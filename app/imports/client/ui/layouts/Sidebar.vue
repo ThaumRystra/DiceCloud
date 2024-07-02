@@ -57,6 +57,7 @@
       <v-divider />
     </v-list>
     <creature-folder-list
+      v-if="signedIn"
       dense
       :creatures="CreaturesWithNoParty"
       :folders="folders"
@@ -80,7 +81,6 @@ export default {
   components: {
     CreatureFolderList
   },
-  // @ts-ignore
   meteor: {
     $subscribe: {
       'characterList': [],
