@@ -26,4 +26,6 @@ const UserImages = createS3FilesCollection({
   }
 });
 
+import './methods';
+
 export default UserImages;

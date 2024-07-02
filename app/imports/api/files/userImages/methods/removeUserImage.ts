@@ -5,7 +5,7 @@ import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileS
 import UserImages from '/imports/api/files/userImages/UserImages';
 
 const removeArchiveCreature = new ValidatedMethod({
-  name: 'ArchiveCreatureFiles.methods.removeUserImage',
+  name: 'userImages.methods.remove',
   validate: new SimpleSchema({
     'fileId': {
       type: String,
@@ -13,7 +13,6 @@ const removeArchiveCreature = new ValidatedMethod({
     },
   }).validator(),
   mixins: [RateLimiterMixin],
-  // @ts-expect-error Rate limit not defined
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
