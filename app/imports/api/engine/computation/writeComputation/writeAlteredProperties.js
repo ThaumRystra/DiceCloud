@@ -1,7 +1,7 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex';
 import bulkWrite, { addSetOp, addUnsetOp, newOperation } from '/imports/api/engine/shared/bulkWrite';
-import denormalizeTabletopPropCount from '/imports/api/tabletop/functions/denormalizeTabletopPropCount'
+import updateTabletopPropCount from '/imports/api/tabletop/functions/denormalizeTabletopPropCount'
 
 export default function writeAlteredProperties(computation) {
   let bulkWriteOperations = [];
@@ -34,11 +34,13 @@ export default function writeAlteredProperties(computation) {
       bulkWriteOperations.push(op);
     }
   });
-  bulkWrite(bulkWriteOperations, CreatureProperties);
+  const writePromise = bulkWrite(bulkWriteOperations, CreatureProperties);
   //if (bulkWriteOperations.length) console.log(`Wrote ${bulkWriteOperations.length} props`);
 
   // Update the relevant tabletop's property count
-  if (computation.creature.tabletopId) denormalizeTabletopPropCount(computation.creature.tabletopId);
+  if (computation.creature?.tabletopId) updateTabletopPropCount(computation.creature?.tabletopId);
+
+  return writePromise;
 }
 
 function addChangedKeysToOp(op, keys, original, changed) {
