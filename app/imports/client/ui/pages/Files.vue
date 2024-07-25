@@ -131,7 +131,6 @@ export default {
     $subscribe: {
       'archiveCreatureFiles': [],
       'characterList': [],
-      'userImages': [],
     },
     archiveFiles() {
       const userId = Meteor.userId();
@@ -147,20 +146,6 @@ export default {
         return f;
       });
     },
-    userImages() {
-      const userId = Meteor.userId();
-      return UserImages.find({
-        userId
-      }, {
-        sort: {
-          size: -1
-        },
-      }).map(f => {
-        f.size = prettyBytes(f.size);
-        f.link = UserImages.link(f);
-        return f;
-      });
-    }
   },
   watch: {
     archiveUploadInProgress(val){
