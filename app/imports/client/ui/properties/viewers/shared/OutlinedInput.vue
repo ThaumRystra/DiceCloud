@@ -3,6 +3,9 @@
     :class="theme.isDark? 'theme--dark' :'theme--light'"
     class="outlined-input rounded v-sheet--outlined"
     @click="$emit('click', $event)"
+    @dragover="$emit('dragover', $event)"
+    @drop="$emit('drop', $event)"
+    @dragleave="$emit('dragleave', $event)"
   >
     <legend
       v-if="name"

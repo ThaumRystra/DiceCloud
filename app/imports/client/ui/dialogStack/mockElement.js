@@ -40,13 +40,23 @@ export default function mockElement({ source, target, offset = { x: 0, y: 0 } })
   let sourceRect = source.getBoundingClientRect();
   let targetRect = target.getBoundingClientRect();
 
+  // The dialogs are transformed from their centers, so we need to find the center of each
+  const sourceCenter = {
+    x: sourceRect.x + sourceRect.width / 2,
+    y: sourceRect.y + sourceRect.height / 2
+  }
+  const targetCenter = {
+    x: targetRect.x + targetRect.width / 2,
+    y: targetRect.y + targetRect.height / 2
+  }
+
   // Get how must the target change to become the source
   const deltaWidth = sourceRect.width / targetRect.width;
   const deltaHeight = sourceRect.height / targetRect.height;
-  const deltaLeft = sourceRect.left - targetRect.left + offset.x;
-  const deltaTop = sourceRect.top - targetRect.top + offset.y;
+  const deltaLeft = sourceCenter.x - targetCenter.x + offset.x;
+  const deltaTop = sourceCenter.y - targetCenter.y + offset.y;
   // Mock the source
-  target.style.transform = `translate(${deltaLeft}px, ${deltaTop}px) ` +
+  target.style.transform = `translate(calc(-50% + ${deltaLeft}px), calc(-50% + ${deltaTop}px)) ` +
     `scale(${deltaWidth}, ${deltaHeight})`;
   // Mock the background color unless it's completely transparent
   let backgroundColor = getComputedStyle(source).backgroundColor

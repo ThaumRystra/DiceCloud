@@ -1,9 +1,25 @@
 <template>
   <outlined-input
     :name="label"
-    class="mb-6 pt-1"
+    class="smart-image-input mb-3 pt-4"
+    :data-id="id"
+    :class="{ dragging }"
+    @click="openImageInputDialog"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
   >
-    <v-file-input
+    <img
+      v-if="value"
+      class="image"
+      :src="value"
+    >
+  </outlined-input>
+</template>
+
+<script lang="js">
+/*
+<v-file-input
       v-cloak
       ref="input"
       v-bind="$attrs"
@@ -19,11 +35,6 @@
       @blur="focused = false"
       @keyup="e => $emit('keyup', e)"
     />
-  </outlined-input>
-</template>
-
-<script lang="js">
-/*
   States to handle:
   - Empty
   - Image from URL
@@ -43,12 +54,23 @@
 */
 import UserImages from '/imports/api/files/userImages/UserImages';
 import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
 export default {
+  components: {
+    OutlinedInput,
+  },
   mixins: [SmartInput],
+  props: {
+    label: {
+      type: String,
+      default: '',
+    },
+  },
   data() {
     return {
-      url: '',
+      id: Random.id(),
+      dragging: false,
     };
   },
   watch: {
@@ -100,6 +122,15 @@ export default {
       }
   },
   methods: {
+    openImageInputDialog() {
+      this.$store.commit('pushDialogStack', {
+        component: 'image-input-dialog',
+        elementId: this.id,
+        data: {
+          href: this.value,
+        },
+      });
+    },
     handleUrlChange() {
       this.$emit('change', this.url);
     },
@@ -108,11 +139,17 @@ export default {
       this.uploadFile(file);
     },
     handleDragOver(event) {
-      // TODO
+      event.preventDefault();
+      this.dragging = true;
+    },
+    handleDragLeave() {
+      this.dragging = false;
     },
     handleDrop(event) {
-      // TODO
+      console.log(event);
+      event.preventDefault();
       const file = event.dataTransfer.files[0];
+      this.dragging = false;
       this.uploadFile(file);
     },
     uploadFile(file) {
@@ -121,3 +158,23 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.smart-image-input {
+  min-height: 120px;
+  cursor: pointer;
+}
+.image {
+  max-height: 400px;
+  max-width: 100%;
+}
+.dragging {
+  border-style: dashed;
+}
+.outlined-input.dragging.theme--dark:not(.no-hover) {
+  border-color: #fff;
+}
+.outlined-input.dragging.theme--light:not(.no-hover) {
+  border-color: rgba(0,0,0,.86);
+}
+</style>

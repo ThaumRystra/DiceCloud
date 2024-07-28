@@ -64,6 +64,19 @@
         </v-btn>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col
+        sm="12"
+        md="6"
+        lg="4"
+      >
+        <smart-image-input
+          label="Image input"
+          :value="inputImageHref"
+          @change="(val, ack) => {inputImageHref = val; ack()}"
+        />
+      </v-col>
+    </v-row>
     <!--
     <v-row dense>
       <v-col cols="12">
@@ -109,6 +122,8 @@ import UserImageCard from '/imports/client/ui/files/UserImageCard.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import migrateArchive from '/imports/migrations/archive/migrateArchive';
+import ImageField from '/imports/client/ui/properties/viewers/shared/ImageField.vue';
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
 // TODO Mark files that don't have versions.${version}.meta.pipePath set as broken links
 
@@ -116,8 +131,7 @@ export default {
   components: {
     ArchiveFileCard,
     FileStorageStats,
-    ImageUploadInput,
-    UserImageCard,
+    SmartImageInput,
   },
   data(){ return {
     updateStorageUsedLoading: false,
@@ -126,6 +140,7 @@ export default {
     archiveUploadInProgress: false,
     archiveUploadProgress: 0,
     archiveUploadIndeterminate: true,
+    inputImageHref: 'https://picsum.photos/2000/500',
   }},
   meteor: {
     $subscribe: {
