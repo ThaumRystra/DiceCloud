@@ -73,7 +73,7 @@
         <smart-image-input
           label="Image input"
           :value="inputImageHref"
-          @change="(val, ack) => {inputImageHref = val; ack()}"
+          @change="(val, ack) => {inputImageHref = val; /*ack()*/}"
         />
       </v-col>
     </v-row>
