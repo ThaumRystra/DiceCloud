@@ -21,22 +21,34 @@
       :error-messages="errors.gender"
       @change="(value, ack) => $emit('change', {path: ['gender'], value, ack})"
     />
-    <text-field
-      label="Picture URL"
-      hint="A link to a high resolution image"
-      :disabled="!editPermission"
-      :value="model.picture"
-      :error-messages="errors.picture"
-      @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
-    />
-    <text-field
-      label="Avatar picture URL"
-      hint="A link to a smaller, square image to use as an avatar"
-      :disabled="!editPermission"
-      :value="model.avatarPicture"
-      :error-messages="errors.avatarPicture"
-      @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
-    />
+    <v-row>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-image-input
+          label="Picture"
+          hint="A link to a high resolution image"
+          :disabled="!editPermission"
+          :value="model.picture"
+          :error-messages="errors.picture"
+          @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
+        />
+      </v-col>
+      <v-col
+        cols="12"
+        md="6"
+      >
+        <smart-image-input
+          label="Avatar"
+          hint="A link to a smaller, square image to use as an avatar"
+          :disabled="!editPermission"
+          :value="model.avatarPicture"
+          :error-messages="errors.avatarPicture"
+          @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
+        />
+      </v-col>
+    </v-row>
     <form-sections>
       <form-section name="Settings">
         <v-switch
@@ -155,12 +167,14 @@ import LibraryList from '/imports/client/ui/library/LibraryList.vue';
 import LibraryCollections from '/imports/api/library/LibraryCollections';
 import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
 export default {
   components: {
     FormSection,
     FormSections,
     LibraryList,
+    SmartImageInput,
   },
   props: {
     stored: {

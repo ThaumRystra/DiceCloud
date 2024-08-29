@@ -114,6 +114,9 @@ export default {
     };
   },
   meteor: {
+    $subscribe: {
+      'userImages': [],
+    },
     userImages() {
       const userId = Meteor.userId();
       return UserImages.find(
