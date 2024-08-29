@@ -25,43 +25,25 @@
           <v-img
             v-for="file in userImages"
             :key="file._id"
-            :data-id="`image-${file._id}`"
+            :data-id="file._id"
             class="user-image ma-1 v-sheet"
-            :class="{'elevation-4': file.href === href}"
+            :class="{'elevation-4': file.link === href}"
             height="250"
-            :src="file.href"
-            @click="selectUserImage(file.href)"
+            :src="file.link"
+            @click="selectUserImage(file.link)"
           >
             <v-btn
               class="zoom-button"
               icon
-              @click.stop="previewImage(file._id, file.href)"
+              @click.stop="previewImage(file)"
             >
               <v-icon>mdi-magnify-plus</v-icon>
             </v-btn>
           </v-img>
-          <v-btn
-            outlined
-            class="upload-image-button ma-1"
-            :color="fileUploadError ? 'error' : undefined"
-            :disabled="fileUploadInProgress"
-            @click="$refs.archiveFileInput.click()"
-          >
-            <v-icon left>
-              mdi-file-upload-outline
-            </v-icon>
-            <template v-if="fileUploadError">
-              {{ fileUploadError }}
-            </template>
-            <template v-else>
-              Upload Image
-            </template>
-            <v-progress-linear
-              v-if="fileUploadInProgress"
-              :value="fileUploadProgress"
-              :indeterminate="fileUploadIndeterminate"
-            />
-          </v-btn>
+          <image-upload-input
+            style="height: 250px;"
+            @uploaded="link => selectUserImage(link)"
+          />
           <div style="height: 0;" />
           <div style="height: 0;" />
           <div style="height: 0;" />
@@ -108,11 +90,15 @@
 </template>
 
 <script lang="js">
+import UserImages from '/imports/api/files/userImages/UserImages';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
+import prettyBytes from 'pretty-bytes';
 
 export default {
   components: {
     DialogBase,
+    ImageUploadInput,
   },
   props: {
     href: {
@@ -129,33 +115,27 @@ export default {
   },
   meteor: {
     userImages() {
-      // return UserImages.find({});
-      return [
+      const userId = Meteor.userId();
+      return UserImages.find(
         {
-          _id: '1',
-          name: 'Example image 1',
-          href: 'https://picsum.photos/1000/1000',
-        },
-        {
-          _id: '2',
-          name: 'Example image 2',
-          href: 'https://picsum.photos/500/600',
-        },
-        {
-          _id: '3',
-          name: 'Example image 3',
-          href: 'https://picsum.photos/850/700',
-        },
-      ]
+          userId,
+        }, {
+          sort: {'size': -1},
+        }
+      ).map(f => {
+        f.size = prettyBytes(f.size);
+        f.link = UserImages.link(f);
+        return f;
+      });
     },
   },
   methods: {
-    previewImage(id, href) {
+    previewImage(file) {
       this.$store.commit('pushDialogStack', {
         component: 'image-preview-dialog',
-        elementId: `image-${id}`,
+        elementId: file._id,
         data: {
-          href: href,
+          href: file.link,
         },
       });
     },

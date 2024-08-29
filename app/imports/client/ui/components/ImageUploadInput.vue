@@ -1,14 +1,34 @@
 <template>
-  <div class="file-upload-input">
-    <v-file-input
-      v-model="file"
-      v-bind="$attrs"
-      accept="image/*"
-    />
+  <v-btn
+    outlined
+    class="image-upload-button ma-1"
+    v-bind="$attrs"
+    :color="fileUploadError ? 'error' : undefined"
+    :disabled="fileUploadInProgress"
+    @click="$refs.hiddenFileInput.click()"
+  >
+    <v-icon left>
+      mdi-file-upload-outline
+    </v-icon>
+    <template v-if="fileUploadError">
+      {{ fileUploadError }}
+    </template>
+    <template v-else>
+      Upload Image
+    </template>
     <v-progress-linear
-      :progress="progress"
+      v-if="fileUploadInProgress"
+      :value="fileUploadProgress"
+      :indeterminate="fileUploadIndeterminate"
     />
-  </div>
+    <input
+      ref="hiddenFileInput"
+      type="file"
+      accept="image/*"
+      style="display: none;"
+      @input="inputChange"
+    >
+  </v-btn>
 </template>
 
 <script lang="js">
@@ -25,48 +45,60 @@ export default {
       if (!file) return;
       let self = this;
       let uploadInstance = UserImages.insert({
-          file: file,
-          /*meta: {
-            userId: Meteor.userId() // Optional, used to check on server for file tampering
-          },*/
-          chunkSize: 'dynamic',
-          allowWebWorkers: true // If you see issues with uploads, change this to false
-        }, false)
+        file: file,
+        chunkSize: 'dynamic',
+        allowWebWorkers: true
+      }, false)
 
-        // These are the event functions, don't need most of them, it shows where we are in the process
-        uploadInstance.on('start', function () {
-          console.log('Starting');
-          this.uploadingInProgress = true;
-        });
+      uploadInstance.on('start', function () {
+        console.log('Starting');
+        this.uploadingInProgress = true;
+      });
 
-        uploadInstance.on('end', function (error, fileObj) {
-          console.log('On end File Object: ', fileObj);
-          this.uploadingInProgress = false;
-        });
+      uploadInstance.on('end', function (error, fileObj) {
+        console.log('On end File Object: ', fileObj);
+        this.uploadingInProgress = false;
+        self.$emit('uploaded', UserImages.link(fileObj));
+      });
 
-        uploadInstance.on('uploaded', function (error, fileObj) {
-          console.log('uploaded: ', fileObj);
+      uploadInstance.on('uploaded', function (error, fileObj) {
+        console.log('uploaded: ', fileObj);
 
-          // Remove the file from the input box
-          self.file = undefined;
+        // Remove the file from the input box
+        self.file = undefined;
 
-          // Reset our state for the next file
-          self.uploadingInProgress = false;
-          self.progress = 0;
-        });
+        // Reset our state for the next file
+        self.uploadingInProgress = false;
+        self.progress = 0;
+      });
 
-        uploadInstance.on('error', function (error, fileObj) {
-          console.log('Error during upload: ' + error, fileObj)
-        });
+      uploadInstance.on('error', function (error, fileObj) {
+        // Remove the file from the input box
+        self.file = undefined;
 
-        uploadInstance.on('progress', function (progress, fileObj) {
-          console.log('Upload Percentage: ' + progress, fileObj)
-          // Update our progress bar
-          self.progress = progress;
-        });
+        // Reset our state for the next file
+        self.uploadingInProgress = false;
+        self.progress = 0;
+        console.log('Error during upload: ' + error, fileObj)
+      });
 
-        uploadInstance.start(); // Must manually start the upload
-      }
+      uploadInstance.on('progress', function (progress, fileObj) {
+        console.log('Upload Percentage: ' + progress, fileObj)
+        // Update our progress bar
+        self.progress = progress;
+      });
+
+      uploadInstance.start(); // Must manually start the upload
+    },
+  },
+  methods: {
+    inputChange(e) {
+      if (!e.target) return;
+      const { files: selectedFiles } = e.target;
+      if (!selectedFiles) return;
+      this.file = selectedFiles[0];
+      return;
+    }
   },
 
 }

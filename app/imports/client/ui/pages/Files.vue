@@ -145,6 +145,7 @@ export default {
   meteor: {
     $subscribe: {
       'archiveCreatureFiles': [],
+      'userImages': [],
       'characterList': [],
     },
     archiveFiles() {
