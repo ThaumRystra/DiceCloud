@@ -4,7 +4,7 @@
     class="image-upload-button ma-1"
     v-bind="$attrs"
     :color="fileUploadError ? 'error' : undefined"
-    :disabled="fileUploadInProgress"
+    :disabled="uploadingInProgress"
     @click="$refs.hiddenFileInput.click()"
   >
     <v-icon left>
@@ -17,9 +17,9 @@
       Upload Image
     </template>
     <v-progress-linear
-      v-if="fileUploadInProgress"
-      :value="fileUploadProgress"
-      :indeterminate="fileUploadIndeterminate"
+      v-if="uploadingInProgress"
+      :value="uploadingInProgress"
+      :indeterminate="uploadIndeterminate"
     />
     <input
       ref="hiddenFileInput"
@@ -39,6 +39,7 @@ export default {
     progress: 0,
     file: undefined,
     uploadingInProgress: false,
+    fileUploadError: undefined,
   }},
   watch: {
     file(file){
@@ -50,41 +51,37 @@ export default {
         allowWebWorkers: true
       }, false)
 
+      self.uploadingInProgress = true;
+      self.uploadIndeterminate = true;
+
       uploadInstance.on('start', function () {
-        console.log('Starting');
-        this.uploadingInProgress = true;
+        self.progress = 0;
+        self.uploadIndeterminate = false;
       });
 
       uploadInstance.on('end', function (error, fileObj) {
-        console.log('On end File Object: ', fileObj);
-        this.uploadingInProgress = false;
+        self.resetState();
         self.$emit('uploaded', UserImages.link(fileObj));
       });
 
       uploadInstance.on('uploaded', function (error, fileObj) {
-        console.log('uploaded: ', fileObj);
-
         // Remove the file from the input box
         self.file = undefined;
-
-        // Reset our state for the next file
-        self.uploadingInProgress = false;
+        self.resetState();
         self.progress = 0;
       });
 
       uploadInstance.on('error', function (error, fileObj) {
         // Remove the file from the input box
         self.file = undefined;
-
-        // Reset our state for the next file
-        self.uploadingInProgress = false;
-        self.progress = 0;
-        console.log('Error during upload: ' + error, fileObj)
+        self.resetState();
+        this.fileUploadError = error.reason || error.message || error.toString();
       });
 
       uploadInstance.on('progress', function (progress, fileObj) {
         console.log('Upload Percentage: ' + progress, fileObj)
-        // Update our progress bar
+        // Update our progress bar with actual progress
+        self.uploadIndeterminate = false;
         self.progress = progress;
       });
 
@@ -98,7 +95,13 @@ export default {
       if (!selectedFiles) return;
       this.file = selectedFiles[0];
       return;
-    }
+    },
+    resetState() {
+      this.file = undefined;
+      this.uploadingInProgress = false;
+      this.progress = 0;
+      this.fileUploadError = undefined;
+    },
   },
 
 }

@@ -126,6 +126,8 @@ import ImageField from '/imports/client/ui/properties/viewers/shared/ImageField.
 import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
 // TODO Mark files that don't have versions.${version}.meta.pipePath set as broken links
+// TODO show user images
+// TODO delete, rename, etc. user images
 
 export default {
   components: {

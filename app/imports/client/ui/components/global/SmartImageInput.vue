@@ -166,7 +166,7 @@ export default {
 }
 .image {
   min-height: 100px;
-  max-height: 400px;
+  max-height: 300px;
   max-width: 100%;
   margin-bottom: -7px;
 }
