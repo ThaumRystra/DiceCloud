@@ -7,7 +7,7 @@ import computeSlotQuantityFilled from './buildComputation/tests/computeSlotQuant
 import computeToggleDependencies from './buildComputation/tests/computeToggleDependencies.testFn';
 import linkCalculationDependencies from './buildComputation/tests/linkCalculationDependencies.testFn';
 import linkInventory from './buildComputation/tests/linkInventory.testFn';
-import linkTypeDependencies from './buildComputation/tests/linkTypeDependencies.testFn';
+import linkTypeDependencies from '/imports/api/engine/computation/buildComputation/tests/linkTypeDependencies.testfn';
 
 describe('buildComputation', function () {
   it('Builds something at all', function () {

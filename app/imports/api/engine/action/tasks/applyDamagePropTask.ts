@@ -63,7 +63,8 @@ export default async function applyDamagePropTask(
   } else {
     value = scope['~set']?.value;
   }
-  const targetPropId = scope['~attributeDamaged']?._propId;
+  const targetPropId = scope['~attributeDamaged']?._propId ??
+    scope['~attributeDamaged']?._id;
 
   // If there are no targets, just log the result that would apply and end
   if (!task.targetIds?.length) {
@@ -108,7 +109,7 @@ export default async function applyDamagePropTask(
         ...prop.silent && { silenced: true },
       }]
     });
-    setScope(result, targetProp, newValue, damage);
+    if (targetId === action.creatureId) setScope(result, targetProp, newValue, damage);
   } else if (operation === 'increment') {
     const currentValue = targetProp.value || 0;
     const currentDamage = targetProp.damage || 0;
@@ -134,7 +135,7 @@ export default async function applyDamagePropTask(
         ...prop.silent && { silenced: true },
       }]
     });
-    setScope(result, targetProp, newValue, damage);
+    if (targetId === action.creatureId) setScope(result, targetProp, newValue, damage);
   }
   await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.after', userInput);
   await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.afterChildren', userInput);
