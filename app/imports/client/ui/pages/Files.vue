@@ -65,6 +65,9 @@
       </v-col>
     </v-row>
     <v-row dense>
+      <v-col cols="12">
+        <v-subheader> Images </v-subheader>
+      </v-col>
       <template v-if="imageFiles && imageFiles.length">
         <v-col
           v-for="file in imageFiles"
