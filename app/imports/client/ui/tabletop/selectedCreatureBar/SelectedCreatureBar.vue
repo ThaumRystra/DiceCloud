@@ -33,7 +33,21 @@
         data-id="tabletop-action-card"
         @close-menu="menuOpen = false"
         @dialog-opened="menuOpen = false"
-        @open-details="openPropertyDetails"
+        @open-details="openPropertyDetails('tabletop-action-card')"
+      />
+      <tabletop-buff-card
+        v-if="selectedProp && selectedProp.type === 'buff'"
+        style="width: 300px;"
+        :style="{
+          width: '300px',
+          opacity: selectedIcon ? 1 : 0.7,
+          transition: 'opacity 0.2s ease',
+        }"
+        :model="selectedProp"
+        data-id="tabletop-buff-card"
+        @close-menu="menuOpen = false"
+        @dialog-opened="menuOpen = false"
+        @open-details="openPropertyDetails('tabletop-buff-card')"
       />
       <v-card
         v-else-if="activeIcon && activeIcon.tab"
@@ -151,6 +165,7 @@
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
+import TabletopBuffCard from '/imports/client/ui/tabletop/TabletopBuffCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';
 import { compact } from 'lodash';
 
@@ -181,7 +196,8 @@ export default {
     //TabletopCreatureSheetTabs,
     CreatureBarIcon,
     TabletopActionCard,
-},
+    TabletopBuffCard,
+  },
   props: {
     creatureId: {
       type: String,
@@ -286,11 +302,11 @@ export default {
       // TODO standard action dialogs
       this.menuOpen = false;
     },
-    openPropertyDetails() {
+    openPropertyDetails(elementId) {
       const propId = this.selectedProp._id;
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
-        elementId: 'tabletop-action-card',
+        elementId,
         data: { _id: propId },
         callback: () => propId
       });
