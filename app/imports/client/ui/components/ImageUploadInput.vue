@@ -1,7 +1,7 @@
 <template>
   <v-btn
     outlined
-    class="image-upload-button ma-1"
+    class="image-upload-button"
     v-bind="$attrs"
     :color="fileUploadError ? 'error' : undefined"
     :disabled="uploadingInProgress"
@@ -18,7 +18,7 @@
     </template>
     <v-progress-linear
       v-if="uploadingInProgress"
-      :value="uploadingInProgress"
+      :value="progress"
       :indeterminate="uploadIndeterminate"
     />
     <input
@@ -48,7 +48,10 @@ export default {
       let uploadInstance = UserImages.insert({
         file: file,
         chunkSize: 'dynamic',
-        allowWebWorkers: true
+        allowWebWorkers: true,
+        meta: {
+          createdAt: new Date(),
+        },
       }, false)
 
       self.uploadingInProgress = true;
@@ -79,7 +82,6 @@ export default {
       });
 
       uploadInstance.on('progress', function (progress, fileObj) {
-        console.log('Upload Percentage: ' + progress, fileObj)
         // Update our progress bar with actual progress
         self.uploadIndeterminate = false;
         self.progress = progress;

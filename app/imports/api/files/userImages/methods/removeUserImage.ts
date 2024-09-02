@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 import UserImages from '/imports/api/files/userImages/UserImages';
 
-const removeArchiveCreature = new ValidatedMethod({
+const removeUserImage = new ValidatedMethod({
   name: 'userImages.methods.remove',
   validate: new SimpleSchema({
     'fileId': {
@@ -41,4 +41,4 @@ const removeArchiveCreature = new ValidatedMethod({
   },
 });
 
-export default removeArchiveCreature;
+export default removeUserImage;

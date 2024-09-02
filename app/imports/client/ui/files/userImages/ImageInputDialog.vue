@@ -123,7 +123,11 @@ export default {
         {
           userId,
         }, {
-          sort: {'size': -1},
+          sort: {
+            'meta.createdAt': -1,
+            'name': 1,
+            'size': -1,
+          },
         }
       ).map(f => {
         f.size = prettyBytes(f.size);

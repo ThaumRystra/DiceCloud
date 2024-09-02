@@ -64,20 +64,33 @@
         </v-btn>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row dense>
+      <template v-if="imageFiles && imageFiles.length">
+        <v-col
+          v-for="file in imageFiles"
+          :key="file._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+        >
+          <user-image-card :model="file" />
+        </v-col>
+      </template>
       <v-col
-        sm="12"
-        md="6"
-        lg="4"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
       >
-        <smart-image-input
-          label="Image input"
-          :value="inputImageHref"
-          @change="(val, ack) => {inputImageHref = val; /*ack()*/}"
+        <image-upload-input
+          style="height: 100%; width: 100%; min-height: 120px;"
         />
       </v-col>
     </v-row>
-    <!--
+      <!--
     <v-row dense>
       <v-col cols="12">
         <v-subheader> Images </v-subheader>
@@ -108,6 +121,7 @@
       </v-col>
     </v-row>
     -->
+    </v-col>
   </v-container>
 </template>
 
@@ -118,7 +132,7 @@ import prettyBytes from 'pretty-bytes';
 import ArchiveFileCard from '/imports/client/ui/files/ArchiveFileCard.vue';
 import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
 import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
-import UserImageCard from '/imports/client/ui/files/UserImageCard.vue';
+import UserImageCard from '/imports/client/ui/files/userImages/UserImageCard.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import migrateArchive from '/imports/migrations/archive/migrateArchive';
@@ -133,7 +147,8 @@ export default {
   components: {
     ArchiveFileCard,
     FileStorageStats,
-    SmartImageInput,
+    UserImageCard,
+    ImageUploadInput,
   },
   data(){ return {
     updateStorageUsedLoading: false,
@@ -161,6 +176,24 @@ export default {
       ).map(f => {
         f.size = prettyBytes(f.size);
         f.link = ArchiveCreatureFiles.link(f);
+        return f;
+      });
+    },
+    imageFiles() {
+      const userId = Meteor.userId();
+      return UserImages.find(
+        {
+          userId,
+        }, {
+          sort: {
+            'meta.createdAt': -1,
+            'name': 1,
+            'size': -1,
+          },
+        }
+      ).map(f => {
+        f.size = prettyBytes(f.size);
+        f.link = UserImages.link(f);
         return f;
       });
     },
@@ -231,18 +264,14 @@ export default {
 
         // These are the event functions, don't need most of them, it shows where we are in the process
         uploadInstance.on('start', function () {
-          console.log('Starting');
           self.archiveUploadIndeterminate = false;
         });
 
         uploadInstance.on('end', function (error, fileObj) {
-          console.log('On end File Object: ', fileObj);
           self.archiveUploadInProgress = false;
         });
 
         uploadInstance.on('uploaded', function (error, fileObj) {
-          console.log('uploaded: ', fileObj);
-
           // Remove the file from the input box
           self.file = undefined;
 
@@ -251,7 +280,6 @@ export default {
         });
 
         uploadInstance.on('error', function (error, fileObj) {
-          console.log('Error during upload: ' + error, fileObj)
           const text = error.reason || error.message || error;
           snackbar({text});
           self.archiveFileError = text;
@@ -259,12 +287,10 @@ export default {
         });
 
         uploadInstance.on('progress', function (progress, fileObj) {
-          console.log('Upload Percentage: ' + progress, fileObj)
-          // Update our progress bar
           self.archiveUploadProgress = progress;
         });
 
-        uploadInstance.start(); // Must manually start the upload
+        uploadInstance.start();
       });
 
       fr.readAsText(file);

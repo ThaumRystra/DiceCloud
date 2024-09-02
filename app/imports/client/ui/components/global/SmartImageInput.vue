@@ -137,18 +137,21 @@ export default {
       this.uploadFile(file);
     },
     handleDragOver(event) {
-      event.preventDefault();
-      this.dragging = true;
+      // TODO
+      // event.preventDefault();
+      // this.dragging = true;
     },
     handleDragLeave() {
-      this.dragging = false;
+      // TODO
+      // this.dragging = false;
     },
     handleDrop(event) {
-      console.log(event);
-      event.preventDefault();
-      const file = event.dataTransfer.files[0];
-      this.dragging = false;
-      this.uploadFile(file);
+      // TODO
+      // console.log(event);
+      // event.preventDefault();
+      // const file = event.dataTransfer.files[0];
+      // this.dragging = false;
+      // this.uploadFile(file);
     },
     uploadFile(file) {
       // Implement your file upload logic here
