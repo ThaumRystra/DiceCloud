@@ -35,12 +35,6 @@ export type Creature = Colored & Shared & {
   // Tabletop
   tabletopId?: string,
   initiativeRoll?: number,
-  tabletopSettings?: {
-    iconGroups: {
-      name?: string,
-      iconIds: string[],
-    }[],
-  },
 
   settings: {
     useVariantEncumbrance?: true,
@@ -128,17 +122,6 @@ const IconGroupSchema = new SimpleSchema({
   'iconIds.$': {
     type: String,
     max: STORAGE_LIMITS.variableName,
-  },
-});
-
-const CreatureTabletopSettingsSchema = new SimpleSchema({
-  iconGroups: {
-    type: Array,
-    defaultValue: [],
-    max: 10,
-  },
-  'iconGroups.$': {
-    type: IconGroupSchema,
   },
 });
 
@@ -250,10 +233,6 @@ const CreatureSchema = new SimpleSchema({
   },
   initiativeRoll: {
     type: SimpleSchema.Integer,
-    optional: true,
-  },
-  tabletopSettings: {
-    type: CreatureTabletopSettingsSchema,
     optional: true,
   },
 

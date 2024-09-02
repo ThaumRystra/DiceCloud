@@ -59,6 +59,7 @@ export default async function doAction(
           task,
         },
         callback(action: EngineAction) {
+          if (!action) return;
           resolve(callActionMethod(action, task));
           return elementId;
         },

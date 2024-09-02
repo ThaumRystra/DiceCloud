@@ -3,7 +3,6 @@
     class="action-card  overflow-y-auto"
     rounded
     :class="cardClasses"
-    :data-id="model._id"
   >
     <div class="layout align-center px-3">
       <div
@@ -34,6 +33,7 @@
       <div
         class="action-header flex layout column justify-center pl-1"
         style="height: 72px; cursor: pointer;"
+        @click="$emit('open-details')"
       >
         <div class="action-title my-1">
           {{ model.name || propertyName }}
@@ -229,13 +229,6 @@ export default {
       setTimeout(() => {
         this.activated = undefined;
       }, 150);
-    },
-    openPropertyDetails() {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${this.model._id}`,
-        data: {_id: this.model._id},
-      });
     },
   }
 }

@@ -10,6 +10,7 @@
     "EJSON",
     "healthbar",
     "healthbars",
+    "jank",
     "meteortesting",
     "nearley",
     "ngraph",
@@ -19,6 +20,7 @@
     "Spellcasting",
     "uncomputed",
     "vuetify",
+    "Vuex",
     "walkdown"
   ]
 }
