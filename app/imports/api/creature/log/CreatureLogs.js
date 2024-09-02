@@ -58,11 +58,17 @@ let CreatureLogSchema = new SimpleSchema({
 
 CreatureLogs.attachSchema(CreatureLogSchema);
 
-function removeOldLogs(creatureId) {
+function removeOldLogs({ creatureId, tabletopId }) {
+  let filter;
+  if (creatureId && tabletopId || (!creatureId && !tabletopId)) {
+    throw Error('Provide either creatureId or tabletopId')
+  } else if (creatureId) {
+    filter = { creatureId };
+  } else if (tabletopId) {
+    filter = { tabletopId }
+  }
   // Find the first log that is over the limit
-  let firstExpiredLog = CreatureLogs.find({
-    creatureId
-  }, {
+  let firstExpiredLog = CreatureLogs.find(filter, {
     sort: { date: -1 },
     skip: PER_CREATURE_LOG_LIMIT,
   });
@@ -156,12 +162,12 @@ export function insertCreatureLogWork({ log, creature, method }) {
   if (Meteor.isServer) {
     method?.unblock();
     if (creature) {
-      removeOldLogs(creature._id);
       logWebhook({ log, creature });
     }
     if (log.tabletopId) {
-      // Todo remove old tabletop logs
-      // Log webhook if it's different to creature webhook
+      removeOldLogs({ tabletopId: log.tabletopId });
+    } else {
+      removeOldLogs({ creatureId: creature._id });
     }
   }
   return id;
