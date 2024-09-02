@@ -35,8 +35,13 @@ export default function mutationToPropUpdates(mutation: Mutation) {
   }
   // Remove creature properties
   if (mutation.removals) for (const removeOne of mutation.removals) {
+    console.log(removeOne);
     bulkWriteOps.push({
-      removeOne,
+      deleteOne: {
+        filter: {
+          _id: removeOne.propId
+        },
+      },
     });
   }
   return bulkWriteOps;
