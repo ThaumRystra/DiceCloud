@@ -17,7 +17,7 @@
         cols="12"
         md="6"
       >
-        <text-field
+        <smart-image-input
           label="Picture URL"
           hint="A link to a cover image for this tabletop"
           :disabled="!editPermission"
@@ -172,6 +172,7 @@ import OutlinedInput from '/imports/client/ui/properties/viewers/shared/Outlined
 import TabletopUserList from '/imports/client/ui/tabletop/TabletopUserList.vue';
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
 export default {
   name: 'TabletopViewer',
@@ -181,6 +182,7 @@ export default {
     PropertyField,
     FormSection,
     FormSections,
+    SmartImageInput,
   },
   props: {
     model: {
