@@ -22,6 +22,7 @@ import TransferOwnershipDialog from '/imports/client/ui/sharing/TransferOwnershi
 
 // Lazily load less common dialogs
 const ArchiveDialog = () => import('/imports/client/ui/creature/archive/ArchiveDialog.vue');
+const CharacterImportDialog = () => import('/imports/client/ui/creature/character/CharacterImportDialog.vue');
 const CreatureFromLibraryDialog = () => import('/imports/client/ui/tabletop/CreatureFromLibraryDialog.vue');
 const DeleteUserAccountDialog = () => import('/imports/client/ui/user/DeleteUserAccountDialog.vue');
 const DependencyGraphDialog = () => import('/imports/client/ui/creature/dependencyGraph/DependencyGraphDialog.vue');
@@ -43,6 +44,7 @@ export default {
   ArchiveDialog,
   CastSpellWithSlotDialog,
   CharacterCreationDialog,
+  CharacterImportDialog,
   CharacterSheetDialog,
   CreatureFormDialog,
   CreatureFromLibraryDialog,

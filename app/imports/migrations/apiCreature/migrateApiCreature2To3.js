@@ -1,7 +1,7 @@
 import migrateProperty2To3 from '/imports/migrations/archive/properties/migrateProperty2To3';
 
-export default function migrate2To3(archive) {
-  archive.properties = archive.properties.map(prop => {
+export default function migrateApiCreature2To3(creature) {
+  creature.creatureProperties = creature.creatureProperties.map(prop => {
     try {
       migrateProperty2To3(prop);
     } catch (e) {

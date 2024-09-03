@@ -51,6 +51,14 @@
           </v-card>
           <div class="layout justify-end mt-2">
             <v-btn
+              v-if="showImportButton"
+              text
+              data-id="import-character-button"
+              @click="importCharacter"
+            >
+              import character
+            </v-btn>
+            <v-btn
               text
               :loading="loadingInsertFolder"
               @click="insertFolder"
@@ -161,6 +169,9 @@ export default {
       let currentCharacterCount = this.creatureCount;
       return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
     },
+    showImportButton() {
+      return !Meteor.settings.public?.disallowCreatureApiImport;
+    }
   },
   methods: {
     insertCharacter() {
@@ -168,6 +179,14 @@ export default {
       self.$store.commit('pushDialogStack', {
         component: 'character-creation-dialog',
         elementId: 'new-character-button',
+        callback: creatureId => creatureId,
+      });
+    },
+    importCharacter() {
+      const self = this;
+      self.$store.commit('pushDialogStack', {
+        component: 'character-import-dialog',
+        elementId: 'import-character-button',
         callback: creatureId => creatureId,
       });
     },
