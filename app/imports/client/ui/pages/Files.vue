@@ -10,19 +10,7 @@
       <v-col cols="12">
         <v-subheader> Archived Characters </v-subheader>
       </v-col>
-      <template v-if="archiveFiles && archiveFiles.length">
-        <v-col
-          v-for="file in archiveFiles"
-          :key="file._id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <archive-file-card :model="file" />
-        </v-col>
-      </template>
+      
       <v-col
         key="upload"
         cols="12"
@@ -63,10 +51,34 @@
           />
         </v-btn>
       </v-col>
+      <template v-if="archiveFiles && archiveFiles.length">
+        <v-col
+          v-for="file in archiveFiles"
+          :key="file._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+        >
+          <archive-file-card :model="file" />
+        </v-col>
+      </template>
     </v-row>
     <v-row dense>
       <v-col cols="12">
         <v-subheader> Images </v-subheader>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+      >
+        <image-upload-input
+          style="height: 100%; width: 100%; min-height: 120px;"
+        />
       </v-col>
       <template v-if="imageFiles && imageFiles.length">
         <v-col
@@ -81,17 +93,6 @@
           <user-image-card :model="file" />
         </v-col>
       </template>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        xl="2"
-      >
-        <image-upload-input
-          style="height: 100%; width: 100%; min-height: 120px;"
-        />
-      </v-col>
     </v-row>
       <!--
     <v-row dense>

@@ -22,6 +22,11 @@
         <div
           class="user-image-list pa-4 d-flex flex-wrap"
         >
+          <image-upload-input
+            class="ma-1"
+            style="height: 250px;"
+            @uploaded="link => selectUserImage(link)"
+          />
           <v-img
             v-for="file in userImages"
             :key="file._id"
@@ -30,6 +35,7 @@
             :class="{'elevation-4': file.link === href}"
             height="250"
             :src="file.link"
+            :lazy-src="file.thumbHashDataUrl"
             @click="selectUserImage(file.link)"
           >
             <v-btn
@@ -40,13 +46,18 @@
               <v-icon>mdi-magnify-plus</v-icon>
             </v-btn>
           </v-img>
-          <image-upload-input
-            style="height: 250px;"
-            @uploaded="link => selectUserImage(link)"
+          <div
+            style="height: 0;"
+            class="ma-1"
           />
-          <div style="height: 0;" />
-          <div style="height: 0;" />
-          <div style="height: 0;" />
+          <div
+            style="height: 0;"
+            class="ma-1"
+          />
+          <div
+            style="height: 0;"
+            class="ma-1"
+          />
         </div>
       </v-tab-item>
       <v-tab-item
@@ -94,6 +105,7 @@ import UserImages from '/imports/api/files/userImages/UserImages';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
 import prettyBytes from 'pretty-bytes';
+import { thumbHashToDataURL } from 'thumbhash';
 
 export default {
   components: {
@@ -132,6 +144,9 @@ export default {
       ).map(f => {
         f.size = prettyBytes(f.size);
         f.link = UserImages.link(f);
+        if (f.meta?.thumbHash) {
+          f.thumbHashDataUrl = thumbHashToDataURL(f.meta.thumbHash);
+        }
         return f;
       });
     },
