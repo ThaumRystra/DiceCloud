@@ -4,6 +4,7 @@
     @click="previewImage"
   >
     <v-img
+      :lazy-src="thumbHashDataUrl"
       :src="model.link"
       :data-id="`${model._id}-image`"
     />
@@ -50,6 +51,7 @@
 <script lang="js">
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import removeUserImage from '/imports/api/files/userImages/methods/removeUserImage';
+import { thumbHashToDataURL } from 'thumbhash';
 
 export default {
   props: {
@@ -61,6 +63,13 @@ export default {
   data() {
     return {
       removeLoading: false,
+    }
+  },
+  computed: {
+    thumbHashDataUrl() {
+      const thumbHash = this.model.meta?.thumbHash;
+      if (!thumbHash) return;
+      return thumbHashToDataURL(thumbHash);
     }
   },
   methods: {

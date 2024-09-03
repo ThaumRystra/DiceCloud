@@ -33,6 +33,7 @@
 
 <script lang="js">
 import UserImages from '/imports/api/files/userImages/UserImages';
+import getThumbHash from '/imports/client/ui/utility/getThumbHash.js'
 
 export default {
   data(){return {
@@ -42,20 +43,34 @@ export default {
     fileUploadError: undefined,
   }},
   watch: {
-    file(file){
+    async file(file){
       if (!file) return;
       let self = this;
+      let thumbHash = undefined;
+
+      // Start the loading state here, because we are loading and processing the image into
+      // a thumb hash
+      self.uploadingInProgress = true;
+      self.uploadIndeterminate = true;
+
+      // ThumbHashes are nice to have, but don't break upload if they fail
+      try {
+        thumbHash = await getThumbHash(file);
+      } catch (e) {
+        console.error('Failed to generate thumbHash')
+        console.error(e);
+      }
+
+      // Start the image insert process
       let uploadInstance = UserImages.insert({
         file: file,
         chunkSize: 'dynamic',
         allowWebWorkers: true,
         meta: {
           createdAt: new Date(),
+          thumbHash,
         },
-      }, false)
-
-      self.uploadingInProgress = true;
-      self.uploadIndeterminate = true;
+      }, false);
 
       uploadInstance.on('start', function () {
         self.progress = 0;
@@ -68,15 +83,11 @@ export default {
       });
 
       uploadInstance.on('uploaded', function (error, fileObj) {
-        // Remove the file from the input box
-        self.file = undefined;
         self.resetState();
         self.progress = 0;
       });
 
       uploadInstance.on('error', function (error, fileObj) {
-        // Remove the file from the input box
-        self.file = undefined;
         self.resetState();
         this.fileUploadError = error.reason || error.message || error.toString();
       });
@@ -99,9 +110,12 @@ export default {
       return;
     },
     resetState() {
+      // Remove file from input
       this.file = undefined;
+      // stop progress
       this.uploadingInProgress = false;
       this.progress = 0;
+      // Remove errors
       this.fileUploadError = undefined;
     },
   },

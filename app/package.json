@@ -56,6 +56,7 @@
     "simpl-schema": "^1.13.1",
     "source-map-support": "^0.5.21",
     "speakingurl": "^14.0.1",
+    "thumbhash": "^0.1.1",
     "vivagraphjs": "^0.12.0",
     "vue": "2.6.14",
     "vue-meteor-tracker": "^2.0.0",
