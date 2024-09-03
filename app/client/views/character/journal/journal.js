@@ -7,7 +7,12 @@ Template.journal.created = function () {
 
 Template.journal.helpers({
 	notes: function () {
-		return Notes.find({ charId: this._id }, { sort: { color: 1, name: 1 } });
+		return Notes.find({
+			charId: this._id,
+			removed: { $ne: true },
+		}, {
+			sort: { color: 1, name: 1 }
+		});
 	},
 	experiences: function () {
 		return Experiences.find(
