@@ -88,7 +88,7 @@ export default {
   meteor: {
     healthBars() {
       const folderIds = CreatureProperties.find({
-        'ancestors.id': this.model._id,
+        'root.id': this.model._id,
         type: 'folder',
         groupStats: true,
         hideStatsGroup: true,
@@ -98,7 +98,7 @@ export default {
 
       // Get the properties that need to be shown as a health bar
       return CreatureProperties.find({
-        'ancestors.id': this.model._id,
+        'root.id': this.model._id,
         'parentId': {
           $nin: folderIds,
         },
@@ -107,6 +107,7 @@ export default {
         healthBarNoDamage: { $ne: true },
         inactive: { $ne: true } ,
         removed: { $ne: true },
+        total: {$ne: 0},
       }, {
         sort: {
           order: 1,
