@@ -104,7 +104,7 @@ export default async function applyDamagePropTask(
       }],
       contents: [{
         name: title,
-        value: `${getPropertyTitle(targetProp)} set to ${value}`,
+        value: `${getPropertyTitle(targetProp)} set from ${targetProp.value} to ${value}`,
         inline: true,
         ...prop.silent && { silenced: true },
       }]
