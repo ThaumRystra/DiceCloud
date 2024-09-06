@@ -14,8 +14,9 @@ export default async function computeCreature(creatureId) {
 async function computeComputation(computation, creatureId) {
   try {
     await computeCreatureComputation(computation);
-    writeAlteredProperties(computation);
-    writeScope(creatureId, computation);
+    const writePromise = writeAlteredProperties(computation);
+    const scopeWritePromise = writeScope(creatureId, computation);
+    await Promise.all([writePromise, scopeWritePromise]);
   } catch (e) {
     const errorText = e.reason || e.message || e.toString();
     computation.errors.push({

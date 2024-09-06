@@ -129,9 +129,9 @@ async function applyAttackToTarget(
     });
 
     if (criticalMiss || result < targetArmor) {
-      scope['~attackMiss'] = { value: true };
+      taskResult.pushScope['~attackMiss'] = { value: true };
     } else {
-      scope['~attackHit'] = { value: true };
+      taskResult.pushScope['~attackHit'] = { value: true };
     }
   } else {
     contents.push({

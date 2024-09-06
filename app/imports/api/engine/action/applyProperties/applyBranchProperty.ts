@@ -7,7 +7,6 @@ import recalculateCalculation from '/imports/api/engine/action/functions/recalcu
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { getPropertyChildren } from '/imports/api/engine/loadCreatures';
-import rollDice from '/imports/parser/rollDice';
 
 export default async function applyBranchProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
@@ -33,7 +32,7 @@ export default async function applyBranchProperty(
       if (!isFinite(prop.condition?.value)) {
         result.appendLog({
           name: 'Branch Error',
-          value: 'Index did not resolve into a valid number'
+          value: `Index did not resolve into a valid number, got \`${prop.condition?.value}\` instead`
         }, targets);
         return applyAfterTasksSkipChildren(action, prop, targets, userInput);
       }
@@ -98,7 +97,7 @@ export default async function applyBranchProperty(
     case 'random': {
       const children = await getPropertyChildren(action.creatureId, prop);
       if (children.length) {
-        const index = rollDice(1, children.length)[0];
+        const index = (await userInput.rollDice([{ number: 1, diceSize: children.length }]))[0][0];
         const child = children[index - 1];
         return applyAfterPropTasksForSingleChild(action, prop, child, targets, userInput);
       } else {

@@ -2,6 +2,7 @@ import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables'
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
+import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
@@ -9,6 +10,9 @@ import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { getVariables } from '/imports/api/engine/loadCreatures';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
+
+// TODO saves are not split to targets correctly
+// This will cause issues with triggers firing on saves on multiple targets
 
 export default async function applySavingThrowProperty(
   task: PropTask, action: EngineAction, result: TaskResult, inputProvider: InputProvider
@@ -23,7 +27,7 @@ export default async function applySavingThrowProperty(
 
     recalculateCalculation(prop.dc, action, 'reduce', inputProvider);
 
-  if (!isFiniteNode(prop.dc)) {
+  if (!isFiniteNode(prop.dc?.parseNode)) {
     result.appendLog({
       name: 'Error',
       value: 'Saving throw requires a DC',
@@ -33,7 +37,7 @@ export default async function applySavingThrowProperty(
 
   const dc = (prop.dc?.value);
   if (!prop.silent) result.appendLog({
-    name: prop.name,
+    name: getPropertyTitle(prop),
     value: `DC **${dc}**`,
     inline: true,
     ...prop.silent && { silenced: prop.silent }
@@ -43,7 +47,7 @@ export default async function applySavingThrowProperty(
   // If there are no save targets, apply all children as if the save both
   // succeeded and failed
   if (!saveTargetIds?.length) {
-    result.scope = {
+    result.pushScope = {
       ['~saveFailed']: { value: true },
       ['~saveSucceeded']: { value: true },
     }
@@ -53,14 +57,14 @@ export default async function applySavingThrowProperty(
   // Each target makes the saving throw
   for (const targetId of saveTargetIds) {
 
-    const save = getFromScope('save', getVariables(targetId));
+    const save = getFromScope(prop.stat, getVariables(targetId));
 
     if (!save) {
       result.appendLog({
         name: 'Saving throw error',
         value: 'No saving throw found: ' + prop.stat,
       }, [targetId]);
-      applyDefaultAfterPropTasks(action, prop, [targetId], inputProvider);
+      return applyDefaultAfterPropTasks(action, prop, [targetId], inputProvider);
     }
 
     const rollModifierText = numberToSignedString(save.value, true);
@@ -90,14 +94,15 @@ export default async function applySavingThrowProperty(
       value = rolledValue;
       resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
     }
-    scope['~saveDiceRoll'] = { value };
+    result.pushScope = {};
+    result.pushScope['~saveDiceRoll'] = { value };
     const resultValue = value + rollModifier || 0;
-    scope['~saveRoll'] = { value: resultValue };
+    result.pushScope['~saveRoll'] = { value: resultValue };
     const saveSuccess = resultValue >= dc;
     if (saveSuccess) {
-      scope['~saveSucceeded'] = { value: true };
+      result.pushScope['~saveSucceeded'] = { value: true };
     } else {
-      scope['~saveFailed'] = { value: true };
+      result.pushScope['~saveFailed'] = { value: true };
     }
     if (!prop.silent) result.appendLog({
       name: saveSuccess ? 'Successful save' : 'Failed save',
