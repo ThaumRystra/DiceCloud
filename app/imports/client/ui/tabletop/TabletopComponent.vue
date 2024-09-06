@@ -84,6 +84,7 @@
         right: 0;
         overflow-x: auto;
       "
+      @wheel.native="transformScroll($event)"
     >
       <v-slide-y-reverse-transition mode="out-in">
         <selected-creature-bar
@@ -102,13 +103,10 @@ import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesTo
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import MiniCharacterSheet from '/imports/client/ui/creature/character/MiniCharacterSheet.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
-import ActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
-import TabletopCreatureListItem from '/imports/client/ui/tabletop/TabletopCreatureListItem.vue';
 import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 
@@ -134,10 +132,7 @@ export default {
   components: {
     TabletopCreatureCard,
     TabletopMap,
-    ActionCard,
-    MiniCharacterSheet,
     SelectedCreatureBar,
-    TabletopCreatureListItem,
   },
   props: {
     model: {
