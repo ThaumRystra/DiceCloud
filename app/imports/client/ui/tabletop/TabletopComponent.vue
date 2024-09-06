@@ -19,7 +19,7 @@
       <v-row
         dense
         class="initiative-row flex-grow-0"
-        style="flex-wrap: nowrap; overflow-x: azuto; padding-bottom: 50px; min-width: 200px;"
+        style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 50px; min-width: 200px;"
         @wheel="transformScroll($event)"
       >
         <tabletop-creature-card
