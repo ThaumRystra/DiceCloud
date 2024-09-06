@@ -16,7 +16,7 @@ import { renewDocIds } from '/imports/api/parenting/parentingFunctions';
 import { cleanProps } from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULATION_REGEX';
 import { applyAfterTasksSkipChildren } from '/imports/api/engine/action/functions/applyTaskGroups';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 

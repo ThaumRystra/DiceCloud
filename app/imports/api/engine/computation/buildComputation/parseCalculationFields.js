@@ -1,4 +1,4 @@
-import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULTION_REGEX';
+import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULATION_REGEX';
 import { prettifyParseError, parse } from '/imports/parser/parser';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get, set, unset } from 'lodash';
