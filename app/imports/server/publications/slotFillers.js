@@ -109,16 +109,12 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
             { libraryTags: searchTerm }
           ]
         });
-        //filter.$text = { $search: searchTerm };
         options = {
-          // relevant documents have a higher score.
           fields: {
-            //_score: { $meta: 'textScore' },
             ...LIBRARY_NODE_TREE_FIELDS,
           },
           sort: {
-            // `score` property specified in the projection fields above.
-            //_score: { $meta: 'textScore' },
+            'cache.node.name': 1,
             name: 1,
             order: 1,
           }
@@ -128,6 +124,9 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
         delete filter.name
         options = {
           sort: {
+            // References sorted in name order, but with non-references first, because undefined
+            // is sorted before docs with cached name defined
+            'cache.node.name': 1,
             name: 1,
             order: 1,
           },
