@@ -1,34 +1,46 @@
 <template>
-  <v-btn
-    outlined
-    class="image-upload-button"
+  <div
     v-bind="$attrs"
-    :color="fileUploadError ? 'error' : undefined"
-    :disabled="uploadingInProgress"
-    @click="$refs.hiddenFileInput.click()"
+    class="d-flex flex-column "
   >
-    <v-icon left>
-      mdi-file-upload-outline
-    </v-icon>
-    <template v-if="fileUploadError">
-      {{ fileUploadError }}
-    </template>
-    <template v-else>
-      Upload Image
-    </template>
-    <v-progress-linear
-      v-if="uploadingInProgress"
-      :value="progress"
-      :indeterminate="uploadIndeterminate"
-    />
-    <input
-      ref="hiddenFileInput"
-      type="file"
-      accept="image/*"
-      style="display: none;"
-      @input="inputChange"
+    <v-btn
+      outlined
+      block
+      class="image-upload-button flex-grow-1"
+      v-bind="$attrs"
+      style="min-height: 64px;"
+      :loading="uploadingInProgress"
+      @click="$refs.hiddenFileInput.click()"
     >
-  </v-btn>
+      <v-icon left>
+        mdi-file-upload-outline
+      </v-icon>
+      <div>
+        Upload Image
+      </div>
+      <template #loader>
+        <v-progress-circular
+          :value="progress"
+          :indeterminate="uploadIndeterminate"
+        />
+      </template>
+      <input
+        ref="hiddenFileInput"
+        type="file"
+        accept="image/*"
+        style="display: none;"
+        @input="inputChange"
+      >
+    </v-btn>
+    <v-alert
+      v-if="fileUploadError"
+      outlined
+      type="error"
+      class="mb-0 mt-4"
+    >
+      {{ fileUploadError }}
+    </v-alert>
+  </div>
 </template>
 
 <script lang="js">
@@ -62,7 +74,7 @@ export default {
       }
 
       // Start the image insert process
-      let uploadInstance = UserImages.insert({
+      const uploadInstance = UserImages.insert({
         file: file,
         chunkSize: 'dynamic',
         allowWebWorkers: true,
@@ -73,32 +85,42 @@ export default {
       }, false);
 
       uploadInstance.on('start', function () {
+        console.log('start')
         self.progress = 0;
         self.uploadIndeterminate = false;
+        // Remove errors
+        self.fileUploadError = undefined;
       });
 
       uploadInstance.on('end', function (error, fileObj) {
+        console.log('end', error)
         self.resetState();
         self.$emit('uploaded', UserImages.link(fileObj));
       });
 
       uploadInstance.on('uploaded', function (error, fileObj) {
-        self.resetState();
+        console.log('uploaded')
         self.progress = 0;
       });
 
       uploadInstance.on('error', function (error, fileObj) {
-        self.resetState();
-        this.fileUploadError = error.reason || error.message || error.toString();
+        console.log('error', error)
+        self.fileUploadError = error.reason || error.message || error.toString();
       });
 
       uploadInstance.on('progress', function (progress, fileObj) {
         // Update our progress bar with actual progress
+        console.log('progress')
         self.uploadIndeterminate = false;
         self.progress = progress;
       });
 
-      uploadInstance.start(); // Must manually start the upload
+      try {
+        uploadInstance.start(); // Must manually start the upload
+      } catch (error) {
+        self.fileUploadError = error.reason || error.message || error.toString();
+        self.resetState();
+      }
     },
   },
   methods: {
@@ -112,11 +134,10 @@ export default {
     resetState() {
       // Remove file from input
       this.file = undefined;
+      this.$refs.hiddenFileInput.value = '';
       // stop progress
       this.uploadingInProgress = false;
       this.progress = 0;
-      // Remove errors
-      this.fileUploadError = undefined;
     },
   },
 
