@@ -3,7 +3,6 @@ import '/imports/api/simpleSchemaConfig.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
@@ -29,12 +28,22 @@ describe('Interrupt action system', function () {
         name: 'action test creature',
         owner: Random.id(),
         dirty: true,
+        type: 'pc',
+        readers: [],
+        writers: [],
+        public: false,
+        settings: {},
       }),
       Creatures.insertAsync({
         _id: targetId,
         name: 'action test creature',
         owner: Random.id(),
         dirty: true,
+        type: 'pc',
+        readers: [],
+        writers: [],
+        public: false,
+        settings: {},
       })
     ]);
     // Add test props
