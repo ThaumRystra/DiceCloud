@@ -55,7 +55,7 @@ const actionTargetCreature = {
   ],
 };
 
-describe('Apply Branch Properties', function () {
+describe('Apply Buff Properties', function () {
   // Increase timeout
   this.timeout(8000);
 
