@@ -65,7 +65,7 @@ describe('Apply Buff Properties', function () {
     await createTestCreature(actionTargetCreature);
   });
 
-  it.only('Applies a buff and freezes some variables', async function () {
+  it('Applies a buff and freezes some variables', async function () {
     const action = await runActionById(buffId, [targetCreatureId]);
     const mutations = allMutations(action);
     // Get random Ids of inserted props
