@@ -86,7 +86,7 @@ describe('Apply Adjustment Properties', function () {
         {
           inline: true,
           name: 'Attribute damage',
-          value: 'Dexterity set to 11',
+          value: 'Dexterity set from 13 to 11',
         }
       ],
       targetIds: [creatureId],
