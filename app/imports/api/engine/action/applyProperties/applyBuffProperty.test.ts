@@ -14,7 +14,6 @@ const [
 const actionTestCreature = {
   _id: creatureId,
   props: [
-    // If branch 
     {
       _id: buffId,
       type: 'buff',

@@ -4,7 +4,7 @@ import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import { findLast, filter, difference, intersection } from 'lodash';
 import { getPropertiesOfType, getPropertyAncestors } from '/imports/api/engine/loadCreatures';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
-import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
+import { applyDefaultAfterPropTasks, applyTaskToEachTarget } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
@@ -13,12 +13,24 @@ export default async function applyBuffRemoverProperty(
 ) {
   const prop = task.prop;
 
-  if (prop.name && !prop.silent) {
+  const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+  if (prop.name) {
     // Log Name
     result.appendLog({
       name: getPropertyTitle(prop),
+      ...prop.silent && { silenced: true },
     }, task.targetIds)
   }
+
+  if (targetIds.length > 1) {
+    return applyTaskToEachTarget(action, task, targetIds, userInput);
+  }
+
+  if (targetIds.length !== 1) {
+    throw 'At this step, only a single target is supported'
+  }
+  const targetId = targetIds[0];
 
   // Remove buffs
   if (prop.targetParentBuff) {
@@ -29,13 +41,13 @@ export default async function applyBuffRemoverProperty(
       result.appendLog({
         name: 'Error',
         value: 'Buff remover does not have a parent buff to remove',
-      }, task.targetIds);
+      }, [targetId]);
       return;
     }
     removeBuff(nearestBuff, prop, result);
   } else {
     // Get all the buffs targeted by tags
-    const allBuffs = getPropertiesOfType(action.creatureId, 'buff');
+    const allBuffs = getPropertiesOfType(targetId, 'buff');
     const targetedBuffs = filter(allBuffs, buff => {
       if (buff.inactive) return false;
       if (buffRemoverMatchTags(prop, buff)) return true;
@@ -66,7 +78,7 @@ function removeBuff(buff: any, prop, result: TaskResult) {
     contents: [{
       name: 'Removed',
       value: `${buff.name || 'Buff'}`,
-      silenced: prop.silent,
+      ...prop.silent && { silenced: true },
     }],
   });
 }
