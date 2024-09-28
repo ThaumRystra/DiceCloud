@@ -2,7 +2,6 @@ import SimpleSchema from 'simpl-schema';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
-import { SavingThrowSchema, ComputedOnlySavingThrowSchema } from '/imports/api/properties/SavingThrows';
 
 const DamageSchema = createPropertySchema({
   // The roll that determines how much to damage the attribute
@@ -79,7 +78,7 @@ const ComputedOnlyDamageSchema = createPropertySchema({
   },
 });
 
-const ComputedDamageSchema = new SimpleSchema()
+const ComputedDamageSchema = new SimpleSchema({})
   .extend(DamageSchema)
   .extend(ComputedOnlyDamageSchema);
 

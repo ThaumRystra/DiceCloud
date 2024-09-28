@@ -55,7 +55,7 @@ const actionOtherCreature = {
   ],
 };
 
-describe('Apply Buff Properties', function () {
+describe('Apply Buff Remover Properties', function () {
   // Increase timeout
   this.timeout(8000);
 
