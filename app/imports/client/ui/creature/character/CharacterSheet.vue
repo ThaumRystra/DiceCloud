@@ -144,6 +144,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
 import CharacterSheetInitiative from '/imports/client/ui/creature/character/CharacterSheetInitiative.vue';
+import {setUpDddiceSdk} from "/imports/client/ui/creature/actions/input/diceProviders/dddice";
 
 export default {
   components: {
@@ -186,6 +187,7 @@ export default {
     },
   },
   mounted() {
+  setUpDddiceSdk();
     this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
     this.nameObserver = Creatures.find({
       creatureId: this.creatureId,
