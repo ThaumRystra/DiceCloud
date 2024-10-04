@@ -108,7 +108,6 @@ import escapeRegex from '/imports/api/utility/escapeRegex';
 
 const filterOptions = [];
 for (let key in PROPERTIES) {
-  if (key === 'reference') continue;
   filterOptions.push({
     text: PROPERTIES[key].name,
     value: key,
@@ -121,11 +120,14 @@ export default {
       type: Object,
       default: undefined,
     },
+    isLibrary: {
+      type: Boolean,
+      default: false
+    }
   },
   data(){return {
     typeFilterInput: [],
     fieldFilters: [{field: 'name', value: undefined}],
-    filterOptions,
     menu: false,
   }},
   computed: {
@@ -155,6 +157,11 @@ export default {
         }
       });
       return filter;
+    },
+    filterOptions() {
+      return !this.isLibrary 
+        ? filterOptions.filter(p => p.value !== 'reference')
+        : filterOptions;
     },
     extraFields() {
       let extraFields = [];
