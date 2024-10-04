@@ -1,3 +1,4 @@
+<!-- Proposal would include a new template that's similar to an item-list, but doesn't care about a parent folder and has an easy delete button -->
 <template lang="html">
   <v-list
     dense

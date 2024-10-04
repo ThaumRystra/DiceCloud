@@ -87,6 +87,7 @@
           </v-card-text>
         </toolbar-card>
       </div>
+      <!-- Proposal would implement a third calculated card here, with an alternative item-list that does not permit dragging, and includes an easy delete feature -->
       <div
         v-for="container in containersWithoutAncestorContainers"
         :key="container._id"
@@ -191,7 +192,7 @@ export default {
         sort: { left: 1 },
       });
     },
-    carriedItems() {
+    carriedItems() { //Would modify to remove items w/ quantity=0
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
         $nor: [getFilter.descendantsOfAll(this.containers)],
@@ -207,7 +208,7 @@ export default {
         sort: { left: 1 },
       });
     },
-    equippedItems() {
+    equippedItems() {//Would modify to remove items w/ quantity=0
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'item',
@@ -237,7 +238,7 @@ export default {
         id: this.creatureId,
         collection: 'creatures'
       };
-    },
+    }, // Would add new calculated field for items w/ quantity=0, for use in depleted list
   },
   computed: {
     weightCarried() {
