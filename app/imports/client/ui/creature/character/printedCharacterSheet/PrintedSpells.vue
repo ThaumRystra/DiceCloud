@@ -61,7 +61,6 @@ export default {
       organize: false,
     }
   },
-  // @ts-ignore-error Meteor not defined on vue
   meteor: {
     spellLists() {
       return CreatureProperties.find({
@@ -76,7 +75,7 @@ export default {
     spellsWithoutList() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.spellLists),
+        $nor: [getFilter.descendantsOfAll(this.spellLists)],
         type: 'spell',
         removed: { $ne: true },
         deactivatedByAncestor: { $ne: true },
@@ -91,7 +90,7 @@ export default {
     spellListsWithoutAncestorSpellLists() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.spellLists),
+        $nor: [getFilter.descendantsOfAll(this.spellLists)],
         type: 'spellList',
         removed: { $ne: true },
         inactive: { $ne: true },

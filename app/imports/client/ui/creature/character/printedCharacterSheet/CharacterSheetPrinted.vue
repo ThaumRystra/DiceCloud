@@ -109,7 +109,7 @@ export default {
         name: 'characterSheet',
         params: { id: this.creatureId},
       });
-      return new URL(props?.href, document.baseURI).href
+      return new URL(props?.href, 'https://dicecloud.com').href
     },
     level() {
       return this.variables?.level?.value;
@@ -139,7 +139,6 @@ export default {
       ].sort((a, b) => a.order - b.order);
     },
   },
-  // @ts-ignore reactiveProvide isn't defined on vue
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -278,7 +277,8 @@ export default {
 }
 
 .character-sheet-printed .column-layout>div {
-  position:relative;
+  position: relative;
+  display: inline-block;
   margin-top: 4px;
   margin-bottom: 4px;
 }
@@ -382,7 +382,8 @@ export default {
       margin: 8mm;  
   }
   body {  
-      margin: 0;  
+      margin: 0;
+      padding: 2mm;
   }
   .character-sheet-printed .page {
     width: 100%;

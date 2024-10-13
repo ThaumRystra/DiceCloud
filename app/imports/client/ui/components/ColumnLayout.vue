@@ -33,7 +33,6 @@ export default {
 
 .column-layout>*,
 .column-layout>span>div {
-  display: inline-block;
   break-inside: avoid;
   page-break-inside: avoid;
   margin-bottom: 8px;

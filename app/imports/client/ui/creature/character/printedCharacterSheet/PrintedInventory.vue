@@ -102,7 +102,6 @@ export default {
       organize: false,
     }
   },
-  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     containers() {
       return CreatureProperties.find({
@@ -128,7 +127,7 @@ export default {
     containersWithoutAncestorContainers() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.containers),
+        $nor: [getFilter.descendantsOfAll(this.containers)],
         type: 'container',
         removed: { $ne: true },
         inactive: { $ne: true },
@@ -151,7 +150,7 @@ export default {
     carriedItems() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
-        $not: getFilter.descendantsOfAll(this.containers),
+        $nor: [getFilter.descendantsOfAll(this.containers)],
         type: 'item',
         equipped: { $ne: true },
         removed: { $ne: true },
