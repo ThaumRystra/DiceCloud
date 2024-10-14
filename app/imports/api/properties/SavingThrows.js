@@ -45,7 +45,7 @@ const ComputedOnlySavingThrowSchema = createPropertySchema({
   },
 });
 
-const ComputedSavingThrowSchema = new SimpleSchema()
+const ComputedSavingThrowSchema = new SimpleSchema({})
   .extend(SavingThrowSchema)
   .extend(ComputedOnlySavingThrowSchema);
 

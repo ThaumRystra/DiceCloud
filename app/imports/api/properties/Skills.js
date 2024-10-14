@@ -170,7 +170,7 @@ let ComputedOnlySkillSchema = createPropertySchema({
   },
 })
 
-const ComputedSkillSchema = new SimpleSchema()
+const ComputedSkillSchema = new SimpleSchema({})
   .extend(ComputedOnlySkillSchema)
   .extend(SkillSchema);
 
