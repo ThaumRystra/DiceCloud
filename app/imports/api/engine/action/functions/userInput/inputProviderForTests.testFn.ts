@@ -6,8 +6,8 @@ const inputProviderForTests: InputProvider = {
   },
   /**
    * For testing, randomness is hard to deal with
-   * rollDice function returns the average roll for every dice rolled
-   * [5d10, 1d4] => [[6,6,6,6,6], [3]]
+   * rollDice function returns the average roll for every dice rolled, but increasing by one each time
+   * [6d10, 1d4] => [[6,7,8,9,10,1], [3]]
    */
   async rollDice(dice = []) {
     const result: number[][] = [];

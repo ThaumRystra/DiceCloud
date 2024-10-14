@@ -52,7 +52,7 @@ export default async function applyRollProperty(
     name: prop.name,
     value: logValue.join('\n'),
     inline: true,
-    silenced: prop.silent,
+    ...prop.silent && { silenced: true },
   }, task.targetIds);
 
   // Apply children

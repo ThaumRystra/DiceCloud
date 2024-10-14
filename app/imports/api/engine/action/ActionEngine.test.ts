@@ -125,7 +125,6 @@ describe('Interrupt action system', function () {
         name: 'New Roll',
         value: '7d1 [1, 1, 1, 1, 1, 1, 1] + 9\n**16**',
         inline: true,
-        silenced: undefined,
       }, {
         value: 'rollVar: 16'
       }

@@ -56,7 +56,7 @@ let ComputedOnlyRollSchema = createPropertySchema({
   },
 });
 
-const ComputedRollSchema = new SimpleSchema()
+const ComputedRollSchema = new SimpleSchema({})
   .extend(RollSchema)
   .extend(ComputedOnlyRollSchema);
 

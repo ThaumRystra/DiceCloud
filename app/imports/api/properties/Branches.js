@@ -52,7 +52,7 @@ let ComputedOnlyBranchSchema = createPropertySchema({
   },
 });
 
-const ComputedBranchSchema = new SimpleSchema()
+const ComputedBranchSchema = new SimpleSchema({})
   .extend(BranchSchema)
   .extend(ComputedOnlyBranchSchema);
 
