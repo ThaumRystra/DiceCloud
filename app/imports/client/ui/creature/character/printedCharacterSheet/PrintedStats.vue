@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="stats">
     <div
-      class="d-flex wrap justify-space-between px-2 pt-3 pb-1"
+      class="d-flex wrap justify-space-between px-2 pt-3 pb-2"
       style="page-break-after: avoid"
     >
       <div
