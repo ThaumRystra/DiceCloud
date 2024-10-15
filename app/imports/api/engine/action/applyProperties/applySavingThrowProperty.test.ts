@@ -60,7 +60,7 @@ const actionTargetCreature2 = {
   ],
 }
 
-describe.only('Apply saving throw properties', function () {
+describe('Apply saving throw properties', function () {
   // Increase timeout
   this.timeout(8000);
 

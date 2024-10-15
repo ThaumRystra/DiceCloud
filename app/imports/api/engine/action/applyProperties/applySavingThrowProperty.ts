@@ -10,8 +10,6 @@ import { getVariables } from '/imports/api/engine/loadCreatures';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
 
-// FIXME saves against multiple targets contaminate later targets scope with the ~saveFailed or ~saveSucceeded variables of the previous targets
-
 export default async function applySavingThrowProperty(
   task: PropTask, action: EngineAction, result: TaskResult, inputProvider: InputProvider
 ): Promise<void> {
@@ -100,8 +98,10 @@ export default async function applySavingThrowProperty(
   const saveSuccess = resultValue >= dc;
   if (saveSuccess) {
     result.pushScope['~saveSucceeded'] = { value: true };
+    result.pushScope['~saveFailed'] = { value: false };
   } else {
     result.pushScope['~saveFailed'] = { value: true };
+    result.pushScope['~saveSucceeded'] = { value: false };
   }
   if (!prop.silent) result.appendLog({
     name: saveSuccess ? 'Successful save' : 'Failed save',
