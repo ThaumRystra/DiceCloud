@@ -88,6 +88,7 @@ import EngineActions from '/imports/api/engine/action/EngineActions';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
 //import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 import TargetsInput from '/imports/client/ui/creature/actions/input/TargetsInput.vue';
+import {rollDice} from "/imports/client/ui/creature/actions/input/diceProviders/dddice";
 
 export default {
   components: {
@@ -215,7 +216,7 @@ export default {
       return this.promiseInput();
     },
     async rollDice(dice) {
-      return Promise.resolve(this.deterministicDiceRoller(dice));
+      //return Promise.resolve(this.deterministicDiceRoller(dice));
       /* Dice Animation and user control goes here:
       this.activeInputParams = {
         deterministicDiceRoller: this.deterministicDiceRoller,
@@ -224,6 +225,7 @@ export default {
       this.activeInput = 'roll-input';
       return this.promiseInput();
       */
+      return Promise.resolve(rollDice(dice));
     },
     async nextStep(task) {
       return this.promiseInput();

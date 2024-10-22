@@ -16,8 +16,7 @@ export default function getReplayChoicesInputProvider(actionId: string, decision
     },
     // To roll dice, ignore the user and use the deterministic dice roller again
     rollDice(dice) {
-      decisionStack.pop();
-      return dRoller(dice);
+      return Promise.resolve(decisionStack.pop());
     },
     choose() {
       return Promise.resolve(decisionStack.pop());
