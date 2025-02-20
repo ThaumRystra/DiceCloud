@@ -20,6 +20,56 @@ import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 let LibraryNodes = new Mongo.Collection('libraryNodes');
 
+// Add default schema for the collection
+const DefaultSchema = new SimpleSchema({
+  _id: {
+    type: String,
+    max: 32,
+  },
+  type: {
+    type: String,
+    allowedValues: Object.keys(propertySchemasIndex),
+  },
+  // Fields required for nested sets
+  order: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  left: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  right: {
+    type: SimpleSchema.Integer,
+    optional: true,
+  },
+  // Fields for tree structure
+  ancestors: {
+    type: Array,
+    optional: true,
+  },
+  'ancestors.$': {
+    type: String,
+  },
+  parent: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+  parentId: {
+    type: String,
+    optional: true,
+  },
+  root: {
+    type: Object,
+    optional: true,
+    blackbox: true,
+  },
+});
+
+// Attach default schema first
+LibraryNodes.attachSchema(DefaultSchema);
+
 let LibraryNodeSchema = new SimpleSchema({
   _id: {
     type: String,
@@ -115,10 +165,17 @@ for (let key in propertySchemasIndex) {
   schema.extend(propertySchemasIndex[key]);
   schema.extend(ChildSchema);
   schema.extend(SoftRemovableSchema);
-  // @ts-expect-error don't have types for .attachSchema
-  LibraryNodes.attachSchema(schema, {
-    selector: { type: key }
-  });
+  
+  try {
+    LibraryNodes.attachSchema(schema, {
+      selector: { type: key },
+      replace: true 
+    });
+  } catch (error) {
+    if (Meteor.isServer) {
+      console.log(`[LibraryNodes] Error attaching schema for type ${key}:`, error);
+    }
+  }
 }
 
 function getLibrary(node) {
@@ -170,6 +227,10 @@ const insertNode = new ValidatedMethod({
     // server-side
     delete libraryNode._id;
 
+    // Ensure required fields are present
+    libraryNode.order = libraryNode.order || 0;
+    libraryNode.ancestors = libraryNode.ancestors || [];
+
     // Insert the node
     const nodeId = LibraryNodes.insert(libraryNode);
 
@@ -191,15 +252,10 @@ const updateLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.update',
   validate({ _id, path }) {
     if (!_id) return false;
-    // We cannot change these fields with a simple update
-    switch (path[0]) {
-      case 'type':
-      case 'order':
-      case 'parent':
-      case 'ancestors':
-      case 'parentId':
-      case 'root':
-        return false;
+    // Allow nested sets field updates when needed
+    const protectedFields = ['type', 'parentId', 'root'];
+    if (protectedFields.includes(path[0])) {
+      return false;
     }
   },
   mixins: [RateLimiterMixin],
@@ -281,7 +337,31 @@ const softRemoveLibraryNode = new ValidatedMethod({
   run({ _id }) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
-    softRemove(LibraryNodes, node);
+    
+    // Instead of using the generic softRemove function, let's update directly
+    LibraryNodes.update(_id, {
+      $set: {
+        removed: true,
+        removedAt: new Date(),
+        removedBy: this.userId
+      }
+    }, {
+      selector: { type: node.type }
+    });
+    
+    // Update child nodes as well
+    LibraryNodes.update({
+      'ancestors': _id
+    }, {
+      $set: {
+        removed: true,
+        removedAt: new Date(),
+        removedBy: this.userId
+      }
+    }, {
+      multi: true,
+      selector: { type: node.type }
+    });
   }
 });
 
