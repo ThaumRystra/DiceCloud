@@ -173,7 +173,7 @@ for (let key in propertySchemasIndex) {
     });
   } catch (error) {
     if (Meteor.isServer) {
-      console.log(`[LibraryNodes] Erro ao anexar schema para tipo ${key}:`, error);
+      console.log(`[LibraryNodes] Error attaching schema for type ${key}:`, error);
     }
   }
 }
@@ -337,7 +337,31 @@ const softRemoveLibraryNode = new ValidatedMethod({
   run({ _id }) {
     let node = LibraryNodes.findOne(_id);
     assertNodeEditPermission(node, this.userId);
-    softRemove(LibraryNodes, node);
+    
+    // Instead of using the generic softRemove function, let's update directly
+    LibraryNodes.update(_id, {
+      $set: {
+        removed: true,
+        removedAt: new Date(),
+        removedBy: this.userId
+      }
+    }, {
+      selector: { type: node.type }
+    });
+    
+    // Update child nodes as well
+    LibraryNodes.update({
+      'ancestors': _id
+    }, {
+      $set: {
+        removed: true,
+        removedAt: new Date(),
+        removedBy: this.userId
+      }
+    }, {
+      multi: true,
+      selector: { type: node.type }
+    });
   }
 });
 
