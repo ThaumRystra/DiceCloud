@@ -1,11 +1,11 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Sharing
+      {{ $t('ShareDialog.03VciIdW7WUj5zao5xU0A') }}
     </v-toolbar-title>
     <div v-if="model">
       <smart-select
-        label="Who can view"
+        :label="$t('ShareDialog._g3AAll7JIJ6eKSezF40L')"
         :items="[
           {text: 'Only people I share with', value: 'false'},
           {text: 'Anyone with link', value: 'true'}
@@ -15,7 +15,7 @@
       />
       <smart-select
         v-if="docRef.collection === 'libraries'"
-        label="Who can copy from this library"
+        :label="$t('ShareDialog.gfqTAznIflA9gIuys0UG4')"
         :items="[
           {text: 'Only people with edit permission', value: 'false'},
           {text: 'Anyone with read permission', value: 'true'}
@@ -26,7 +26,7 @@
       <text-field
         v-if="model.public && docRef.collection === 'libraries'"
         readonly
-        label="Link"
+        :label="$t('ShareDialog.JXIZsDoMWYIDczc39na2p')"
         :value="window.location.origin + $router.resolve({
           name: 'singleLibrary',
           params: { id: model._id },
@@ -34,7 +34,7 @@
       />
       <div class="layout">
         <text-field
-          label="Username or email"
+          :label="$t('SignIn.9Hgx-SDsbxdrMu3MW63bY')"
           :value="userSearched"
           :debounce-time="300"
           @change="(value, ack) => getUser({value, ack})"
@@ -44,7 +44,7 @@
           :disabled="userFoundState !== 'found'"
           @click="updateSharing(userId, 'reader')"
         >
-          Share
+          {{ $t('ShareDialog.8hLNrY3cfCjnHG8Ibg4S2') }}
         </v-btn>
       </div>
       <v-list
@@ -85,7 +85,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-pencil</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Can edit</v-list-item-title>
+                  <v-list-item-title>{{ $t('ShareDialog.L9JNgV2bpSTg3G8XUlb08') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item
                   v-if="user.permission === 'writer'"
@@ -94,7 +94,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>View only</v-list-item-title>
+                  <v-list-item-title>{{ $t('ShareDialog.R2-U-vaUgW5Qt_EcWFhR6') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item
                   v-if="user.permission === 'writer'"
@@ -103,13 +103,13 @@
                   <v-list-item-action>
                     <v-icon>mdi-signature</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Transfer Ownership</v-list-item-title>
+                  <v-list-item-title>{{ $t('ShareDialog.or0_zrIkepecbBUj6uZpY') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>
                     <v-icon>mdi-delete</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Remove</v-list-item-title>
+                  <v-list-item-title>{{ $t('ShareDialog.u68iDg3Jq4sXvq9xARfLQ') }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -129,7 +129,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Done
+      {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
     </v-btn>
   </dialog-base>
 </template>
@@ -195,14 +195,14 @@ export default {
           if (result) {
             if (result === this.model.owner) {
               this.userFoundState = 'failed';
-              ack('User is already the owner')
+              ack(this.$t('ShareDialog.m1248OmS-l17CkOjbMM98'))
             } else {
               this.userFoundState = 'found';
               ack();
             }
           } else {
             this.userFoundState = 'notFound';
-            ack('User not found');
+            ack(this.$t('ShareDialog.VqkQCmxb_c2wDNm0F8BEF'));
           }
         }
       });

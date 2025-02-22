@@ -5,24 +5,24 @@
       justify="center"
     >
       <property-field
-        name="Level"
+        :name="$t('CharacterCreationDialog.ALoCn8fXt0dv34QiFx1jx')"
         large
         center
         :value="model.level"
       />
       <property-field
-        name="Variable Name"
+        :name="$t('AttributeViewer.MNk7FUYtABwXmOJJeujzZ')"
         mono
         :value="model.variableName"
       />
       <property-field
         v-if="!context.creatureId"
-        name="Condition"
+        :name="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
         mono
         :value="model.slotFillerCondition"
       />
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

@@ -3,7 +3,7 @@
     class="d-flex flex-wrap align-start"
   >
     <outlined-input
-      name="Icon"
+      :name="$t('DocEditForm.fdnsRCx5WMZngX4lcEfYv')"
       class="mb-4"
     >
       <icon-picker
@@ -14,7 +14,7 @@
       />
     </outlined-input>
     <outlined-input
-      name="Color"
+      :name="$t('IconColorMenu.SoA0wSX27fC-jNK_9Z9sk')"
       class="mb-4 ml-2"
     >
       <color-picker

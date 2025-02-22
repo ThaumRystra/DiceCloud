@@ -3,17 +3,17 @@
     <span
       v-if="coinValue.gp || value === 0"
     >
-      {{ coinValue.gp }} gp
+      {{ $t('CoinValue.JL2Z6mOZhL5dcBjOJcsvA', [coinValue.gp]) }}
     </span>
     <span
       v-if="coinValue.sp || (coinValue.gp && coinValue.cp)"
     >
-      {{ coinValue.sp }} sp
+      {{ $t('CoinValue.3tH0b_R7B-Ge65HtL6fgY', [coinValue.sp]) }}
     </span>
     <span
       v-if="coinValue.cp"
     >
-      {{ coinValue.cp }} cp
+      {{ $t('CoinValue.Ig9s8fiNqqshG8DBauG-f', [coinValue.cp]) }}
     </span>
   </div>
 </template>

@@ -25,7 +25,7 @@
           />
           <v-card v-else-if="!doc">
             <v-card-title>
-              Help document not found for {{ title }}
+              {{ $t('Documentation.WcxPO-zAU0XpZmw2KL8if', [title]) }}
             </v-card-title>
           </v-card>
         </v-fade-transition>
@@ -57,7 +57,7 @@ export default {
     },
     title() {
       if (this.prop) {
-        return this.prop.name + ' Docs';
+        return this.prop.name + this.$t('Documentation.2ldd4m3lp62jCu1hMzsEg');
       } else {
         const titleCase = this.path.replace(
           /(\w*)(\W+)/g,
@@ -65,7 +65,7 @@ export default {
             return word.charAt(0).toUpperCase() + word.substr(1).toLowerCase() + ' ';
           }
         );
-        return titleCase || 'DiceCloud Docs';
+        return titleCase || this.$t('Documentation.kn_NC3-tQozB8uw3-4OHl');
       }
     }
   },

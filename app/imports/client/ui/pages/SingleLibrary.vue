@@ -18,11 +18,11 @@ export default {
   },
   watch: {
     'library.name'(newName) {
-      this.$store.commit('setPageTitle', newName || 'Library');
+      this.$store.commit('setPageTitle', newName || this.$t('SingleLibrary.CqIJd_CZPYFyhxG7h2JmS'));
     },
   },
   mounted() {
-    this.$store.commit('setPageTitle', this.library && this.library.name || 'Library');
+    this.$store.commit('setPageTitle', this.library && this.library.name || this.$t('SingleLibrary.8o8zfT4rnslD95pstr578'));
   },
   meteor: {
     library(){

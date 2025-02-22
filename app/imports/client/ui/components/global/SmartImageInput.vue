@@ -33,7 +33,7 @@
       v-else
       class="add-image-text d-flex align-center justify-center"
     >
-      Add image
+      {{ $t('SmartImageInput.2mVywUR6Zdfpn4z-LSnCd') }}
       <v-icon
         right
       >

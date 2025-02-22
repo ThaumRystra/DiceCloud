@@ -27,7 +27,7 @@
           cols="12"
           md="8"
         >
-          <h1>Documentation not found</h1>
+          <h1>{{ $t('DocsPage.psOXcjyh3rff4DXBzu3PU') }}</h1>
         </v-col>
       </v-row>
       <doc-edit-form
@@ -75,9 +75,9 @@ export default {
       if (this.doc) {
         return this.doc.name;
       } else if (this.docNotFound) {
-        return 'Doc not found';
+        return this.$t('DocsPage.yq2nBdxazbemD05WqnEqD');
       } else {
-        return 'Documentation'
+        return this.$t('DocsPage.owEFuhKAi0S5XmhIaiqMB')
       }
     },
     root() {

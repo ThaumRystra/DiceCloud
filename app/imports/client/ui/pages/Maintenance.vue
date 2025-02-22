@@ -9,19 +9,19 @@
       v-if="maintenanceMode"
       class="ma-4 text-h3"
     >
-      DiceCloud is currently under maintenance
+      {{ $t('Maintenance.bpjsWojulL3gpaBwFPbbP') }}
     </h1>
     <template v-else>
       <h1
         class="ma-4 text-h3"
       >
-        DiceCloud is live.
+        {{ $t('Maintenance.ZIsaWRSECZbz1xRv8wS6U') }}
       </h1>
       <v-btn
         color="accent"
         to="/"
       >
-        Home
+        {{ $t('Maintenance.xn1iabUyQAcN50064OLqt') }}
       </v-btn>
     </template>
     <h1

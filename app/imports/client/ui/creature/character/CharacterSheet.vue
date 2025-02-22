@@ -8,11 +8,10 @@
           justify-center
         >
           <h2 style="margin: 48px 28px 16px">
-            Character not found
+            {{ $t('CharacterSheet.QQp8e1dXwU9jDD9WyKx1T') }}
           </h2>
           <h3>
-            Either this character does not exist, or you don't have permission
-            to view it.
+            {{ $t('CharacterSheet.F3kV7DDZvnmpPNhLMl-TT') }}
           </h3>
         </v-layout>
       </div>
@@ -81,35 +80,35 @@
       )"
     >
       <v-btn>
-        <span>Stats</span>
+        <span>{{ $t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t') }}</span>
         <v-icon>mdi-chart-box</v-icon>
       </v-btn>
       <v-btn>
-        <span>Actions</span>
+        <span>{{ $t('CharacterSheetDialog.uEahuOj2R9wGkNQ-mmdBa') }}</span>
         <v-icon>mdi-lightning-bolt</v-icon>
       </v-btn>
       <v-btn v-if="!creature.settings.hideSpellsTab">
-        <span>Spells</span>
+        <span>{{ $t('CharacterSheetDialog.D7iHe3wbPaZ2Jhsn9CXU8') }}</span>
         <v-icon>mdi-fire</v-icon>
       </v-btn>
       <v-btn>
-        <span>Inventory</span>
+        <span>{{ $t('CharacterSheetDialog.0E9n7NRcJsKcvSOh8pJGk') }}</span>
         <v-icon>mdi-cube</v-icon>
       </v-btn>
       <v-btn>
-        <span>Features</span>
+        <span>{{ $t('CharacterSheetDialog.7PhUWMOg_8wLLCCY7CKDz') }}</span>
         <v-icon>mdi-text</v-icon>
       </v-btn>
       <v-btn>
-        <span>Journal</span>
+        <span>{{ $t('CharacterSheetDialog.KOKK1cNcrY6O64cRo8aKa') }}</span>
         <v-icon>mdi-book-open-variant</v-icon>
       </v-btn>
       <v-btn>
-        <span>Build</span>
+        <span>{{ $t('CharacterSheetDialog.biA0vlRWylo6EW8GckGOx') }}</span>
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
       <v-btn v-if="creature.settings.showTreeTab">
-        <span>Tree</span>
+        <span>{{ $t('CharacterSheet.PaDxTX6-CoFfTji1AYSHv') }}</span>
         <v-icon>mdi-file-tree</v-icon>
       </v-btn>
     </v-bottom-navigation>
@@ -169,20 +168,20 @@ export default {
   },
   watch: {
     'creature.name'(value) {
-      this.$store.commit('setPageTitle', value || 'Character Sheet');
+      this.$store.commit('setPageTitle', value || this.$t('HelpDialog.Klueb_dCWM-dqLDCnrAvc'));
     },
   },
   mounted() {
-    this.$store.commit('setPageTitle', this.creature && this.creature.name || 'Character Sheet');
+    this.$store.commit('setPageTitle', this.creature && this.creature.name || this.$t('HelpDialog.Klueb_dCWM-dqLDCnrAvc'));
     this.nameObserver = Creatures.find({
       creatureId: this.creatureId,
     }, {
       fields: { name: 1 },
     }).observe({
       added: ({ name }) =>
-        this.$store.commit('setPageTitle', name || 'Character Sheet'),
+        this.$store.commit('setPageTitle', name || this.$t('HelpDialog.Klueb_dCWM-dqLDCnrAvc')),
       changed: ({ name }) =>
-        this.$store.commit('setPageTitle', name || 'Character Sheet'),
+        this.$store.commit('setPageTitle', name || this.$t('HelpDialog.Klueb_dCWM-dqLDCnrAvc')),
     });
     if (this.$route.name === 'characterSheet') {
       let that = this;

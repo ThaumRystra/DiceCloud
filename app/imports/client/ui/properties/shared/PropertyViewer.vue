@@ -6,7 +6,7 @@
     <v-row dense>
       <property-field
         v-if="model.inactive"
-        name="Status"
+        :name="$t('PropertyViewer.EhamBkUEXXiR61RswQ_LF')"
         :cols="{cols: 12}"
       >
         <div
@@ -14,13 +14,13 @@
           class="text--disabled"
         >
           <div>
-            Inactive
+            {{ $t('PropertyViewer.ayyUiD347dMgQAbxzCUHn') }}
           </div>
           <div
             v-if="model.deactivatedByToggle && deactivatingToggle"
             class="pt-2"
           >
-            <div>Deactivated by:</div>
+            <div>{{ $t('PropertyViewer.A2-Kaprp4titpzjHtBl0m') }}</div>
             <v-btn
               block
               :data-id="`tree-node-${model.deactivatingToggleId}`"
@@ -36,13 +36,13 @@
             v-if="model.deactivatedByAncestor"
             class="pt-2"
           >
-            Deactivated by ancestor
+            {{ $t('PropertyViewer.ffr0YqqdylRGtGQSlp-eW') }}
           </div>
           <div
             v-if="model.deactivatedBySelf"
             class="pt-2"
           >
-            Deactivated by own settings
+            {{ $t('PropertyViewer.Sk44T3yriJNHryB4ttpXi') }}
           </div>
         </div>
       </property-field>
@@ -62,38 +62,38 @@
       >
         <property-field
           v-if="model.fillSlots || model.searchable"
-          name="Library Behavior"
+          :name="$t('PropertyViewer.R2y59Jx1lSCn_iVM3UiTM')"
         >
           <ul>
             <li
               v-if="model.fillSlots"
             >
-              Can fill slots
+              {{ $t('PropertyForm.XXwZiSyy3PLlHms5-hiEq') }}
             </li>
             <li v-if="model.searchable">
-              Searchable from character sheet
+              {{ $t('PropertyForm.MZRFbTU4dQcWdpVlXv9ah') }}
             </li>
           </ul>
         </property-field>
         <property-field 
-          name="Slot fill type"
+          :name="$t('PropertyForm.nN8qiVQXkc18VOhirptoM')"
           :value="slotFillTypeName"
         />
         <property-field 
-          name="Slot quantity filled"
+          :name="$t('PropertyForm.rOdph7uHJPkuF3rKxLiUA')"
           :value="model.slotQuantityFilled"
         />
         <property-field 
-          name="Condition"
+          :name="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
           mono
           :value="model.slotFillerCondition"
         />
         <property-field 
-          name="Condition Error Text"
+          :name="$t('PropertyForm.pfX-T7sDiiLNLZ4XYxmZe')"
           :value="model.slotFillerConditionNote"
         />
         <property-field 
-          name="Library Tags"
+          :name="$t('PropertyForm.hRA5h3_UC9k3Zk3iFywu8')"
           :cols="{cols: 12}"
         >
           <div
@@ -113,7 +113,7 @@
         </property-field>
       </template>
       <property-field 
-        name="Tags"
+        :name="$t('PropertyForm.vAMpUe37OijnEHSpa_exs')"
         :cols="{cols: 12}"
       >
         <div
@@ -133,7 +133,7 @@
       </property-field>
       <property-field
         v-show="childrenLength"
-        name="Child properties"
+        :name="$t('PropertyViewer.sIjkFiqjLqnIGsWsdWtDC')"
         :cols="{cols: 12}"
       >
         <descendant-properties-tree
@@ -147,7 +147,7 @@
     </v-row>
   </div>
   <div v-else-if="model">
-    This property can't be viewed yet.
+    {{ $t('PropertyViewer.hCNvG0nKgX-D86BdSbmsv') }}
   </div>
 </template>
 

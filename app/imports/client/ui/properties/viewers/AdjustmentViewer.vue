@@ -2,7 +2,7 @@
   <div class="adjustment-viewer">
     <v-row dense>
       <property-field
-        name="Amount"
+        :name="$t('AdjustmentForm.AndV_m2mK4EKCnXer50C8')"
         center
         large
       >
@@ -12,13 +12,13 @@
         {{ displayedValue }}
       </property-field>
       <property-field
-        name="Attribute"
+        :name="$t('AdjustmentForm.GHSISPeV1o-lHDQGal1TZ')"
         mono
         :value="model.stat"
       />
       <property-field
         v-if="model.target === 'self'"
-        name="Target"
+        :name="$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm')"
         value="Self"
       />
     </v-row>
@@ -63,12 +63,12 @@ export default {
           typeof this.value === 'string' ||
           this.value >= 0
         ) {
-          return 'Minus';
+          return this.$t('AdjustmentViewer.pDVyy7MwJYGrzQq0jDPC6');
         } else {
-          return 'Add'
+          return this.$t('AttributeEffect.9iZBUqNtV818puHQ9S5mA')
         }
       } else {
-        return 'Set'
+        return this.$t('EffectForm.WEtHJEmy9l5UiGuanUysJ')
       }
     }
   },

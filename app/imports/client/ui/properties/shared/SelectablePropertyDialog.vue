@@ -7,7 +7,7 @@
     >
       <template slot="toolbar">
         <v-toolbar-title>
-          Property Type
+          {{ $t('SelectablePropertyDialog.MSXU_s9svhgqzP1TjZxUV') }}
         </v-toolbar-title>
         <v-spacer />
         <v-switch

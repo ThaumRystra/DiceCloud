@@ -323,16 +323,16 @@ export default {
 
       // Get the standard icons
       const standardIconsById = {
-        'cast-spell': {standardId: 'cast-spell', groupName: 'Standard Actions', icon: 'mdi-fire', actionName: 'Cast Spell' },
-        // 'make-check': {standardId: 'make-check', groupName: 'Standard Actions', icon: 'mdi-radiobox-marked',  actionName: 'Check' },
-        // 'roll-dice': {standardId: 'roll-dice', groupName: 'Standard Actions', icon: 'mdi-dice-d20', actionName: 'Roll' },
-        'tab-stats': {standardId: 'tab-stats', groupName: 'Tabs', icon: 'mdi-chart-box', tab: 'stats', tabName: 'Stats' },
-        'tab-actions': {standardId: 'tab-actions', groupName: 'Tabs', icon: 'mdi-lightning-bolt', tab: 'actions', tabName: 'Actions' },
-        'tab-spells': this.creature?.settings?.hideSpellsTab ? undefined : {standardId: 'tab-spells', groupName: 'Tabs', icon: 'mdi-fire', tab: 'spells', tabName: 'Spells' },
-        'tab-inventory': {standardId: 'tab-inventory', groupName: 'Tabs', icon: 'mdi-cube', tab: 'inventory', tabName: 'Inventory' },
-        'tab-features': {standardId: 'tab-features', groupName: 'Tabs', icon: 'mdi-text', tab: 'features', tabName: 'Features' },
-        'tab-journal': {standardId: 'tab-journal', groupName: 'Tabs', icon: 'mdi-book-open-variant', tab: 'journal', tabName: 'Journal' },
-        'tab-build': {standardId: 'tab-build', groupName: 'Tabs', icon: 'mdi-wrench', tab: 'build', tabName: 'Build' },
+        'cast-spell': {standardId: 'cast-spell', groupName: this.$t('SelectedCreatureBar.fhJpWpTQTpuCrtsOioWxJ'), icon: 'mdi-fire', actionName: this.$t('SelectedCreatureBar.Zg5aaw0sAM6W64-ocA_E4') },
+        // 'make-check': {standardId: 'make-check', groupName: this.$t('SelectedCreatureBar.fhJpWpTQTpuCrtsOioWxJ'), icon: 'mdi-radiobox-marked',  actionName: this.$t('SelectedCreatureBar.UcAwEN_Jmv7Lezh-o8g6S') },
+        // 'roll-dice': {standardId: 'roll-dice', groupName: this.$t('SelectedCreatureBar.fhJpWpTQTpuCrtsOioWxJ'), icon: 'mdi-dice-d20', actionName: this.$t('SelectedCreatureBar.NgRLZ1KujlD3o3EtzLY3R') },
+        'tab-stats': {standardId: 'tab-stats', groupName: this.$t('SelectedCreatureBar.WTl6k0_UkGQshnCnlN3t6'), icon: 'mdi-chart-box', tab: 'stats', tabName: this.$t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t') },
+        'tab-actions': {standardId: 'tab-actions', groupName: this.$t('SelectedCreatureBar.rsDz2jeDde3rZixCEIxLp'), icon: 'mdi-lightning-bolt', tab: 'actions', tabName: this.$t('CharacterSheetDialog.uEahuOj2R9wGkNQ-mmdBa') },
+        'tab-spells': this.creature?.settings?.hideSpellsTab ? undefined : {standardId: 'tab-spells', groupName: this.$t('SelectedCreatureBar.xvb9H6sVfBt7HYtpMicQz'), icon: 'mdi-fire', tab: 'spells', tabName: this.$t('CharacterSheetDialog.D7iHe3wbPaZ2Jhsn9CXU8') },
+        'tab-inventory': {standardId: 'tab-inventory', groupName: this.$t('SelectedCreatureBar.gYC1yFaOl9zXhX_ppgoWx'), icon: 'mdi-cube', tab: 'inventory', tabName: this.$t('CharacterSheetDialog.0E9n7NRcJsKcvSOh8pJGk') },
+        'tab-features': {standardId: 'tab-features', groupName: this.$t('SelectedCreatureBar.o3j9IwMnvU4lhem9IzY3y'), icon: 'mdi-text', tab: 'features', tabName: this.$t('CharacterSheetDialog.7PhUWMOg_8wLLCCY7CKDz') },
+        'tab-journal': {standardId: 'tab-journal', groupName: this.$t('SelectedCreatureBar.mjZ672LJyHdhMi6YmHEJn'), icon: 'mdi-book-open-variant', tab: 'journal', tabName: this.$t('CharacterSheetDialog.KOKK1cNcrY6O64cRo8aKa') },
+        'tab-build': {standardId: 'tab-build', groupName: this.$t('SelectedCreatureBar.UY94rrIn40QvhXb052leI'), icon: 'mdi-wrench', tab: 'build', tabName: this.$t('CharacterSheetDialog.biA0vlRWylo6EW8GckGOx') },
       };
 
       // Get the folders that could hide a property
@@ -400,15 +400,15 @@ export default {
         if (prop._placedInGroup) return;
         let groupName;
         switch (prop.type) {
-          case 'buff': groupName = 'Buffs'; break;
-          case 'action': groupName = 'Actions'; break;
-          case 'resource': groupName = 'Resources'; break;
-          case 'folder': groupName = 'Folders'; break;
+          case 'buff': groupName = this.$t('SelectedCreatureBar.Gpk8d2M8u_GVhell7SH4w'); break;
+          case 'action': groupName = this.$t('CharacterSheetDialog.uEahuOj2R9wGkNQ-mmdBa'); break;
+          case 'resource': groupName = this.$t('SelectedCreatureBar.tpB9wyZt3UOVoVR9e_Tvm'); break;
+          case 'folder': groupName = this.$t('SelectedCreatureBar.UCE8E-qK5tW0K20yPG11i'); break;
         }
         if (!groupName) return;
         if (!groupsByName[groupName]) {
           groupsByName[groupName] = { name: groupName, iconList: [] };
-          if (groupName !== 'Buffs') { // don't add buffs to the default groups, it is handled differently
+          if (groupName !== this.$t('SelectedCreatureBar.oQYJ73IjGs_u96UbCpyo-')) { // don't add buffs to the default groups, it is handled differently
             defaultGroups.push(groupsByName[groupName]);
           }
         }
@@ -433,7 +433,7 @@ export default {
       iconGroups.push(...defaultGroups);
 
       // Store a specific reference to buffs outside of the list order
-      iconGroups.buffs = groupsByName['Buffs'];
+      iconGroups.buffs = groupsByName[this.$t('SelectedCreatureBar.2Fz98cxVXGhTN-LqYLLxV')];
 
       // Divide the icons into rows
       iconGroups.forEach(group => {

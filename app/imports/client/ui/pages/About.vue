@@ -15,10 +15,7 @@
             class="white--text ma-2 text-center"
             style="max-width: 1200px;"
           >
-            DiceCloud is a single-developer project started in 2014 with the aim of
-            being a character sheet that stayed in sync between the DM and their
-            players, and made it clear where every value in the sheet came from, and
-            how it was calculated.
+            {{ $t('About.KNjn21iiJo5DHGBgIQ3tl') }}
           </p>
         </v-layout>
       </v-parallax>
@@ -26,16 +23,15 @@
     <section class="layout column align-center ma-2 mt-4">
       <div>
         <h3 class="text-h5 mb-2">
-          Special Thanks
+          {{ $t('About.1GLM0elvLeiwucyw3e5uR') }}
         </h3>
         <p>
-          <b>Sam;</b> without her love, DiceCloud could not hope to exist
+          <b>Sam;</b> {{ $t('About.cAjcER2pzgHEO1GD-Op5I') }}
         </p><p>
-          <b>The "Heroes" of Asaea</b> The D&amp;D party whose joy was the fuel
-          powering the early versions of DiceCloud.
+          <b>{{ $t('About.YNa86X1J0jVs-V0NST3KH') }}</b> {{ $t('About.ux2wyUY8CQxbWbTMyF21E') }}&amp{{ $t('About.D8JQa8plAJK2RApywL269') }}
         </p>
         <h3 class="text-h6">
-          Paragon tier Patrons
+          {{ $t('About.HYoADNUbUvPIUel0poPoX') }}
         </h3>
         <v-list
           avatar
@@ -68,32 +64,32 @@
 export default {
   data(){ return {
     paragons:[{
-      name: 'Kira Ametrine',
-      title: 'Cleric of Lewd',
+      name: this.$t('About.hOiVfViXRJmSNmmImZtjS'),
+      title: this.$t('About.UeguSsZrlTIc83c6rBSVb'),
       avatar: 'kira'
     },{
-      name: 'Satherian',
-      title: 'Defender of Naptime',
+      name: this.$t('About.xqU-Vsk2W2N0TT_U27-62'),
+      title: this.$t('About.m5HeWtWm_D9nmHi8pj01b'),
       avatar: 'satherian'
     },{
-      name: 'Vinton',
-      title: 'The Gravekeeper',
+      name: this.$t('About.4QV9cqMWOd323dgeXpPCo'),
+      title: this.$t('About.CrdaAyGFSpnBU7T-Og1eE'),
       avatar: 'vinton'
     },{
-      name: 'Lord of Junk',
-      title: 'Archwizard of the Odd',
+      name: this.$t('About.hlHatK1LPOfTe_86N4MbN'),
+      title: this.$t('About.pVD6iUnr39mNwpPQlW1Wq'),
       avatar: 'lordOfJunk'
     },{
-      name: 'Dai',
-      title: 'A Kobold\'s Best Friend',
+      name: this.$t('About.uF54mKfkoMk_c8vCeK0Yk'),
+      title: this.$t('About.Lrh1aPjGD3MALdfGebrKh'),
       avatar: 'dai'
     }, {
-      name: 'Vibes',
-      title: 'Kell of Nothing',
+      name: this.$t('About.fjyZXM3HxG6GZTi3YLLbQ'),
+      title: this.$t('About.fYnP2TzDN7mwON9WkBT1c'),
       avatar: 'vibes'
     }, {
-      name: 'ßlue',
-      title: 'Embodiment of Greed',
+      name: this.$t('About.Zy6xUk3SJ9eEoWUu4QcJR'),
+      title: this.$t('About.iC49nkwMzoit5rspime5y'),
       avatar: 'blue'
     },
     ],

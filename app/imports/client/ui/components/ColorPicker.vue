@@ -86,14 +86,14 @@
           text
           @click="$emit('input')"
         >
-          Clear
+          {{ $t('ColorPicker.zVC9ZXiQABvJOKMrkGhMn') }}
         </v-btn>
         <v-spacer />
         <v-btn
           text
           @click="opened = false"
         >
-          Done
+          {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
         </v-btn>
       </v-card-actions>
     </v-card>

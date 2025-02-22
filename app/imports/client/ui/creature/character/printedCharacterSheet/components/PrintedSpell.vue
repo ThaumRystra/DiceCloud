@@ -30,10 +30,10 @@
     <div
       v-if="rollBonus"
     >
-      <b>To hit:</b> {{ rollBonus }}
+      <b>{{ $t('PrintedSpell.Ppfd_FuIo6pw_1YB8wX9B') }}</b> {{ rollBonus }}
     </div>
     <div>
-      <b>Casting time:</b> {{ model.castingTime }}
+      <b>{{ $t('PrintedSpell.DrvKag7gMXqeWyeGTQ8NC') }}</b> {{ model.castingTime }}
     </div>
     <div>
       <b>Range:</b> {{ model.range }}

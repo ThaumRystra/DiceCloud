@@ -120,11 +120,11 @@ export default {
       if (!this.active) return;
       const targets = this.targets || [];
       if (this.model.target === 'singleTarget' && targets.length === 0) {
-        return 'Select target';
+        return this.$t('TabletopActionCard.batQxupZ6H-O7Jh4N01Gq');
       } else if (targets.length > 1 && this.model.target !== 'multipleTargets'){
-        return 'Single target only';
+        return this.$t('TabletopActionCard.4D2gnIZxsYG5e5YEu7Tqj');
       } else if (this.model.target === 'self' && targets.length > 0){
-        return 'Can only target self';
+        return this.$t('TabletopActionCard.GhblVy6hAnkQ3-BYRIHJu');
       }
       return undefined;
     }

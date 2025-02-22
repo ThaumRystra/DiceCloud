@@ -78,14 +78,14 @@
           text
           @click="$store.dispatch('popDialogStack', false)"
         >
-          Cancel
+          {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
         </v-btn>
         <v-spacer />
         <v-btn
           text
           @click="$store.dispatch('popDialogStack', true)"
         >
-          Select
+          {{ $t('LibraryNodeDialog.3sQbBN1liQCyUbp2ndbRt') }}
         </v-btn>
       </template>
       <v-btn
@@ -93,7 +93,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
       </v-btn>
     </div>
   </dialog-base>
@@ -267,7 +267,7 @@ export default {
         component: 'move-library-node-dialog',
         elementId: 'property-toolbar-menu-button',
         data: {
-          action: 'Copy',
+          action: this.$t('CreaturePropertyDialog.aavm9J7YCtJKVzrKjx3We'),
         },
         callback(parentId){
           if (!parentId) return;
@@ -285,7 +285,7 @@ export default {
               });
             } else {
               snackbar({
-                text: 'Copied successfully',
+                text: this.$t('CreaturePropertyDialog.B4terf7fAZO4IqRVHKkbS'),
               });
             }
           });
@@ -366,7 +366,7 @@ export default {
         this.$store.dispatch('popDialogStack');
       }
       snackbar({
-        text: `Deleted ${getPropertyTitle(this.model)}`,
+        text: this.$t('LibraryNodeDialog.5itWo4EFXmS15ACjyfpJX', [getPropertyTitle(this.model)]),
         callbackName: 'undo',
         callback(){
           restoreLibraryNode.call({_id});

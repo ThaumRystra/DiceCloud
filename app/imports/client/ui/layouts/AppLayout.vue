@@ -77,7 +77,7 @@ export default {
   },
   data() {
     return {
-      name: 'Home',
+      name: this.$t('Maintenance.xn1iabUyQAcN50064OLqt'),
       tabs: 0,
     }
   },

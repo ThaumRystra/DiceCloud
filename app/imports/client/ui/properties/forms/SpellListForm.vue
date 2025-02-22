@@ -6,8 +6,8 @@
         md="6"
       >
         <computed-field
-          label="Maximum prepared spells"
-          hint="How many spells can be prepared"
+          :label="$t('SpellListForm.-S8t64gUIlS_M6wcwTYi2')"
+          :hint="$t('SpellListForm.lEY_HbzhVJhDadjXDzLHC')"
           :model="model.maxPrepared"
           :error-messages="errors.maxPrepared"
           @change="({path, value, ack}) =>
@@ -19,9 +19,9 @@
         md="6"
       >
         <smart-combobox
-          label="Spellcasting ability"
+          :label="$t('SpellListForm.sJVB7VP-LJqBWgObeUqHZ')"
           :value="model.ability"
-          hint="Which ability is used to cast spells in this spell list"
+          :hint="$t('SpellListForm.pCjZEGorK8Kv5cAlHqt5A')"
           :items="abilityScoreList"
           :error-messages="errors.ability"
           @change="changeAbility"
@@ -32,8 +32,8 @@
         md="6"
       >
         <computed-field
-          label="Spell save DC"
-          hint="The spell save DC of spells in this list"
+          :label="$t('SpellListForm.6oCOmu8CpiZy89q1l6Z_E')"
+          :hint="$t('SpellListForm.XFsGG3xbc6pmw8NWyO2YL')"
           :model="model.dc"
           :error-messages="errors.dc"
           @change="({path, value, ack}) =>
@@ -45,8 +45,8 @@
         md="6"
       >
         <computed-field
-          label="Attack roll bonus"
-          hint="The attack roll bonus of spell attacks made by spells in this list"
+          :label="$t('SpellListForm.KQA6DzSentAneUoHFTGBB')"
+          :hint="$t('SpellListForm.BYthVQEmQLux4Ao3GDdcN')"
           :model="model.attackRollBonus"
           :error-messages="errors.attackRollBonus"
           @change="({path, value, ack}) =>
@@ -56,7 +56,7 @@
     </v-row>
 
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>

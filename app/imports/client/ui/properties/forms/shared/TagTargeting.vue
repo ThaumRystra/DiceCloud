@@ -16,7 +16,7 @@
         </v-icon>
       </v-btn>
       <smart-combobox
-        label="Tags Required"
+        :label="$t('TagTargeting.o5IUFxjQjJTcdzzuShiuT')"
         :hint="tagHint"
         class="mb-2"
         multiple
@@ -37,7 +37,7 @@
         class="target-tags layout align-center justify-space-between"
       >
         <smart-select
-          label="Operation"
+          label="$t('AdjustmentForm.a3GneFZJ3MOMwzxGWJgMq')"
           style="width: 90px; flex-grow: 0;"
           :items="['OR', 'NOT']"
           :value="extras.operation"
@@ -45,8 +45,8 @@
           @change="change([extraTagsField, i, 'operation'], ...arguments)"
         />
         <smart-combobox
-          label="Tags"
-          :hint="extras.operation === 'OR' ? orHint : notHint"
+          :label="$t('PropertyForm.vAMpUe37OijnEHSpa_exs')"
+          :hint="extras.operation === $t('TagTargeting.Me5i0iAxJAdCJjLxln07K') ? orHint : notHint"
           class="mx-2 mb-2"
           multiple
           small-chips
@@ -88,25 +88,22 @@ export default {
       type: String,
       default: 'extraTags',
     },
-    tagHint: {
-      type: String,
-      default: 'Applied to properties that have all the listed tags',
-    },
-    orHint: {
-      type: String,
-      default: 'Also applied to properties that have all of these tags',
-    },
-    notHint: {
-      type: String,
-      default: 'Ignore properties that have any of these tags',
-    },
   },
   data() {
     return {
       addExtraTagsLoading: false,
-    }
+    };
   },
   computed: {
+    tagHint() {
+      return this.$t('TagTargeting.67E8U7zI0B53kcwSNLy_Q');
+    },
+    orHint() {
+      return this.$t('TagTargeting.uzOWxo9tayOigMMgYlzvY');
+    },
+    notHint() {
+      return this.$t('TagTargeting.ZKVnK8hVzGHqnDffr3gqb');
+    },
     maxTags() {
       if (!this.model?.type) return 0;
       const schema = propertySchemasIndex[this.model.type];
@@ -127,7 +124,7 @@ export default {
           operation: 'OR',
           tags: [],
         },
-        ack: () => this.addExtraTagsLoading = false,
+        ack: () => (this.addExtraTagsLoading = false),
       });
     },
     change(path, value, ack) {
@@ -137,5 +134,6 @@ export default {
       this.$emit('change', { path, value, ack });
     },
   },
-}
+};
+
 </script>

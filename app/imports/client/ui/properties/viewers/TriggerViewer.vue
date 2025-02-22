@@ -2,20 +2,20 @@
   <div class="trigger-viewer">
     <v-row dense>
       <property-field
-        name="Timing"
+        :name="$t('TriggerForm.9ynLx9unJDKhHC_H8HtuQ')"
         :value="timingText"
       />
       <property-field
-        name="Event"
+        :name="$t('ActionForm.3ylc2njgCKwqOiWNQLFrF')"
         :value="eventText"
       />
       <property-field
-        name="Event Type"
+        :name="$t('TriggerForm.F5P5mtqa7m0WJCf_h_p7i')"
         :value="actionPropertyText"
       />
       <property-field
         v-if="(model.targetTags && model.targetTags.length) || (model.extraTags && model.extraTags.length)"
-        name="Tags Required"
+        :name="$t('TagTargeting.o5IUFxjQjJTcdzzuShiuT')"
         :cols="{cols: 12}"
       >
         <div>
@@ -32,7 +32,7 @@
         </div>
       </property-field>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

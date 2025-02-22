@@ -2,7 +2,7 @@
   <dialog-base v-if="model">
     <template #toolbar>
       <v-toolbar-title>
-        {{ model.name || 'Unnamed Tabletop' }}
+        {{ model.name || $t('TabletopDialog._CUja7wu-7zhsnJDzWsNc') }}
       </v-toolbar-title>
       <v-spacer />
       <v-slide-x-transition>
@@ -22,7 +22,7 @@
         @click="toggleEditing"
       >
         <span style="width: 44px;">
-          {{ editing ? 'Done' : 'Edit' }}
+          {{ editing ? $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') : $t('TabletopDialog.cIX0D4B7RV67K8WyWUPNk') }}
         </span>
         <v-slide-y-transition
           hide-on-leave
@@ -71,7 +71,7 @@
           text
           @click="$store.dispatch('popDialogStack')"
         >
-          Close
+          {{ $t('ImageInputDialog.E9s5YhcazF4CjinGCQJp7') }}
         </v-btn>
         <v-spacer />
         <v-btn
@@ -79,7 +79,7 @@
           :to="`/tabletop/${model._id}`"
           @click="$store.dispatch('popDialogStack')"
         >
-          Launch
+          {{ $t('Tabletops.-f4XUksqNpxYfvmhlXMI3') }}
           <v-icon
             right
             dark
@@ -158,7 +158,7 @@ export default {
   },
   methods: {
     notImplemented() {
-      snackbar({text: 'Not implemented'});
+      snackbar({text: this.$t('TabletopDialog.cnSRbggl0Hal5qJfuDGY1')});
     },
     toggleEditing() {
       this.editing = !this.editing;
@@ -193,7 +193,7 @@ export default {
         elementId: 'remove-btn',
         data: {
           name: this.model.name,
-          typeName: 'Tabletop'
+          typeName: this.$t('TabletopDialog.RwfJt95TnyJ031jxBJvO_')
         },
         callback(confirmation) {
           if (!confirmation) return;
@@ -214,4 +214,3 @@ export default {
   }
 };
 </script>
-

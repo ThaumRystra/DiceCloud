@@ -1,6 +1,6 @@
 <template>
   <smart-select
-    label="Reset"
+    :label="$t('ResetSelector.i6eGWDKtSDJDxSkvSA9bB')"
     clearable
     style="flex-basis: 300px;"
     :hint="hint"
@@ -32,10 +32,10 @@ export default {
       }, true);
       const defaultEvents = [
         {
-          text: 'Short rest',
+          text: this.$t('ResetSelector.kWVeEgn9xE3ttsd7ywkDb'),
           value: 'shortRest',
         }, {
-          text: 'Long rest',
+          text: this.$t('ResetSelector.qGXvcPldmk5aYt86yPZL-'),
           value: 'longRest',
         }
       ];

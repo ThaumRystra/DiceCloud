@@ -18,12 +18,12 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Weight Carried
+                  {{ $t('InventoryTab.frAYVmG8GPxQ4gvrSrlGy') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
                 <v-list-item-title>
-                  {{ weightCarried }} lb
+                  {{ $t('InventoryTab.F1_i9vo8jx6iCoUpKf8lq', [weightCarried]) }}
                 </v-list-item-title>
               </v-list-item-action>
             </v-list-item>
@@ -33,7 +33,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Net worth
+                  {{ $t('InventoryTab.N8fKkkzjtuW3gNWsyJ2AE') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -48,7 +48,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Items attuned
+                  {{ $t('InventoryTab.IrsrK7LqyqtPrg7inEXZU') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -63,7 +63,7 @@
       <div>
         <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
-            Equipped
+            {{ $t('InventoryTab.7csTJE-Hdc56U4SulNOzN') }}
           </v-toolbar-title>
           <v-card-text class="px-0">
             <item-list
@@ -77,7 +77,7 @@
       <div>
         <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
-            Carried
+            {{ $t('InventoryTab.Qyw8J_ywquzZVrLGok-D8') }}
           </v-toolbar-title>
           <v-card-text class="px-0">
             <item-list

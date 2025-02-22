@@ -10,7 +10,7 @@
         <template v-if="properties.suggested">
           <v-col cols="12">
             <v-subheader>
-              Suggested
+              {{ $t('PropertySelector.atdz1RUUai4SWok0-7T4r') }}
             </v-subheader>
           </v-col>
           <template v-for="(property, type) in properties.suggested">
@@ -34,7 +34,7 @@
           cols="12"
         >
           <v-subheader>
-            More
+            {{ $t('PropertySelector.wpde41ir6M054lGU8CLwk') }}
           </v-subheader>
         </v-col>
         <template v-for="(property, type) in properties.more">

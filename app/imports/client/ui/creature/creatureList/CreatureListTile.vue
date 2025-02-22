@@ -119,7 +119,7 @@ export default {
           newPosition: 0.5,
         });
         snackbar({
-          text: `Moved ${item.name || 'item'} to ${this.model.name || 'another character'}`,
+          text: this.$t('CreatureListTile.nL5xZbaq_UDQ-vdzPXXwT', [item.name || 'item', this.model.name || 'another character']),
           callbackName: 'undo',
           callback: undo,
         });

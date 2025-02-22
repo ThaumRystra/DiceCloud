@@ -19,11 +19,10 @@
           justify-center
         >
           <h2 style="margin: 48px 28px 16px">
-            Character not found
+            {{ $t('CharacterSheet.QQp8e1dXwU9jDD9WyKx1T') }}
           </h2>
           <h3>
-            Either this character does not exist, or you don't have permission
-            to view it.
+            {{ $t('CharacterSheetPrinted.8ZVWk-T-i8_wx0EzlsQ3C') }}
           </h3>
         </v-layout>
       </div>
@@ -48,10 +47,10 @@
                 {{ creature.gender }} {{ race }}
               </dir>
               <div v-if="level && classes && classes.length === 1">
-                Level {{ level }} {{ classes[0].name }}
+                {{ $t('CharacterSheetPrinted.u3Sf8fJGPRW3gCON6DLhl', [level]) }} {{ classes[0].name }}
               </div>
               <div v-else-if="level">
-                Level {{ level }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
+                {{ $t('CharacterSheetPrinted.u3Sf8fJGPRW3gCON6DLhl', [level]) }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
               </div>
             </div>
             <qrcode-vue
@@ -145,14 +144,14 @@ export default {
   },
   watch: {
     'creature.name'(value) {
-      this.$store.commit('setPageTitle', value ? ('Print ' + value) : 'Print Character Sheet');
+      this.$store.commit('setPageTitle', value ? (this.$t('CharacterSheetToolbar.MEKfUHv4LuBXm7IaA_y2M') + ' ' + value) : this.$t('CharacterSheetPrinted.6dUbDHnCRivEyMA8sIaHp'));
     },
   },
   mounted() {
     this.$store.commit('setPageTitle',
       (this.creature && this.creature.name) ?
-        ('Print ' + this.creature.name) :
-        'Print Character Sheet'
+        (this.$t('CharacterSheetToolbar.MEKfUHv4LuBXm7IaA_y2M') + ' ' + this.creature.name) :
+        this.$t('CharacterSheetPrinted.6dUbDHnCRivEyMA8sIaHp')
     );
     this.nameObserver = Creatures.find({
       creatureId: this.creatureId,
@@ -160,9 +159,9 @@ export default {
       fields: { name: 1 },
     }).observe({
       added: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+        this.$store.commit('setPageTitle', name ? (this.$t('CharacterSheetToolbar.MEKfUHv4LuBXm7IaA_y2M') + ' ' + name) : this.$t('CharacterSheetPrinted.6dUbDHnCRivEyMA8sIaHp')),
       changed: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+        this.$store.commit('setPageTitle', name ? (this.$t('CharacterSheetToolbar.MEKfUHv4LuBXm7IaA_y2M') + ' ' + name) : this.$t('CharacterSheetPrinted.6dUbDHnCRivEyMA8sIaHp')),
     });
   },
   beforeDestroy() {

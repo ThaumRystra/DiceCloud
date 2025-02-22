@@ -27,14 +27,14 @@
     >
       <v-row dense>
         <property-field
-          name="Owner"
+          :name="$t('TabletopForm.Ye33lCxkLiuCk7ejTS-3B')"
           :cols="{ cols: 12 }"
         >
           {{ users.owner.username || users.owner._id || '' }}
         </property-field>
         <property-field
           v-if="users.gameMasters.length"
-          name="Game Masters"
+          :name="$t('TabletopForm.Dnp5nRtDPgzhw2HlU9CDw')"
           :cols="{ cols: 12 }"
         >
           <li
@@ -46,7 +46,7 @@
         </property-field>
         <property-field
           v-if="users.players.length"
-          name="Players"
+          :name="$t('TabletopForm.w8-3hmBIm0WX2f98I5Nrp')"
           :cols="{ cols: 12 }"
         >
           <li
@@ -58,7 +58,7 @@
         </property-field>
         <property-field
           v-if="users.spectators.length"
-          name="Spectators"
+          :name="$t('TabletopForm.j92FT1AXgEpXeD3KtPcQO')"
           :cols="{ cols: 12 }"
         >
           <li

@@ -5,7 +5,7 @@
   >
     <template slot="toolbar">
       <v-toolbar-title>
-        Character Details
+        {{ $t('CreatureFormDialog.E8FYgkM99fJeGrtnCg-WL') }}
       </v-toolbar-title>
       <v-spacer />
       <color-picker
@@ -27,7 +27,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Done
+      {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
     </v-btn>
   </dialog-base>
 </template>

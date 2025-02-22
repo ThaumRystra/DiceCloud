@@ -30,7 +30,7 @@
           class="done-button"
           @click="finishAction"
         >
-          Done
+          {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
         </v-btn>
       </v-card>
     </v-slide-x-reverse-transition>

@@ -7,8 +7,8 @@
       >
         <computed-field
           ref="focusFirst"
-          label="Damage"
-          hint="A calculation including dice rolls of the damage to deal to the target when activated by an action"
+          :label="$t('AttributeForm.Nhf3bIPS2M4dn_fb7Dt58')"
+          :hint="$t('DamageForm.tKvc9A04tf15QgW5I0HST')"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>
@@ -20,9 +20,9 @@
         md="6"
       >
         <smart-combobox
-          label="Damage Type"
+          :label="$t('DamageForm.vSBUWgtZXUz-R3mygeDRb')"
           style="flex-basis: 200px;"
-          hint="Use the Healing type to restore hit points"
+          :hint="$t('DamageForm.Le1gdU0LVDcAb318jQnpZ')"
           :rules="damageTypeRules"
           :items="DAMAGE_TYPES"
           :value="model.damageType"
@@ -33,7 +33,7 @@
       </v-col>
       <v-col cols="12">
         <smart-toggle
-          label="Target creature"
+          :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
           :value="model.target"
           :options="[
             {name: 'Action Target', value: 'target'},
@@ -46,7 +46,7 @@
       <v-col cols="12">
         <smart-switch
           class="mt-0"
-          label="Saving throw"
+          :label="$t('DamageForm.elhIUdNqUin0tIr8HPASE')"
           :value="!!model.save"
           :error-messages="errors.save"
           @change="(val, ack) => $emit('change', {
@@ -67,8 +67,8 @@
           md="6"
         >
           <computed-field
-            label="DC"
-            hint="Saving throw DC"
+            :label="$t('DamageForm.K4tBJdCA-IX5x2x7_gFU_')"
+            :hint="$t('DamageForm.2ZYkiUwpnuyQEcaxZCnZ6')"
             :model="model.save.dc"
             :error-messages="errors['save.dc']"
             @change="({path, value, ack}) =>
@@ -80,8 +80,8 @@
           md="6"
         >
           <smart-combobox
-            label="Save"
-            hint="Which stat the saving throw targets"
+            :label="$t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU')"
+            :hint="$t('DamageForm.wLt8NpiVWrumZ9fIkfU6I')"
             :value="model.save.stat"
             :items="saveList"
             :error-messages="errors['save.stat']"
@@ -92,9 +92,9 @@
         <v-col cols="12">
           <computed-field
             v-if="!!model.save"
-            label="Damage on successful save"
-            hint="Use &quot;~damage&quot; to reference the damage that would normally be dealt"
-            placeholder="Half damage"
+            :label="$t('DamageForm.vn1yigF-QkAGevxOv_hE6')"
+            :hint="$t('DamageForm.4T1RVOx5n7MiWgNTFONBl')"
+            :placeholder="$t('DamageForm.1wEkuz0UjFyeKTJq_F1cS')"
             persistent-placeholder
             :model="model.save.damageFunction"
             :error-messages="errors['save.damageFunction']"
@@ -105,11 +105,11 @@
       </v-row>
     </v-expand-transition>
     <form-sections type="damage">
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <v-row>
           <v-col cols="12">
             <smart-switch
-              label="Don't show in log"
+              :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
               :value="model.silent"
               :error-messages="errors.silent"
               @change="change('silent', ...arguments)"
@@ -141,9 +141,9 @@ export default {
       DAMAGE_TYPES,
       damageTypeRules: [
         value => {
-          if (!value) return 'Damage type is required';
+          if (!value) return this.$t('DamageForm.EnQgqwE5gfzy6PTTjZzY7');
           if (!VARIABLE_NAME_REGEX.test(value)) {
-            return `${value} is not a valid damage name`
+            return this.$t('DamageForm.yn1Bes_MY4pX_6RMi7xQJ', [value])
           }
         }
       ],
@@ -153,18 +153,18 @@ export default {
     targetOptions() {
       return [
         {
-          text: 'Self',
+          text: this.$t('ActionForm.wvr48hnF1DbxApmRDC3R0'),
           value: 'self',
         }, {
-          text: 'Target',
+          text: this.$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm'),
           value: 'target',
         },
       ];
     },
     targetOptionHint() {
       let hints = {
-        self: 'The damage will be applied to the character taking the action',
-        target: 'The damage will be applied to the target of the action',
+        self: this.$t('DamageForm.Na3qN3IUrdyG-T4ivcu9E'),
+        target: this.$t('DamageForm.u1M7JtjYwhEame-Pp_QOk'),
       };
       return hints[this.model.target];
     }

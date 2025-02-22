@@ -6,10 +6,10 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('AttributeForm.vWQj52YzUPPcXSMEZ6dvh')"
           :value="model.variableName"
           style="flex-basis: 300px;"
-          hint="Use this name in action formulae to refer to the result of this roll"
+          :hint="$t('RollForm.JWuj-egKYGNBCtSDcN9Pp')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,8 +19,8 @@
         md="6"
       >
         <computed-field
-          label="Roll"
-          hint="The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
+          :label="$t('SelectedCreatureBar.NgRLZ1KujlD3o3EtzLY3R')"
+          :hint="$t('RollForm.1tJlgrJOlIRP7yDDmCPzA')"
           :model="model.roll"
           :error-messages="errors.roll"
           @change="({path, value, ack}) =>
@@ -29,9 +29,9 @@
       </v-col>
     </v-row>
     <form-sections type="roll">
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

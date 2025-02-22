@@ -2,12 +2,12 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        Cast a Spell
+        {{ $t('CastSpellWithSlotDialog.G115jkwGBnIxXtwS_szGb') }}
       </v-toolbar-title>
       <v-spacer />
       <text-field
         ref="focusFirst"
-        label="Name"
+        :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
         prepend-inner-icon="mdi-magnify"
         regular
         hide-details
@@ -51,7 +51,7 @@
               text
               @click="clearBooleanFilters"
             >
-              Clear
+              {{ $t('ColorPicker.zVC9ZXiQABvJOKMrkGhMn') }}
             </v-btn>
             <v-spacer />
             <v-btn
@@ -59,7 +59,7 @@
               class="primary--text"
               @click="filterMenuOpen = false"
             >
-              Done
+              {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
             </v-btn>
           </div>
         </v-list>
@@ -71,7 +71,7 @@
           key="slot-title"
           class="text-h6 my-3"
         >
-          Slot
+          {{ $t('CastSpellWithSlotDialog.O0qmYguCKrxO2cig4xp4l') }}
         </div>
         <v-list-item-group
           key="slot-list"
@@ -87,7 +87,7 @@
           >
             <v-list-item-content>
               <v-list-item-title>
-                Cast without spell slot
+                {{ $t('CastSpellWithSlotDialog.QOzOe_bLq5eVMrr18cOfi') }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -101,7 +101,7 @@
           >
             <v-list-item-content>
               <v-list-item-title>
-                Cast as ritual
+                {{ $t('CastSpellWithSlotDialog.Zv1zhDyEwLsYWudgaihbF') }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -122,7 +122,7 @@
           key="spell-title-right"
           class="text-h6 my-3"
         >
-          Spell
+          {{ $t('CastSpellWithSlotDialog.3W-UoUKx4ls6IAln-E9UR') }}
         </div>
         <v-list-item-group
           key="slot-list-right"
@@ -157,7 +157,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-btn
         text
@@ -167,7 +167,7 @@
         data-id="cast-spell-dialog-btn"
         @click="cast"
       >
-        Cast
+        {{ $t('CastSpellWithSlotDialog.DZaTr8fsD1lKfYP8IL_fY') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -226,11 +226,11 @@ export default {
       searchError: undefined,
       filterMenuOpen: false,
       booleanFilters: {
-        verbal: { name: 'Verbal', enabled: false, value: true },
-        somatic: { name: 'Somatic', enabled: false, value: true },
-        material: { name: 'Material', enabled: false, value: true },
-        concentration: { name: 'Concentration', enabled: false, value: true },
-        ritual: { name: 'Ritual', enabled: false, value: true },
+        verbal: { name: this.$t('CastSpellWithSlotDialog.ZJalW18LEJvZmvjZ7rbUG'), enabled: false, value: true },
+        somatic: { name: this.$t('CastSpellWithSlotDialog._1NJvagH4wHdqwixdE6nU'), enabled: false, value: true },
+        material: { name: this.$t('CastSpellWithSlotDialog.3F4GREMFeI2XiZUbvbx4M'), enabled: false, value: true },
+        concentration: { name: this.$t('CastSpellWithSlotDialog.JhkgAy7hkeEm0nlKxRUKb'), enabled: false, value: true },
+        ritual: { name: this.$t('CastSpellWithSlotDialog.pKKtVPJFsDi6EMWOmVbkP'), enabled: false, value: true },
       },
     }
   },

@@ -3,7 +3,7 @@
     <v-row dense>
       <property-field
         v-if="model.description"
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :cols="{cols: 12}"
       >
         <markdown-text :markdown="model.description" />

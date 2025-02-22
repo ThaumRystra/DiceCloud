@@ -16,14 +16,13 @@
             v-if="characterSpaceLeft < 0"
             type="error"
           >
-            You have exceeded your maximum number of character slots, archive or delete
-            some characters.
+            {{ $t('CharacterList.-LdQ0twu89jMXeqAuTXUR') }}
           </v-alert>
           <v-alert
             v-else-if="characterSpaceLeft === 0"
             type="info"
           >
-            You have hit your maximum number of characters.
+            {{ $t('CharacterList.eO2z7wc1FenrOaPKWzQqN') }}
             <archive-button
               small
               text
@@ -37,7 +36,7 @@
               small
               text
             >
-              Increase Patreon tier
+              {{ $t('CharacterList.jH1ExOrhqUs1ztoD3HTtY') }}
               <v-icon right>
                 mdi-patreon
               </v-icon>
@@ -56,14 +55,14 @@
               data-id="import-character-button"
               @click="importCharacter"
             >
-              import character
+              {{ $t('CharacterList.K22MZDa29C0xDYFiKlmBV') }}
             </v-btn>
             <v-btn
               text
               :loading="loadingInsertFolder"
               @click="insertFolder"
             >
-              add folder
+              {{ $t('CharacterList.1fhPDMlRilOSezFDoW21W') }}
             </v-btn>
           </div>
           <v-btn
@@ -97,7 +96,7 @@ import { uniq, flatten } from 'lodash';
 
 const characterTransform = function (char) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
-  char.initial = char.name && char.name[0] || '?';
+  char.initial = char.name && char.name[0] || this.$t('CharacterList.5Lh6_XvKqv3A7OD7dR00y');
   return char;
 };
 export default {

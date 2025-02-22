@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="buff-form">
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -20,11 +20,11 @@
     -->
     <smart-toggle
       v-if="!model.applied"
-      label="Target creature"
+      :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
       :value="model.target"
       :options="[
-        {name: 'Action Target', value: 'target'},
-        {name: 'Self', value: 'self'},
+        {name: $t('BuffRemoverForm.wP1izzQbSh60_E36Jwhdv'), value: 'target'},
+        {name: $t('ActionForm.wvr48hnF1DbxApmRDC3R0'), value: 'self'},
       ]"
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
@@ -32,12 +32,12 @@
     <form-sections type="buff">
       <form-section
         v-if="$slots.children"
-        name="Children"
+        :name="$t('BuffRemoverForm.mfgWVnzACJzVST8OLqhdo')"
         standalone
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Behavior">
+      <form-section :name="$t('AttributeForm.yRM4XSwze2YA1X0FZY8RI')">
         <v-row dense>
           <v-col
             cols="12"
@@ -45,7 +45,7 @@
             md="4"
           >
             <smart-switch
-              label="Hide remove button"
+              :label="$t('BuffForm.ujGTNeS7Qt6UNdSi90bCY')"
               :value="model.hideRemoveButton"
               :error-messages="errors.hideRemoveButton"
               @change="change('hideRemoveButton', ...arguments)"
@@ -57,7 +57,7 @@
             md="4"
           >
             <smart-switch
-              label="Don't freeze variables"
+              :label="$t('BuffForm.pLP5I0DeEiydJilZcbWIS')"
               :value="model.skipCrystalization"
               :error-messages="errors.skipCrystalization"
               @change="change('skipCrystalization', ...arguments)"
@@ -65,9 +65,9 @@
           </v-col>
         </v-row>
       </form-section>
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

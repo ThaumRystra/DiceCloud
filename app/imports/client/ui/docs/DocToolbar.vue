@@ -9,7 +9,7 @@
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-toolbar-title>
-      Documentation
+      {{ $t('DocsPage.owEFuhKAi0S5XmhIaiqMB') }}
     </v-toolbar-title>
     <v-spacer />
     <v-app-bar-nav-icon

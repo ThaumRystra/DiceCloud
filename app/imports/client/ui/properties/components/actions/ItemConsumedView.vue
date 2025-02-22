@@ -50,7 +50,7 @@
             v-else
             class="error--text text-no-wrap text-truncate flex"
           >
-            Select item
+            {{ $t('ItemConsumedView.ojSY3UghqfcmO7TeV4Lbh') }}
           </div>
           <v-icon
             v-if="context.editPermission"

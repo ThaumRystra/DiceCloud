@@ -23,7 +23,7 @@
             <v-switch
               v-if="context.editPermission !== false"
               v-model="organize"
-              label="Organize"
+              :label="$t('TreeTab.52XlDKKVBQDA26plR43LO')"
               class="mx-3"
               :disabled="organizeDisabled"
               style="flex-grow: 0; height: 32px;"

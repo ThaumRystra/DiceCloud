@@ -2,7 +2,7 @@
   <div>
     <v-sheet>
       <h1>
-        Friends
+        {{ $t('Friends.LPnKzu_iwEkWKHDp0SVmF') }}
       </h1>
       <v-btn
         fixed

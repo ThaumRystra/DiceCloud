@@ -48,7 +48,7 @@
               {{ model.actionType }}
             </div>
             <div v-if="Number.isFinite(model.usesLeft)">
-              {{ model.usesLeft }} uses
+              {{ $t('ActionCard.-bbCePxzaDImme9iZ2rxF', [model.usesLeft]) }}
             </div>
           </template>
         </div>
@@ -182,9 +182,9 @@ export default {
       // Can always do an action without a target
       if (!this.targets || !this.targets.length) return undefined;
       if (this.targets.length > 1 && this.model.target !== 'multipleTargets'){
-        return 'Single target';
+        return this.$t('ActionCard.5IbE7yubecegAHFjeu4mr');
       } else if (this.model.target === 'self' && this.targets[0] !== this.model.ancestors[0]._id){
-        return 'Can only target self';
+        return this.$t('TabletopActionCard.GhblVy6hAnkQ3-BYRIHJu');
       }
       return undefined;
     }

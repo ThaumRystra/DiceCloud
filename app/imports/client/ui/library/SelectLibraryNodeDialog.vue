@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Select Library Property
+      {{ $t('SelectLibraryNodeDialog.NSHQWleuXmGAMAUWGoX2-') }}
     </v-toolbar-title>
     <library-and-node
       slot="unwrapped-content"
@@ -15,7 +15,7 @@
         color="primary"
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -23,7 +23,7 @@
         color="primary"
         @click="$store.dispatch('popDialogStack', node)"
       >
-        Select
+        {{ $t('LibraryNodeDialog.3sQbBN1liQCyUbp2ndbRt') }}
       </v-btn>
     </template>
   </dialog-base>

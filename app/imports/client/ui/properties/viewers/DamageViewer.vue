@@ -2,18 +2,18 @@
   <div class="damage-viewer">
     <v-row dense>
       <property-field
-        name="Amount"
+        :name="$t('AdjustmentForm.AndV_m2mK4EKCnXer50C8')"
         large
         center
         :calculation="model.amount"
       />
       <property-field
-        name="Type"
+        :name="$t('TreeSearchInput.BAArIlU-xLOyjxKLYTPg7')"
         :value="type"
       />
       <property-field
         v-if="model.target === 'self'"
-        name="Target"
+        :name="$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm')"
         value="Self"
       />
       <template v-if="model.save">
@@ -24,12 +24,12 @@
           :calculation="model.save.dc"
         />
         <property-field
-          name="Save"
+          :name="$t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU')"
           mono
           :value="model.save.stat"
         />
         <property-field
-          name="On a successful saving throw"
+          :name="$t('DamageViewer.VEpM2ZSTeCTr2zrlY2MHq')"
           v-bind="saveDamage"
         />
       </template>
@@ -50,10 +50,10 @@ export default {
     saveDamage() {
       if (!this.model.save) return;
       if (!this.model.save.damageFunction?.calculation) {
-        return { value: 'Half damage' };
+        return { value: this.$t('DamageForm.1wEkuz0UjFyeKTJq_F1cS') };
       }
       if (this.model.save.damageFunction.calculation == '0' || this.model.save.damageFunction.value === 0) {
-        return { value: 'No damage' };
+        return { value: this.$t('DamageViewer.eWiuTWrUZM43skOm_Erhe') };
       }
       return { calculation: this.model.save.damageFunction };
     }

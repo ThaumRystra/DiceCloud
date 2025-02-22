@@ -3,7 +3,7 @@
     <template slot="toolbar">
       <v-toolbar-title class="mr-4">
         <template v-if="tab === 2">
-          New
+          {{ $t('InsertPropertyDialog.RY4p2NBWbpDUPdo37rkVw') }}
         </template>{{ typeName }}
       </v-toolbar-title>
       <v-spacer />
@@ -43,13 +43,13 @@
         {{ typeName || 'Type' }}
       </v-tab>
       <v-tab :disabled="!type">
-        Create
+        {{ $t('CharacterCreationDialog.EGyaTsNsK_I2KkiUB2hjV') }}
       </v-tab>
       <v-tab
         v-if="!hideLibraryTab"
         :disabled="!type"
       >
-        Library
+        {{ $t('SingleLibrary.8o8zfT4rnslD95pstr578') }}
       </v-tab>
     </v-tabs>
     <v-tabs-items
@@ -153,7 +153,7 @@
                 class="ma-4"
                 @click="loadMore"
               >
-                Load More
+                {{ $t('CreatureFromLibraryDialog.gKd4prmSqKxO3Tn3oNfV-') }}
               </v-btn>
             </div>
           </v-fade-transition>
@@ -187,7 +187,7 @@
         <template v-if="selectedNodeIds.length >= 15">
           {{ selectedNodeIds.length }}/20
         </template>
-        Insert
+        {{ $t('CreatureFromLibraryDialog.3loR2KAjQfv3IEMsldc7S') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -269,7 +269,7 @@ export default {
   };},
   computed: {
     typeName(){
-      return getPropertyName(this.type) || 'Property';
+      return getPropertyName(this.type) || this.$t('CharacterSheetFab.INXnPK501RhoZ_yH5gNsm');
     },
     toolbarColor(){
       return getThemeColor('secondary');

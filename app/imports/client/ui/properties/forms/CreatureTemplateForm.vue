@@ -6,8 +6,8 @@
         md="6"
       >
         <smart-image-input
-          label="Picture"
-          hint="A link to a high resolution image"
+          :label="$t('CreatureForm.ordep68gu9FPcmPbN2qNQ')"
+          :hint="$t('CreatureForm.K_X3XLw_OiKsx5Gz8VKuE')"
           :value="model.picture"
           :error-messages="errors.picture"
           @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
@@ -18,8 +18,8 @@
         md="6"
       >
         <smart-image-input
-          label="Avatar"
-          hint="A link to a smaller, square image to use as an avatar"
+          :label="$t('CreatureForm.YGtqDhW93C1P2aAq-rV2Z')"
+          :hint="$t('CreatureForm.P51MPYDy7PxdpoBtc2LFA')"
           :value="model.avatarPicture"
           :error-messages="errors.avatarPicture"
           @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
@@ -27,8 +27,8 @@
       </v-col>
     </v-row>
     <inline-computation-field
-      label="Description"
-      hint="A brief description of the creature shown when the creature is added to a tabletop"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
+      :hint="$t('CreatureTemplateForm.DE13oKA3fiC13FVUIh_xD')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>

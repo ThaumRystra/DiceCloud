@@ -65,7 +65,7 @@
           color="accent"
           @click="$store.dispatch('popDialogStack')"
         >
-          Close
+          {{ $t('ImageInputDialog.E9s5YhcazF4CjinGCQJp7') }}
         </v-btn>
       </div>
     </template>
@@ -223,7 +223,7 @@ export default {
         this.$store.dispatch('popDialogStack');
       }
       snackbar({
-        text: `Deleted ${getPropertyTitle(this.model)}`,
+        text: this.$t('CreaturePropertyDialog.n-TofgX92mhX35Ou9XvPx', [getPropertyTitle(this.model)]),
         callbackName: 'undo',
         callback(){
           restoreProperty.call({_id});
@@ -250,7 +250,7 @@ export default {
         component: 'move-library-node-dialog',
         elementId: 'property-toolbar-menu-button',
         data: {
-          action: 'Copy',
+          action: this.$t('CreaturePropertyDialog.aavm9J7YCtJKVzrKjx3We'),
         },
         callback(parentId){
           if (!parentId) return;
@@ -268,7 +268,7 @@ export default {
               });
             } else {
               snackbar({
-                text: 'Copied successfully',
+                text: this.$t('CreaturePropertyDialog.B4terf7fAZO4IqRVHKkbS'),
               });
             }
           });

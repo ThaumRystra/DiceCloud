@@ -7,10 +7,10 @@
         @change="changeAdvantage"
       >
         <v-btn :value="-1">
-          Disadvantage
+          {{ $t('AdvantageInput.sN61sdTDUmZNRJhgdk3FT') }}
         </v-btn>
         <v-btn :value="1">
-          Advantage
+          {{ $t('AdvantageInput.GOVw9p7PQMyvg1W3QMv1h') }}
         </v-btn>
       </v-btn-toggle>
       <div style="position: relative;">
@@ -30,20 +30,20 @@
           @click="$emit('continue')"
         >
           <div>
-            Roll
+            {{ $t('SelectedCreatureBar.NgRLZ1KujlD3o3EtzLY3R') }}
           </div>
         </vertical-hex>
       </div>
     </div>
     <div class="d-flex flex-column mt-4 mr-4">
       <smart-select
-        label="Ability"
+        :label="$t('CheckInput.ZOqgwwG1rCTTKIVrY23XB')"
         :items="abilityOptions"
         :value="value.abilityVariableName"
         @change="change('abilityVariableName', ...arguments)"
       />
       <smart-select
-        label="Skill"
+        :label="$t('CheckInput.sKXmebGzd92GfO5RYbSPI')"
         :items="skillOptions"
         :value="value.skillVariableName"
         @change="change('skillVariableName', ...arguments)"

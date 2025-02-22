@@ -8,7 +8,7 @@
     </v-row>
     <v-row dense>
       <v-col cols="12">
-        <v-subheader> Archived Characters </v-subheader>
+        <v-subheader> {{ $t('Files.lODNcxhbG9cYo2nyVaNI7') }} </v-subheader>
       </v-col>
       
       <v-col
@@ -42,7 +42,7 @@
             {{ archiveFileError }}
           </template>
           <template v-else>
-            Upload archive
+            {{ $t('UserImageList.vQ1GH9ouCeobhAWFMUk9q') }}
           </template>
           <v-progress-linear
             v-if="archiveUploadInProgress"
@@ -67,7 +67,7 @@
     </v-row>
     <v-row dense>
       <v-col cols="12">
-        <v-subheader> Images </v-subheader>
+        <v-subheader> {{ $t('UserImageList.4eG2n_kbo95NmBJiZ8ldw') }} </v-subheader>
       </v-col>
       <v-col
         cols="12"
@@ -219,11 +219,11 @@ export default {
       this.$refs.archiveFileInput.value = null;
       if (!file) return;
       if (file.type !== 'application/json'){
-        this.archiveFileError = 'File must be .json';
+        this.archiveFileError = this.$t('Files.bPlqV9yZjulOsJlm1dUy6');
         return;
       }
       if (file.size > 10000000){
-        this.archiveFileError = 'File too large';
+        this.archiveFileError = this.$t('Files.hUMuHiGYqCw-VP3G4t4wy');
         return;
       }
       this.archiveFile = file;
@@ -239,7 +239,7 @@ export default {
         try {
           data = JSON.parse(fr.result);
         } catch (e){
-          self.archiveFileError = 'File could not be parsed';
+          self.archiveFileError = this.$t('Files.OOKbEQsrTEYMnwfTyLg2W');
           self.archiveUploadInProgress = false;
           console.error(e);
           return;
@@ -250,7 +250,7 @@ export default {
           data = archiveSchema.clean(data);
           archiveSchema.validate(data);
         } catch (e){
-          self.archiveFileError = 'File failed validation: ' + (e.reason || e.message || e.toString());
+          self.archiveFileError = this.$t('Files.IWywNfV8ZQO6HrcEjyIEn') + ' ' + (e.reason || e.message || e.toString());
           self.archiveUploadInProgress = false;
           console.error(e);
           return;

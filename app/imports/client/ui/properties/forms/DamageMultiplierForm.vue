@@ -5,17 +5,17 @@
         cols="12"
       >
         <smart-toggle
-          label="Multiplier"
+          :label="$t('DamageMultiplierForm.M3x4lMUUK8hPMBunTeJKW')"
           :value="model.value"
           :options="[{
             value: 2,
-            name: 'Vulnerability',
+            name: $t('PrintedDamageMultipliers.p5oBcNFeC2ebcPTxmWvab'),
           },{
             value: 0.5,
-            name: 'Resistance',
+            name: $t('PrintedDamageMultipliers.uP77KRfYo25L_qwnj-JQR'),
           }, {
             value: 0,
-            name: 'Immunity',
+            name: $t('PrintedDamageMultipliers.uNx-Dyhk3Z17Q7dWuR4Bp'),
           }]"
           :error-messages="errors.value"
           @change="change('value', ...arguments)"
@@ -25,7 +25,7 @@
     <v-row dense>
       <v-col cols="12">
         <smart-combobox
-          label="Damage Types"
+          :label="$t('DamageMultiplierForm.uSIuxHLCTocxiiJ5q3abK')"
           multiple
           chips
           deletable-chips
@@ -42,16 +42,16 @@
     <form-sections type="damageMultiplier">
       <form-section
         v-if="$slots.children"
-        name="Children"
+        :name="$t('BuffRemoverForm.mfgWVnzACJzVST8OLqhdo')"
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Apply by tag">
+      <form-section :name="$t('DamageMultiplierForm.NgRyI3HHHG2iNgaWW1sfO')">
         <v-row dense>
           <v-col cols="12">
             <smart-combobox
-              label="Tags required"
-              hint="Only apply to damage that has all of these tags"
+              :label="$t('DamageMultiplierForm.M7PrptCUqUxPZ7iWpme1O')"
+              :hint="$t('DamageMultiplierForm.DtSkXDBKCytH1PP8OOCYO')"
               multiple
               small-chips
               deletable-chips
@@ -63,8 +63,8 @@
           </v-col>
           <v-col cols="12">
             <smart-combobox
-              label="Tags excluded"
-              hint="Don't apply to damage that has any of these tags"
+              :label="$t('DamageMultiplierForm.Dx09c5by0x2vyTqYHwR75')"
+              :hint="$t('DamageMultiplierForm.FfK6vlC9tBsHSLQLI1Wll')"
               multiple
               small-chips
               deletable-chips
@@ -101,7 +101,7 @@ export default {
           if (value && value.length) {
             for (let i = 0; i < value.length; i++) {
               if (!VARIABLE_NAME_REGEX.test(value[i])) {
-                return `${value[i]} is not a valid damage name`
+                return this.$t('DamageMultiplierForm.AMAn3Zqxk3uTILNZ9tBHL', [value[i]])
               }
             }
           }

@@ -3,12 +3,12 @@
     <v-row>
       <property-field
         v-if="model.cache.error"
-        name="Error"
+        :name="$t('ReferenceViewer.QKA68iibE1CmNtSWoQlwD')"
         :value="model.cache.error"
       />
       <property-field
         v-else-if="model.ref && model.ref.id"
-        name="Linked property"
+        :name="$t('ReferenceViewer.55UcYLqUq55tWKGdailva')"
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden; min-width: 100%; min-height: 100%;">
@@ -31,7 +31,7 @@
       </property-field>
       <property-field
         v-if="model.cache.library && model.cache.library.name"
-        name="Library"
+        :name="$t('SingleLibrary.8o8zfT4rnslD95pstr578')"
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden; min-width: 100%; min-height: 100%;">

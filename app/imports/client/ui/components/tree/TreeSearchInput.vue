@@ -22,13 +22,13 @@
 
     <v-card>
       <v-card-title>
-        Search
+        {{ $t('TreeSearchInput.n_95TuiRQ2kxGGg75XOYg') }}
       </v-card-title>
       <v-card-text>
         <v-select
           v-model="typeFilterInput"
           outlined
-          label="Type"
+          :label="$t('TreeSearchInput.BAArIlU-xLOyjxKLYTPg7')"
           :items="filterOptions"
           multiple
           clearable
@@ -44,12 +44,12 @@
             <v-text-field
               v-model="fieldFilter.field"
               class="text--mono"
-              label="Field"
+              :label="$t('TreeSearchInput.U-oWTIZNTOO1Sx6gsV9ah')"
               outlined
             />
             <v-text-field
               v-model="fieldFilter.value"
-              label="Text"
+              :label="$t('TreeSearchInput.n00nuv-ruVz9Ug_Vv51wY')"
               class="ml-2"
               outlined
             />
@@ -86,7 +86,7 @@
             <v-icon left>
               mdi-close
             </v-icon>
-            Clear
+            {{ $t('ColorPicker.zVC9ZXiQABvJOKMrkGhMn') }}
           </v-btn>
           <v-spacer />
           <v-btn
@@ -94,7 +94,7 @@
             color="primary"
             @click="menu = false"
           >
-            Find
+            {{ $t('TreeSearchInput.ttDyIJdfuqSWgFT1FTJbI') }}
           </v-btn>
         </v-card-actions>
       </v-card-text>

@@ -134,7 +134,7 @@ export default {
         return;
       } catch (e){
         console.warn(e);
-        this.inputError = 'Compilation error';
+        this.inputError = this.$t('CharacterLog.uJ6zorsDB4vjbPaQrMyDz');
         return;
       }
     },

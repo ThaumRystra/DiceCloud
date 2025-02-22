@@ -1,11 +1,11 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Add Characters
+      {{ $t('SelectCreaturesDialog.ooUpaVf3Q6Kb-Ot1Kc0k0') }}
     </v-toolbar-title>
     <v-list>
       <p v-if="!creatures.length">
-        There are no creatures to add or you have already added them all
+        {{ $t('SelectCreaturesDialog.UjUpHVRYzvCyqwNi7DV2w') }}
       </p>
       <creature-list-tile
         v-for="creature in creatures"
@@ -23,7 +23,7 @@
         color="primary"
         @click="$store.dispatch('popDialogStack', selected)"
       >
-        Add characters
+        {{ $t('SelectCreaturesDialog.gnUhOrXXmGGPWI9kQbpHI') }}
       </v-btn>
     </template>
   </dialog-base>

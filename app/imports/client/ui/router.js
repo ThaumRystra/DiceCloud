@@ -1,6 +1,8 @@
 import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
 import { acceptInviteToken } from '/imports/api/users/Invites';
 import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
+import i18n from '/imports/client/ui/i18n';
+
 // Components
 const Home = () => import('/imports/client/ui/pages/Home.vue');
 const About = () => import('/imports/client/ui/pages/About.vue');
@@ -18,7 +20,6 @@ const CharacterSheetPrintedToolbar = () => import('/imports/client/ui/creature/c
 const SignIn = () => import('/imports/client/ui/pages/SignIn.vue');
 const Register = () => import('/imports/client/ui/pages/Register.vue');
 const IconAdmin = () => import('/imports/client/ui/icons/IconAdmin.vue');
-//const Friends = () => import('/imports/client/ui/pages/Friends.vue' );
 const Feedback = () => import('/imports/client/ui/pages/Feedback.vue');
 const FunctionReference = () => import('/imports/client/ui/pages/FunctionReference.vue');
 const Account = () => import('/imports/client/ui/pages/Account.vue');
@@ -58,7 +59,7 @@ function ensureLoggedIn(to, from, next) {
       computation.stop();
       const user = Meteor.user();
       if (user) {
-        next()
+        next();
       } else {
         next({ name: 'signIn', query: { redirect: to.path } });
       }
@@ -73,7 +74,7 @@ function ensureAdmin(to, from, next) {
       const user = Meteor.user();
       if (user) {
         if (user.roles && user.roles.includes('admin')) {
-          next()
+          next();
         } else {
           next({ name: 'home' });
         }
@@ -92,12 +93,12 @@ function claimInvite(to, from, next) {
       if (user) {
         let inviteToken = to.params.inviteToken;
         acceptInviteToken.call({
-          inviteToken
+          inviteToken,
         }, (error) => {
           if (error) {
             next({ name: 'inviteError', params: { error } });
           } else {
-            next('/invite-success')
+            next('/invite-success');
           }
         });
       } else {
@@ -109,16 +110,16 @@ function claimInvite(to, from, next) {
 
 function verifyEmail(to, from, next) {
   const token = to.params.token;
-  Accounts.verifyEmail(token, error => {
+  Accounts.verifyEmail(token, (error) => {
     if (error) {
       next({ name: 'emailVerificationError', params: { error } });
     } else {
-      next('/email-verification-success')
+      next('/email-verification-success');
     }
   });
 }
 
-RouterFactory.configure(router => {
+RouterFactory.configure((router) => {
   router.addRoutes([{
     path: '/',
     name: 'home',
@@ -126,7 +127,7 @@ RouterFactory.configure(router => {
       default: Home,
     },
     meta: {
-      title: 'Home',
+      title: i18n.t('Maintenance.xn1iabUyQAcN50064OLqt'),
     },
   }, {
     path: '/character-list',
@@ -136,7 +137,7 @@ RouterFactory.configure(router => {
       toolbarItems: CharacterListToolbarItems,
     },
     meta: {
-      title: 'Character List',
+      title: i18n.t('router.W2umY4yHN_krdS1Fail1K'),
     },
     beforeEnter: ensureLoggedIn,
   }, {
@@ -146,7 +147,7 @@ RouterFactory.configure(router => {
       default: Library,
     },
     meta: {
-      title: 'Library',
+      title: i18n.t('SingleLibrary.8o8zfT4rnslD95pstr578'),
     },
     beforeEnter: ensureLoggedIn,
   }, {
@@ -157,7 +158,7 @@ RouterFactory.configure(router => {
       toolbar: SingleLibraryToolbar,
     },
     meta: {
-      title: 'Library',
+      title: i18n.t('SingleLibrary.8o8zfT4rnslD95pstr578'),
     },
   }, {
     name: 'libraryCollection',
@@ -167,7 +168,7 @@ RouterFactory.configure(router => {
       toolbar: LibraryCollectionToolbar,
     },
     meta: {
-      title: 'Library Collection',
+      title: i18n.t('router.cPNbp74fWaIGYG1yzE2fL'),
     },
   }, {
     name: 'libraryBrowser',
@@ -176,7 +177,7 @@ RouterFactory.configure(router => {
       default: LibraryBrowser,
     },
     meta: {
-      title: 'Community Libraries',
+      title: i18n.t('LibraryBrowserDialog.rEief-McLI6QrOAmbFPFz'),
     },
   }, {
     name: 'characterSheet',
@@ -188,7 +189,7 @@ RouterFactory.configure(router => {
       rightDrawer: CharacterSheetRightDrawer,
     },
     meta: {
-      title: 'Character Sheet',
+      title: i18n.t('HelpDialog.Klueb_dCWM-dqLDCnrAvc'),
     },
   }, {
     name: 'printCharacterSheet',
@@ -199,7 +200,7 @@ RouterFactory.configure(router => {
       toolbar: CharacterSheetPrintedToolbar,
     },
     meta: {
-      title: 'Print Character Sheet',
+      title: i18n.t('CharacterSheetPrinted.6dUbDHnCRivEyMA8sIaHp'),
     },
   }, {
     path: '/tabletops',
@@ -207,7 +208,7 @@ RouterFactory.configure(router => {
     component: Tabletops,
     beforeEnter: ensureLoggedIn,
     meta: {
-      title: 'Tabletops',
+      title: i18n.t('Sidebar.lO8RxJFgOO2O9Sl2b1pxT'),
     },
   }, {
     path: '/tabletop/:id',
@@ -223,7 +224,7 @@ RouterFactory.configure(router => {
       default: NotImplemented,
     },
     meta: {
-      title: 'Friends',
+      title: i18n.t('Friends.LPnKzu_iwEkWKHDp0SVmF'),
     },
     beforeEnter: ensureLoggedIn,
   }, {
@@ -233,7 +234,7 @@ RouterFactory.configure(router => {
       default: SignIn,
     },
     meta: {
-      title: 'Sign In',
+      title: i18n.t('Home.Q8kGqjMJQ66X0YCH3JT0g'),
     },
   }, {
     name: 'register',
@@ -242,7 +243,7 @@ RouterFactory.configure(router => {
       default: Register,
     },
     meta: {
-      title: 'Register',
+      title: i18n.t('Home.Y7uTRbv5hbEkIplOp6-XF'),
     },
   }, {
     path: '/account',
@@ -250,7 +251,7 @@ RouterFactory.configure(router => {
       default: Account,
     },
     meta: {
-      title: 'Account',
+      title: i18n.t('router.EJunS06DZiQ-VbPaO-GL2'),
     },
     beforeEnter: ensureLoggedIn,
   }, {
@@ -259,7 +260,7 @@ RouterFactory.configure(router => {
       default: Files,
     },
     meta: {
-      title: 'Files',
+      title: i18n.t('Sidebar.BPQym8QzWFodXZjtBNfdd'),
     },
     beforeEnter: ensureLoggedIn,
   }, {
@@ -268,7 +269,7 @@ RouterFactory.configure(router => {
       default: Feedback,
     },
     meta: {
-      title: 'Feedback',
+      title: i18n.t('Sidebar.pxf1SzERzQzKgl3Anfi1F'),
     },
   }, {
     path: '/docs/functions',
@@ -276,7 +277,7 @@ RouterFactory.configure(router => {
       default: FunctionReference,
     },
     meta: {
-      title: 'Functions',
+      title: i18n.t('FunctionReference.yTQBDcPtnTzcmAEOzeDj9'),
     },
   }, {
     path: '/docs/:docPath([^/]+.*)?',
@@ -286,7 +287,7 @@ RouterFactory.configure(router => {
       rightDrawer: DocsRightDrawer,
     },
     meta: {
-      title: 'Documentation',
+      title: i18n.t('DocsPage.owEFuhKAi0S5XmhIaiqMB'),
     },
   }, {
     path: '/about',
@@ -294,7 +295,7 @@ RouterFactory.configure(router => {
       default: About,
     },
     meta: {
-      title: 'About DiceCloud',
+      title: i18n.t('router.Q3ZSspM1tZouuBzoLcY0_'),
     },
   }, {
     path: '/invite/:inviteToken',
@@ -312,7 +313,7 @@ RouterFactory.configure(router => {
       default: true,
     },
     meta: {
-      title: 'Invite Error',
+      title: i18n.t('InviteError.W-8EMJsBuzqRMZC3GzCdm'),
     },
   }, {
     path: '/invite-success',
@@ -320,7 +321,7 @@ RouterFactory.configure(router => {
       default: InviteSuccess,
     },
     meta: {
-      title: 'Invite Success',
+      title: i18n.t('InviteSuccess.myoQ_oeTcPO92TLbFBVvu'),
     },
   }, {
     name: 'emailVerificationError',
@@ -332,7 +333,7 @@ RouterFactory.configure(router => {
       default: true,
     },
     meta: {
-      title: 'Email Verification Error',
+      title: i18n.t('EmailVerificationError.dGAlXt2C_CR8kggghnqSK'),
     },
   }, {
     path: '/email-verification-success',
@@ -340,7 +341,7 @@ RouterFactory.configure(router => {
       default: EmailVerificationSuccess,
     },
     meta: {
-      title: 'Email Verification Success',
+      title: i18n.t('router.leDI9g43CHfjO_JBc7DYC'),
     },
   }, {
     path: '/reset-password/:token?',
@@ -348,7 +349,7 @@ RouterFactory.configure(router => {
       default: ResetPassword,
     },
     meta: {
-      title: 'Reset Password',
+      title: i18n.t('ResetPassword.OtXdcuhNszD9-49yGdYKR'),
     },
   }, {
     path: '/patreon-level-too-low',
@@ -356,7 +357,7 @@ RouterFactory.configure(router => {
       default: PatreonLevelTooLow,
     },
     meta: {
-      title: 'Patreon Tier Too Low',
+      title: i18n.t('router.viCm_a4Ir-pKkn0xY_HPc'),
     },
   }, {
     path: '/icon-admin',

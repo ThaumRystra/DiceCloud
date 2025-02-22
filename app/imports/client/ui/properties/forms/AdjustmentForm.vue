@@ -6,8 +6,8 @@
         md="6"
       >
         <smart-combobox
-          label="Attribute"
-          hint="The attribute that will be damaged or healed"
+          :label="$t('AdjustmentForm.GHSISPeV1o-lHDQGal1TZ')"
+          :hint="$t('AdjustmentForm.v0y3nqMHVe0yEqxsRQSvV')"
           style="flex-basis: 300px;"
           :items="attributeList"
           :value="model.stat"
@@ -20,8 +20,8 @@
         md="6"
       >
         <computed-field
-          label="Amount"
-          :hint="model.operation === 'set' ? setHint : damageHint"
+          :label="$t('AdjustmentForm.AndV_m2mK4EKCnXer50C8')"
+          :hint="$t('AdjustmentForm.EvtwZAc19U5OS5op-Q9I8',model.operation === `set` ? setHint : damageHint)"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>
@@ -35,8 +35,8 @@
         md="6"
       >
         <smart-toggle
-          label="Operation"
-          hint="Should the attribute be damaged by the amount, or set to the amount"
+          :label="$t('AdjustmentForm.a3GneFZJ3MOMwzxGWJgMq')"
+          :hint="$t('AdjustmentForm.mBh1ceJrKc1DtmJldSJ-X')"
           :value="model.operation"
           :options="[
             { name: 'Damage', value: 'increment' },
@@ -51,7 +51,7 @@
         md="6"
       >
         <smart-toggle
-          label="Target creature"
+          :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
           :value="model.target"
           :options="[
             {name: 'Action Target', value: 'target'},
@@ -63,9 +63,9 @@
       </v-col>
     </v-row>
     <form-sections type="adjustment">
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"
@@ -84,8 +84,8 @@ export default {
   mixins: [propertyFormMixin, attributeListMixin],
   data() {
     return {
-      damageHint: 'The amount of damage to apply, negative values will heal',
-      setHint: 'The value to set the stat to',
+      damageHint: this.$t('AdjustmentForm.4pXn24qlhOEF6vsh4xKOF'),
+      setHint: this.$t('AdjustmentForm.ZwwCxikfNMJtWSce4UeGm'),
     }
   },
 }

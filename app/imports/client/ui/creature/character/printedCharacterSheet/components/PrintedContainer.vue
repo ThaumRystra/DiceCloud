@@ -65,7 +65,7 @@
             >
               $vuetify.icons.weight
             </v-icon>
-            {{ model.weight }} lb
+            {{ $t('PrintedContainer.C_cxBPHcLXi_zwduVst7t', [model.weight]) }}
           </v-layout>
 
           <v-layout
@@ -78,7 +78,7 @@
             >
               $vuetify.icons.injustice
             </v-icon>
-            {{ model.contentsWeight }} lb
+            {{ $t('PrintedContainer.MRW7XJIjayibJ_5TV5YR-', [model.contentsWeight]) }}
             <span
               class="ml-1"
             >

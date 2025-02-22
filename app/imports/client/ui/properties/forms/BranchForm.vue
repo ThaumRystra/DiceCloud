@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="buff-form">
     <smart-select
-      label="Branch Type"
+      :label="$t('BranchForm.FmQ75e44kBMrrHjwYzmQ1')"
       :items="typeOptions"
       :hint="typeHint"
       :value="model.branchType"
@@ -12,8 +12,8 @@
     <v-expand-transition>
       <computed-field
         v-if="model.branchType === 'if'"
-        label="Condition"
-        hint="If this resolved to a true value, the child properties will be applied"
+        :label="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
+        :hint="$t('BranchForm.w2jF6BdJcNceAcOoj-0Rh')"
         :model="model.condition"
         :error-messages="errors.condition"
         @change="({path, value, ack}) =>
@@ -21,8 +21,8 @@
       />
       <computed-field
         v-else-if="model.branchType === 'index'"
-        label="Index"
-        hint="Which child to apply. An index of 2 will choose the 2nd child."
+        :label="$t('BranchForm.qq_xhg0usIJNPJVpiKNNl')"
+        :hint="$t('BranchForm.0rJv1n_f8jRiwrqPracCR')"
         :model="model.condition"
         :error-messages="errors.condition"
         @change="({path, value, ack}) =>
@@ -30,9 +30,9 @@
       />
     </v-expand-transition>
     <form-sections type="branch">
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"
@@ -57,30 +57,30 @@ export default {
   data() {
     return {
       typeOptions: [
-        { value: 'if', text: 'If condition is true' },
-        { value: 'hit', text: 'Attack hit' },
-        { value: 'miss', text: 'Attack miss' },
-        { value: 'failedSave', text: 'Save failed' },
-        { value: 'successfulSave', text: 'Save succeeded' },
-        { value: 'eachTarget', text: 'Apply to each target' },
-        { value: 'random', text: 'Random' },
-        { value: 'index', text: 'Calculated index' },
-        { value: 'choice', text: 'User choice' },
+        { value: 'if', text: this.$t('BranchForm.SomVaD-_G-stlmtSEeJ4w') },
+        { value: 'hit', text: this.$t('BranchForm.0inXyGC_3HQLzxgO6z2f0') },
+        { value: 'miss', text: this.$t('BranchForm.vftr_XM4oZjPUjH96B5qm') },
+        { value: 'failedSave', text: this.$t('BranchForm.Gi7ZFuJP58OUhkUBYnH-u') },
+        { value: 'successfulSave', text: this.$t('BranchForm.cmCVz0se_9sHKBdxbp-9u') },
+        { value: 'eachTarget', text: this.$t('BranchForm.FhXVP8QcggmDUKoQJb9sD') },
+        { value: 'random', text: this.$t('BranchForm.fxRhrS9aOD7kX4DLOegmY') },
+        { value: 'index', text: this.$t('BranchForm.OFZphIXo_lqnX-vnPoQRc') },
+        { value: 'choice', text: this.$t('BranchForm.XPK-8Ci9jaFYL0KeeseO1') },
       ],
     }
   },
   computed: {
     typeHint() {
       switch (this.model.branchType) {
-        case 'if': return 'If the condition is true, the child properties are applied';
-        case 'hit': return 'If the parent attack hits, the child properties are applied';
-        case 'miss': return 'If the parent attack misses, the child properties are applied';
-        case 'failedSave': return 'If the parent save is failed, the child properties are applied';
-        case 'successfulSave': return 'If the parent save is made, the child properties are applied';
-        case 'eachTarget': return 'Applies each child property once per target';
-        case 'random': return 'Chooses one child property at random and applies it';
-        case 'index': return 'Chooses one child property to apply based on the given index';
-        case 'choice': return 'Pause the action and let the user choose which child to apply';
+        case 'if': return this.$t('BranchForm.BJXXvVRlZ5Er1_CD_SeuE');
+        case 'hit': return this.$t('BranchForm.WyO5vhpvwBG4LmfAc60fz');
+        case 'miss': return this.$t('BranchForm.ZdtJxBggyw6XLDGuEtInK');
+        case 'failedSave': return this.$t('BranchForm.H0dAio0Zhb5B2-ccOMomc');
+        case 'successfulSave': return this.$t('BranchForm.IUf6-15AhyS4iQ3NBqVrm');
+        case 'eachTarget': return this.$t('BranchForm.BkbdX3vJYOmRw4iwCl38h');
+        case 'random': return this.$t('BranchForm.G_RfuTT8RD-P3Bk05R6f9');
+        case 'index': return this.$t('BranchForm.6AzVEkMDrx-6-awEDatgG');
+        case 'choice': return this.$t('BranchForm.BiuNuKC-fpzPzYrjhNyFb');
         default: return '';
       }
     }

@@ -39,7 +39,7 @@
                 <v-list-item-action>
                   <v-icon>mdi-pencil</v-icon>
                 </v-list-item-action>
-                <v-list-item-title>Make game master</v-list-item-title>
+                <v-list-item-title>{{ $t('TabletopUserList.4an3fI-5Ar6EtpFEkPfhm') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -50,7 +50,7 @@
                 <v-list-item-action>
                   <v-icon>mdi-account-box</v-icon>
                 </v-list-item-action>
-                <v-list-item-title>Make player</v-list-item-title>
+                <v-list-item-title>{{ $t('TabletopUserList.5uJX4PpzIbL2f8EJNlHJH') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -61,7 +61,7 @@
                 <v-list-item-action>
                   <v-icon>mdi-eye</v-icon>
                 </v-list-item-action>
-                <v-list-item-title>Make spectator</v-list-item-title>
+                <v-list-item-title>{{ $t('TabletopUserList.IFDo7qlOWO4KC5NtEyTCE') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -72,7 +72,7 @@
                 <v-list-item-action>
                   <v-icon>mdi-signature</v-icon>
                 </v-list-item-action>
-                <v-list-item-title>Transfer Ownership</v-list-item-title>
+                <v-list-item-title>{{ $t('ShareDialog.or0_zrIkepecbBUj6uZpY') }}</v-list-item-title>
               </v-list-item>
 
               <v-list-item
@@ -82,7 +82,7 @@
                 <v-list-item-action>
                   <v-icon>mdi-delete</v-icon>
                 </v-list-item-action>
-                <v-list-item-title>Remove</v-list-item-title>
+                <v-list-item-title>{{ $t('ShareDialog.u68iDg3Jq4sXvq9xARfLQ') }}</v-list-item-title>
               </v-list-item>
             </v-list>
           </v-menu>

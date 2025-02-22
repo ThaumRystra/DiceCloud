@@ -61,7 +61,7 @@
                   :to="`/tabletop/${tabletop._id}`"
                   @click.native.stop=""
                 >
-                  Launch
+                  {{ $t('Tabletops.-f4XUksqNpxYfvmhlXMI3') }}
                   <v-icon right>
                     mdi-play
                   </v-icon> 
@@ -78,7 +78,7 @@
             cols="12"
             class="d-flex align-center justify-center"
           >
-            <h1>You don't have any tabletops yet</h1>
+            <h1>{{ $t('Tabletops.diBJJc3cKscIs3JIc6xTk') }}</h1>
           </v-col>
         </v-row>
       </v-fade-transition>

@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="buff-remover-form">
     <smart-toggle
-      label="Target buffs"
+      :label="$t('BuffRemoverForm.koccxDVJa0JKkspKWF73T')"
       :value="model.targetParentBuff ? 'parent' : 'tag'"
       :options="[
-        {name: 'Remove tagged buffs', value: 'tag'},
-        {name: 'Remove parent buff', value: 'parent'},
+        {name: $t('BuffRemoverForm.OYEP_6V-THVmJ4RRy2p7P'), value: 'tag'},
+        {name: $t('BuffRemoverForm.1Zvsru6SwSLDga99voeii'), value: 'parent'},
       ]"
       @change="(value, ack) => change('targetParentBuff', value === 'parent' ? true : undefined, ack)"
     />
@@ -25,11 +25,11 @@
             md="6"
           >
             <smart-toggle
-              label="Remove matching buffs"
+              :label="$t('BuffRemoverForm.IlQFf_rfodgD6E17Y8B4w')"
               :value="model.removeAll ? 'all' : 'one'"
               :options="[
-                {name: 'Remove 1 buff', value: 'one'},
-                {name: 'Remove all buffs', value: 'all'},
+                {name: $t('BuffRemoverForm.X5fuj3rRPFrdLgikpzdha'), value: 'one'},
+                {name: $t('BuffRemoverForm.597m5h8jhIy_9rID_47Yj'), value: 'all'},
               ]"
               @change="(value, ack) => change('removeAll', value === 'all' ? true : undefined, ack)"
             />
@@ -39,11 +39,11 @@
             md="6"
           >
             <smart-toggle
-              label="Target creature"
+              :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
               :value="model.target"
               :options="[
-                {name: 'Action Target', value: 'target'},
-                {name: 'Self', value: 'self'},
+                {name: $t('BuffRemoverForm.wP1izzQbSh60_E36Jwhdv'), value: 'target'},
+                {name: $t('ActionForm.wvr48hnF1DbxApmRDC3R0'), value: 'self'},
               ]"
               :error-messages="errors.target"
               @change="change('target', ...arguments)"
@@ -55,16 +55,16 @@
     <form-sections type="buffRemover">
       <form-section
         v-if="$slots.children"
-        name="Children"
+        :name="$t('BuffRemoverForm.mfgWVnzACJzVST8OLqhdo')"
         standalone
       >
         <slot name="children" />
       </form-section>
       <form-section
-        name="Log"
+        :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')"
       >
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

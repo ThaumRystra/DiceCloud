@@ -6,7 +6,7 @@
         md="6"
       >
         <proficiency-select
-          label="Proficiency"
+          :label="$t('InlineProficiency.jN183F3ufg8Le9jkznJ4p')"
           style="flex-basis: 300px;"
           :clearable="false"
           :value="model.value"
@@ -18,7 +18,7 @@
         md="6"
       >
         <smart-toggle
-          label="Target properties"
+          :label="$t('EffectForm.qP3ZqRZPSY87NPXcxXgsk')"
           :value="model.targetByTags ? 'tags' : 'skills'"
           :options="[
             {name: 'Target by variable name', value: 'skills'},
@@ -45,12 +45,12 @@
           />
           <smart-combobox
             v-else
-            label="Skills"
+            :label="$t('StatsTab._POnH8ne4-_owhYxKHS9I')"
             class="mr-2"
             multiple
             small-chips
             deletable-chips
-            hint="Which skills does this proficiency apply to"
+            :hint="$t('ProficiencyForm.XgrzFtMQF6IfD4jBvGqfA')"
             :value="model.stats"
             :items="skillList"
             :error-messages="errors.stats"
@@ -64,10 +64,10 @@
           cols="12"
         >
           <text-field
-            label="Target field"
+            :label="$t('EffectForm.-IBot5cFFVU_fExJi4xIA')"
             :value="model.targetField"
-            hint="Target a specific calculation field on the affected properties"
-            placeholder="Default field"
+            :hint="$t('EffectForm.C7bO5_RlI0jtDfzqVqgnE')"
+            :placeholder="$t('EffectForm.snD8tCJau7JV3nHgF0GuU')"
             persistent-placeholder
             :error-messages="errors.targetField"
             @change="change('targetField', ...arguments)"

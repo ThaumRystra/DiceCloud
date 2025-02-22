@@ -7,13 +7,13 @@
     <v-row dense>
       <property-field
         v-if="model.target === 'self'"
-        name="Target"
+        :name="$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm')"
         value="Self"
       />
     </v-row>
     <v-row dense>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>
@@ -30,11 +30,9 @@ export default {
     reset() {
       let reset = this.model.reset
       if (reset === 'shortRest') {
-        return `Reset${this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-          } on a short rest`;
+        return this.$t('BuffViewer.-_McV2ZSvTi9dhJwS0-B9', [this.model.resetMultiplier && ' x' + this.model.resetMultiplier]);
       } else if (reset === 'longRest') {
-        return `Reset${this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-          } on a long rest`;
+        return this.$t('BuffViewer.gitCC-1i-K2cEhlQFE5Bc', [this.model.resetMultiplier && ' x' + this.model.resetMultiplier]);
       } else {
         return undefined;
       }

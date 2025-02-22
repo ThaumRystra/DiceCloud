@@ -2,7 +2,7 @@
   <div class="creature-viewer">
     <v-row dense>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

@@ -16,7 +16,7 @@
         <v-text-field
           v-model="name"
           type="text"
-          label="Username or email"
+          :label="$t('SignIn.9Hgx-SDsbxdrMu3MW63bY')"
           :rules="nameRules"
           class="ma-2"
           outlined
@@ -26,7 +26,7 @@
         <v-text-field
           v-model="password"
           type="password"
-          label="Password"
+          :label="$t('Register.i7xi3kzHqYrsjmgPGbpqz')"
           :rules="passwordRules"
           class="ma-2"
           outlined
@@ -37,7 +37,7 @@
           text
           to="/reset-password"
         >
-          Reset Password
+          {{ $t('ResetPassword.OtXdcuhNszD9-49yGdYKR') }}
         </v-btn>
         <div
           v-if="error"
@@ -52,21 +52,21 @@
             class="ma-2"
             @click="submit"
           >
-            Sign In
+            {{ $t('Home.Q8kGqjMJQ66X0YCH3JT0g') }}
           </v-btn>
           <v-btn
             color="accent"
             :to="{ name: 'register', query: { redirect: $route.query.redirect} }"
             class="ma-2"
           >
-            Register
+            {{ $t('Home.Y7uTRbv5hbEkIplOp6-XF') }}
           </v-btn>
         </v-layout>
         <div class="text-caption mt-4 px-4">
           <p>
-            DiceCloud Version 2 requires a new account to use.
+            {{ $t('SignIn.RrDrojVv2enNOWDBv-TSC') }}
           </p><p>
-            Version 1 is still available at <a href="https://v1.dicecloud.com">v1.dicecloud.com</a>
+            {{ $t('SignIn.QkTkN_D5t8-ioQZJ7atHY') }} <a href="https://v1.dicecloud.com">v1.dicecloud.com</a>
           </p>
         </div>
       </v-layout>
@@ -84,7 +84,7 @@
         class="ma-2"
         @click="googleLogin"
       >
-        Sign in with Google
+        {{ $t('SignIn._I9mGXEz4iLE_orJVUX98') }}
       </v-btn>
       <div class="error--text">
         {{ patreonError }}
@@ -94,7 +94,7 @@
         class="ma-2"
         @click="patreonLogin"
       >
-        Sign in with Patreon
+        {{ $t('SignIn.jVS-KggdzH9X_7mE1FZR1') }}
       </v-btn>
     </v-layout>
   </div>
@@ -106,11 +106,11 @@ export default {
     valid: true,
     name: '',
     nameRules: [
-      v => !!v || 'Name is required',
+      v => !!v || this.$t('Register.yfTv252rVq9SqVdTJ3Yks'),
     ],
     password: '',
     passwordRules: [
-      v => !!v || 'Password is required',
+      v => !!v || this.$t('Register.eT-l-HBPTmti3zIhNNzhX'),
     ],
     error: '',
     googleError: '',

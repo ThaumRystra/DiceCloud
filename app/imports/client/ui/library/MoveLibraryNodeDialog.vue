@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Select new location
+      {{ $t('MoveLibraryNodeDialog.6IRH2s4gwtFFrcHQt8dCd') }}
     </v-toolbar-title>
     <library-and-node
       slot="unwrapped-content"

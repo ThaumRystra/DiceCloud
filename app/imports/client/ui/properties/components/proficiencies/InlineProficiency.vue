@@ -46,7 +46,7 @@ export default {
   },
   computed: {
     displayedText(){
-      return this.model.name || (this.model.type == 'proficiency' ? 'Proficiency' : 'Skill')
+      return this.model.name || (this.model.type == 'proficiency' ? this.$t('InlineProficiency.jN183F3ufg8Le9jkznJ4p') : this.$t('CheckInput.sKXmebGzd92GfO5RYbSPI'))
     },
     displayedValue() {
       return numberToSignedString(this.model.value);

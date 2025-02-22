@@ -55,7 +55,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Help
+                  {{ $t('propertyToolbar.xDkA3nUBYYRVoFc_hl-9i') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -69,7 +69,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Duplicate
+                  {{ $t('propertyToolbar.ysB83HvXqAxTwBSAvoMby') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -83,7 +83,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Copy To
+                  {{ $t('propertyToolbar.rLTkCqt5aTaN2ONaDCh41') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -97,7 +97,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Create Reference
+                  {{ $t('propertyToolbar.IE6DYSJBNtIkV0fKaxSSe') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -111,7 +111,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Move
+                  {{ $t('propertyToolbar.3WJJLkRDXXDD6ZvB1c_vq') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -125,7 +125,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Copy to library
+                  {{ $t('propertyToolbar.z42m_dYc0Dc3CryNnRe5K') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -139,7 +139,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Delete
+                  {{ $t('DocEditForm.pblwi8OgupFn22G1Nw-oY') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -160,7 +160,7 @@
       @click="$emit('toggle-editing')"
     >
       <span style="width: 44px;">
-        {{ editing ? 'Done' : 'Edit' }}
+        {{ editing ? $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') : $t('TabletopDialog.cIX0D4B7RV67K8WyWUPNk') }}
       </span>
       <v-slide-y-transition
         hide-on-leave

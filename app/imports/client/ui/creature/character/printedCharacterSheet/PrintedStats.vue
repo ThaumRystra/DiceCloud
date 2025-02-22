@@ -155,7 +155,7 @@
             style="text-align: center;"
             class="label"
           >
-            Hit Dice
+            {{ $t('StatsTab.RQgNf5Wl-hCuofuUrzaL3') }}
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@
           <div
             v-if="resource.total > 8"
           >
-            total: {{ resource.total }}
+            {{ $t('PrintedStats.6DeYa0E1ghGheY-O3b7iu', [resource.total]) }}
             <div style="height: 60px;" />
           </div>
           <div
@@ -220,7 +220,7 @@
             * {{ effect.text }}
           </div>
           <div class="label text-center">
-            Saving Throws
+            {{ $t('StatsTab.ayg1W622QCMCCW0App3Fb') }}
           </div>
         </div>
       </div>
@@ -245,7 +245,7 @@
             * {{ effect.text }}
           </div>
           <div class="label text-center">
-            Skills
+            {{ $t('StatsTab._POnH8ne4-_owhYxKHS9I') }}
           </div>
         </div>
       </div>
@@ -266,7 +266,7 @@
             <b>Languages:</b> {{ languages.map(p => p.name).join(', ') }}
           </p>
           <div class="label text-center">
-            Proficiencies
+            {{ $t('PrintedStats.INiHkB9G-fGTkJrdfgXjS') }}
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@
       >
         <div class="double-border">
           <div class="label text-center">
-            Spell Slots
+            {{ $t('PrintedStats.p0zRTFU33OBpZjmRBfSA4') }}
           </div>
           <div
             v-for="spellSlot in spellSlots"
@@ -290,7 +290,7 @@
             <div
               v-if="spellSlot.total > 8"
             >
-              Total: {{ spellSlot.total }}
+              {{ $t('PrintedStats.Mk_m-2x5g-4jobcF7frTH', [spellSlot.total]) }}
             </div>
             <div
               v-else

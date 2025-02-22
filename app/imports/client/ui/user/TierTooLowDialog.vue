@@ -6,11 +6,10 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        Your current Patreon tier is {{ tier.name }}
+        {{ $t('TierTooLowDialog.bL24QnONUCJI6WmeiLm_p', [tier.name]) }}
       </h2>
       <h3>
-        You need to be at least Adventurer tier (or be invited by a Patron of
-        a higher tier) to perform this action
+        {{ $t('TierTooLowDialog.xlGzEYS9hP2IRHISxwgOu') }}
       </h3>
       <div
         class="d-flex"
@@ -21,7 +20,7 @@
           class="ma-4"
           target="_blank"
         >
-          Join now
+          {{ $t('PatreonLevelTooLow.MthXEAw6WyBg-N7IuQkiT') }}
         </v-btn>
         <template v-if="!user.services.patreon">
           <v-btn
@@ -29,7 +28,7 @@
             class="ma-4"
             @click="linkWithPatreon"
           >
-            Link Patreon Account
+            {{ $t('Account.dLdhXdRxWkcsh8CD0Y03f') }}
           </v-btn>
         </template>
       </div>
@@ -40,7 +39,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Cancel
+      {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
     </v-btn>
   </dialog-base>
 </template>

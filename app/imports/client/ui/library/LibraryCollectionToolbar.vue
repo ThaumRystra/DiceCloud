@@ -24,7 +24,7 @@
       :loading="loading"
       @click="subscribe(!subscribed)"
     >
-      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
+      {{ subscribed ? $t('LibraryCollectionToolbar.rz7QqB66JPkBOOtwxv57c') : $t('LibraryCollectionToolbar.Er2XJ9n9t_8Lb9E1AOL94') }}
     </v-btn>
     <v-btn
       v-if="canEdit"
@@ -40,7 +40,7 @@
       slot="extension"
       class="mx-4 text--disabled"
     >
-      {{ formatNumber(libraryCollection.subscriberCount) }} subscribers
+      {{ $t('LibraryCollectionToolbar.bwi-B64_VXVqzLOEzWCOg', [formatNumber(libraryCollection.subscriberCount)]) }}
     </div>
   </v-app-bar>
 </template>

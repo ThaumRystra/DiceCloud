@@ -6,9 +6,9 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('AttributeForm.vWQj52YzUPPcXSMEZ6dvh')"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this attribute"
+          :hint="$t('AttributeForm.5vD-GDW3cW8IXJrzxwTo_')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,12 +19,12 @@
         md="6"
       >
         <smart-toggle
-          label="Active"
+          :label="$t('ToggleForm.M6rQs8-0oMxUoBhLi8Wvd')"
           :value="radioSelection"
           :options="[
-            {name: 'Enabled', value: 'enabled'},
-            {name: 'Disabled', value: 'disabled'},
-            {name: 'Calculated', value: 'calculated'},
+            {name: $t('FeatureForm.GL4EbIj5qEFQytx900y66'), value: 'enabled'},
+            {name: $t('FeatureForm.wYzh3YiPCU7yo9eHbY--A'), value: 'disabled'},
+            {name: $t('ToggleForm.AgF6Okb4hfQAu7F8UKJEZ'), value: 'calculated'},
           ]"
           :error-messages="errors.enabled"
           @change="radioChange"
@@ -36,8 +36,8 @@
           cols="12"
         >
           <computed-field
-            label="Condition"
-            hint="When this calculation returns a value that isn't false or zero the children will be active"
+            :label="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
+            :hint="$t('ToggleForm.BFti2l8oatI5k4RjxxCep')"
             :model="model.condition"
             :error-messages="errors.condition"
             @change="({path, value, ack}) =>
@@ -47,11 +47,11 @@
       </v-expand-transition>
       <v-col cols="12">
         <smart-toggle
-          label="Enabled or disable properties"
+          :label="$t('ToggleForm.zRbIJijn1zNDHkomLg48I')"
           :value="model.targetByTags"
           :options="[
-            {name: 'Descendants', value: false},
-            {name: 'By target tags', value: true},
+            {name: $t('ToggleForm.SIbEAd9FLBez81YkexhXx'), value: false},
+            {name: $t('ToggleForm.P8L-khbCy8CwfqNtBTO8e'), value: true},
           ]"
           @change="change('targetByTags', ...arguments)"
         />
@@ -71,14 +71,14 @@
     </v-row>
 
     <form-sections type="toggle">
-      <form-section name="Behavior">
+      <form-section :name="$t('AttributeForm.yRM4XSwze2YA1X0FZY8RI')">
         <v-col
           cols="12"
           md="6"
         >
           <smart-switch
             class="ml-2"
-            label="Show on character sheet"
+            :label="$t('ToggleForm.7fZcH1rGTNNHgVjtTYyLn')"
             :value="model.showUI"
             :error-messages="errors.showUI"
             @change="change('showUI', ...arguments)"

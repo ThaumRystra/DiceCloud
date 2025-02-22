@@ -2,17 +2,17 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        New Library
+        {{ $t('LibraryCreationDialog.hu7zV_QaHHXsA5Fe4wjy7') }}
       </v-toolbar-title>
     </template>
     <text-field
-      label="Name"
+      :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
       :value="library.name"
       :debounce-time="0"
       @change="nameChanged"
     />
     <text-area
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :value="library.description"
       :debounce-time="0"
       @change="descriptionChanged"
@@ -24,7 +24,7 @@
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', library)"
       >
-        Insert Library
+        {{ $t('LibraryCreationDialog.08g2uPx0s44itGzjyflWz') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       library: {
-        name: 'New Library',
+        name: this.$t('LibraryCreationDialog.IZrKqkZHdXwybtwrBlqxF'),
         description: undefined,
       },
       valid: true,
@@ -54,7 +54,7 @@ export default {
           ack();
       } else {
         this.valid = false;
-        ack('Name is required')
+        ack(this.$t('Register.yfTv252rVq9SqVdTJ3Yks'))
       }
     },
     descriptionChanged(val, ack) {

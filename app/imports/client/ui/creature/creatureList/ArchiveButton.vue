@@ -7,7 +7,7 @@
     @click="openArchive"
   >
     <template v-if="text">
-      Archive Characters
+      {{ $t('ArchiveButton.F2vhx6FY3BIjZIO3BYQvS') }}
     </template>
     <v-icon :right="text">
       mdi-archive

@@ -2,14 +2,14 @@
   <div class="experience-form">
     <div class="layout column align-center">
       <smart-switch
-        label="Milestone"
+        :label="$t('ExperienceForm.stG-qp6cp2s4HtvLJpANw')"
         class="mx-3"
         :value="milestone"
         @change="makeMilestone"
       />
       <text-field
         v-if="milestone"
-        label="Levels"
+        :label="$t('ExperienceForm.K0h-Fle3qR_ZWmbROYmq2')"
         type="number"
         class="base-value-field text-center large-format no-flex"
         :value="model.levels"
@@ -28,7 +28,7 @@
       />
     </div>
     <text-field
-      label="Name"
+      :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
       :autofocus="milestone"
       :value="model.name"
       :error-messages="errors.name"
