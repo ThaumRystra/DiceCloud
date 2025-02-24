@@ -8,7 +8,7 @@ import router from '/imports/client/ui/router';
 import '/imports/client/ui/components/global/globalIndex';
 import '/imports/client/ui/markdownCofig';
 import vuetify from '/imports/client/ui/vuetify';
-import i18n from '/imports/client/ui/i18n';
+import i18n from './locales/config/i18n';
 import VueI18n from 'vue-i18n';
 
 // Vue setup

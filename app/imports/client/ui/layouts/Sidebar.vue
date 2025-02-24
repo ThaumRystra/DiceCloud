@@ -1,12 +1,21 @@
+<!-- eslint-disable vue/attributes-order -->
 <template>
   <div class="sidebar">
-    <v-layout v-if="!signedIn" justify-center>
-      <v-btn text to="/sign-in">
+    <v-layout
+      v-if="!signedIn"
+      justify-center
+    >
+      <v-btn
+        text
+        to="/sign-in"
+      >
         {{ $t('Sidebar.Ic_fWFzKEAoFGAzBaHGE0') }}
       </v-btn>
     </v-layout>
-
-    <v-list nav class="links">
+    <v-list
+      nav
+      class="links"
+    >
       <v-list-item v-if="signedIn">
         <v-list-item-content>
           <v-list-item-title>
@@ -16,7 +25,11 @@
         <v-list-item-action>
           <v-tooltip bottom>
             <template #activator="{ on }">
-              <v-btn icon to="/account" v-on="on">
+              <v-btn
+                icon
+                to="/account"
+                v-on="on"
+              >
                 <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
@@ -25,7 +38,13 @@
         </v-list-item-action>
       </v-list-item>
 
-      <v-list-item v-for="(link, i) in links" :key="i" :to="link.to" :href="link.href" :target="link.href ? '_blank' : undefined">
+      <v-list-item
+        v-for="(link, i) in links"
+        :key="i"
+        :to="link.to"
+        :href="link.href"
+        :target="link.href ? '_blank': undefined"
+      >
         <v-list-item-action>
           <v-icon>{{ link.icon }}</v-icon>
         </v-list-item-action>
@@ -36,33 +55,50 @@
           mdi-open-in-new
         </v-icon>
       </v-list-item>
+      
+      <!-- Language Selector -->
+      <v-list-group
+        v-model="isLanguageMenuOpen"
+        class="language-selector"
+        dense
+      >
+        <template v-slot:activator>
+          <v-list-item-icon>
+            <v-icon>mdi-earth</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="d-flex align-center">
+              <span class="flag-icon mr-2">{{ selectedItem.flag }}</span>
+              <span class="language-code">{{ selectedItem.value.toUpperCase() }}</span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
 
+        <v-list-item
+          v-for="item in availableLocales"
+          :key="item.value"
+          @click="changeLocale(item.value)"
+          :class="{'v-list-item--active': item.value === selectedLocale}"
+          dense
+        >
+          <v-list-item-content>
+            <v-list-item-title class="d-flex align-center">
+              <span class="flag-icon mr-2">{{ item.flag }}</span>
+              <span class="language-text">{{ item.text }}</span>
+              <span class="language-code ml-auto">({{ item.value.toUpperCase() }})</span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+      
       <v-divider />
-
-      <!-- 🔹 Seletor de Idiomas -->
-      <v-list-item>
-        <v-list-item-content>
-          <v-select
-            v-model="selectedLocale"
-            :items="availableLocales"
-            @change="changeLocale"
-            dense
-            outlined
-            hide-details
-            class="language-selector"
-          >
-            <template #selection="{ item }">
-              <span>{{ item.flag }} {{ item.text }}</span>
-            </template>
-            <template #item="{ item }">
-              <span>{{ item.flag }} {{ item.text }}</span>
-            </template>
-          </v-select>
-        </v-list-item-content>
-      </v-list-item>
     </v-list>
-
-    <creature-folder-list v-if="signedIn" dense :creatures="CreaturesWithNoParty" :folders="folders" />
+    <creature-folder-list
+      v-if="signedIn"
+      dense
+      :creatures="CreaturesWithNoParty"
+      :folders="folders"
+    />
   </div>
 </template>
 
@@ -72,39 +108,23 @@ import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolde
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
+import LocaleService from '/imports/client/ui/locales/config/LocaleService';
 
 const characterTransform = function (char) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
-  char.initial = char.name && char.name[0] || this.$t('CharacterList.5Lh6_XvKqv3A7OD7dR00y');
+  char.initial = char.name && char.name[0] || '?';
   return char;
 };
-
 export default {
   components: {
     CreatureFolderList
   },
-  data() {
-    return {
-      selectedLocale: this.$i18n.locale, // Setup initial locale
-    };
-  },
-  computed: {
-    availableLocales() {
-      const flags = {
-        en: '🇬🇧',
-        pt: '🇧🇷',
-        es: '🇪🇸',
-        fr: '🇫🇷',
-        de: '🇩🇪',
-      };
-      return this.$i18n.availableLocales.map(locale => ({
-        text: locale.toUpperCase(),
-        value: locale,
-        flag: flags[locale] || '🏳️', // Use the corresponding flag or a generic one
-      }));
+  meteor: {
+    $subscribe: {
+      'characterList': [],
     },
     signedIn() {
-      return !!Meteor.userId();
+      return Meteor.userId();
     },
     userName() {
       let user = Meteor.user();
@@ -159,21 +179,56 @@ export default {
       ).map(characterTransform);
     },
   },
+  data() {
+    return {
+      selectedLocale: LocaleService.getSavedLocale(),
+      isLanguageMenuOpen: false,
+    };
+  },
+  computed: {
+    availableLocales() {
+      return LocaleService.getAvailableLocales();
+    },
+    selectedItem() {
+      return this.availableLocales.find(item => item.value === this.selectedLocale) || this.availableLocales[0];
+    },
+  },
   methods: {
-    changeLocale(locale) {
-      this.$i18n.locale = locale;
-      this.selectedLocale = locale;
-      localStorage.setItem('userLocale', locale); // Saves the selected locale in the local storage
+    async changeLocale(locale) {
+      await LocaleService.changeLocale(this.$i18n, locale);
     },
   },
 };
 </script>
 
 <style scoped>
-.language-selector {
-  max-width: 150px;
-}
 .links .v-list-item:not(:last-child):not(:only-child) {
   margin-bottom: 4px;
+}
+.language-selector {
+  margin: 4px 0;
+}
+.v-list-item--active {
+  background: var(--v-primary-lighten4);
+}
+.language-text {
+  font-size: 0.95em;
+  flex-grow: 1;
+}
+.language-code {
+  font-size: 0.85em;
+  font-weight: 500;
+  opacity: 0.7;
+}
+.flag-icon {
+  font-size: 1.2em;
+}
+.v-select.language-selector ::v-deep .v-input__slot {
+  min-height: 36px !important;
+}
+.language-code {
+  font-size: 0.85em;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 </style>

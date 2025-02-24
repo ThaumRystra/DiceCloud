@@ -28,7 +28,7 @@
         <p>
           <b>Sam;</b> {{ $t('About.cAjcER2pzgHEO1GD-Op5I') }}
         </p><p>
-          <b>{{ $t('About.YNa86X1J0jVs-V0NST3KH') }}</b> {{ $t('About.ux2wyUY8CQxbWbTMyF21E') }}&amp{{ $t('About.D8JQa8plAJK2RApywL269') }}
+          <b>{{ $t('About.YNa86X1J0jVs-V0NST3KH') }}</b> {{ $t('About.D8JQa8plAJK2RApywL269') }}
         </p>
         <h3 class="text-h6">
           {{ $t('About.HYoADNUbUvPIUel0poPoX') }}
