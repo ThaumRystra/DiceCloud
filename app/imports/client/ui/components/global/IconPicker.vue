@@ -41,7 +41,7 @@
         <div class="layout row align-center">
           <text-field
             ref="iconSearchField"
-            label="Search icons"
+            :label="$t('IconPicker.4f-71N_nnOTtIif2pKMOK')"
             append-icon="mdi-magnify"
             clearable
             hide-details

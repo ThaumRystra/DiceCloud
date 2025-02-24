@@ -4,7 +4,7 @@
   >
     <template slot="toolbar">
       <v-toolbar-title>
-        Insert creatures
+        {{ $t('CreatureFromLibraryDialog.8L5E1_uaQyxFnOopG7Rof') }}
       </v-toolbar-title>
       <v-spacer />
       <v-text-field
@@ -91,7 +91,7 @@
                     libraryNode._disabledByQuantityFilled
                 }"
               >
-                {{ libraryNode.slotQuantityFilled }} slots
+                {{ $t('CreatureFromLibraryDialog.uLa16DXHE6l49-j3BQtaj', [libraryNode.slotQuantityFilled]) }}
               </div>
               <template v-if="open">
                 <v-btn
@@ -123,7 +123,7 @@
         outlined
         @click="loadMore"
       >
-        Load More
+        {{ $t('CreatureFromLibraryDialog.gKd4prmSqKxO3Tn3oNfV-') }}
       </v-btn>
     </v-layout>
     <v-layout
@@ -131,7 +131,7 @@
       justify-center
       class="text-caption text--disabled mt-8 mb-2"
     >
-      Can't find what you're looking for?
+      {{ $t('CreatureFromLibraryDialog.2fkv6_3ZeC4V6p9sWUMJq') }}
     </v-layout>
     <v-layout
       align-center
@@ -146,7 +146,7 @@
         data-id="library-browser-button"
         @click="openLibraryBrowser"
       >
-        Browse community libraries
+        {{ $t('Library.4M1dnsetmEUhDZmwRlchR') }}
       </v-btn>
       <!-- <v-btn
         v-if="!dummySlot"
@@ -164,7 +164,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -173,7 +173,7 @@
         :disabled="!dummySlot && !selectedNodeIds.length"
         @click="$store.dispatch('popDialogStack', selectedNodeIds)"
       >
-        Insert
+        {{ $t('CreatureFromLibraryDialog.3loR2KAjQfv3IEMsldc7S') }}
       </v-btn>
     </template>
   </dialog-base>

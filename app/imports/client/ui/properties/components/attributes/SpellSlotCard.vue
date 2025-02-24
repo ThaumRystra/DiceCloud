@@ -5,7 +5,7 @@
       two-line
       subheader
     >
-      <v-subheader>Spell Slots</v-subheader>
+      <v-subheader>{{ $t('PrintedStats.p0zRTFU33OBpZjmRBfSA4') }}</v-subheader>
       <spell-slot-list-tile
         v-for="spellSlot in spellSlots"
         :key="spellSlot._id"
@@ -25,7 +25,7 @@
         data-id="cast-spell-btn"
         @click="castSpell"
       >
-        Cast a spell
+        {{ $t('SpellSlotCard.3XR3OdhgxKxmV21UZLK_T') }}
       </v-btn>
     </div>
   </v-card>

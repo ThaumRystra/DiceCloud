@@ -1,26 +1,26 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Delete User Account
+      {{ $t('DeleteUserAccountDialog.K1g_WwnsJY0jxGUHv-dir') }}
     </v-toolbar-title>
     <div>
-      <h2>Are you sure you want to delete your account?</h2>
+      <h2>{{ $t('DeleteUserAccountDialog.8_1aagUg0_82yQc6bbvh0') }}</h2>
       <v-alert
         :value="true"
         icon="mdi-alert"
         color="error"
         outlined
       >
-        Deleted accounts can not be recovered
+        {{ $t('DeleteUserAccountDialog.mRk_m1E7isGvMZlg5MYRi') }}
       </v-alert>
-      <p>We will immediately delete your account and all of your data</p>
-      <p>Your username will become available to anyone on DiceCloud</p>
+      <p>{{ $t('DeleteUserAccountDialog.Okq6Nsc3PmT-cHSklg-5O') }}</p>
+      <p>{{ $t('DeleteUserAccountDialog.w5qWIj3NYmaKm-_sc_I5n') }}</p>
       <template v-if="characters.length">
         <h3 v-if="characters.length > 1">
-          These {{ characters.length }} characters will be deleted:
+          {{ $t('DeleteUserAccountDialog.qmfJD9s12vzAb1-H9aKOe', [characters.length]) }}
         </h3>
         <h3 v-else>
-          This character will be deleted:
+          {{ $t('DeleteUserAccountDialog.t_qT3X6ZcdPYWJNNw_zzR') }}
         </h3>
         <v-list>
           <creature-list-tile
@@ -32,10 +32,10 @@
       </template>
       <template v-if="libraries.length">
         <h3 v-if="libraries.length > 1">
-          These {{ libraries.length }} libraries will be deleted:
+          {{ $t('DeleteUserAccountDialog.SFAC1EqlY3krkcX62YN5u', [libraries.length]) }}
         </h3>
         <h3 v-else>
-          This library will be deleted:
+          {{ $t('DeleteUserAccountDialog.f3jPR5PASLEBBF48CqI4a') }}
         </h3>
         <v-list>
           <creature-list-tile
@@ -52,14 +52,14 @@
         <v-text-field
           v-if="user.username"
           v-model="usernameInput"
-          label="Type your username or email"
+          :label="$t('DeleteUserAccountDialog.eZGDM8P-zOzTQqdyxS7kU')"
           style="width: 350px;"
           :error-messages="usernameInputValid ? undefined : ' '"
           :append-icon="usernameInputValid ? 'mdi-check' : undefined"
         />
         <v-text-field
           v-model="verificationInput"
-          label="To verify type 'delete my account'"
+          :label="$t('DeleteUserAccountDialog.uCrG-R-63SnvzAhdU2on5')"
           style="width: 350px;"
           :error-messages="verificationInputValid ? undefined : ' '"
           :append-icon="verificationInputValid ? 'mdi-check' : undefined"
@@ -70,7 +70,7 @@
           :disabled="!valid"
           @click="deleteAccount"
         >
-          Permanently delete account
+          {{ $t('DeleteUserAccountDialog.0JXz-C-9ZuiCDymS9b_kK') }}
         </v-btn>
       </v-layout>
     </div>
@@ -82,7 +82,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
     </div>
   </dialog-base>
@@ -135,7 +135,7 @@ export default {
     },
     verificationInputValid() {
       let input = this.verificationInput || '';
-      return input.toLowerCase() === 'delete my account'
+      return input.toLowerCase() === this.$t('DeleteUserAccountDialog.vRIINpm1HCgWwkbyuEx73')
     },
     valid() {
       return this.usernameInputValid && this.verificationInputValid;

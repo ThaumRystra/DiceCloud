@@ -1,11 +1,11 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Delete Character
+      {{ $t('CharacterDeleteDialog.cz32NY5-KS9_JgprY2IwT') }}
     </v-toolbar-title>
     <div>
       <p v-if="name">
-        Type "{{ name }}" to permanently delete the character
+        {{ $t('CharacterDeleteDialog.qJSNB7_gDzHxyoaC_JSzu', [name]) }}
       </p>
       <v-text-field
         v-if="name"
@@ -16,7 +16,7 @@
         class="primary"
         @click="remove"
       >
-        Delete forever
+        {{ $t('DeleteConfirmationDialog.vQ64nw8OemMSa9GxOCc8n') }}
       </v-btn>
     </div>
     <v-spacer slot="actions" />
@@ -25,7 +25,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Cancel
+      {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
     </v-btn>
   </dialog-base>
 </template>

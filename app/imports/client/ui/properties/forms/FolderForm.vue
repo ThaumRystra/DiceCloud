@@ -1,16 +1,16 @@
 <template lang="html">
   <div class="folder-form">
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-sections type="folder">
-      <form-section name="Grouping">
+      <form-section :name="$t('FolderForm.R1pe28ZEPjbwlgpZzdOBx')">
         <smart-switch
-          label="Group children on a card"
+          :label="$t('FolderForm.R84OXV09jmFO1f9TeS-KR')"
           :value="model.groupStats"
           :error-messages="errors.groupStats"
           @change="change('groupStats', ...arguments)"
@@ -18,22 +18,22 @@
         <v-expand-transition>
           <div v-if="model.groupStats">
             <smart-switch
-              label="Hide children from their default locations"
+              :label="$t('FolderForm.F5tJESMNnFj72GGaYpdMc')"
               :value="model.hideStatsGroup"
               :error-messages="errors.hideStatsGroup"
               @change="change('hideStatsGroup', ...arguments)"
             />
             <smart-select
               clearable
-              label="Tab"
+              :label="$t('FolderForm.uSVTWqY1bgp6pHX8JaHVa')"
               :items="[
-                { text: 'Stats Tab', value: 'stats' },
-                { text: 'Features Tab', value: 'features' },
-                { text: 'Actions Tab', value: 'actions' },
-                { text: 'Spells Tab', value: 'spells' },
-                { text: 'Inventory Tab', value: 'inventory' },
-                { text: 'Journal Tab', value: 'journal' },
-                { text: 'Build Tab', value: 'build' },
+                { text: $t('FolderForm.hRK_ceriRti6rJTrakw6i'), value: 'stats' },
+                { text: $t('FolderForm.O-kWcvLytlG27QDmjJkNM'), value: 'features' },
+                { text: $t('FolderForm.AMEeuqc52F4zSdf1l7lzL'), value: 'actions' },
+                { text: $t('FolderForm.p-iGQVvIZbSADeV-CLngl'), value: 'spells' },
+                { text: $t('FolderForm.eoyw-vjLBTxDNpUe8BBil'), value: 'inventory' },
+                { text: $t('FolderForm.XoCxPDCPQmESC8qqj1Pdm'), value: 'journal' },
+                { text: $t('FolderForm.jIoUBd6RjQ_1yhAWRbcjc'), value: 'build' },
               ]"
               :value="model.tab"
               :error-messages="errors.tab"
@@ -42,7 +42,7 @@
             />
             <smart-select
               clearable
-              label="Location"
+              :label="$t('FolderForm.TSUGqutjpC2kAk2I1SoHY')"
               :items="locationItems"
               :value="model.location"
               :error-messages="errors.location"
@@ -70,17 +70,17 @@ export default {
     locationItems() {
       if (this.model.tab === 'stats') {
         return [
-          { text: 'Start', value: 'start' },
-          { text: 'After events', value: 'events' },
-          { text: 'After stats', value: 'stats' },
-          { text: 'After skills', value: 'skills' },
-          { text: 'After proficiencies', value: 'proficiencies' },
-          { text: 'End', value: 'end' },
+          { text: this.$t('FolderForm.njKBgocRx-pKTqtt0mrOB'), value: 'start' },
+          { text: this.$t('FolderForm.i-tGltjgjIXUurYmN2lKo'), value: 'events' },
+          { text: this.$t('FolderForm.l-49G-c7LldbKdGd9foKr'), value: 'stats' },
+          { text: this.$t('FolderForm.wkjm39H13dNoLVoGTvvZj'), value: 'skills' },
+          { text: this.$t('FolderForm.biy1hZYci_6ZL7SKH7CcP'), value: 'proficiencies' },
+          { text: this.$t('FolderForm.tGBQcx5WJYa9oLyr6Ek8N'), value: 'end' },
         ];
       } else {
         return [
-          { text: 'Start', value: 'start' },
-          { text: 'End', value: 'end' },
+          { text: this.$t('FolderForm.S0H0vocXzZVoRQQHx5siF'), value: 'start' },
+          { text: this.$t('FolderForm.6pLWAMlfOogGtFQgY6953'), value: 'end' },
         ];
       }
     }

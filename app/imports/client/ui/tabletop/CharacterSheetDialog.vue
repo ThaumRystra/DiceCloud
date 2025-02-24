@@ -25,31 +25,31 @@
       )"
     >
       <v-btn>
-        <span>Stats</span>
+        <span>{{ $t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t') }}</span>
         <v-icon>mdi-chart-box</v-icon>
       </v-btn>
       <v-btn>
-        <span>Actions</span>
+        <span>{{ $t('CharacterSheetDialog.uEahuOj2R9wGkNQ-mmdBa') }}</span>
         <v-icon>mdi-lightning-bolt</v-icon>
       </v-btn>
       <v-btn v-if="!creature.settings.hideSpellsTab">
-        <span>Spells</span>
+        <span>{{ $t('CharacterSheetDialog.D7iHe3wbPaZ2Jhsn9CXU8') }}</span>
         <v-icon>mdi-fire</v-icon>
       </v-btn>
       <v-btn>
-        <span>Inventory</span>
+        <span>{{ $t('CharacterSheetDialog.0E9n7NRcJsKcvSOh8pJGk') }}</span>
         <v-icon>mdi-cube</v-icon>
       </v-btn>
       <v-btn>
-        <span>Features</span>
+        <span>{{ $t('CharacterSheetDialog.7PhUWMOg_8wLLCCY7CKDz') }}</span>
         <v-icon>mdi-text</v-icon>
       </v-btn>
       <v-btn>
-        <span>Journal</span>
+        <span>{{ $t('CharacterSheetDialog.KOKK1cNcrY6O64cRo8aKa') }}</span>
         <v-icon>mdi-book-open-variant</v-icon>
       </v-btn>
       <v-btn>
-        <span>Build</span>
+        <span>{{ $t('CharacterSheetDialog.biA0vlRWylo6EW8GckGOx') }}</span>
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
     </v-bottom-navigation>

@@ -2,11 +2,11 @@
   <div class="note-viewer">
     <v-row dense>
       <property-description
-        name="Summary"
+        :name="$t('ActionForm.uMqJz6So1tbWiONiw7coZ')"
         :model="model.summary"
       />
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

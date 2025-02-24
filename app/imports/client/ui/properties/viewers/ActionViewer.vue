@@ -3,7 +3,7 @@
     <v-row dense>
       <property-field
         v-if="context.creatureId"
-        :name="model.type === 'spell'? 'Cast spell' : 'Apply action'"
+        :name="$t('ActionViewer.ZdLamTjTwN50xEr4pobC7')"
         center
       >
         <v-btn
@@ -24,23 +24,23 @@
         </v-btn>
       </property-field>
       <property-field
-        name="To hit"
+        :name="$t('ActionViewer.LuJ5GbVYRabP8sH91Amw0')"
         large
         center
         signed
         :calculation="model.attackRoll"
       />
       <property-field
-        name="Action type"
+        :name="$t('ActionForm.Swu-7z8ZpCzf1wlyF0m3F')"
         :value="actionTypes[model.actionType]"
       />
       <property-field
-        name="Targeting"
+        :name="$t('ActionViewer.2PAXZyo6dsMayT5h8Vxl9')"
         :value="targetTypes[model.target]"
       />
       <property-field
         v-if="model.uses"
-        name="Uses"
+        :name="$t('ActionForm.kIN6lH7jJTD3RaF7WkyUy')"
       >
         <template v-if="context.creatureId && model.uses.value">
           <v-spacer />
@@ -53,7 +53,7 @@
             :disabled="!model.usesUsed || !context.editPermission"
             @click="resetUses"
           >
-            Reset
+            {{ $t('ResetSelector.i6eGWDKtSDJDxSkvSA9bB') }}
           </v-btn>
         </template>
         <span v-else>
@@ -61,12 +61,12 @@
         </span>
       </property-field>
       <property-field
-        name="Reset"
+        :name="$t('ResetSelector.i6eGWDKtSDJDxSkvSA9bB')"
         :value="reset"
       />
       <property-field
         v-if="model.resources.conditions && model.resources.conditions.length"
-        name="Conditions"
+        :name="$t('ResourcesForm.lQGikx2mch-_nphcT4bTY')"
       >
         <div style="width: 100%;">
           <action-condition-view
@@ -79,7 +79,7 @@
       </property-field>
       <property-field
         v-if="model.resources.attributesConsumed.length"
-        name="Attributes consumed"
+        :name="$t('ActionViewer.Vs9l_E_xRjNrphvjnTfxg')"
       >
         <div style="width: 100%;">
           <attribute-consumed-view
@@ -92,7 +92,7 @@
       </property-field>
       <property-field
         v-if="model.resources.itemsConsumed.length"
-        name="Items consumed"
+        :name="$t('ActionViewer.eUx-vcgpMRH8dtONDZPHm')"
       >
         <div style="width: 100%;">
           <item-consumed-view
@@ -106,11 +106,11 @@
       </property-field>
       <slot />
       <property-description
-        name="Summary"
+        :name="$t('ActionForm.uMqJz6So1tbWiONiw7coZ')"
         :model="model.summary"
       />
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>
@@ -147,17 +147,17 @@ export default {
     return {
       doActionLoading: false,
       actionTypes: {
-        action: 'Action',
-        bonus: 'Bonus action',
-        attack: 'Attack action',
-        reaction: 'Reaction',
-        free: 'Free action',
-        long: 'Long action',
+        action: this.$t('PrintedAction.IrhNSkzJSRi84GhcibaA6'),
+        bonus: this.$t('ActionForm.t_rdlLehNy3iLM13m8KHi'),
+        attack: this.$t('ActionForm.kPjD8rr_PnXqy-pMLGLXp'),
+        reaction: this.$t('PrintedAction.mfg8w8IEyp7lqOtrKA716'),
+        free: this.$t('ActionForm.L7CIoiuGHz6rNUNfQR0x1'),
+        long: this.$t('ActionForm.pW9GN3ykvnJUE5ozpy0zR'),
       },
       targetTypes: {
-        self: 'Self',
-        singleTarget: 'Single target',
-        multipleTargets: 'Multiple targets',
+        self: this.$t('ActionForm.wvr48hnF1DbxApmRDC3R0'),
+        singleTarget: this.$t('ActionCard.5IbE7yubecegAHFjeu4mr'),
+        multipleTargets: this.$t('ActionForm.SPian0NX_8UamXDgapfmE'),
       },
     }
   },
@@ -165,9 +165,9 @@ export default {
     reset() {
       let reset = this.model.reset
       if (reset === 'shortRest') {
-        return 'Reset on a short rest';
+        return this.$t('ActionViewer.mPkSelm59kG9PgRpl7PuX');
       } else if (reset === 'longRest') {
-        return 'Reset on a long rest';
+        return this.$t('ActionViewer.bN9dpIryBBN8_iI1JacWp');
       }
       return undefined;
     },

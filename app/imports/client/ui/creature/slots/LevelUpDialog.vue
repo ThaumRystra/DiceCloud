@@ -97,7 +97,7 @@
                     libraryNode._disabledByQuantityFilled
                 }"
               >
-                {{ libraryNode.slotQuantityFilled }} slots
+                {{ $t('LevelUpDialog.kUtYdzmVh5iGbRH4YBDra', [libraryNode.slotQuantityFilled]) }}
               </div>
               <template v-if="open">
                 <v-btn
@@ -129,7 +129,7 @@
         outlined
         @click="loadMore"
       >
-        Load More
+        {{ $t('CreatureFromLibraryDialog.gKd4prmSqKxO3Tn3oNfV-') }}
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -140,7 +140,7 @@
         class="ma-3"
       >
         <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
+          {{ $t('LevelUpDialog.US_McJGWbG82XzLEXnW7N', [disabledNodeCount]) }}
         </div>
         <v-btn
           class="mt-2"
@@ -148,7 +148,7 @@
           color="accent"
           @click="showDisabled = true"
         >
-          Show All
+          {{ $t('LevelUpDialog.Lf2o25z7r-baxgl6oUYbV') }}
         </v-btn>
       </v-layout>
     </template>
@@ -157,7 +157,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -170,10 +170,10 @@
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         <template v-if="classId">
-          Insert
+          {{ $t('CreatureFromLibraryDialog.3loR2KAjQfv3IEMsldc7S') }}
         </template>
         <template v-else>
-          Close Test
+          {{ $t('LevelUpDialog.VcK3Z-0fwcRbNsNAR9tVP') }}
         </template>
       </v-btn>
     </template>
@@ -448,7 +448,7 @@ export default {
             console.warn(e);
             let error = prettifyParseError(e);
             node._disabledBySlotFillerCondition = true;
-            node._conditionError = 'Condition error: ' + error;
+            node._conditionError = this.$t('LevelUpDialog.NiaDODaITliGrMRqgPbor') + ' ' + error;
             disabledNodeCount += 1;
           }
         }

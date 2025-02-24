@@ -19,7 +19,7 @@ export default {
   computed: {
     items() {
       const items = [{
-        text: 'Docs',
+        text: this.$t('Documentation.2ldd4m3lp62jCu1hMzsEg'),
         to: '/docs',
         exact: true,
       }];

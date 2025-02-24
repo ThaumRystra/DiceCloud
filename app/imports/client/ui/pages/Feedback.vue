@@ -13,11 +13,10 @@
       <v-card-title primary-title>
         <div>
           <h3 class="text-h5 mb-0">
-            DiceCloud Discord server
+            {{ $t('Feedback._ZLqbT-i52icd_96z7L79') }}
           </h3>
           <div>
-            To give feedback or get support using DiceCloud,
-            join the official Discord server
+            {{ $t('Feedback.br1TqRF4Kxw4QNoATiVMu') }}
           </div>
         </div>
       </v-card-title>
@@ -28,7 +27,7 @@
           color="primary"
           href="https://discord.gg/qEvdfeB"
         >
-          Join
+          {{ $t('Feedback.Npe9l37-6-jLe2GDpbQpd') }}
         </v-btn>
       </v-card-actions>
     </v-card>

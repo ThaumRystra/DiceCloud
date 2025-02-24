@@ -26,7 +26,7 @@
       :string="model.description"
     />
     <p>
-      {{ slotPropertyTypeName }} with library tags:
+      {{ $t('SlotFillDialog.e-lRRHd2WscTFKEJJO0As', [slotPropertyTypeName]) }}
       <property-tags
         v-for="(tags, index) in tagsSearched.or"
         :key="index + 'tags'"
@@ -112,7 +112,7 @@
                       libraryNode._disabledByQuantityFilled
                   }"
                 >
-                  {{ libraryNode.slotQuantityFilled }} slots
+                  {{ $t('SlotFillDialog.NByM949RvyOBiT8e1eRTh', [libraryNode.slotQuantityFilled]) }}
                 </div>
                 <template v-if="open">
                   <v-btn
@@ -145,7 +145,7 @@
         outlined
         @click="loadMore"
       >
-        Load More
+        {{ $t('CreatureFromLibraryDialog.gKd4prmSqKxO3Tn3oNfV-') }}
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -156,7 +156,7 @@
         class="ma-3 mt-8"
       >
         <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
+          {{ $t('SlotFillDialog.sxHB4uZqjCnP9Hp62Pd6Y', [disabledNodeCount]) }}
         </div>
         <v-btn
           class="mt-2"
@@ -165,7 +165,7 @@
           outlined
           @click="showDisabled = true"
         >
-          Show All
+          {{ $t('LevelUpDialog.Lf2o25z7r-baxgl6oUYbV') }}
         </v-btn>
       </v-layout>
     </template>
@@ -174,7 +174,7 @@
       justify-center
       class="text-caption text--disabled mt-8 mb-2"
     >
-      Can't find what you're looking for?
+      {{ $t('CreatureFromLibraryDialog.2fkv6_3ZeC4V6p9sWUMJq') }}
     </v-layout>
     <v-layout
       align-center
@@ -190,7 +190,7 @@
         :disabled="!model"
         @click="openLibraryBrowser"
       >
-        Browse community libraries
+        {{ $t('Library.4M1dnsetmEUhDZmwRlchR') }}
       </v-btn>
       <v-btn
         v-if="!dummySlot"
@@ -200,7 +200,7 @@
         data-id="custom-button"
         @click="insertCustomFiller"
       >
-        Create custom filler
+        {{ $t('SlotFillDialog.JOCKpSDFugjowLTFq53YA') }}
       </v-btn>
     </v-layout>
     
@@ -209,7 +209,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -222,10 +222,10 @@
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         <template v-if="slotId">
-          Insert
+          {{ $t('CreatureFromLibraryDialog.3loR2KAjQfv3IEMsldc7S') }}
         </template>
         <template v-else>
-          Close Test
+          {{ $t('LevelUpDialog.VcK3Z-0fwcRbNsNAR9tVP') }}
         </template>
       </v-btn>
     </template>
@@ -306,7 +306,7 @@ export default {
     },
     slotPropertyTypeName() {
       if (!this.model) return;
-      if (!this.model.slotType) return 'Property';
+      if (!this.model.slotType) return this.$t('CharacterSheetFab.INXnPK501RhoZ_yH5gNsm');
       let propName = getPropertyName(this.model.slotType);
       return propName;
     },
@@ -500,7 +500,7 @@ export default {
             let error = prettifyParseError(e);
             node._disabled = true;
             node._disabledBySlotFillerCondition = true;
-            node._conditionError = 'Condition error: '+ error;
+            node._conditionError = this.$t('LevelUpDialog.NiaDODaITliGrMRqgPbor') + ' ' + error;
             disabledNodeCount += 1;
           }
         }

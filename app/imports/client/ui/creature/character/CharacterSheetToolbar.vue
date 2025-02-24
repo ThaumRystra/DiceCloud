@@ -55,7 +55,7 @@
                     {{ ownerName }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    Sheet owner
+                    {{ $t('CharacterSheetToolbar.emdD3PkZeGh4DggsQ8gXu') }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -66,21 +66,21 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-cancel
-                  </v-icon> Unshare with me
+                  </v-icon> {{ $t('CharacterSheetToolbar.VQpJOOSLj9jVu_Ug2VkdW') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item :to="printUrl">
                 <v-list-item-title>
                   <v-icon left>
                     mdi-printer
-                  </v-icon> Print
+                  </v-icon> {{ $t('CharacterSheetToolbar.MEKfUHv4LuBXm7IaA_y2M') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showCharacterForm">
                 <v-list-item-title>
                   <v-icon left>
                     mdi-pencil
-                  </v-icon> Edit details
+                  </v-icon> {{ $t('CharacterSheetToolbar.RTIYpVmEiPR-12DHpABiN') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item
@@ -90,7 +90,7 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-share-variant
-                  </v-icon> Sharing
+                  </v-icon> {{ $t('ShareDialog.03VciIdW7WUj5zao5xU0A') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item
@@ -100,7 +100,7 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-delete
-                  </v-icon> Delete
+                  </v-icon> {{ $t('DocEditForm.pblwi8OgupFn22G1Nw-oY') }}
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -140,28 +140,28 @@
           )"
         >
           <v-tab>
-            Stats
+            {{ $t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t') }}
           </v-tab>
           <v-tab>
-            Actions
+            {{ $t('CharacterSheetDialog.uEahuOj2R9wGkNQ-mmdBa') }}
           </v-tab>
           <v-tab v-if="!creature.settings.hideSpellsTab">
-            Spells
+            {{ $t('CharacterSheetDialog.D7iHe3wbPaZ2Jhsn9CXU8') }}
           </v-tab>
           <v-tab>
-            Inventory
+            {{ $t('CharacterSheetDialog.0E9n7NRcJsKcvSOh8pJGk') }}
           </v-tab>
           <v-tab>
-            Features
+            {{ $t('CharacterSheetDialog.7PhUWMOg_8wLLCCY7CKDz') }}
           </v-tab>
           <v-tab>
-            Journal
+            {{ $t('CharacterSheetDialog.KOKK1cNcrY6O64cRo8aKa') }}
           </v-tab>
           <v-tab>
-            Build
+            {{ $t('CharacterSheetDialog.biA0vlRWylo6EW8GckGOx') }}
           </v-tab>
           <v-tab v-if="creature.settings.showTreeTab">
-            Tree
+            {{ $t('CharacterSheet.PaDxTX6-CoFfTji1AYSHv') }}
           </v-tab>
         </v-tabs>
         <v-spacer />
@@ -246,7 +246,7 @@ export default {
         elementId: 'creature-menu',
         data: {
           name: this.creature.name,
-          typeName: 'Character'
+          typeName: this.$t('CharacterSheetToolbar.sI8Ova8fMZEX_gVBZX6xH')
         },
         callback(confirmation) {
           if (!confirmation) return;

@@ -5,7 +5,7 @@
     @dragover.prevent="imageDragOver"
   >
     <v-col cols="12">
-      <v-subheader> Images </v-subheader>
+      <v-subheader> {{ $t('UserImageList.4eG2n_kbo95NmBJiZ8ldw') }} </v-subheader>
     </v-col>
     <template v-if="userImages && userImages.length">
       <v-col
@@ -51,7 +51,7 @@
           {{ uploadImageError }}
         </template>
         <template v-else>
-          Upload archive
+          {{ $t('UserImageList.vQ1GH9ouCeobhAWFMUk9q') }}
         </template>
         <v-progress-linear
           v-if="uploadImageInProgress"

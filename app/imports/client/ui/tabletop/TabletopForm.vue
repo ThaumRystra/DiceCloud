@@ -6,7 +6,7 @@
         md="6"
       >
         <text-field
-          label="Name"
+          :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
           :value="model.name"
           :error-messages="errors.name"
           :disabled="!editPermission"
@@ -18,8 +18,8 @@
         md="6"
       >
         <smart-image-input
-          label="Picture URL"
-          hint="A link to a cover image for this tabletop"
+          :label="$t('TabletopForm.Zg7wJZ4RUc2_phGc_LCWr')"
+          :hint="$t('TabletopForm.quaePio9-ta0EePai')"
           :disabled="!editPermission"
           :value="model.imageUrl"
           :error-messages="errors.imageUrl"
@@ -30,7 +30,7 @@
         cols="12"
       >
         <text-area
-          label="Description"
+          :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
           :value="model.description"
           :disabled="!editPermission"
           @change="(value, ack) => change('description', value, ack)"
@@ -39,17 +39,17 @@
     </v-row>
 
     <form-sections type="tabletop">
-      <form-section name="Sharing">
+      <form-section :name="$t('ShareDialog.03VciIdW7WUj5zao5xU0A')">
         <v-row>
           <v-col
             cols="12"
             md="6"
           >
             <smart-select
-              label="Who can view"
+              :label="$t('ShareDialog._g3AAll7JIJ6eKSezF40L')"
               :items="[
-                {text: 'Only people I share with', value: 'false'},
-                {text: 'Anyone with link', value: 'true'}
+                {text: $t('TabletopForm.enRTOfb6gmE6wfvazG7tH'), value: 'false'},
+                {text: $t('TabletopForm.UqVDG2MYiKNKrGoVeRF1l'), value: 'true'}
               ]"
               :value="!!model.public + ''"
               @change="(value, ack) => change('public', value === 'true', ack)"
@@ -62,7 +62,7 @@
           >
             <text-field
               readonly
-              label="Link"
+              :label="$t('ShareDialog.JXIZsDoMWYIDczc39na2p')"
               :value="link"
             />
           </v-col>
@@ -72,21 +72,21 @@
             class="mb-4 px-4"
           >
             <h3 class="mb-4">
-              Add user
+              {{ $t('TabletopForm.bnTLZc-_n8le4z7FUD5sv') }}
             </h3>
             <text-field
-              label="Username or email"
+              :label="$t('SignIn.9Hgx-SDsbxdrMu3MW63bY')"
               :value="userSearched"
               :debounce-time="300"
               :disabled="!editPermission"
               @change="(value, ack) => getUser({value, ack})"
             />
             <smart-select
-              label="Permission"
+              :label="$t('TabletopForm.UICbZ5qt1flJK6akgqxXH')"
               :items="[
-                {text: 'Game Master', value: 'gameMaster'},
-                {text: 'Player', value: 'player'},
-                {text: 'Spectator', value: 'spectator'},
+                {text: $t('TabletopForm.fcVkX6ikAyHyFBZZoPlXG'), value: 'gameMaster'},
+                {text: $t('TabletopForm.G8L9YTh_9mMnHLXaSg8-k'), value: 'player'},
+                {text: $t('TabletopForm._iKgwOiSJu9koKv_dHRm9'), value: 'spectator'},
               ]"
               :value="newSharePermission"
               :disabled="!editPermission"
@@ -98,12 +98,12 @@
               :disabled="userFoundState !== 'found' || !editPermission"
               @click="ack => updateSharing(userId, newSharePermission, ack)"
             >
-              Share
+              {{ $t('ShareDialog.8hLNrY3cfCjnHG8Ibg4S2') }}
             </smart-btn>
           </v-col>
 
           <property-field
-            name="Owner"
+            :name="$t('TabletopForm.Ye33lCxkLiuCk7ejTS-3B')"
             :cols="{cols: 12, md: 6}"
           >
             {{ users.owner.username || users.owner._id || '' }}
@@ -115,7 +115,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Game Masters">
+            <outlined-input :name="$t('TabletopForm.Dnp5nRtDPgzhw2HlU9CDw')">
               <tabletop-user-list
                 :users="users.gameMasters"
                 :edit-permission="editPermission"
@@ -133,7 +133,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Players">
+            <outlined-input :name="$t('TabletopForm.w8-3hmBIm0WX2f98I5Nrp')">
               <tabletop-user-list
                 :users="users.players"
                 :edit-permission="editPermission"
@@ -151,7 +151,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Spectators">
+            <outlined-input :name="$t('TabletopForm.j92FT1AXgEpXeD3KtPcQO')">
               <tabletop-user-list
                 :users="users.spectators"
                 :edit-permission="editPermission"
@@ -243,20 +243,20 @@ export default {
           if (result) {
             if (this.users.gameMasters.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a game master');
+              ack(this.$t('TabletopForm.hagY-T8U6Kq54Bk3JKhQJ'));
             } else if (this.users.players.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a player');
+              ack(this.$t('TabletopForm.E6_8VX8CoYPr1EYRCQoFy'));
             } else if (this.users.spectators.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a spectator');
+              ack(this.$t('TabletopForm.T2eR8xKcGEaypPkX92TsU'));
             } else {
               this.userFoundState = 'found';
               ack();
             }
           } else {
             this.userFoundState = 'notFound';
-            ack('User not found');
+            ack(this.$t('ShareDialog.VqkQCmxb_c2wDNm0F8BEF'));
           }
         }
       });

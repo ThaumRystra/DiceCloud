@@ -2,7 +2,7 @@
   <div class="container-viewer">
     <v-row dense>
       <property-field
-        name="Value"
+        :name="$t('ConstantForm.aEv2NC1UXKBC9Z63kT9Jb')"
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden;">
@@ -40,7 +40,7 @@
         </div>
       </property-field>
       <property-field
-        name="Weight"
+        :name="$t('ContainerForm.7KxFeshSgsphebWl6Y_Bt')"
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden;">
@@ -56,7 +56,7 @@
               $vuetify.icons.weight
             </v-icon>
             <span class="text-subtitle-1 mr-2">
-              {{ model.weight }} lb
+              {{ $t('ContainerViewer.iaSo2F9hn7VmSSzfwSvT1', [model.weight]) }}
             </span>
           </v-layout>
           <v-layout
@@ -70,7 +70,7 @@
               $vuetify.icons.injustice
             </v-icon>
             <span class="text-subtitle-1 mr-2">
-              {{ model.contentsWeight }} lb
+              {{ $t('ContainerViewer.lp8QWZHKDIXv42JsZlygP', [model.contentsWeight]) }}
             </span>
             <span class="text-subtitle-1">
               contents
@@ -89,10 +89,10 @@
         >
           $vuetify.icons.weightless
         </v-icon>
-        <span class="ml-1">Contents weightless</span>
+        <span class="ml-1">{{ $t('ContainerViewer.4zYbcpuZsRCmGn4ZdMZgd') }}</span>
       </property-field>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

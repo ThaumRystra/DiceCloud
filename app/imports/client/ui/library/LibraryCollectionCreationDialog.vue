@@ -2,24 +2,24 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        New Collection
+        {{ $t('LibraryCollectionCreationDialog.91vPMCkyY7wba30jPsufP') }}
       </v-toolbar-title>
     </template>
     <template>
       <text-field
-        label="Name"
+        :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
         :value="libraryCollection.name"
         :debounce-time="0"
         @change="nameChanged"
       />
       <text-area
-        label="Description"
+        :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :value="libraryCollection.description"
         :debounce-time="0"
         @change="descriptionChanged"
       />
       <smart-select
-        label="Libraries"
+        :label="$t('CharacterCreationDialog.uiuDKE-JU_7xjNfrbo7lh')"
         :items="libraryOptions"
         :value="libraryCollection.libraries"
         :debounce-time="0"
@@ -37,7 +37,7 @@
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', libraryCollection)"
       >
-        Insert Collection
+        {{ $t('LibraryCollectionCreationDialog.5XDN8RnSgbykb7y8Sl-U7') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -53,7 +53,7 @@ export default {
   },
   data(){ return {
     libraryCollection: {
-      name: 'New Collection',
+      name: this.$t('LibraryCollectionCreationDialog.GbJh4HQgyhjYvVMuPW2on'),
       description: undefined,
       libraries: [],
     },
@@ -88,7 +88,7 @@ export default {
         ack();
       } else {
         this.valid = false;
-        ack('Name is required')
+        ack(this.$t('Register.yfTv252rVq9SqVdTJ3Yks'))
       }
     },
     descriptionChanged(val, ack){

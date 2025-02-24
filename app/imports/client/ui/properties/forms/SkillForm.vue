@@ -6,10 +6,10 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('AttributeForm.vWQj52YzUPPcXSMEZ6dvh')"
           :value="model.variableName"
           style="flex-basis: 300px;"
-          hint="Use this name in formulae to reference this skill"
+          :hint="$t('SkillForm.FwTi5l87wO7XVQizFa3Bk')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,10 +19,10 @@
         md="6"
       >
         <smart-combobox
-          label="Ability"
+          :label="$t('CheckInput.ZOqgwwG1rCTTKIVrY23XB')"
           :value="model.ability"
           style="flex-basis: 300px;"
-          hint="Which ability is this skill based off of"
+          :hint="$t('SkillForm.fIJDr4ZD2k-67ZQHSOJGZ')"
           :items="abilityScoreList"
           :error-messages="errors.ability"
           @change="change('ability', ...arguments)"
@@ -33,7 +33,7 @@
         md="6"
       >
         <smart-select
-          label="Type"
+          :label="$t('TreeSearchInput.BAArIlU-xLOyjxKLYTPg7')"
           clearable
           :items="skillTypes"
           :value="model.skillType"
@@ -45,7 +45,7 @@
       </v-col>
     </v-row>
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -53,14 +53,14 @@
     />
 
     <form-sections type="skill">
-      <form-section name="Base Values">
+      <form-section :name="$t('SkillForm.xEYh2FhucUyfpFeOiCK1t')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
             <proficiency-select
-              label="Base Proficiency"
+              :label="$t('SkillForm.go1fZMjOamVypbpskbqZD')"
               :value="model.baseProficiency"
               :error-messages="errors.baseProficiency"
               @change="change('baseProficiency', ...arguments)"
@@ -71,8 +71,8 @@
             md="6"
           >
             <computed-field
-              label="Base Value"
-              hint="This is the value of the skill before effects are applied"
+              :label="$t('AttributeForm.sg1vCF4ceatDzU2Y3bUbw')"
+              :hint="$t('SkillForm.0RIVS1iiSps7zFgRhCU-i')"
               :model="model.baseValue"
               :error-messages="errors.baseValue"
               @change="({path, value, ack}) =>
@@ -81,9 +81,9 @@
           </v-col>
         </v-row>
       </form-section>
-      <form-section name="Apply skill">
+      <form-section :name="$t('SkillForm.p09IUwxeRXWEUnNOBsawW')">
         <smart-switch
-          label="Apply skill to targeted tags"
+          :label="$t('SkillForm.3S6BJ3LTSnpNl_2YJ5xbn')"
           :value="model.targetByTags"
           :error-messages="errors.targetByTags"
           @change="change('targetByTags', ...arguments)"
@@ -122,40 +122,40 @@ export default {
     return {
       skillTypes: [
         {
-          text: 'Skill',
+          text: this.$t('CheckInput.sKXmebGzd92GfO5RYbSPI'),
           value: 'skill',
         }, {
-          text: 'Save',
+          text: this.$t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU'),
           value: 'save',
         }, {
-          text: 'Check',
+          text: this.$t('SelectedCreatureBar.UcAwEN_Jmv7Lezh-o8g6S'),
           value: 'check',
         }, {
-          text: 'Tool',
+          text: this.$t('SkillForm.xayNU3cxaIOtLz1iCrUX_'),
           value: 'tool',
         }, {
-          text: 'Weapon',
+          text: this.$t('SkillForm._uUQIQfQJm94jRvJnoCa4'),
           value: 'weapon',
         }, {
-          text: 'Armor',
+          text: this.$t('StatsTab.HuxcSGUjObZNOlWVKkZG4'),
           value: 'armor',
         }, {
-          text: 'Language',
+          text: this.$t('SkillForm.PfUrjVRAHmEX7AhfxnPTT'),
           value: 'language',
         }, {
-          text: 'Utility',
+          text: this.$t('AttributeForm.QUnXaen7rDzDb624npbUE'),
           value: 'utility',
         },
       ],
       skillTypeHints: {
-        skill: 'A normal character sheet skill like Athletics, Deception, or Investigation',
-        'save': 'A saving throw the character can make: Strength Save, etc.',
-        'check': 'An ability check that might include a proficiency bonus later eg. Initiative',
-        'tool': 'A tool proficiency. Be sure to add a base proficiency in the advanced section.',
-        'weapon': 'A weapon proficiency. Be sure to add a base proficiency in the advanced section.',
-        'armor': 'A armor proficiency. Be sure to add a base proficiency in the advanced section.',
-        'language': 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
-        'utility': 'A skill that does not show up in the sheet, but can be used by other caclulations',
+        skill: this.$t('SkillForm.3HmLC1Cet1hnDeYhuhOal'),
+        'save': this.$t('SkillForm.1yXeNttBJlQ8NHU6WBTN6'),
+        'check': this.$t('SkillForm.XiqWCVYk6vLFjbduURJol'),
+        'tool': this.$t('SkillForm.bBD23OFYb7fRB1V9BS0P-'),
+        'weapon': this.$t('SkillForm.9c_kA3_kdX2DHMkeJluW5'),
+        'armor': this.$t('SkillForm.fX2vgMPC31V0qW12rcolL'),
+        'language': this.$t('SkillForm.gAlgFXNb94543om00oR51'),
+        'utility': this.$t('SkillForm.s74pIwtTO9_roPkhjJO6f'),
       }
     };
   },

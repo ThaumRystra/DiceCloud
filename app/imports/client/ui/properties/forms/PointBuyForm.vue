@@ -6,15 +6,15 @@
       @change="e => $emit('change', e)"
     />
     <form-sections type="pointBuy">
-      <form-section name="Point buy settings">
+      <form-section :name="$t('PointBuyForm.hW_GGLTissf4OxOolFUD8')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
             <computed-field
-              label="Min"
-              hint="The minimum value for each row"
+              :label="$t('PointBuyForm.1951B8ZI5gZRCs_ZAF8zn')"
+              :hint="$t('PointBuyForm.CysbomYf00kKzFpDDxu99')"
               placeholder="0"
               :model="model.min"
               :error-messages="errors.min"
@@ -27,8 +27,8 @@
             md="6"
           >
             <computed-field
-              label="Max"
-              hint="The maximum value for each row"
+              :label="$t('PointBuyForm.C-0sxC0BtHnTenrNmBoWt')"
+              :hint="$t('PointBuyForm.D_arqDNLfaamuIiUdhgn7')"
               placeholder="100"
               :model="model.max"
               :error-messages="errors.max"
@@ -41,8 +41,8 @@
             md="6"
           >
             <computed-field
-              label="Cost function"
-              hint="A function of `value` that determines the cost of each row"
+              :label="$t('PointBuyForm.76kViLsS2FQdKLp2NNGU9')"
+              :hint="$t('PointBuyForm.jNb11a1Q5rb-pBf_mSCxA')"
               hide-value
               :model="model.cost"
               :error-messages="errors.cost"
@@ -55,8 +55,8 @@
             md="6"
           >
             <computed-field
-              label="Total available points"
-              hint="The total allowed cost of all rows"
+              :label="$t('PointBuyForm.ggYiFpVMzvWnqg4qboE9A')"
+              :hint="$t('PointBuyForm.7SXmECZCAm1p0xHhDWJHt')"
               :model="model.total"
               :error-messages="errors.total"
               @change="({path, value, ack}) =>
@@ -65,7 +65,7 @@
           </v-col>
         </v-row>
       </form-section>
-      <form-section name="Rows">
+      <form-section :name="$t('PointBuyForm.irbsTn6C6jeUiIhiuYplB')">
         <v-slide-x-transition
           group
           leave-absolute
@@ -88,7 +88,7 @@
                 >
                   <text-field
                     ref="focusFirst"
-                    label="Row Name"
+                    :label="$t('PointBuyForm.hmThDEHkPp9wU3rDXyN-l')"
                     :value="row.name"
                     :error-messages="errors.values && errors.values[i] && errors.values[i].name"
                     @change="change(['values', i, 'name'], ...arguments)"
@@ -99,9 +99,9 @@
                   md="6"
                 >
                   <text-field
-                    label="Variable name"
+                    :label="$t('AttributeForm.vWQj52YzUPPcXSMEZ6dvh')"
                     :value="row.variableName"
-                    hint="Use this name in calculations to reference this row of the table"
+                    :hint="$t('PointBuyForm.7e2ucUDSxvPWwdSnsd4sZ')"
                     :error-messages="errors.values && errors.values[i] && errors.values[i].variableName"
                     @change="change(['values', i, 'variableName'], ...arguments)"
                   />
@@ -112,9 +112,9 @@
                   md="6"
                 >
                   <text-field
-                    label="Default value"
+                    :label="$t('PointBuyForm.7KUBbb83xo02E0AS64Emj')"
                     :value="row.value"
-                    hint="The starting value of the row"
+                    :hint="$t('PointBuyForm.hYmj6ak9yUk0V3eFBpqix')"
                     :error-messages="errors.values && errors.values[i] && errors.values[i].value"
                     @change="change(['values', i, 'value'], ...arguments)"
                   />

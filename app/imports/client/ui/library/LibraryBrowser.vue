@@ -64,7 +64,7 @@
       @click="insertLibrary"
     >
       <v-icon>mdi-plus</v-icon>
-      New library
+      {{ $t('LibraryBrowser.jUkc_CTXvxVrCeuhisZIo') }}
     </v-btn>
   </div>
 </template>

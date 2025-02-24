@@ -248,7 +248,7 @@ export default {
       const _id = model._id;
       softRemoveProperty.call({_id});
       snackbar({
-        text: `Deleted ${getPropertyTitle(model)}`,
+        text: this.$t('BuildTreeNode.p1QIkwdqRfb30jNEyO0ie', [getPropertyTitle(model)]),
         callbackName: 'undo',
         callback(){
           restoreProperty.call({_id});

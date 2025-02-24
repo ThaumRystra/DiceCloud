@@ -6,7 +6,7 @@
         md="6"
       >
         <smart-select
-          label="Operation"
+          :label="$t('AdjustmentForm.a3GneFZJ3MOMwzxGWJgMq')"
           append-icon="mdi-menu-down"
           :hint="operationHint"
           :error-messages="errors.operation"
@@ -39,16 +39,16 @@
       >
         <text-field
           v-if="model.operation === 'conditional'"
-          label="Text"
-          hint="The text to display on the affected stats"
+          :label="$t('TreeSearchInput.n00nuv-ruVz9Ug_Vv51wY')"
+          :hint="$t('EffectForm.SHtnMBKpVFp2Ihfkrztt2')"
           :value="model.text"
           :error-messages="errors.text"
           @change="change('text', ...arguments)"
         />
         <computed-field
           v-else
-          label="Value"
-          hint="Number or calculation to determine the value of this effect"
+          :label="$t('ConstantForm.aEv2NC1UXKBC9Z63kT9Jb')"
+          :hint="$t('EffectForm.gboBBKj7YU4dALGd2TiDh')"
           :disabled="!needsValue"
           :model="model.amount"
           :error-messages="errors.amount"
@@ -59,7 +59,7 @@
     </v-row>
 
     <smart-toggle
-      label="Target properties"
+      :label="$t('EffectForm.qP3ZqRZPSY87NPXcxXgsk')"
       :value="radioGroup"
       :options="[
         {name: 'Target by variable name', value: 'stats'},
@@ -71,12 +71,12 @@
     <v-slide-y-transition hide-on-leave>
       <smart-combobox
         v-if="!model.targetByTags"
-        label="Stats"
+        :label="$t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t')"
         class="mr-2"
         multiple
         small-chips
         deletable-chips
-        hint="Which stats will this effect apply to"
+        :hint="$t('EffectForm.YDbS6tLL9tGQssAHzz--u')"
         persistent-hint
         :value="model.stats"
         :items="attributeList"
@@ -98,10 +98,10 @@
         cols="12"
       >
         <text-field
-          label="Target field"
+          :label="$t('EffectForm.-IBot5cFFVU_fExJi4xIA')"
           :value="model.targetField"
-          hint="Target a specific calculation field on the affected properties"
-          placeholder="Default field"
+          :hint="$t('EffectForm.C7bO5_RlI0jtDfzqVqgnE')"
+          :placeholder="$t('EffectForm.snD8tCJau7JV3nHgF0GuU')"
           persistent-placeholder
           :error-messages="errors.targetField"
           @change="change('targetField', ...arguments)"
@@ -135,17 +135,17 @@ export default {
       iconClass: '',
       oldOperation: undefined,
       operations: [
-        { value: 'base', text: 'Base Value' },
-        { value: 'add', text: 'Add' },
-        { value: 'mul', text: 'Multiply' },
-        { value: 'min', text: 'Minimum' },
-        { value: 'max', text: 'Maximum' },
-        { value: 'set', text: 'Set' },
-        { value: 'advantage', text: 'Advantage' },
-        { value: 'disadvantage', text: 'Disadvantage' },
-        { value: 'passiveAdd', text: 'Passive Bonus' },
-        { value: 'fail', text: 'Fail' },
-        { value: 'conditional', text: 'Conditional Benefit' },
+        { value: 'base', text: this.$t('AttributeForm.sg1vCF4ceatDzU2Y3bUbw') },
+        { value: 'add', text: this.$t('AttributeEffect.9iZBUqNtV818puHQ9S5mA') },
+        { value: 'mul', text: this.$t('AttributeEffect.Y45EOUc4qxDGlx5Xzle92') },
+        { value: 'min', text: this.$t('AttributeEffect.PWglsxP8zZNtoVCZtbg-l') },
+        { value: 'max', text: this.$t('AttributeEffect.dEk96gl0uh7EJIwSh--a6') },
+        { value: 'set', text: this.$t('EffectForm.WEtHJEmy9l5UiGuanUysJ') },
+        { value: 'advantage', text: this.$t('AdvantageInput.GOVw9p7PQMyvg1W3QMv1h') },
+        { value: 'disadvantage', text: this.$t('AdvantageInput.sN61sdTDUmZNRJhgdk3FT') },
+        { value: 'passiveAdd', text: this.$t('EffectForm.ZuLYLB4j2cuBWCdUzyy6a') },
+        { value: 'fail', text: this.$t('EffectForm.iT7omfOfVjW5aAj9kCC7D') },
+        { value: 'conditional', text: this.$t('EffectForm.YMSdBEq2wJCbQq7Aor9uZ') },
       ],
     }
   },
@@ -171,17 +171,17 @@ export default {
     },
     operationHint() {
       switch (this.model.operation) {
-        case 'base': return 'Stats take their largest base value, and then apply all other effects';
-        case 'add': return 'Add this value to the stat';
-        case 'mul': return 'Multiply the stat by this value';
-        case 'min': return 'The stat will be at least this value';
-        case 'max': return 'The stat will not exceed this value';
-        case 'set': return 'The stat will be set to this value';
-        case 'advantage': return 'If this stat is the basis for a check, that check will be at advantage';
-        case 'disadvantage': return 'If this stat is the basis for a check, that check will be at advantage';
-        case 'passiveAdd': return 'This value will be added to the passive check';
-        case 'fail': return 'Targeted skills and checks will always fail';
-        case 'conditional': return 'Add a text note to this stat';
+        case 'base': return this.$t('EffectForm.iwKzgNYrj70WgRM1Xoc5_');
+        case 'add': return this.$t('EffectForm.-Joha5EoEp6cwj-ASgV6M');
+        case 'mul': return this.$t('EffectForm.NWwR2iYKigbP-fB4v7vLO');
+        case 'min': return this.$t('EffectForm.FdsMEJRSYVdWsUasjpYJT');
+        case 'max': return this.$t('EffectForm.YiU5qaeVVCZsEO5UlwF09');
+        case 'set': return this.$t('EffectForm.xMY-6t6rOKYhJ9zLKbxjw');
+        case 'advantage': return this.$t('EffectForm.4OEUhBe2V-9J_ugMReImf');
+        case 'disadvantage': return this.$t('EffectForm.gpZPc3mE5Auwup0o2E7as');
+        case 'passiveAdd': return this.$t('EffectForm.xp_04nGt0LMA-JD9SJipV');
+        case 'fail': return this.$t('EffectForm.JMxHUgMOu5XlMqqlHiLNn');
+        case 'conditional': return this.$t('EffectForm.ALsVM2wCgI2BZU9bY8v9N');
         default: return '';
       }
     },

@@ -6,10 +6,10 @@
       @change="emitInput"
     >
       <v-btn :value="-1">
-        Disadvantage
+        {{ $t('AdvantageInput.sN61sdTDUmZNRJhgdk3FT') }}
       </v-btn>
       <v-btn :value="1">
-        Advantage
+        {{ $t('AdvantageInput.GOVw9p7PQMyvg1W3QMv1h') }}
       </v-btn>
     </v-btn-toggle>
     <div style="position: relative;">
@@ -29,7 +29,7 @@
         @click="$emit('continue')"
       >
         <div>
-          Roll
+          {{ $t('SelectedCreatureBar.NgRLZ1KujlD3o3EtzLY3R') }}
         </div>
       </vertical-hex>
     </div>

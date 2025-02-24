@@ -10,13 +10,13 @@
         mandatory
       >
         <v-btn value="archive">
-          <span>Archive</span>
+          <span>{{ $t('ArchiveDialog.Mx1WdDHTLgSwrP-zeszcC') }}</span>
           <v-icon right>
             mdi-archive-arrow-down
           </v-icon>
         </v-btn>
         <v-btn value="restore">
-          <span>Restore</span>
+          <span>{{ $t('ArchiveFileCard.dMQqaltiBjCM68nTo9Qua') }}</span>
           <v-icon right>
             mdi-archive-arrow-up-outline
           </v-icon>
@@ -40,7 +40,7 @@
       @click="archiveAction"
     >
       <template v-if="mode === 'restore' && characterSlots <= 0">
-        No Character Slots Left
+        {{ $t('ArchiveDialog.UzLEAKMi-ia32kBmo_AyT') }}
       </template>
       <template v-else>
         {{ mode === 'archive' ? 'Archive' : 'Restore' }}
@@ -51,7 +51,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Close
+      {{ $t('ImageInputDialog.E9s5YhcazF4CjinGCQJp7') }}
     </v-btn>
   </dialog-base>
 </template>
@@ -70,7 +70,7 @@ import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods
 
 const characterTransform = function(char){
   char.url = `/character/${char._id}/${char.urlName || '-'}`;
-  char.initial = char.name && char.name[0] || '?';
+  char.initial = char.name && char.name[0] || this.$t('CharacterList.5Lh6_XvKqv3A7OD7dR00y');
   return char;
 };
 

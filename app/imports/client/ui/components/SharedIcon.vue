@@ -44,9 +44,9 @@ export default {
     },
     accessText(){
       switch (this.accessRights){
-        case 'writer': return 'Shared with edit permission';
-        case 'reader': return 'Shared as view-only';
-        case 'public': return 'Shared publically';
+        case 'writer': return this.$t('SharedIcon.q2o9ULMxirc3EO7lc_HJz');
+        case 'reader': return this.$t('SharedIcon.kF8vLcL1xPgleTIoZwfyz');
+        case 'public': return this.$t('SharedIcon.kqGIJFg86xcv4IzPhPKcg');
         default: return '';
       }
     },

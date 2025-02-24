@@ -9,7 +9,7 @@
         <text-field
           v-if="schemaHasName"
           ref="focusFirst"
-          label="Name"
+          :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
           style="flex-basis: 320px;"
           :value="model.name"
           :error-messages="errors.name"
@@ -32,7 +32,7 @@
     >
       <form-section
         v-if="context.isLibraryForm"
-        name="Library"
+        :name="$t('SingleLibrary.8o8zfT4rnslD95pstr578')"
       >
         <v-row
           v-if="context.isLibraryForm"
@@ -43,7 +43,7 @@
             md="6"
           >
             <smart-switch
-              label="Can fill slots"
+              :label="$t('PropertyForm.XXwZiSyy3PLlHms5-hiEq')"
               :value="model.fillSlots"
               :error-messages="errors.fillSlots"
               @change="(value, ack) => $emit('change', {path: ['fillSlots'], value, ack})"
@@ -54,7 +54,7 @@
             md="6"
           >
             <smart-switch
-              label="Searchable from character sheet"
+              :label="$t('PropertyForm.MZRFbTU4dQcWdpVlXv9ah')"
               :value="model.searchable"
               :error-messages="errors.searchable"
               @change="(value, ack) => $emit('change', {path: ['searchable'], value, ack})"
@@ -65,10 +65,10 @@
             md="6"
           >
             <smart-select
-              label="Slot fill type"
+              :label="$t('PropertyForm.nN8qiVQXkc18VOhirptoM')"
               style="flex-basis: 300px;"
               clearable
-              hint="The property type that this slot filler pretends to be when being searched for by a slot"
+              :hint="$t('PropertyForm.G_YfY3xbu2WYu8bzJgULO')"
               :items="slotTypes"
               :value="model.slotFillerType"
               :error-messages="errors.slotFillerType"
@@ -80,10 +80,10 @@
             md="6"
           >
             <text-field
-              label="Slot quantity filled"
+              :label="$t('PropertyForm.rOdph7uHJPkuF3rKxLiUA')"
               type="number"
               min="0"
-              hint="How many properties this counts as when filling a slot"
+              :hint="$t('PropertyForm.ACu_jRxz32qDAe16Wit4A')"
               :value="model.slotQuantityFilled"
               :error-messages="errors.slotQuantityFilled"
               @change="(value, ack) => $emit('change', {path: ['slotQuantityFilled'], value, ack})"
@@ -95,9 +95,9 @@
           >
             <text-field
               v-if="context.isLibraryForm"
-              label="Condition"
-              hint="A caclulation to determine if this property can be added to a character"
-              placeholder="Always active"
+              :label="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
+              :hint="$t('PropertyForm.Mn4WP5-Y0QLyoAm-5cO1-')"
+              placeholder="$t('PropertyForm.M6byRruoaG1QJnLgCQJzH')"
               :value="model.slotFillerCondition"
               :error-messages="errors.slotFillerCondition"
               @change="(value, ack) => $emit('change', {path: ['slotFillerCondition'], value, ack})"
@@ -109,9 +109,9 @@
           >
             <text-field
               v-if="context.isLibraryForm"
-              label="Condition Error Text"
-              hint="Text to display if the condition isn't met"
-              placeholder="Always active"
+              :label="$t('PropertyForm.pfX-T7sDiiLNLZ4XYxmZe')"
+              :hint="$t('PropertyForm.ll5VOZBvTaDkanqmhdxY4')"
+              placeholder="$t('PropertyForm.xhQ1px8UKEwUfLt-2VIp_')"
               :value="model.slotFillerConditionNote"
               :error-messages="errors.slotFillerConditionNote"
               @change="(value, ack) => $emit('change', {path: ['slotFillerConditionNote'], value, ack})"
@@ -121,11 +121,11 @@
             cols="12"
           >
             <smart-combobox
-              label="Library Tags"
+              :label="$t('PropertyForm.hRA5h3_UC9k3Zk3iFywu8')"
               multiple
               small-chips
               deletable-chips
-              hint="Used to let slots find this property in a library"
+              :hint="$t('PropertyForm.F0m6HGixfZz0PawzG6Mm9')"
               :value="model.libraryTags"
               :error-messages="errors.libraryTags"
               @change="(value, ack) => $emit('change', {path: ['libraryTags'], value, ack})"
@@ -142,11 +142,11 @@
         cols="12"
       >
         <smart-combobox
-          label="Tags"
+          :label="$t('PropertyForm.vAMpUe37OijnEHSpa_exs')"
           multiple
           small-chips
           deletable-chips
-          hint="Tags let other properties target this property with interactions"
+          :hint="$t('PropertyForm.sZAVdib4BS4JqbPjOd-hh')"
           :value="model.tags"
           :error-messages="errors.tags"
           @change="(value, ack) => $emit('change', {path: ['tags'], value, ack})"
@@ -163,7 +163,7 @@
         style="gap: 8px"
       >
         <outlined-input
-          name="Child properties"
+          :name="$t('PropertyViewer.sIjkFiqjLqnIGsWsdWtDC')"
           style="width: 100%"
           class="pa-2 no-hover"
         >
@@ -208,7 +208,7 @@
             v-if="noChildInsert"
             class="ma-2 text--disabled"
           >
-            Children can be added after this property is created
+            {{ $t('PropertyForm.-9Y-RPAarunJWnLeLkRe8') }}
           </div>
         </outlined-input>
       </v-col>

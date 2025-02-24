@@ -1,7 +1,7 @@
 <template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      New Character
+      {{ $t('CharacterCreationDialog.g9OEQ6ODxw3182cFY8mfD') }}
     </v-toolbar-title>
     <v-stepper
       slot="unwrapped-content"
@@ -16,7 +16,7 @@
           step="1"
           :rules="[() => biographyAlert || true]"
         >
-          Biography
+          {{ $t('CharacterCreationDialog.ANXfivoQBJ7vJA21ti7OF') }}
           <small v-if="biographyAlert">{{ biographyAlert }}</small>
         </v-stepper-step>
         <v-divider />
@@ -25,7 +25,7 @@
           :complete="step > 2"
           step="2"
         >
-          Libraries
+          {{ $t('CharacterCreationDialog.uiuDKE-JU_7xjNfrbo7lh') }}
         </v-stepper-step>
       </v-stepper-header>
 
@@ -34,24 +34,24 @@
           <v-text-field
             v-model="name"
             outlined
-            label="Name"
+            :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
             class="mt-1"
             :error="!name"
           />
           <v-text-field
             v-model="alignment"
             outlined
-            label="Alignment"
+            :label="$t('CreatureForm.goOLNBH2M1q5u3b9JGUYd')"
           />
           <v-text-field
             v-model="gender"
             outlined
-            label="Gender"
+            :label="$t('CreatureForm.5PEqzUXcmiqyy4GEbI-td')"
           />
           <v-text-field
             v-model.number="startingLevel"
             outlined
-            label="Level"
+            :label="$t('CharacterCreationDialog.ALoCn8fXt0dv34QiFx1jx')"
             type="number"
             height="20"
             min="0"
@@ -61,7 +61,7 @@
         <v-stepper-content step="2">
           <v-switch
             v-model="allSubscribedLibraries"
-            label="All user libraries"
+            :label="$t('CreatureForm.hQuConId3Ue_R35EPFuP-')"
           />
           <library-list
             selection
@@ -80,14 +80,14 @@
         text
         @click="$emit('pop')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
       <v-btn
         v-if="step > 1"
         text
         @click="step--"
       >
-        Back
+        {{ $t('CharacterCreationDialog.C5B9zZf15rhmo_2vfaQtc') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -95,7 +95,7 @@
         color="accent"
         @click="step++"
       >
-        Next
+        {{ $t('CharacterCreationDialog.WND9g9jyBvyLplbYycyfB') }}
       </v-btn>
       <v-btn
         :disabled="!!biographyAlert"
@@ -103,7 +103,7 @@
         :color="step < 2? '' : 'accent'"
         @click="submit"
       >
-        Create
+        {{ $t('CharacterCreationDialog.EGyaTsNsK_I2KkiUB2hjV') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -124,7 +124,7 @@ export default {
   },
   data(){return {
     step: 1,
-    name: 'New Character',
+    name: this.$t('CharacterCreationDialog.h1v791IkWNs4KC1w7m6Yy'),
     gender: '',
     alignment: '',
     startingLevel: 1,
@@ -135,7 +135,7 @@ export default {
   }},
   computed: {
     biographyAlert() {
-      if (!this.name) return 'Name required';
+      if (!this.name) return this.$t('CharacterCreationDialog.JpT06KJNwEyJ4AD2XbbM_');
       return undefined;
     }
   },

@@ -2,7 +2,7 @@
   <div>
     <text-field
       ref="focusFirst"
-      label="Name"
+      :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
       prepend-inner-icon="mdi-magnify"
       regular
       hide-details
@@ -128,7 +128,7 @@
               :key="`${spell.level}-header`"
               class="item"
             >
-              {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+              {{ $t('CastSpellInput.U69b5DZ-gQ3uzAgPrdr7q', [spell.level === 0 ? 'Cantrips' : `Level ${spell.level}`]) }}
             </v-subheader>
             <spell-list-tile
               v-else

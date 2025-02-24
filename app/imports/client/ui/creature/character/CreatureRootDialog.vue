@@ -56,7 +56,7 @@
         color="accent"
         @click="$store.dispatch('popDialogStack')"
       >
-        Close
+        {{ $t('ImageInputDialog.E9s5YhcazF4CjinGCQJp7') }}
       </v-btn>
     </div>
   </dialog-base>

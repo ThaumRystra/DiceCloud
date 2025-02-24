@@ -2,7 +2,7 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        Community Libraries
+        {{ $t('LibraryBrowserDialog.rEief-McLI6QrOAmbFPFz') }}
       </v-toolbar-title>
     </template>
     <library-browser slot="unwrapped-content" />
@@ -12,7 +12,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
       </v-btn>
     </template>
   </dialog-base>

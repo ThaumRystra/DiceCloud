@@ -7,7 +7,7 @@
       >
         <computed-field
           label="DC"
-          hint="Saving throw DC"
+          :hint="$t('DamageForm.2ZYkiUwpnuyQEcaxZCnZ6')"
           :model="model.dc"
           :error-messages="errors.dc"
           @change="({path, value, ack}) =>
@@ -19,8 +19,8 @@
         md="6"
       >
         <smart-combobox
-          label="Save"
-          hint="Which stat the saving throw targets"
+          :label="$t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU')"
+          :hint="$t('DamageForm.wLt8NpiVWrumZ9fIkfU6I')"
           :value="model.stat"
           :items="saveList"
           :error-messages="errors.stat"
@@ -31,7 +31,7 @@
         cols="12"
       >
         <smart-toggle
-          label="Target creature"
+          :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
           :value="model.target"
           :options="[
             {name: 'Action Target', value: 'target'},
@@ -43,9 +43,9 @@
       </v-col>
     </v-row>
     <form-sections type="savingThrow">
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

@@ -67,11 +67,11 @@ export default {
       }
     },
     displayedStats(){
-      if (!this.model.stats) return 'Selected stats';
+      if (!this.model.stats) return this.$t('EffectTreeNode.UKIYCUaiTtgsJbcTnknaw');
       return this.model.stats.join(', ');
     },
     displayedTags(){
-      if (!this.model.targetTags) return 'Selected tags';
+      if (!this.model.targetTags) return this.$t('EffectTreeNode.0I57EVJo4scr5yYDXGmqM');
       const tags = this.model.targetTags.join(', ');
       if (!this.model.extraTags) return tags;
       const extraTags = this.model.extraTags.map(ex => {

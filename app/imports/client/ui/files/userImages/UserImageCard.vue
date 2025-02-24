@@ -29,7 +29,7 @@
         <v-list>
           <v-list-item @click="removeUserFile">
             <v-list-item-title>
-              Delete file
+              {{ $t('UserImageCard.JjwKnUf8xHiDd0lEKODTS') }}
               <v-icon right>
                 mdi-delete
               </v-icon>

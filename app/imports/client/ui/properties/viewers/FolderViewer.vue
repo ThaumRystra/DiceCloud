@@ -4,11 +4,11 @@
       dense
     >
       <property-field
-        name="Name"
+        :name="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
         :value="model.name"
       />
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

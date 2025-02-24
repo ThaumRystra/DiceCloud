@@ -1,7 +1,7 @@
 <template lang="html">
   <property-field
     v-if="model.targetByTags"
-    name="Targeted tags"
+    name="$t('PropertyTargetTags.kBSIIGERW9KuZeuu6r9E0')"
   >
     <div 
       class="py-1"

@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="effect-viewer">
     <v-row dense>
-      <property-field name="Operation">
+      <property-field :name="$t('AdjustmentForm.a3GneFZJ3MOMwzxGWJgMq')">
         <div
           class="layout"
           style="overflow: hidden;"
@@ -14,7 +14,7 @@
       </property-field>
       <property-field
         v-if="model.operation !== 'conditional'"
-        name="Amount"
+        :name="$t('AdjustmentForm.AndV_m2mK4EKCnXer50C8')"
         :value="displayedValue || ' '"
       />
       <property-target-tags
@@ -23,7 +23,7 @@
       />
       <property-field
         v-else
-        name="Stats"
+        :name="$t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t')"
       >
         <div class="d-flex flex-wrap">
           <v-chip
@@ -37,7 +37,7 @@
       </property-field>
       <property-field
         v-if="model.operation === 'conditional'"
-        name="Text"
+        :name="$t('TreeSearchInput.n00nuv-ruVz9Ug_Vv51wY')"
         :cols="{cols: 12}"
         :value="model.text || ' '"
       />
@@ -69,17 +69,17 @@ export default {
     },
     operation() {
       switch (this.model.operation) {
-        case 'base': return 'Base value';
-        case 'add': return 'Add';
-        case 'mul': return 'Multiply';
-        case 'min': return 'Minimum';
-        case 'max': return 'Maximum';
-        case 'set': return 'Set';
-        case 'advantage': return 'Advantage';
-        case 'disadvantage': return 'Disadvantage';
-        case 'passiveAdd': return 'Passive bonus';
-        case 'fail': return 'Always fail';
-        case 'conditional': return 'Conditional benefit';
+        case 'base': return this.$t('AttributeEffect.NbNtxtSkIF-eEvpQ6M1VH');
+        case 'add': return this.$t('AttributeEffect.9iZBUqNtV818puHQ9S5mA');
+        case 'mul': return this.$t('AttributeEffect.Y45EOUc4qxDGlx5Xzle92');
+        case 'min': return this.$t('AttributeEffect.PWglsxP8zZNtoVCZtbg-l');
+        case 'max': return this.$t('AttributeEffect.dEk96gl0uh7EJIwSh--a6');
+        case 'set': return this.$t('EffectForm.WEtHJEmy9l5UiGuanUysJ');
+        case 'advantage': return this.$t('AdvantageInput.GOVw9p7PQMyvg1W3QMv1h');
+        case 'disadvantage': return this.$t('AdvantageInput.sN61sdTDUmZNRJhgdk3FT');
+        case 'passiveAdd': return this.$t('AttributeEffect.TdH_tc2p6Vkb18y3GO7hY');
+        case 'fail': return this.$t('AttributeEffect.UzlEh2YQm-EU6POm5FZsj');
+        case 'conditional': return this.$t('AttributeEffect.sZxywbspgVnqysC8fZKES');
         default: return this.model.operation;
       }
     },

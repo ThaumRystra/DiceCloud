@@ -29,7 +29,7 @@
       </div>
       <v-fade-transition mode="out-in">
         <div
-          :key="doc && doc.name || 'Documentation Home'"
+          :key="doc && doc.name || $t('DocViewer.iNP-rBL8YKwM1yrzfzANC')"
           class="d-flex align-center mb-4"
         >
           <v-avatar
@@ -56,7 +56,7 @@
           <h1
             v-else
           >
-            Documentation
+            {{ $t('DocsPage.owEFuhKAi0S5XmhIaiqMB') }}
           </h1>
         </div>
       </v-fade-transition>

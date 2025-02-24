@@ -9,7 +9,7 @@
       <property-field
         v-if="model.value !== undefined ||
           fallbackValue !== undefined"
-        :name="model.damage !== undefined ? 'Value / Total': 'Value'"
+        :name="$t('AttributeViewer.zEu8A_0XCdLVyossItEYd')"
         center
       >
         <v-spacer />
@@ -47,7 +47,7 @@
       </property-field>
       <property-field
         v-if="model.modifier !== undefined"
-        name="Modifier"
+        :name="$t('AttributeForm.hmMMXL0YrBcfQuwiKerBH')"
         center
         :value="isFinite(model.modifier) ?
           numberToSignedString(model.modifier) :
@@ -58,34 +58,34 @@
         </div>
       </property-field>
       <property-field
-        name="Variable Name"
+        :name="$t('AttributeViewer.MNk7FUYtABwXmOJJeujzZ')"
         mono
         :value="model.variableName"
       />
       <property-field
-        name="Attribute type"
+        :name="$t('AttributeViewer.bIYmp9PJeOvM6OfGfRKdm')"
         :value="attributeTypes[model.attributeType]"
       />
       <property-field
         v-if="model.attributeType === 'hitDice' && model.hitDiceSize"
-        name="Hit dice size"
+        :name="$t('AttributeViewer.AGm3xFqY_MvIqXyIH0lIw')"
         :value="model.hitDiceSize"
       />
       <property-field
         v-if="model.attributeType === 'hitDice'"
-        name="Constitution modifier"
+        :name="$t('AttributeViewer.UPC_7nSq-oc8wxYsumxZL')"
         :value="isFinite(model.constitutionMod) ?
           numberToSignedString(model.constitutionMod) :
           model.constitutionMod"
       />
       <property-field
         v-if="model.attributeType === 'spellSlot' && model.spellSlotLevel"
-        name="Spell slot level"
+        :name="$t('AttributeForm.lPr7-xwYqNHO27hpZCuKM')"
         :value="model.spellSlotLevel.value !== undefined ? model.spellSlotLevel.value : model.spellSlotLevel.calculation"
       />
       <property-field
         v-if="model.attributeType === 'ability' && model.proficiency !== undefined"
-        name="Proficiency"
+        :name="$t('InlineProficiency.jN183F3ufg8Le9jkznJ4p')"
       >
         <v-icon
           style="height: 12px"
@@ -99,19 +99,19 @@
       </property-field>
       <property-field
         v-if="reset && model.attributeType !== 'hitDice'"
-        name="Reset"
+        :name="$t('ResetSelector.i6eGWDKtSDJDxSkvSA9bB')"
         :value="reset"
       />
       <property-field
         v-if="model.overridden"
         :cols="{cols: 6, md: 12}"
-        name="Overridden"
-        value="Overriden by another property with the same variable name"
+        :name="$t('AttributeViewer.tPFT2_kLfhaS8Od_i6cAK')"
+        :value=$t('AttributeViewer.JcSIdK2QZ6kcQFs94kJeh')
       />
     </v-row>
     <v-row dense>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>
@@ -119,7 +119,7 @@
       <property-field
         v-if="effects && effects.length"
         :cols="{col: 12}"
-        name="Effects"
+        :name="$t('AttributeViewer.kgj4Ky-O4dlLEDYQyGP2V')"
       >
         <v-list style="width: 100%;">
           <attribute-effect
@@ -160,21 +160,21 @@ import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTi
     },
     data(){return {
       attributeTypes: {
-        ability: 'Ability score',
-        stat: 'Stat',
-        modifier: 'Modifier',
-        hitDice: 'Hit dice',
-        healthBar: 'Health bar',
-        resource: 'Resource',
-        spellSlot: 'Spell slot',
-        utility: 'Utility',
+        ability: this.$t('AttributeForm.5hpvJ6q4Hn5sFTyouCff6'),
+        stat: this.$t('AttributeForm.HfQFeTAfKd1zckW8iTKeZ'),
+        modifier: this.$t('AttributeForm.hmMMXL0YrBcfQuwiKerBH'),
+        hitDice: this.$t('AttributeForm.Zq1j6dv8EzkcCKupgbtJJ'),
+        healthBar: this.$t('AttributeForm.c26Obti6Uq4ei1OCpx5Nt'),
+        resource: this.$t('AttributeForm.6n6iQ0mM-LNTUFGDgEicm'),
+        spellSlot: this.$t('AttributeForm.VaJqa5cUoqNj8brF0-of6'),
+        utility: this.$t('AttributeForm.QUnXaen7rDzDb624npbUE'),
       },
       proficiencyText: {
-        0: 'Not proficient',
-        1: 'Proficient',
-        0.49: 'Half proficiency bonus rounded down',
-        0.5: 'Half proficiency bonus rounded up',
-        2: 'Double proficiency bonus',
+        0: this.$t('AttributeViewer.zS5I5I1HtvQ-bmZWAvNWK'),
+        1: this.$t('SkillProficiency.c7_OrgWVaMZiroKapKs0O'),
+        0.49: this.$t('SkillProficiency.rdG6DgAZ2pH5uGiEXs9ni'),
+        0.5: this.$t('SkillProficiency.H3H4WWeJkDnYc9n0b8pee'),
+        2: this.$t('SkillProficiency.Lq-INVfia0gaEurWHuCvq'),
       },
       damagePropertyLoading: false,
     }},
@@ -182,9 +182,9 @@ import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTi
       reset(){
         let reset = this.model.reset
         if (reset === 'shortRest'){
-          return 'Reset on a short rest';
+          return this.$t('ActionViewer.mPkSelm59kG9PgRpl7PuX');
         } else if (reset === 'longRest'){
-          return 'Reset on a long rest';
+          return this.$t('ActionViewer.bN9dpIryBBN8_iI1JacWp');
         }
         return undefined;
       },

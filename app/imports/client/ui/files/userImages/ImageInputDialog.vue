@@ -6,8 +6,8 @@
         :color="$vuetify.theme.themes.dark.accent"
         grow
       >
-        <v-tab>User Files</v-tab>
-        <v-tab>From URL</v-tab>
+        <v-tab>{{ $t('ImageInputDialog.9SHk8YEQHCgYV91wogpZG') }}</v-tab>
+        <v-tab>{{ $t('ImageInputDialog.en5XFGMDi3f54ER1Z_HDe') }}</v-tab>
       </v-tabs>
     </template>
     <v-tabs-items
@@ -66,7 +66,7 @@
         <v-card-text class="fill-height d-flex flex-column justify-center align-center">
           <v-text-field
             v-model="inputHref"
-            label="Direct link to image"
+            :label="$t('ImageInputDialog.zb6ST-_z_zJvOhv-DPvag')"
             class="flex-grow-0"
             style="width: 100%"
           />
@@ -87,7 +87,7 @@
       <v-icon left>
         mdi-check
       </v-icon>
-      Save
+      {{ $t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU') }}
     </v-btn>
     <v-btn
       v-else
@@ -95,7 +95,7 @@
       text
       @click="$emit('pop')"
     >
-      Close
+      {{ $t('ImageInputDialog.E9s5YhcazF4CjinGCQJp7') }}
     </v-btn>
   </dialog-base>
 </template>

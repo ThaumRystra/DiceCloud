@@ -17,11 +17,11 @@
           damage
         </span>
         <span v-if="model.target === 'self'">
-          to self
+          {{ $t('AdjustmentTreeNode.VZaia8qVr9WSGXw50oSCe') }}
         </span>
       </template>
       <template v-else>
-        <span>{{ model.stat || 'Attribute' }} damage</span>
+        <span>{{ $t('AdjustmentTreeNode.gOVb9Z3tsjX8x6oCtbSmk', [model.stat || 'Attribute']) }}</span>
       </template>
     </div>
   </div>

@@ -9,11 +9,11 @@
     >
       <v-list>
         <v-subheader>
-          File storage used
+          {{ $t('Account.IgPFoRX1GZ54XLutVgBXb') }}
         </v-subheader>
         <file-storage-stats />
         <v-subheader>
-          Character storage used
+          {{ $t('Account.fwk5RkXcCocZfIDVw-C9r') }}
         </v-subheader>
         <v-list-item>
           <v-list-item-title>
@@ -21,11 +21,11 @@
           </v-list-item-title>
         </v-list-item>
         <v-subheader class="mb-4">
-          Preferences
+          {{ $t('Account.3pbzYvXPCos7z-eySLZl1') }}
         </v-subheader>
         <v-list-item>
           <smart-toggle
-            label="Theme"
+            :label="$t('Account.Do9l1M5QOft47GPCr9we9')"
             :value="darkMode === true ? 'true' : darkMode === false ? 'false' : darkMode === null ? 'unset': undefined"
             :options="[
               {name: 'Dark', value: 'true', icon: 'mdi-brightness-5'},
@@ -37,7 +37,7 @@
         </v-list-item>
         <v-list-item>
           <smart-switch
-            label="Swap ability scores and modifiers"
+            :label="$t('Account.fiO_GPwbZvws6D-uV5Cmi')"
             :value="
               user &&
                 user.preferences &&
@@ -48,7 +48,7 @@
         </v-list-item>
 
         <v-subheader>
-          Username
+          {{ $t('Account.xdRICWNnL1zKFqlLV1YVe') }}
         </v-subheader>
         <v-list-item data-id="username">
           <v-list-item-action>
@@ -62,7 +62,7 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
-              <span>Change Username</span>
+              <span>{{ $t('Account.Tr8I2Y3XgfC353GAuzeyB') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
@@ -71,7 +71,7 @@
         </v-list-item>
 
         <v-subheader>
-          Email
+          {{ $t('Account.1CjTMGr4G6PAUTuIV-0u1') }}
         </v-subheader>
         <v-list-item
           v-for="email in emails"
@@ -104,7 +104,7 @@
           <v-text-field
             v-if="showEmailInput"
             v-model="inputEmail"
-            label="Add Email Address"
+            :label="$t('Account.PU_3e67f2QDSgm5Q3ewgD')"
             :error-messages="addEmailError"
             outlined
           >
@@ -132,7 +132,7 @@
           </v-btn>
         </v-slide-x-transition>
         <v-subheader>
-          Patreon
+          {{ $t('Account.U9BIXDXwbO63Izqnr9n7o') }}
         </v-subheader>
         <v-list-item>
           <v-list-item-action>
@@ -147,7 +147,7 @@
                   <v-icon>mdi-refresh</v-icon>
                 </v-btn>
               </template>
-              <span>Refresh Patreon status</span>
+              <span>{{ $t('Account.YVZoAq5bW7uKPFXn6___J') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
@@ -159,7 +159,7 @@
             color="primary"
             @click="linkWithGoogle"
           >
-            Link Google Account
+            {{ $t('Account.BQT0FX7Lp9l4T3qdkdTCX') }}
           </v-btn>
         </v-list-item>
         <v-list-item v-if="!user.services.patreon">
@@ -167,7 +167,7 @@
             color="primary"
             @click="linkWithPatreon"
           >
-            Link Patreon Account
+            {{ $t('Account.dLdhXdRxWkcsh8CD0Y03f') }}
           </v-btn>
         </v-list-item>
       </v-list>
@@ -178,14 +178,14 @@
           color="accent"
           @click="signOut"
         >
-          Sign Out
+          {{ $t('Account.eu6bZxqHLNIk6BIbkHXZS') }}
         </v-btn>
       </v-layout>
       <template v-if="invites.length">
         <v-divider class="mt-3 mb-3" />
         <v-subheader>
           <h1>
-            Invites
+            {{ $t('Account.u5SaMzpfPswQRyVsHxfi3') }}
           </h1>
         </v-subheader>
         <v-list>
@@ -221,7 +221,7 @@
           data-id="delete-account-btn"
           @click="deleteAccount"
         >
-          Delete Account
+          {{ $t('Account.KZNInB0WcjkPLeppcCG7p') }}
         </v-btn>
       </v-layout>
     </v-card>

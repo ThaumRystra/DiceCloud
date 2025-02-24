@@ -85,9 +85,9 @@ export default {
   methods: {
     title(prop){
       switch (prop.value){
-        case 0: return 'Immunity';
-        case 0.5: return 'Resistance';
-        case 2: return 'Vulnerability';
+        case 0: return this.$t('PrintedDamageMultipliers.uNx-Dyhk3Z17Q7dWuR4Bp');
+        case 0.5: return this.$t('PrintedDamageMultipliers.uP77KRfYo25L_qwnj-JQR');
+        case 2: return this.$t('PrintedDamageMultipliers.p5oBcNFeC2ebcPTxmWvab');
       }
     }
   }

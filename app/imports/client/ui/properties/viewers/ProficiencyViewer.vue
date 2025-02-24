@@ -3,7 +3,7 @@
     <v-row dense>
       <property-field
         v-if="model.value !== undefined"
-        name="Proficiency"
+        :name="$t('InlineProficiency.jN183F3ufg8Le9jkznJ4p')"
       >
         <proficiency-icon
           :value="model.value"
@@ -20,7 +20,7 @@
       />
       <property-field
         v-else
-        name="Stats"
+        :name="$t('CharacterSheetDialog.NnBUF4ZwE2sxY2H9laU5t')"
         :value="model.stats && model.stats.join(', ')"
         mono
       />
@@ -42,10 +42,10 @@ export default {
   computed: {
     proficiencyText(){
       switch (this.model.value){
-        case 0.49: return 'Half proficiency bonus rounded down';
-        case 0.5: return 'Half proficiency bonus';
-        case 1: return 'Proficient';
-        case 2: return 'Double proficiency bonus';
+        case 0.49: return this.$t('SkillProficiency.rdG6DgAZ2pH5uGiEXs9ni');
+        case 0.5: return this.$t('ProficiencyViewer.fSzRlRx_9g9BQI5cWRfJ7');
+        case 1: return this.$t('SkillProficiency.c7_OrgWVaMZiroKapKs0O');
+        case 2: return this.$t('SkillProficiency.Lq-INVfia0gaEurWHuCvq');
         default: return '';
       }
     }

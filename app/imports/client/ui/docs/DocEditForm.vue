@@ -11,7 +11,7 @@
             md="6"
           >
             <text-field
-              label="Title"
+              :label="$t('DocEditForm.x69gyxffuSguaHXvQ56H7')"
               :value="doc.name"
               @change="(value, ack) => change({path: ['name'], value, ack})"
             />
@@ -22,9 +22,9 @@
             class="d-flex"
           >
             <text-field
-              label="URL title"
+              :label="$t('DocEditForm.ibL0uSJEY48oXcP1KRfhZ')"
               :value="doc.urlName"
-              hint="Only letters, numbers, and dashes"
+              :hint="$t('DocEditForm.iYa364MzsI7qeI-Hqqvqp')"
               @change="(value, ack) => change({path: ['urlName'], value, ack})"
             />
             <v-menu
@@ -47,7 +47,7 @@
                 >
                   <v-list-item-content>
                     <v-list-item-title>
-                      Delete
+                      {{ $t('DocEditForm.pblwi8OgupFn22G1Nw-oY') }}
                     </v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -62,7 +62,7 @@
             md="6"
           >
             <smart-switch
-              label="Published"
+              :label="$t('DocEditForm.rlg1W1Bi9d_cFlgtCvR7K')"
               :value="doc.published"
               @change="(value, ack) => change({path: ['published'], value, ack})"
             />
@@ -73,7 +73,7 @@
             class="d-flex align-center"
           >
             <icon-picker
-              label="Icon"
+              :label="$t('DocEditForm.fdnsRCx5WMZngX4lcEfYv')"
               :value="doc.icon"
               @change="(value, ack) => change({path: ['icon'], value, ack})"
             />
@@ -82,7 +82,7 @@
             cols="12"
           >
             <text-area
-              label="Body"
+              :label="$t('DocEditForm.B_3-X2h_ufATd8alPiO5O')"
               :rows="20"
               :value="doc.description"
               @change="(value, ack) => change({path: ['description'], value, ack})"
@@ -119,7 +119,7 @@
             style="width: 100%; height: 240px;"
             @click="ack => add({ ack })"
           >
-            Add child
+            {{ $t('DocEditForm.j7Vpqo3j1Sz29ubpKb0LR') }}
           </smart-btn>
         </v-col>
       </v-row>
@@ -178,7 +178,7 @@ export default {
     add({ ack }) {
       insertDoc.call({
         doc: {
-          name: 'New Doc',
+          name: this.$t('DocEditForm.jLbuJuy5M6aZO3Y2egMz7'),
         },
         parentId: this.docId,
       }, ack);
@@ -195,7 +195,7 @@ export default {
         ack?.(error);
         if (!error) {
           snackbar({
-            text: `Deleted ${docName}`,
+            text: this.$t('DocEditForm.SA6oEM0EnAeoxVuV5HTAg', [docName]),
             callbackName: 'undo',
             callback() {
               restoreDoc.call({ _id });

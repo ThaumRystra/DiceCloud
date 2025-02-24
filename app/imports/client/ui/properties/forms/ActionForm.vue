@@ -9,14 +9,14 @@
           <v-switch
             v-if="!isAttack"
             class="ml-4"
-            label="Attack roll"
+            :label="$t('ActionForm.xmMtf1B_9pQbs427sDgXe')"
             :value="attackSwitch"
             @change="e => attackSwitch = e"
           />
           <computed-field
             v-else
-            label="Base attack roll bonus"
-            hint="Must be set for the action to have an attack roll"
+            :label="$t('ActionForm.qRNU4yeoGNycWekPlSaVt')"
+            :hint="$t('ActionForm.AzFSRHVXHkOjHwzEBpW1S')"
             :model="model.attackRoll"
             :error-messages="errors.attackRoll"
             @change="({path, value, ack}) =>
@@ -40,7 +40,7 @@
         md="4"
       >
         <smart-select
-          label="Action type"
+          :label="$t('ActionForm.Swu-7z8ZpCzf1wlyF0m3F')"
           :items="actionTypes"
           :value="model.actionType"
           :error-messages="errors.actionType"
@@ -54,29 +54,29 @@
     <v-slide-x-transition mode="out-in">
       <text-field
         v-if="model.actionType === 'event'"
-        label="Event variable name"
+        :label="$t('ActionForm.0I_y_C73SJXvF96894Q5d')"
         :value="model.variableName"
-        hint="Variable name of the event that this action represents"
+        :hint="$t('ActionForm.YYTI642lXA_BdgxMerFqU')"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
     </v-slide-x-transition>
 
     <smart-toggle
-      label="Target creature"
+      :label="$t('ActionForm.IwoGz7GsJv8SJpY4hizQ8')"
       :value="model.target"
       :options="[
-        {name: 'Single Target', value: 'singleTarget'},
-        {name: 'Multiple Targets', value: 'multipleTargets'},
-        {name: 'Self', value: 'self'},
+        {name: $t('ActionForm.X-T-bN6vOll6c4GJ09EpL'), value: 'singleTarget'},
+        {name: $t('ActionForm.cZ7n7frApR4M5NF_lVStR'), value: 'multipleTargets'},
+        {name: $t('ActionForm.wvr48hnF1DbxApmRDC3R0'), value: 'self'},
       ]"
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
     />
 
     <inline-computation-field
-      label="Summary"
-      hint="This will appear in the action card in the character sheet, summarise what the action does. This text will be displayed in the log when the action is taken"
+      :label="$t('ActionForm.uMqJz6So1tbWiONiw7coZ')"
+      :hint="$t('ActionForm.ji0n_ZaizHaR9NIcbiNYK')"
       :model="model.summary"
       :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
@@ -84,7 +84,7 @@
     />
 
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -92,7 +92,7 @@
     />
 
     <form-sections type="action">
-      <form-section name="Resources Consumed">
+      <form-section :name="$t('ActionForm.cpAHLXjqzucwbDadtCQum')">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -100,15 +100,15 @@
           @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
         />
       </form-section>
-      <form-section name="Limit Uses">
+      <form-section :name="$t('ActionForm.UDRHVbObbwgfNGTG86O9l')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
             <computed-field
-              label="Uses"
-              hint="How many times this action can be used before needing to be reset"
+              :label="$t('ActionForm.kIN6lH7jJTD3RaF7WkyUy')"
+              :hint="$t('ActionForm.7SSJSK3GiHrpECAN5kVK7')"
               class="mr-2"
               :model="model.uses"
               :error-messages="errors.uses"
@@ -121,9 +121,9 @@
             md="6"
           >
             <text-field
-              label="Uses used"
+              :label="$t('ActionForm.HTFEl9P4nWPzp5aVQmtz4')"
               type="number"
-              hint="How many times this action has already been used: should be 0 in most cases"
+              :hint="$t('ActionForm.WRR0YxFykMD9mmYmqe5no')"
               style="flex-basis: 300px;"
               :value="model.usesUsed"
               :error-messages="errors.uses"
@@ -132,15 +132,15 @@
           </v-col>
         </v-row>
         <reset-selector
-          hint="When number of uses used should be reset to zero"
+          :hint="$t('ActionForm.dHGbl2jpHpaOGOSg3oGeJ')"
           :value="model.reset"
           :error-messages="errors.reset"
           @change="change('reset', ...arguments)"
         />
       </form-section>
-      <form-section name="Log">
+      <form-section :name="$t('ActionForm.7JkrChA5Oz7n_-wF0QxsW')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('ActionForm.pTOkAuMdrx_hGI0E1xQl2')"
           class="ml-4 mt-0 mb-4"
           :value="model.silent"
           :error-messages="errors.silent"
@@ -167,41 +167,41 @@ export default {
     let data = {
       actionTypes: [
         {
-          text: 'Action',
+          text: this.$t('PrintedAction.IrhNSkzJSRi84GhcibaA6'),
           value: 'action',
         }, {
-          text: 'Bonus action',
+          text: this.$t('ActionForm.t_rdlLehNy3iLM13m8KHi'),
           value: 'bonus',
         }, {
-          text: 'Attack action',
+          text: this.$t('ActionForm.kPjD8rr_PnXqy-pMLGLXp'),
           value: 'attack',
-          help: 'Attack actions replace a single attack when you choose to use your Action to attack',
+          help: this.$t('ActionForm.p7OvsLgcWG2GjhPpfy4aZ'),
         }, {
-          text: 'Reaction',
+          text: this.$t('PrintedAction.mfg8w8IEyp7lqOtrKA716'),
           value: 'reaction',
         }, {
-          text: 'Free action',
+          text: this.$t('ActionForm.L7CIoiuGHz6rNUNfQR0x1'),
           value: 'free',
-          help: 'You can take one free action on your turn without using an action or bonus action'
+          help: this.$t('ActionForm.DGVwhkixMi9ZS_UugfZrR')
         }, {
-          text: 'Long action',
+          text: this.$t('ActionForm.pW9GN3ykvnJUE5ozpy0zR'),
           value: 'long',
-          help: 'Long actions take longer than one turn to complete'
+          help: this.$t('ActionForm.RTgX4kDybPn7w6k1h-xQU')
         }, {
-          text: 'Event',
+          text: this.$t('ActionForm.3ylc2njgCKwqOiWNQLFrF'),
           value: 'event',
-          help: 'Events are actions that happen to the character like rests or dawn'
+          help: this.$t('ActionForm.hV4fQBRRTxnnMDEbFthkM')
         },
       ],
       targetOptions: [
         {
-          text: 'Self',
+          text: this.$t('ActionForm.wvr48hnF1DbxApmRDC3R0'),
           value: 'self',
         }, {
-          text: 'Single target',
+          text: this.$t('ActionCard.5IbE7yubecegAHFjeu4mr'),
           value: 'singleTarget',
         }, {
-          text: 'Multiple targets',
+          text: this.$t('ActionForm.SPian0NX_8UamXDgapfmE'),
           value: 'multipleTargets',
         },
       ],

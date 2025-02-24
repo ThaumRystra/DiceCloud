@@ -1,14 +1,14 @@
 <template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Import character 
+      {{ $t('CharacterImportDialog.YeTuBenUiVxNWdSD1W1Sn') }} 
     </v-toolbar-title>
     <div>
       <h2 class="mb-4">
-        Import a character from another instance of DiceCloud
+        {{ $t('CharacterImportDialog.Suo_pTaP9gmyyDoiXwEp-') }}
       </h2>
       <p>
-        The character needs to have their sharing permission set to "anyone can view"
+        {{ $t('CharacterImportDialog.DsbwUmVBwajKNXuIwg3r6') }}
       </p>
       <text-field
         :value="currentUrl"
@@ -23,7 +23,7 @@
             color="primary"
             @click="importCharacterData"
           >
-            Import
+            {{ $t('CharacterImportDialog.E4IFoDL7aTpurrEN-fyqQ') }}
           </v-btn>
         </v-slide-x-transition>
       </div>
@@ -33,7 +33,7 @@
         text
         @click="$emit('pop')"
       >
-        Cancel
+        {{ $t('DeleteConfirmationDialog.7_oqaObBgI5fk_suDAZ0V') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -55,7 +55,7 @@ export default {
   }},
   computed: {
     biographyAlert() {
-      if (!this.name) return 'Name required';
+      if (!this.name) return this.$t('CharacterCreationDialog.JpT06KJNwEyJ4AD2XbbM_');
       return undefined;
     }
   },
@@ -68,7 +68,7 @@ export default {
     async setUrl(val, ack) {
       const regex = /(https?:\/\/)([\w|.]+)\/character\/([^/]+)\/(.+)/;
       if (!regex.test(val)) {
-        ack('Not a valid character URL');
+        ack(this.$t('CharacterImportDialog.smZY0L2hAeglTEByUO2j4'));
         return;
       }
       const newUrl = val.replace(regex, '$1$2/api/creature/$3');
@@ -82,8 +82,8 @@ export default {
         return;
       }
       if (characterData.error) {
-        if (characterData.reason === 'No user ID. Are you logged in?') {
-          ack('This character\'s sharing settings are not set to allow anyone to view')
+        if (characterData.reason === this.$t('CharacterImportDialog.x4oAHeV2B5uUemiIM3C8h')) {
+          ack(this.$t('CharacterImportDialog.iPECBoQB1saz_5K-9kltX'))
         } else {
           ack(characterData.reason ?? characterData.error);
         }

@@ -16,7 +16,7 @@
         <v-text-field
           v-model="email"
           type="text"
-          label="Email"
+          :label="$t('Account.1CjTMGr4G6PAUTuIV-0u1')"
           :rules="emailRules"
           class="ma-2"
           outlined
@@ -26,7 +26,7 @@
         <v-text-field
           v-model="username"
           type="text"
-          label="Username"
+          :label="$t('Account.xdRICWNnL1zKFqlLV1YVe')"
           :rules="usernameRules"
           class="ma-2"
           outlined
@@ -36,7 +36,7 @@
         <v-text-field
           v-model="password"
           type="password"
-          label="Password"
+          :label="$t('Register.i7xi3kzHqYrsjmgPGbpqz')"
           :rules="passwordRules"
           class="ma-2"
           outlined
@@ -46,7 +46,7 @@
         <v-text-field
           v-model="password2"
           type="password"
-          label="Password Again"
+          :label="$t('Register.mG7vo0cKtZOsVnLF4MJFc')"
           :rules="password2Rules"
           class="ma-2"
           outlined
@@ -62,7 +62,7 @@
             color="accent"
             @click="submit"
           >
-            Register
+            {{ $t('Home.Y7uTRbv5hbEkIplOp6-XF') }}
           </v-btn>
         </v-layout>
       </v-layout>
@@ -79,7 +79,7 @@
         color="accent"
         @click="googleLogin"
       >
-        Register in with Google
+        {{ $t('Register.avHsf7o8zL3P_N7ma_IdP') }}
       </v-btn>
     </v-layout>
   </div>
@@ -92,21 +92,21 @@
         valid: true,
         username: '',
         usernameRules: [
-          v => !!v || 'Name is required',
+          v => !!v || this.$t('Register.yfTv252rVq9SqVdTJ3Yks'),
         ],
         email: '',
         emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
+          v => !!v || this.$t('Register.W_CdFLZLh_HrlUiFd9T6G'),
+          v => /.+@.+/.test(v) || this.$t('Register.9zW2GcUch66RUVP8KvNdN'),
         ],
         password: '',
         passwordRules: [
-          v => !!v || 'Password is required',
+          v => !!v || this.$t('Register.pjj23oD2_4P9_mRgSGFFy'),
         ],
         password2: '',
         password2Rules: [
-          v => !!v || 'Password is required',
-          v => v == this.password || 'Passwords don\'t match',
+          v => !!v || this.$t('Register.eT-l-HBPTmti3zIhNNzhX'),
+          v => v == this.password || this.$t('Register.1S2ehjyrUG5gkDTpEGCBw'),
         ],
         error: '',
         googleError: '',

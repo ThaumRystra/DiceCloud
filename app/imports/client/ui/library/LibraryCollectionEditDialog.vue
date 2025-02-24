@@ -38,7 +38,7 @@
             {{ ownerName || '?' }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            Collection owner
+            {{ $t('LibraryCollectionEditDialog.2pS42Hzay89QTxEjuq7DH') }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -48,18 +48,18 @@
         @change="(name, ack) => updateLibraryCollection({name}, ack)"
       />
       <text-area
-        label="Description"
+        :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :value="model.description"
         @change="(description, ack) => updateLibraryCollection({description}, ack)"
       />
       <smart-switch
         :value="model.showInMarket"
         :disabled="!isOwner"
-        label="Show in community library browser"
+        :label="$t('LibraryCollectionEditDialog.UkpmWuRz7Xjp0SsJq0tR4')"
         @change="(showInMarket, ack) => updateLibraryCollection({showInMarket}, ack)"
       />
       <smart-select
-        label="Libraries"
+        :label="$t('CharacterCreationDialog.uiuDKE-JU_7xjNfrbo7lh')"
         :items="libraryOptions"
         :value="model.libraries"
         :debounce-time="0"
@@ -77,7 +77,7 @@
         data-id="delete-library-button"
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -109,7 +109,7 @@ export default {
         elementId: 'delete-library-button',
         data: {
           name: this.model.name,
-          typeName: 'Collection'
+          typeName: this.$t('LibraryCollectionEditDialog.E0xemwvMGxun2_MvDmVB9')
         },
         callback(confirmation) {
           if (!confirmation) return;

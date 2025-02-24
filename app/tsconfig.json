@@ -16,6 +16,7 @@
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
+    "sourceMap": true,
     "noErrorTruncation": true,
     "outDir": "build",
     "paths": {
@@ -31,7 +32,7 @@
       ]
     },
     "resolveJsonModule": true,
-    "esModuleInterop": true,
+    "esModuleInterop": true
   },
   "vueCompilerOptions": {
     "target": 2

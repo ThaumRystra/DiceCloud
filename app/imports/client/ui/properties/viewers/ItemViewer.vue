@@ -3,7 +3,7 @@
     <v-row dense>
       <property-field
         v-if="model.quantity > 1 || model.showIncrement"
-        name="Quantity"
+        :name="$t('AttributeConsumedForm.UmwJU_8ntBz-N8i0UgvKd')"
         large
       >
         <v-spacer />
@@ -22,7 +22,7 @@
       </property-field>
       <property-field
         v-if="context.creatureId"
-        name="Delete"
+        :name="$t('DocEditForm.pblwi8OgupFn22G1Nw-oY')"
         center
       >
         <v-btn
@@ -80,7 +80,7 @@
       </property-field>
       <property-field
         v-if="model.weight !== undefined"
-        name="Weight"
+        :name="$t('ContainerForm.7KxFeshSgsphebWl6Y_Bt')"
       >
         <div style="overflow: hidden;">
           <v-layout
@@ -95,7 +95,7 @@
               $vuetify.icons.injustice
             </v-icon>
             <span class="text-subtitle-1">
-              {{ totalWeight }} lb
+              {{ $t('ItemViewer.v9VxAknaqvQ8HCBcydnxk', [totalWeight]) }}
             </span>
           </v-layout>
           <v-layout
@@ -108,7 +108,7 @@
               $vuetify.icons.weight
             </v-icon>
             <span class="text-subtitle-1 mr-2">
-              {{ model.weight }} lb
+              {{ $t('ItemViewer.0eBVpSpRe4VzVWbPuTxDD', [model.weight]) }}
             </span>
             <span
               v-if="model.quantity > 1"
@@ -126,15 +126,15 @@
         >
           mdi-account-arrow-left
         </v-icon>
-        <span class="ml-1">Equipped</span>
+        <span class="ml-1">{{ $t('InventoryTab.7csTJE-Hdc56U4SulNOzN') }}</span>
       </property-field>
       <property-field
         v-if="model.requiresAttunement && context.creatureId"
-        name="Requires attunement"
+        :name="$t('PrintedBlockItem.SFhP2eWq7btddl4MHtwZj')"
       >
         <smart-switch
           class="ml-4"
-          label="Attuned"
+          label="$t('PrintedBlockItem.C--Y4P75TjKpuM26BDapb')"
           :value="model.attuned"
           @change="(value, ack) => $emit('change', { path: ['attuned'], value, ack })"
         />
@@ -147,14 +147,14 @@
           >
             $vuetify.icons.spell
           </v-icon>
-          <span class="ml-1">Attuned</span>
+          <span class="ml-1">{{ $t('PrintedBlockItem.C--Y4P75TjKpuM26BDapb') }}</span>
         </template>
         <template v-else>
-          Requires attunement
+          {{ $t('PrintedBlockItem.SFhP2eWq7btddl4MHtwZj') }}
         </template>
       </property-field>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>
@@ -193,8 +193,8 @@ export default {
     },
     attunementText() {
       if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
+        if (this.model.attuned) return this.$t('PrintedBlockItem.C--Y4P75TjKpuM26BDapb');
+        return this.$t('PrintedBlockItem.SFhP2eWq7btddl4MHtwZj');
       }
       return undefined;
     }

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/attributes-order -->
 <template>
   <div class="sidebar">
     <v-layout
@@ -8,7 +9,7 @@
         text
         to="/sign-in"
       >
-        Sign in
+        {{ $t('Sidebar.Ic_fWFzKEAoFGAzBaHGE0') }}
       </v-btn>
     </v-layout>
     <v-list
@@ -32,7 +33,7 @@
                 <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
-            <span>Account Settings</span>
+            <span>{{ $t('Sidebar.TLlr6aU-7D83jdG1gJHY8') }}</span>
           </v-tooltip>
         </v-list-item-action>
       </v-list-item>
@@ -54,6 +55,42 @@
           mdi-open-in-new
         </v-icon>
       </v-list-item>
+      
+      <!-- Language Selector -->
+      <v-list-group
+        v-model="isLanguageMenuOpen"
+        class="language-selector"
+        dense
+      >
+        <template v-slot:activator>
+          <v-list-item-icon>
+            <v-icon>mdi-earth</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title class="d-flex align-center">
+              <span class="flag-icon mr-2">{{ selectedItem.flag }}</span>
+              <span class="language-code">{{ selectedItem.value.toUpperCase() }}</span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="item in availableLocales"
+          :key="item.value"
+          @click="changeLocale(item.value)"
+          :class="{'v-list-item--active': item.value === selectedLocale}"
+          dense
+        >
+          <v-list-item-content>
+            <v-list-item-title class="d-flex align-center">
+              <span class="flag-icon mr-2">{{ item.flag }}</span>
+              <span class="language-text">{{ item.text }}</span>
+              <span class="language-code ml-auto">({{ item.value.toUpperCase() }})</span>
+            </v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+      
       <v-divider />
     </v-list>
     <creature-folder-list
@@ -71,6 +108,7 @@ import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolde
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
+import LocaleService from '/imports/client/ui/locales/config/LocaleService';
 
 const characterTransform = function (char) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
@@ -95,17 +133,16 @@ export default {
     links() {
       let isLoggedIn = !!Meteor.userId();
       let links = [
-        { title: 'Home', icon: 'mdi-home', to: '/' },
-        { title: 'Characters', icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
-        { title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
-        { title: 'Tabletops', icon: 'mdi-table-furniture', to: '/tabletops', requireLogin: true },
-        //{ title: 'Friends', icon: 'mdi-account-multiple', to: '/friends', requireLogin: true },
-        { title: 'Files', icon: 'mdi-file-multiple', to: '/my-files', requireLogin: true, },
-        { title: 'Documentation', icon: 'mdi-book-open-variant', to: '/docs' },
-        { title: 'Feedback', icon: 'mdi-bug', to: '/feedback' },
-        { title: 'About', icon: 'mdi-sign-text', to: '/about' },
-        { title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
-        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
+        { title: this.$t('Maintenance.xn1iabUyQAcN50064OLqt'), icon: 'mdi-home', to: '/' },
+        { title: this.$t('Sidebar.Rr1M41-BLJbeBDuSMqsqs'), icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
+        { title: this.$t('SingleLibrary.8o8zfT4rnslD95pstr578'), icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
+        { title: this.$t('Sidebar.lO8RxJFgOO2O9Sl2b1pxT'), icon: 'mdi-table-furniture', to: '/tabletops', requireLogin: true },
+        { title: this.$t('Sidebar.BPQym8QzWFodXZjtBNfdd'), icon: 'mdi-file-multiple', to: '/my-files', requireLogin: true },
+        { title: this.$t('DocsPage.owEFuhKAi0S5XmhIaiqMB'), icon: 'mdi-book-open-variant', to: '/docs' },
+        { title: this.$t('Sidebar.pxf1SzERzQzKgl3Anfi1F'), icon: 'mdi-bug', to: '/feedback' },
+        { title: this.$t('Sidebar.pIDDy8BnVkf01Ysma7Gaj'), icon: 'mdi-sign-text', to: '/about' },
+        { title: this.$t('Account.U9BIXDXwbO63Izqnr9n7o'), icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
+        { title: this.$t('Sidebar.ji7gEHWu4QoZQOsY9ZMJW'), icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
       ];
       return links.filter(link => !link.requireLogin || isLoggedIn);
     },
@@ -142,11 +179,56 @@ export default {
       ).map(characterTransform);
     },
   },
+  data() {
+    return {
+      selectedLocale: LocaleService.getSavedLocale(),
+      isLanguageMenuOpen: false,
+    };
+  },
+  computed: {
+    availableLocales() {
+      return LocaleService.getAvailableLocales();
+    },
+    selectedItem() {
+      return this.availableLocales.find(item => item.value === this.selectedLocale) || this.availableLocales[0];
+    },
+  },
+  methods: {
+    async changeLocale(locale) {
+      await LocaleService.changeLocale(this.$i18n, locale);
+    },
+  },
 };
 </script>
 
 <style scoped>
 .links .v-list-item:not(:last-child):not(:only-child) {
   margin-bottom: 4px;
+}
+.language-selector {
+  margin: 4px 0;
+}
+.v-list-item--active {
+  background: var(--v-primary-lighten4);
+}
+.language-text {
+  font-size: 0.95em;
+  flex-grow: 1;
+}
+.language-code {
+  font-size: 0.85em;
+  font-weight: 500;
+  opacity: 0.7;
+}
+.flag-icon {
+  font-size: 1.2em;
+}
+.v-select.language-selector ::v-deep .v-input__slot {
+  min-height: 36px !important;
+}
+.language-code {
+  font-size: 0.85em;
+  font-weight: 500;
+  text-transform: uppercase;
 }
 </style>

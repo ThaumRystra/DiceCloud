@@ -18,7 +18,7 @@
       v-if="Number.isFinite(model.uses)"
       class="action-sub-title d-flex align-center"
     >
-      {{ model.uses }} uses
+      {{ $t('PrintedAction.g7Zqf3Rk5ldnxHOK2LMgv', [model.uses]) }}
     </div>
     <div>
       <div
@@ -31,14 +31,14 @@
           :key="attributeConsumed._id"
           class="layout align-center justify-start"
         >
-          Cost: {{ attributeConsumed.quantity && attributeConsumed.quantity.value }} {{ attributeConsumed.statName || attributeConsumed.variableName }}
+          {{ $t('PrintedAction.fgwXlNTknRAXFw-2I49s2', [attributeConsumed.quantity && attributeConsumed.quantity.value]) }} {{ attributeConsumed.statName || attributeConsumed.variableName }}
         </div>
         <div
           v-for="itemConsumed in model.resources.itemsConsumed"
           :key="itemConsumed._id"
         >
           <template v-if="itemConsumed.itemName">
-            Uses: {{ itemConsumed.quantity && itemConsumed.quantity.value || 0 }} {{ itemConsumed.itemName || itemConsumed.tag }}
+            {{ $t('PrintedAction.yPJXNovDswPw3Tf_UrUvS', [itemConsumed.quantity && itemConsumed.quantity.value || 0]) }} {{ itemConsumed.itemName || itemConsumed.tag }}
           </template>
         </div>
       </div>
@@ -53,7 +53,7 @@
           {{ rollBonus }}
         </span>
         <span>
-          to hit
+          {{ $t('PrintedAction.9koQY1JmJbMnPI-2Yu6D-') }}
         </span>
       </div>
       <tree-node-list
@@ -131,12 +131,12 @@ export default {
     },
     actionTypeName() {
       return {
-        'action': 'Action',
-        'bonus': 'Bonus Action',
-        'attack': 'Attack',
-        'reaction': 'Reaction',
-        'free': 'Free Action',
-        'long': 'Long Action'
+        'action': this.$t('PrintedAction.IrhNSkzJSRi84GhcibaA6'),
+        'bonus': this.$t('PrintedAction.pB_7PTSkQGSC3ydYPKdk4'),
+        'attack': this.$t('PrintedAction.OAukBFTLqoIuE_boNY4qO'),
+        'reaction': this.$t('PrintedAction.mfg8w8IEyp7lqOtrKA716'),
+        'free': this.$t('PrintedAction.XNpxfsk_apluhNuXqmnbJ'),
+        'long': this.$t('PrintedAction.vuRsPS5NyXpqYAo7DYbK0')
       }[this.model.actionType] || this.model.actionType
     },
   },

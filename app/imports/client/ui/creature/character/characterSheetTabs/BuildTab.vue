@@ -29,7 +29,7 @@
       >
         <v-card class="pb-4">
           <v-card-title style="height: 68px;">
-            Slots
+            {{ $t('BuildTab.3dXHrz5Z_30gWc7znIQnx') }}
             <v-spacer />
             <v-scale-transition>
               <v-menu
@@ -98,7 +98,7 @@
             v-if="variables.level"
             class="text-h6"
           >
-            Level {{ variables.level.value }}
+            {{ $t('BuildTab.gRil1dNLDdZLCZ882-jNh', [variables.level.value]) }}
           </v-card-title>
           <v-list two-line>
             <v-list-item>
@@ -109,7 +109,7 @@
                       variables.milestoneLevels.value
                   "
                 >
-                  {{ variables.milestoneLevels.value }} Milestone levels
+                  {{ $t('BuildTab.4wlPGHBE5ZzQlTH6vz8Y6', [variables.milestoneLevels.value]) }}
                 </v-list-item-title>
                 <v-list-item-title
                   v-if="
@@ -118,12 +118,7 @@
                       (variables.xp &&
                         variables.xp.value)
                   "
-                >
-                  {{
-                    variables.xp &&
-                      variables.xp.value ||
-                      0
-                  }} XP
+                > {{ variables.xp && variables.xp.value || 0 }} XP
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -171,10 +166,10 @@
                     mdi-plus
                   </v-icon>
                   <template v-if="cls.missingLevels && cls.missingLevels.length">
-                    Get Missing Levels 
+                    {{ $t('BuildTab._TZnAe6ytMIX9JAOy_ws7') }} 
                   </template>
                   <template v-else>
-                    Level Up
+                    {{ $t('BuildTab.lu8EqIIRQm8jcSn4TLxah') }}
                   </template> 
                 </v-btn>
               </v-list-item-action>

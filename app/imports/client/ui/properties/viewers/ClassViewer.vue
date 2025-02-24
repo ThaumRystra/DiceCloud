@@ -2,17 +2,17 @@
   <div class="class-viewer">
     <v-row dense>
       <property-field
-        name="Variable Name"
+        :name="$t('AttributeViewer.MNk7FUYtABwXmOJJeujzZ')"
         mono
         :value="model.variableName"
       />
       <property-field
-        name="Condition"
+        :name="$t('PropertyForm.reKPKGEnAfdHpBLoywE1w')"
         :value="model.slotCondition && (model.slotCondition.value || model.slotCondition.calculation)"
       />
       <property-field
         v-if="(model.slotTags && model.slotTags.length) || (model.extraTags && model.extraTags.length)"
-        name="Tags Required"
+        :name="$t('TagTargeting.o5IUFxjQjJTcdzzuShiuT')"
         :cols="{cols: 12}"
       >
         <div>
@@ -29,7 +29,7 @@
         </div>
       </property-field>
       <property-field
-        name="Missing Levels"
+        :name="$t('ClassViewer.tSWxRpWoywiupUiYO0z5j')"
         mono
         :value="model.missingLevels &&
           (model.missingLevels.length || undefined) &&
@@ -38,12 +38,12 @@
       />
       <property-field
         v-if="context.creatureId"
-        name="Level"
+        :name="$t('CharacterCreationDialog.ALoCn8fXt0dv34QiFx1jx')"
         :value="model.level"
       />
       <property-field
         v-if="context.creatureId"
-        name="Level Up"
+        :name="$t('BuildTab.lu8EqIIRQm8jcSn4TLxah')"
         :cols="{cols: 12}"
       >
         <v-btn
@@ -57,15 +57,15 @@
             mdi-plus
           </v-icon>
           <template v-if="model.missingLevels && model.missingLevels.length">
-            Get Missing Levels 
+            {{ $t('BuildTab._TZnAe6ytMIX9JAOy_ws7') }} 
           </template>
           <template v-else>
-            Level Up
+            {{ $t('BuildTab.lu8EqIIRQm8jcSn4TLxah') }}
           </template> 
         </v-btn>
       </property-field>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
     </v-row>

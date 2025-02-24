@@ -4,27 +4,27 @@
     class="spell-viewer"
   >
     <property-field
-      name="School"
+      :name="$t('SpellForm.piPx3pA-W5h-qH0Z94ZsE')"
       :value="model.school"
     />
     <property-field
-      name="Level"
+      :name="$t('CharacterCreationDialog.ALoCn8fXt0dv34QiFx1jx')"
       :value="levelText"
     />
     <property-field
-      name="Casting time"
+      :name="$t('SpellViewer.Gdc3WTq0-wImt_U4ceL2V')"
       :value="model.castingTime"
     />
     <property-field
-      name="Range"
+      :name="$t('SpellForm.GTo5F3pHuu3BbIYKib0wi')"
       :value="model.range"
     />
     <property-field
-      name="Components"
+      :name="$t('SpellViewer.V-Z3NnFr9mXSirqS9aMnZ')"
       :value="spellComponents"
     />
     <property-field
-      name="Duration"
+      :name="$t('SpellForm.O5ypCXsK7hCS6k9_GsGa6')"
       :value="model.duration"
     />
   </action-viewer>
@@ -50,11 +50,11 @@ export default {
     },
     spellComponents() {
       let components = [];
-      if (this.model.ritual) components.push('Ritual');
-      if (this.model.concentration) components.push('Concentration');
-      if (this.model.verbal) components.push('Verbal');
-      if (this.model.somatic) components.push('Somatic');
-      if (this.model.material) components.push(`Material (${this.model.material})`);
+      if (this.model.ritual) components.push(this.$t('CastSpellWithSlotDialog.pKKtVPJFsDi6EMWOmVbkP'));
+      if (this.model.concentration) components.push(this.$t('CastSpellWithSlotDialog.JhkgAy7hkeEm0nlKxRUKb'));
+      if (this.model.verbal) components.push(this.$t('CastSpellWithSlotDialog.ZJalW18LEJvZmvjZ7rbUG'));
+      if (this.model.somatic) components.push(this.$t('CastSpellWithSlotDialog._1NJvagH4wHdqwixdE6nU'));
+      if (this.model.material) components.push(this.$t('SpellViewer.eS5_P_7EZ3OVlsvLNNttN', [this.model.material]));
       return components.join(', ');
     },
   }

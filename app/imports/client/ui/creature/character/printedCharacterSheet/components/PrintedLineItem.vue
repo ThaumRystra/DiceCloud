@@ -25,7 +25,7 @@
           <template
             v-if="model.weight"
           >
-            {{ model.weight }} lb
+            {{ $t('PrintedLineItem.YgWODeXdufy3Q4AwTBQ6w', [model.weight]) }}
           </template>
         </div>
       </div>
@@ -88,8 +88,8 @@ export default {
     },
     attunementText() {
       if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
+        if (this.model.attuned) return this.$t('PrintedBlockItem.C--Y4P75TjKpuM26BDapb');
+        return this.$t('PrintedBlockItem.SFhP2eWq7btddl4MHtwZj');
       }
       return undefined;
     }

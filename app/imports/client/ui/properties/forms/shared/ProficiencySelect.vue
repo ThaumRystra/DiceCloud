@@ -39,10 +39,10 @@
       displayedIcon: 'mdi-radiobox-blank',
       iconClass: '',
       values: [
-        {value: 1, text: 'Proficient'},
-        {value: 0.49, text: 'Half proficiency bonus rounded down'},
-        {value: 0.5, text: 'Half proficiency bonus rounded up'},
-        {value: 2, text: 'Double proficiency bonus'},
+        {value: 1, text: this.$t('SkillProficiency.c7_OrgWVaMZiroKapKs0O')},
+        {value: 0.49, text: this.$t('SkillProficiency.rdG6DgAZ2pH5uGiEXs9ni')},
+        {value: 0.5, text: this.$t('SkillProficiency.H3H4WWeJkDnYc9n0b8pee')},
+        {value: 2, text: this.$t('SkillProficiency.Lq-INVfia0gaEurWHuCvq')},
       ],
     }},
     watch: {

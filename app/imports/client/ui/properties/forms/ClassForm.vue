@@ -5,9 +5,9 @@
         cols="12"
       >
         <text-field
-          label="Variable name"
+          :label="$t('AttributeForm.vWQj52YzUPPcXSMEZ6dvh')"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this class"
+          :hint="$t('ClassForm.FCdQw1K4vQj_se7Ve6yRB')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -15,7 +15,7 @@
     </v-row>
 
     <inline-computation-field
-      label="Description"
+      :label="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -23,23 +23,23 @@
     />
 
     <form-sections type="class">
-      <form-section name="Class levels from libraries">
+      <form-section :name="$t('ClassForm.gDeOhXP1mwk3mW2dewYdr')">
         <tag-targeting
           :model="model"
           :errors="errors"
           tag-field="slotTags"
-          tag-hint="Find class levels that have all of these tags"
-          or-hint="Also find class levels that have all of these tags instead"
-          not-hint="Ignore class levels that have any of these tags"
+          :tag-hint="$t('ClassForm.ZEMvL6PhjpagHmRJkdzJu')"
+          :or-hint="$t('ClassForm.gIBplAWYI81r77s3sTpXi')"
+          :not-hint="$t('ClassForm.uQdLc6H0MB7BPD0raOaS3')"
           @change="e => $emit('change', e)"
           @push="e => $emit('push', e)"
           @pull="e => $emit('pull', e)"
         />
 
         <computed-field
-          label="Active condition"
-          hint="A calculation to determine if this class can have class levels added to it"
-          placeholder="Always active"
+          :label="$t('ClassForm.i6JHJs93-3cdtKgGlLO78')"
+          :hint="$t('ClassForm.4TeEM-qHSXYRQWxrQioEF')"
+          :placeholder="$t('PropertyForm.M6byRruoaG1QJnLgCQJzH')"
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"
           @change="({path, value, ack}) =>

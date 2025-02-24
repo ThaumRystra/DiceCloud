@@ -2,7 +2,7 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        Invite
+        {{ $t('InviteDialog.haRd4V-fi0dcc9y9IscFl') }}
       </v-toolbar-title>
     </template>
     <div
@@ -15,7 +15,7 @@
           color="primary"
           @click="revokeInvite"
         >
-          Revoke Invite
+          {{ $t('InviteDialog.KIjaabv6nsBAlAJM0yHqF') }}
         </v-btn>
       </div>
     </div>
@@ -23,7 +23,7 @@
       v-else
       class="layout column align-center"
     >
-      <p>This invite is available</p>
+      <p>{{ $t('InviteDialog.iY3kNH9LFIMWh-AkVTB2d') }}</p>
       <v-fade-transition mode="out-in">
         <v-btn
           v-if="!inviteLink"
@@ -32,7 +32,7 @@
           :disabled="loading"
           @click="getInviteLink"
         >
-          Get Invite Link
+          {{ $t('InviteDialog.ouSgtRu2Z0wupJh1KBZQX') }}
         </v-btn>
         <h3 v-else>
           {{ inviteLink }}

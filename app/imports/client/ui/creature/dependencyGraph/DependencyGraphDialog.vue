@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base class="dependency-graph">
     <div slot="toolbar">
-      Dependency Graph
+      {{ $t('CreatureForm.bs0bv6TYL4PrUH7HYiCDK') }}
     </div>
     <div
       id="dependency-graph-container"

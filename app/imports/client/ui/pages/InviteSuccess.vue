@@ -6,10 +6,10 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        Invite Success
+        {{ $t('InviteSuccess.myoQ_oeTcPO92TLbFBVvu') }}
       </h2>
       <h3>
-        You can now use DiceCloud
+        {{ $t('InviteSuccess.lI-3wT_8PfbybQ8vEBYxf') }}
       </h3>
     </v-layout>
   </div>

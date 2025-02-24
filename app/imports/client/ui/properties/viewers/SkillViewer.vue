@@ -9,14 +9,14 @@
         v-if="model.value !== undefined"
         center
         large
-        name="Roll bonus"
+        :name="$t('SkillViewer.itiQzZR9_lCU6Hzv4oZIi')"
         :value="isFinite(model.value) ?
           numberToSignedString(model.value) :
           model.value"
       />
       <property-field
         v-if="model.proficiency !== undefined"
-        name="Proficiency"
+        :name="$t('InlineProficiency.jN183F3ufg8Le9jkznJ4p')"
       >
         <v-icon
           style="height: 12px"
@@ -29,28 +29,28 @@
         </div>
       </property-field>
       <property-field
-        name="Variable Name"
+        :name="$t('AttributeViewer.MNk7FUYtABwXmOJJeujzZ')"
         mono
         :value="model.variableName"
       />
       <property-field
-        name="Ability"
+        :name="$t('CheckInput.ZOqgwwG1rCTTKIVrY23XB')"
         mono
         :value="model.ability"
       />
       <property-field
-        name="Skill type"
+        :name="$t('SkillViewer.YZboQ2SYx9re2HQvMJ7cl')"
         :value="skillTypes[model.skillType]"
       />
       <property-field
         v-if="'passiveBonus' in model"
-        name="Passive score"
+        :name="$t('SkillViewer.SF0Q1ye2fl6S1zGeeWzTT')"
         :value="passiveScore"
       />
       <property-field
         v-if="model.overridden"
         :cols="{cols: 6, md: 12}"
-        name="Overridden"
+        :name="$t('AttributeViewer.tPFT2_kLfhaS8Od_i6cAK')"
         value="Overriden by another property with the same variable name"
       />
       <property-target-tags
@@ -69,7 +69,7 @@
     >
       <property-field
         :cols="{col: 12}"
-        name="Effects"
+        :name="$t('AttributeViewer.kgj4Ky-O4dlLEDYQyGP2V')"
       >
         <v-list style="width: 100%">
           <attribute-effect
@@ -97,7 +97,7 @@
     >
       <property-field
         :cols="{col: 12}"
-        name="Proficiencies"
+        :name="$t('PrintedStats.INiHkB9G-fGTkJrdfgXjS')"
       >
         <v-list style="width: 100%">
           <skill-proficiency
@@ -138,21 +138,21 @@ export default {
   data() {
     return {
       proficiencyText: {
-        0: 'Not proficient',
-        1: 'Proficient',
-        0.49: 'Half proficiency bonus rounded down',
-        0.5: 'Half proficiency bonus rounded up',
-        2: 'Double proficiency bonus',
+        0: this.$t('AttributeViewer.zS5I5I1HtvQ-bmZWAvNWK'),
+        1: this.$t('SkillProficiency.c7_OrgWVaMZiroKapKs0O'),
+        0.49: this.$t('SkillProficiency.rdG6DgAZ2pH5uGiEXs9ni'),
+        0.5: this.$t('SkillProficiency.H3H4WWeJkDnYc9n0b8pee'),
+        2: this.$t('SkillProficiency.Lq-INVfia0gaEurWHuCvq'),
       },
       skillTypes: {
-        skill: 'Skill',
-        save: 'Save',
-        check: 'Check',
-        tool: 'Tool',
-        weapon: 'Weapon',
-        armor: 'Armor',
-        language: 'Language',
-        utility: 'Utility',
+        skill: this.$t('CheckInput.sKXmebGzd92GfO5RYbSPI'),
+        save: this.$t('ImageInputDialog.dcbgmuOVYglN2J7VpTBFU'),
+        check: this.$t('SelectedCreatureBar.UcAwEN_Jmv7Lezh-o8g6S'),
+        tool: this.$t('SkillForm.xayNU3cxaIOtLz1iCrUX_'),
+        weapon: this.$t('SkillForm._uUQIQfQJm94jRvJnoCa4'),
+        armor: this.$t('StatsTab.HuxcSGUjObZNOlWVKkZG4'),
+        language: this.$t('SkillForm.PfUrjVRAHmEX7AhfxnPTT'),
+        utility: this.$t('AttributeForm.QUnXaen7rDzDb624npbUE'),
       },
     }
   },

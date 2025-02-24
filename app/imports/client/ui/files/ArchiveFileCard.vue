@@ -13,7 +13,7 @@
         :loading="restoreLoading"
         @click="restore(model._id)"
       >
-        Restore
+        {{ $t('ArchiveFileCard.dMQqaltiBjCM68nTo9Qua') }}
       </v-btn>
       <v-flex />
       <v-btn
@@ -75,7 +75,7 @@ export default {
         elementId: `${that.model._id}-archive-card`,
         data: {
           name: this.model.meta.creatureName,
-          typeName: 'Character Archive'
+          typeName: this.$t('ArchiveFileCard.juxKLUr3OQaNg-lz75aiy')
         },
         callback(confirmation) {
           if (!confirmation) return;

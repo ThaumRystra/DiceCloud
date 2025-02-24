@@ -33,7 +33,7 @@
                   {{ card.name }}
                 </v-card-title>
                 <v-card-subtitle v-if="card.subscriberCount">
-                  {{ formatNumber(card.subscriberCount) }} subscribers
+                  {{ $t('LibraryBrowser.d1bz0jB5EXhSj3VCKXMCS', [formatNumber(card.subscriberCount)]) }}
                 </v-card-subtitle>
                 <v-card-text>
                   <markdown-text :markdown="card.description" />
@@ -47,7 +47,7 @@
                     :color="card.subscribed ? '': 'accent'"
                     @click="ack => changeSubscribe(card, ack)"
                   >
-                    {{ card.subscribed ? 'Unsubscribe' : 'Subscribe' }}
+                    {{ card.subscribed ? $t('LibraryCollectionToolbar.rz7QqB66JPkBOOtwxv57c') : $t('LibraryCollectionToolbar.Er2XJ9n9t_8Lb9E1AOL94') }}
                   </smart-btn>
                 </v-card-actions>
               </v-card>
@@ -144,7 +144,7 @@ export default {
           subscribe,
         }, ack);
       } else {
-        ack('Library or Library Collection not found')
+        ack(this.$t('LibraryBrowser.8u-n8n2IfWZ5zdPmBdPRp'))
       }
     },
   },

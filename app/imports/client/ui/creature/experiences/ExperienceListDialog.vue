@@ -2,7 +2,7 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        Experiences
+        {{ $t('ExperienceListDialog.ZS8DXNBdmNBl0uKaCSGRR') }}
       </v-toolbar-title>
       <v-spacer />
       <v-btn
@@ -36,7 +36,7 @@
         $vuetify.icons.baby_face
       </v-icon>
       <p class="text-h5">
-        No experiences
+        {{ $t('ExperienceListDialog.YlXwV3OKB1O5Ci5-gXbBG') }}
       </p>
     </div>
     <v-list v-else>
@@ -124,9 +124,9 @@ export default {
     xpText(experience){
       let xpText = [];
       if (experience.levels === 1){
-        xpText.push('1 Milestone level');
+        xpText.push(this.$t('ExperienceListDialog.YD6W_BT_jL1nuVH14yxoP'));
       } else if (experience.levels){
-        xpText.push(`${experience.levels} Milestone levels`);
+        xpText.push(this.$t('ExperienceListDialog.A30VArzop0zjb0nsj2KlN', [experience.levels]));
       }
       if (experience.xp || !experience.levels){
         xpText.push(`${experience.xp || 0} XP`);

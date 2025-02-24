@@ -1,21 +1,21 @@
 <template lang="html">
   <div class="creature-form">
     <text-field
-      label="Name"
+      :label="$t('TabletopForm.ogp8pUXHP7GwzGUlEkqSF')"
       :disabled="!editPermission"
       :value="model.name"
       :error-messages="errors.name"
       @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
     />
     <text-field
-      label="Alignment"
+      :label="$t('CreatureForm.goOLNBH2M1q5u3b9JGUYd')"
       :disabled="!editPermission"
       :value="model.alignment"
       :error-messages="errors.alignment"
       @change="(value, ack) => $emit('change', {path: ['alignment'], value, ack})"
     />
     <text-field
-      label="Gender"
+      :label="$t('CreatureForm.5PEqzUXcmiqyy4GEbI-td')"
       :disabled="!editPermission"
       :value="model.gender"
       :error-messages="errors.gender"
@@ -27,8 +27,8 @@
         md="6"
       >
         <smart-image-input
-          label="Picture"
-          hint="A link to a high resolution image"
+          :label="$t('CreatureForm.ordep68gu9FPcmPbN2qNQ')"
+          :hint="$t('CreatureForm.K_X3XLw_OiKsx5Gz8VKuE')"
           :disabled="!editPermission"
           :value="model.picture"
           :error-messages="errors.picture"
@@ -40,8 +40,8 @@
         md="6"
       >
         <smart-image-input
-          label="Avatar"
-          hint="A link to a smaller, square image to use as an avatar"
+          :label="$t('CreatureForm.YGtqDhW93C1P2aAq-rV2Z')"
+          :hint="$t('CreatureForm.P51MPYDy7PxdpoBtc2LFA')"
           :disabled="!editPermission"
           :value="model.avatarPicture"
           :error-messages="errors.avatarPicture"
@@ -50,34 +50,34 @@
       </v-col>
     </v-row>
     <form-sections>
-      <form-section name="Settings">
+      <form-section :name="$t('CreatureForm.MA4ELYrt4w7ZRVwC3bfOy')">
         <v-switch
-          label="Hide redundant stats"
+          :label="$t('CreatureForm.s9T8L5iBv84h03L1vzuPw')"
           :disabled="!editPermission"
           :input-value="model.settings.hideUnusedStats"
           @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
         />
         <v-switch
-          label="Hide rest buttons"
+          :label="$t('CreatureForm.XWmMUBmcC-yoX0EG2PN9H')"
           :disabled="!editPermission"
           :input-value="model.settings.hideRestButtons"
           @change="value => $emit('change', {path: ['settings','hideRestButtons'], value: !!value})"
         />
         <v-switch
-          label="Show spells tab"
+          :label="$t('CreatureForm.nkNPsjI4gGK83TDXhg5nl')"
           :disabled="!editPermission"
           :input-value="!model.settings.hideSpellsTab"
           @change="changeHideSpellsTab"
         />
         <v-switch
-          label="Show tree tab"
+          :label="$t('CreatureForm.YqkxDZ7LW_pEaDFPqldKL')"
           :disabled="!editPermission"
           :input-value="model.settings.showTreeTab"
           @change="changeShowTreeTab"
         />
         <text-field
-          label="Hit Dice reset multiplier"
-          hint="What fraction of your hit dice are reset every long rest"
+          :label="$t('CreatureForm.oPFJK6gF8EdCf42k5Wmo4')"
+          :hint="$t('CreatureForm.V_MJ_nHGtuaJusLxtXgXW')"
           placeholder="0.5"
           type="number"
           min="0"
@@ -88,8 +88,8 @@
           @change="(value, ack) => $emit('change', {path: ['settings','hitDiceResetMultiplier'], value, ack})"
         />
         <text-field
-          label="Discord Webhook URL"
-          hint="This creature's logs will be posted to the discord channel"
+          :label="$t('CreatureForm.nYF_x6EcP290XOfOW0l9g')"
+          :hint="$t('CreatureForm._ZhX3D-JrJVeqpHO0AsNl')"
           placeholder="https://discordapp.com/api/webhooks/<id>/<token>"
           :disabled="!editPermission"
           :value="model.settings.discordWebhook"
@@ -116,9 +116,9 @@
         />
         -->
       </form-section>
-      <form-section name="Libraries">
+      <form-section :name="$t('CharacterCreationDialog.uiuDKE-JU_7xjNfrbo7lh')">
         <smart-switch
-          label="All user libraries"
+          :label="$t('CreatureForm.hQuConId3Ue_R35EPFuP-')"
           :disabled="!editPermission"
           :value="allUserLibraries"
           @change="allUserLibrariesChange"
@@ -144,7 +144,7 @@
           {{ libraryWriteError }}
         </p>
       </form-section>
-      <form-section name="Debug">
+      <form-section :name="$t('CreatureForm.9PvBygiElTUxuhV1RF7_H')">
         <v-btn
           data-id="dependency-graph-button"
           text
@@ -153,7 +153,7 @@
           <v-icon left>
             mdi-graph
           </v-icon>
-          Dependency Graph
+          {{ $t('CreatureForm.bs0bv6TYL4PrUH7HYiCDK') }}
         </v-btn>
       </form-section>
     </form-sections>

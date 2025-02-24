@@ -1,0 +1,1282 @@
+{
+  "About": {
+    "1GLM0elvLeiwucyw3e5uR": "Merci spécial",
+    "4QV9cqMWOd323dgeXpPCo": "Vinton",
+    "CrdaAyGFSpnBU7T-Og1eE": "Le gravepareur",
+    "D8JQa8plAJK2RApywL269": "Le D&D Party dont la joie était le carburant alimentant les premières versions de DiceCloud.",
+    "HYoADNUbUvPIUel0poPoX": "Patrons de niveau Paragon",
+    "KNjn21iiJo5DHGBgIQ3tl": "DiceCloud est un projet à développement unique lancé en 2014 dans le but d'être une feuille de personnage qui est restée synchronisée entre le DM et leurs joueurs, et a clairement indiqué d'où chaque valeur de la feuille, et comment elle a été calculée.",
+    "Lrh1aPjGD3MALdfGebrKh": "Un meilleur ami de Kobold",
+    "UeguSsZrlTIc83c6rBSVb": "Clerc de obscurité",
+    "YNa86X1J0jVs-V0NST3KH": "Les \"héros\" d'Asaea",
+    "Zy6xUk3SJ9eEoWUu4QcJR": "liée",
+    "cAjcER2pzgHEO1GD-Op5I": "Sans son amour, DiceCloud ne pouvait pas espérer exister",
+    "fYnP2TzDN7mwON9WkBT1c": "Kell de rien",
+    "fjyZXM3HxG6GZTi3YLLbQ": "Ambiance",
+    "hOiVfViXRJmSNmmImZtjS": "Kira Ametrine",
+    "hlHatK1LPOfTe_86N4MbN": "Seigneur des ordures",
+    "iC49nkwMzoit5rspime5y": "Mode de réalisation de la cupidité",
+    "m5HeWtWm_D9nmHi8pj01b": "Défenseur de la sieste",
+    "pVD6iUnr39mNwpPQlW1Wq": "Archwizard de l'étrange",
+    "uF54mKfkoMk_c8vCeK0Yk": "Dai",
+    "xqU-Vsk2W2N0TT_U27-62": "Souffard"
+  },
+  "Account": {
+    "1CjTMGr4G6PAUTuIV-0u1": "E-mail",
+    "3pbzYvXPCos7z-eySLZl1": "Préférences",
+    "BQT0FX7Lp9l4T3qdkdTCX": "Lier le compte Google",
+    "Do9l1M5QOft47GPCr9we9": "Thème",
+    "IgPFoRX1GZ54XLutVgBXb": "Stockage de fichiers utilisé",
+    "KZNInB0WcjkPLeppcCG7p": "Supprimer le compte",
+    "PU_3e67f2QDSgm5Q3ewgD": "Ajouter l'adresse e-mail",
+    "Tr8I2Y3XgfC353GAuzeyB": "Changer le nom d'utilisateur",
+    "U9BIXDXwbO63Izqnr9n7o": "Patreon",
+    "YVZoAq5bW7uKPFXn6___J": "Rafraîchir le statut de Patreon",
+    "dLdhXdRxWkcsh8CD0Y03f": "Lier le compte Patreon",
+    "eu6bZxqHLNIk6BIbkHXZS": "Se déconnecter",
+    "fiO_GPwbZvws6D-uV5Cmi": "Échanger des scores et des modificateurs",
+    "fwk5RkXcCocZfIDVw-C9r": "Stockage de caractère utilisé",
+    "u5SaMzpfPswQRyVsHxfi3": "Invitations",
+    "xdRICWNnL1zKFqlLV1YVe": "Nom d'utilisateur"
+  },
+  "ActionCard": {
+    "-bbCePxzaDImme9iZ2rxF": "{0} utilise",
+    "5IbE7yubecegAHFjeu4mr": "Cible unique"
+  },
+  "ActionConditionForm": {
+    "4MHDOLH7O-fyg2mojtvs7": "Cela doit être vrai pour que l'action soit prise",
+    "D43JDV2GxwLXXBv68DIyi": "Texte d'erreur de condition"
+  },
+  "ActionConditionView": {
+    "kgjnKJ5eYeG-6_UGkEwDW": "Aucune condition spécifiée"
+  },
+  "ActionForm": {
+    "0I_y_C73SJXvF96894Q5d": "Nom de la variable d'événement",
+    "3ylc2njgCKwqOiWNQLFrF": "Événement",
+    "7JkrChA5Oz7n_-wF0QxsW": "Enregistrer",
+    "7SSJSK3GiHrpECAN5kVK7": "Combien de fois cette action peut être utilisée avant de devoir être réinitialisée",
+    "AzFSRHVXHkOjHwzEBpW1S": "Doit être défini pour que l'action ait un jet d'attaque",
+    "DGVwhkixMi9ZS_UugfZrR": "Vous pouvez prendre une action gratuite à votre tour sans utiliser une action ou une action bonus",
+    "HTFEl9P4nWPzp5aVQmtz4": "Utilisation utilisée",
+    "IwoGz7GsJv8SJpY4hizQ8": "Cible créature",
+    "L7CIoiuGHz6rNUNfQR0x1": "Action libre",
+    "RTgX4kDybPn7w6k1h-xQU": "Les actions longues prennent plus d'un tour pour terminer",
+    "SPian0NX_8UamXDgapfmE": "Plusieurs cibles",
+    "Swu-7z8ZpCzf1wlyF0m3F": "Type d'action",
+    "UDRHVbObbwgfNGTG86O9l": "Limiter les utilisations",
+    "WRR0YxFykMD9mmYmqe5no": "Combien de fois cette action a déjà été utilisée: devrait être 0 dans la plupart des cas",
+    "X-T-bN6vOll6c4GJ09EpL": "Cible unique",
+    "YYTI642lXA_BdgxMerFqU": "Nom variable de l'événement que cette action représente",
+    "cZ7n7frApR4M5NF_lVStR": "Plusieurs cibles",
+    "cpAHLXjqzucwbDadtCQum": "Ressources consommées",
+    "dHGbl2jpHpaOGOSg3oGeJ": "Lorsque le nombre d'utilisations utilisés doit être réinitialisé à zéro",
+    "hV4fQBRRTxnnMDEbFthkM": "Les événements sont des actions qui arrivent au personnage comme RESTS ou DAWN",
+    "ji0n_ZaizHaR9NIcbiNYK": "Cela apparaîtra dans la carte d'action de la feuille de caractères, résumera ce que fait l'action. \nCe texte sera affiché dans le journal lorsque l'action sera prise",
+    "kIN6lH7jJTD3RaF7WkyUy": "Usages",
+    "kPjD8rr_PnXqy-pMLGLXp": "Attaque",
+    "p7OvsLgcWG2GjhPpfy4aZ": "Les actions d'attaque remplacent une seule attaque lorsque vous choisissez d'utiliser votre action pour attaquer",
+    "pTOkAuMdrx_hGI0E1xQl2": "Ne montrez pas dans le journal",
+    "pW9GN3ykvnJUE5ozpy0zR": "Longue action",
+    "qRNU4yeoGNycWekPlSaVt": "Bonus de rouleau d'attaque de base",
+    "t_rdlLehNy3iLM13m8KHi": "Action bonus",
+    "uMqJz6So1tbWiONiw7coZ": "Résumé",
+    "wvr48hnF1DbxApmRDC3R0": "Soi",
+    "xmMtf1B_9pQbs427sDgXe": "Rouleau d'attaque"
+  },
+  "ActionViewer": {
+    "2PAXZyo6dsMayT5h8Vxl9": "Ciblage",
+    "LuJ5GbVYRabP8sH91Amw0": "Frapper",
+    "Vs9l_E_xRjNrphvjnTfxg": "Attributs consommés",
+    "ZdLamTjTwN50xEr4pobC7": "`Model.Type ===« Spell »? \n`Cast Spell ':` Appliquer l'action",
+    "bN9dpIryBBN8_iI1JacWp": "Réinitialiser sur un long repos",
+    "eUx-vcgpMRH8dtONDZPHm": "Articles consommés",
+    "mPkSelm59kG9PgRpl7PuX": "Réinitialiser sur un court repos"
+  },
+  "AdjustmentForm": {
+    "4pXn24qlhOEF6vsh4xKOF": "La quantité de dommages à appliquer, des valeurs négatives guériront",
+    "AndV_m2mK4EKCnXer50C8": "Montant",
+    "EvtwZAc19U5OS5op-Q9I8": "{0}",
+    "GHSISPeV1o-lHDQGal1TZ": "Attribut",
+    "ZwwCxikfNMJtWSce4UeGm": "La valeur pour définir la statistique sur",
+    "a3GneFZJ3MOMwzxGWJgMq": "Opération",
+    "mBh1ceJrKc1DtmJldSJ-X": "Si l'attribut est endommagé par le montant ou fixé sur le montant",
+    "v0y3nqMHVe0yEqxsRQSvV": "L'attribut qui sera endommagé ou guéri"
+  },
+  "AdjustmentTreeNode": {
+    "VZaia8qVr9WSGXw50oSCe": "à soi",
+    "gOVb9Z3tsjX8x6oCtbSmk": "{0} Dommages"
+  },
+  "AdjustmentViewer": {
+    "pDVyy7MwJYGrzQq0jDPC6": "Moins"
+  },
+  "Admin": {
+    "LXTHgSF1tubXs3CFnmXfg": "Version actuelle de la base de données: {0}",
+    "RXGFbQYVBuIb-ZpEi04a5": "Version git: {0}",
+    "aVWrjxgTf04VdvWZfa52Y": "Migrer vers la version de la base de données {0}",
+    "kj687tcN7d_rd0NRQwjrq": "Version attendue de la base de données: {0}",
+    "pULxpo5cEC6lP9yRWxhOv": "Sauvegardez la base de données avant de tenter une migration. \nUne migration échouée peut entraîner une perte de données profonde.",
+    "s9-XR2o7KdT_49MUfVuGS": "La base de données est à jour avec la dernière version. \nRedémarrer pour permettre la navigation."
+  },
+  "AdvantageInput": {
+    "GOVw9p7PQMyvg1W3QMv1h": "Avantage",
+    "sN61sdTDUmZNRJhgdk3FT": "Inconvénient"
+  },
+  "ArchiveButton": {
+    "F2vhx6FY3BIjZIO3BYQvS": "Archiver les personnages"
+  },
+  "ArchiveDialog": {
+    "Mx1WdDHTLgSwrP-zeszcC": "Archive",
+    "UzLEAKMi-ia32kBmo_AyT": "Aucune machine à sous"
+  },
+  "ArchiveFileCard": {
+    "dMQqaltiBjCM68nTo9Qua": "Restaurer",
+    "juxKLUr3OQaNg-lz75aiy": "Archive de personnage"
+  },
+  "AttributeConsumedForm": {
+    "0kRTLciPSV-Bjk6RFrzaX": "Quelle part de l'attribut sera consommée. \nSi ce montant n'est pas disponible dans l'attribut, l'action ne peut pas être prise",
+    "FcSQlAAP2P6TS3nRAo--6": "Le nom de variable d'attribut qui sera consommé",
+    "UmwJU_8ntBz-N8i0UgvKd": "Quantité"
+  },
+  "AttributeEffect": {
+    "9iZBUqNtV818puHQ9S5mA": "Ajouter",
+    "NbNtxtSkIF-eEvpQ6M1VH": "Valeur de base",
+    "PWglsxP8zZNtoVCZtbg-l": "Minimum",
+    "TdH_tc2p6Vkb18y3GO7hY": "Bonus passif",
+    "UzlEh2YQm-EU6POm5FZsj": "Échouer toujours",
+    "Y45EOUc4qxDGlx5Xzle92": "Multiplier",
+    "dEk96gl0uh7EJIwSh--a6": "Maximum",
+    "sZxywbspgVnqysC8fZKES": "Avantage conditionnel"
+  },
+  "AttributeForm": {
+    "-DPKihK3NeCXQMc2LMjLB": "Autoriser les valeurs décimales",
+    "2Aiu6NaOCfyS8NLPk7Hpg": "Les barres de santé ordonnées inférieures subiront des dommages avant les plus en ordre d'ordre supérieur",
+    "5hpvJ6q4Hn5sFTyouCff6": "Score de capacité",
+    "5vD-GDW3cW8IXJrzxwTo_": "Utilisez ce nom dans les calculs pour faire référence à cet attribut",
+    "608eZxARAyNyX1lYJV1Bk": "Frapper la taille des dés",
+    "6n6iQ0mM-LNTUFGDgEicm": "Ressource",
+    "DloW6vXDl_1prYmPob3-l": "Les scores de capacité sont vos principaux attributs, comme la force et l'intelligence",
+    "EhZsX8JX9x74WuNSOX6Vg": "Couleurs endommagées",
+    "FJ9V5QOXAnquEGN-B1AzC": "Les barres de santé ordonnées inférieures prendront la guérison avant celles des ordonnances supérieures",
+    "FVjxPC24B3Rg5lGdqrrOC": "Barre de santé",
+    "HfQFeTAfKd1zckW8iTKeZ": "Stat",
+    "Nhf3bIPS2M4dn_fb7Dt58": "Dommage",
+    "QUnXaen7rDzDb624npbUE": "Utilitaire",
+    "RvRkZRWrvDi4qFNjWDhAR": "Ignorer la guérison",
+    "Slz4MMc-dVhiu6ZVMLEaf": "Masquer lorsque la valeur est nul",
+    "USMFXb_H8L3dsdH48GYC-": "Les ressources sont des attributs dépensés pour alimenter les actions, comme les points de sorcellerie ou Ki",
+    "VaJqa5cUoqNj8brF0-of6": "Slot",
+    "Xn1zUjmLnCU61XnSN4zYO": "Empêcher le débordement des dommages",
+    "YZB2Nb2QgD78d7cH2n7-j": "Cacher lorsque le total est nul",
+    "YvZi9u7WSXAXAJsQmHZqT": "Peut être endommagé en valeurs négatives",
+    "Zq1j6dv8EzkcCKupgbtJJ": "Frappez les dés",
+    "ac-HjaZ1jMyN5N8dDkBSR": "Les modificateurs sont des attributs qui sont ajoutés aux rouleaux, comme le bonus de compétence",
+    "bEUH3HK4x3vEvSv1CQ4F-": "Lorsque les dommages doivent être réinitialisés à zéro",
+    "c26Obti6Uq4ei1OCpx5Nt": "Barre de santé",
+    "ctttcmTh_0M7sdOTf4yhf": "Les statistiques sont des attributs avec une valeur numérique comme la vitesse ou la capacité de charge",
+    "hmMMXL0YrBcfQuwiKerBH": "Modificateur",
+    "lPr7-xwYqNHO27hpZCuKM": "Niveau de l'emplacement",
+    "pk4elR1L1G94TnzY6OcuS": "Vide",
+    "ruI-LEbISdtlav6qdW_0i": "Ignorer les dégâts",
+    "ryw9qPB4RinfRXhxwKs1T": "Les dommages réduisent la valeur finale de l'attribut",
+    "sg1vCF4ceatDzU2Y3bUbw": "Valeur de base",
+    "tVNWyR4ivKTYK5bCxDrNs": "Peut être incrémenté au-dessus du total",
+    "td2_WWmRFBpLx5m7y56QX": "Ordre des dommages",
+    "v6W1HsIGsKPTlCVeAvQVB": "Ordre de guérison",
+    "vWQj52YzUPPcXSMEZ6dvh": "Nom variable",
+    "vcJiP4B7PJJz6TrD802Zy": "Empêcher le débordement de guérison",
+    "vu2VNBgUUq_qRRlUmh_wV": "Il s'agit de la valeur de l'attribut avant les effets appliqués. \nPeut être un nombre ou un calcul",
+    "xB4J2J1mjkaLNKYgrGZrW": "Moitié",
+    "yRM4XSwze2YA1X0FZY8RI": "Comportement",
+    "zVUsvz7aiedOb83otUDoA": "Les attributs d'utilité ne sont pas affichés sur votre feuille de caractère, mais peuvent être référencés ou utilisés dans les calculs"
+  },
+  "AttributeViewer": {
+    "AGm3xFqY_MvIqXyIH0lIw": "Frapper la taille des dés",
+    "JcSIdK2QZ6kcQFs94kJeh": "Overriden par une autre propriété avec le même nom de variable",
+    "MNk7FUYtABwXmOJJeujzZ": "Nom variable",
+    "UPC_7nSq-oc8wxYsumxZL": "Modificateur de la Constitution",
+    "bIYmp9PJeOvM6OfGfRKdm": "Type d'attribut",
+    "kgj4Ky-O4dlLEDYQyGP2V": "Effets",
+    "tPFT2_kLfhaS8Od_i6cAK": "Trop largement",
+    "zEu8A_0XCdLVyossItEYd": "`Model.Damage! == Undefined? \n«Valeur / Total»: `Valeur",
+    "zS5I5I1HtvQ-bmZWAvNWK": "Pas compétent"
+  },
+  "BranchForm": {
+    "0inXyGC_3HQLzxgO6z2f0": "Attack Hit",
+    "0rJv1n_f8jRiwrqPracCR": "Quel enfant appliquer. \nUn index de 2 choisira le 2ème enfant.",
+    "6AzVEkMDrx-6-awEDatgG": "Choisit une propriété enfant à postuler en fonction de l'indice donné",
+    "BJXXvVRlZ5Er1_CD_SeuE": "Si la condition est vraie, les propriétés des enfants sont appliquées",
+    "BiuNuKC-fpzPzYrjhNyFb": "Pause l'action et laissez l'utilisateur choisir quel enfant appliquer",
+    "BkbdX3vJYOmRw4iwCl38h": "Applique chaque propriété enfant une fois par cible",
+    "FhXVP8QcggmDUKoQJb9sD": "Appliquer à chaque cible",
+    "FmQ75e44kBMrrHjwYzmQ1": "Type de succursale",
+    "G_RfuTT8RD-P3Bk05R6f9": "Choisit une propriété enfant au hasard et l'applique",
+    "Gi7ZFuJP58OUhkUBYnH-u": "Échec de l'échec",
+    "H0dAio0Zhb5B2-ccOMomc": "Si la sauvegarde des parents a échoué, les propriétés de l'enfant sont appliquées",
+    "IUf6-15AhyS4iQ3NBqVrm": "Si la sauvegarde des parents est effectuée, les propriétés des enfants sont appliquées",
+    "OFZphIXo_lqnX-vnPoQRc": "Indice calculé",
+    "SomVaD-_G-stlmtSEeJ4w": "Si la condition est vraie",
+    "WyO5vhpvwBG4LmfAc60fz": "Si l'attaque du parent frappe, les propriétés des enfants sont appliquées",
+    "XPK-8Ci9jaFYL0KeeseO1": "Choix de l'utilisateur",
+    "ZdtJxBggyw6XLDGuEtInK": "Si l'attaque du parent manque, les propriétés de l'enfant sont appliquées",
+    "cmCVz0se_9sHKBdxbp-9u": "Save a réussi",
+    "fxRhrS9aOD7kX4DLOegmY": "Aléatoire",
+    "qq_xhg0usIJNPJVpiKNNl": "Indice",
+    "vftr_XM4oZjPUjH96B5qm": "Attaquer Miss",
+    "w2jF6BdJcNceAcOoj-0Rh": "Si cela a résolu une vraie valeur, les propriétés de l'enfant seront appliquées"
+  },
+  "BranchTreeNode": {
+    "49ehFme1kwg1Gv7qOjbrP": "À coup",
+    "5W3yB5wJV3feGAT6uF2By": "Sur",
+    "V2cQA7PkQhQPGd_MDXoKQ": "En sauvegarde",
+    "Z7bMb_qdi4xS896SO-JrJ": "Chaque cible",
+    "gev48hiSRP6hXvlH2OsTo": "Choisissez-en un au hasard",
+    "r1Nwfl4CB4r7UBX6pNsBN": "Choisissez un par index",
+    "sW4DuQTvkmSs8CszW8u0V": "À condition",
+    "xEwOD6Z0d9lsuEv2s4LWq": "Sur une sauvegarde échouée"
+  },
+  "BuffForm": {
+    "pLP5I0DeEiydJilZcbWIS": "Ne congelez pas les variables",
+    "ujGTNeS7Qt6UNdSi90bCY": "Masquer le bouton Supprimer"
+  },
+  "BuffRemoverForm": {
+    "1Zvsru6SwSLDga99voeii": "Retirer le parent buff",
+    "597m5h8jhIy_9rID_47Yj": "Retirer tous les buffs",
+    "IlQFf_rfodgD6E17Y8B4w": "Supprimer les buffs assortis",
+    "OYEP_6V-THVmJ4RRy2p7P": "Supprimer les buffs marqués",
+    "X5fuj3rRPFrdLgikpzdha": "Retirer 1 buff",
+    "koccxDVJa0JKkspKWF73T": "Buffs ciblés",
+    "mfgWVnzACJzVST8OLqhdo": "Enfants",
+    "wP1izzQbSh60_E36Jwhdv": "Cible d'action"
+  },
+  "BuffRemoverViewer": {
+    "Sbsbw_OCKL3p3Iud6hWcS": "Réinitialiser {0} sur un long repos",
+    "WZ3mg83gpAZAz1rOdfrVp": "Lorsqu'il est appliqué",
+    "u9DbLAtokGvNrqXNt-5_d": "Réinitialiser {0} sur un court repos"
+  },
+  "BuffViewer": {
+    "-_McV2ZSvTi9dhJwS0-B9": "Réinitialiser {0} sur un court repos",
+    "gitCC-1i-K2cEhlQFE5Bc": "Réinitialiser {0} sur un long repos"
+  },
+  "BuildTab": {
+    "3dXHrz5Z_30gWc7znIQnx": "Machines à sous",
+    "4wlPGHBE5ZzQlTH6vz8Y6": "{0} niveaux de jalons",
+    "_TZnAe6ytMIX9JAOy_ws7": "Obtenir des niveaux manquants",
+    "gRil1dNLDdZLCZ882-jNh": "Niveau {0}",
+    "lu8EqIIRQm8jcSn4TLxah": "Monter à niveau"
+  },
+  "BuildTreeNode": {
+    "p1QIkwdqRfb30jNEyO0ie": "Supprimé {0}"
+  },
+  "CastSpellInput": {
+    "REgZ3S1NFfWIy_H2OnVN0": "Cantrips",
+    "U69b5DZ-gQ3uzAgPrdr7q": "{0}",
+    "kIe3SVoQpNiDIZha_1mam": "Niveau {0}"
+  },
+  "CastSpellWithSlotDialog": {
+    "3F4GREMFeI2XiZUbvbx4M": "Matériel",
+    "3W-UoUKx4ls6IAln-E9UR": "Épeler",
+    "DZaTr8fsD1lKfYP8IL_fY": "Casting",
+    "G115jkwGBnIxXtwS_szGb": "Lancer un sort",
+    "JhkgAy7hkeEm0nlKxRUKb": "Concentration",
+    "O0qmYguCKrxO2cig4xp4l": "Fente",
+    "QOzOe_bLq5eVMrr18cOfi": "Coulé sans emplacement",
+    "ZJalW18LEJvZmvjZ7rbUG": "Verbal",
+    "Zv1zhDyEwLsYWudgaihbF": "Coulé comme rituel",
+    "_1NJvagH4wHdqwixdE6nU": "Somatique",
+    "pKKtVPJFsDi6EMWOmVbkP": "Rituel"
+  },
+  "CharacterCreationDialog": {
+    "ALoCn8fXt0dv34QiFx1jx": "Niveau",
+    "ANXfivoQBJ7vJA21ti7OF": "Biographie",
+    "C5B9zZf15rhmo_2vfaQtc": "Dos",
+    "EGyaTsNsK_I2KkiUB2hjV": "Créer",
+    "JpT06KJNwEyJ4AD2XbbM_": "Nom requis",
+    "WND9g9jyBvyLplbYycyfB": "Suivant",
+    "g9OEQ6ODxw3182cFY8mfD": "Nouveau caractère",
+    "h1v791IkWNs4KC1w7m6Yy": "Nouveau caractère",
+    "uiuDKE-JU_7xjNfrbo7lh": "Bibliothèques"
+  },
+  "CharacterDeleteDialog": {
+    "cz32NY5-KS9_JgprY2IwT": "Supprimer le caractère",
+    "qJSNB7_gDzHxyoaC_JSzu": "Tapez \"{0}\" pour supprimer définitivement le personnage"
+  },
+  "CharacterImportDialog": {
+    "DsbwUmVBwajKNXuIwg3r6": "Le personnage doit avoir son ensemble d'autorisation de partage à \"n'importe qui peut afficher\"",
+    "E4IFoDL7aTpurrEN-fyqQ": "Importer",
+    "Suo_pTaP9gmyyDoiXwEp-": "Importer un personnage à partir d'une autre instance de diceCloud",
+    "YeTuBenUiVxNWdSD1W1Sn": "Caractère d'importation",
+    "iPECBoQB1saz_5K-9kltX": "Les paramètres de partage de ce caractère ne sont définis pour permettre à quiconque d'afficher",
+    "smZY0L2hAeglTEByUO2j4": "Pas une URL de caractère valide",
+    "x4oAHeV2B5uUemiIM3C8h": "Aucun ID utilisateur. \nÊtes-vous connecté?"
+  },
+  "CharacterList": {
+    "-LdQ0twu89jMXeqAuTXUR": "Vous avez dépassé votre nombre maximal de créneaux de caractère, archiver ou supprimer certains caractères.",
+    "1fhPDMlRilOSezFDoW21W": "ajouter un dossier",
+    "5Lh6_XvKqv3A7OD7dR00y": "?",
+    "K22MZDa29C0xDYFiKlmBV": "Caractère d'importation",
+    "eO2z7wc1FenrOaPKWzQqN": "Vous avez frappé votre nombre maximum de caractères.",
+    "jH1ExOrhqUs1ztoD3HTtY": "Augmenter le niveau Patreon"
+  },
+  "CharacterLog": {
+    "uJ6zorsDB4vjbPaQrMyDz": "Erreur de compilation"
+  },
+  "CharacterSheet": {
+    "F3kV7DDZvnmpPNhLMl-TT": "Soit ce personnage n'existe pas, soit vous n'avez pas la permission de le voir.",
+    "PaDxTX6-CoFfTji1AYSHv": "Arbre",
+    "QQp8e1dXwU9jDD9WyKx1T": "Personnage non trouvé"
+  },
+  "CharacterSheetDialog": {
+    "0E9n7NRcJsKcvSOh8pJGk": "Inventaire",
+    "7PhUWMOg_8wLLCCY7CKDz": "Caractéristiques",
+    "D7iHe3wbPaZ2Jhsn9CXU8": "Sorts",
+    "KOKK1cNcrY6O64cRo8aKa": "Journal",
+    "NnBUF4ZwE2sxY2H9laU5t": "Statistiques",
+    "biA0vlRWylo6EW8GckGOx": "Construire",
+    "uEahuOj2R9wGkNQ-mmdBa": "Actes"
+  },
+  "CharacterSheetFab": {
+    "6CEb8b7AnNofsOk2LXl8y": "Buff ou condition",
+    "INXnPK501RhoZ_yH5gNsm": "Propriété"
+  },
+  "CharacterSheetPrinted": {
+    "6dUbDHnCRivEyMA8sIaHp": "Fiche de caractère imprimé",
+    "8ZVWk-T-i8_wx0EzlsQ3C": "Soit ce personnage n'existe pas, soit vous n'avez pas la permission de le voir.",
+    "u3Sf8fJGPRW3gCON6DLhl": "Niveau {0}"
+  },
+  "CharacterSheetToolbar": {
+    "MEKfUHv4LuBXm7IaA_y2M": "Imprimer",
+    "RTIYpVmEiPR-12DHpABiN": "Modifier les détails",
+    "VQpJOOSLj9jVu_Ug2VkdW": "Sans partage avec moi",
+    "emdD3PkZeGh4DggsQ8gXu": "Propriétaire de feuille",
+    "sI8Ova8fMZEX_gVBZX6xH": "Personnage"
+  },
+  "CheckInput": {
+    "ZOqgwwG1rCTTKIVrY23XB": "Capacité",
+    "sKXmebGzd92GfO5RYbSPI": "Compétence"
+  },
+  "ClassForm": {
+    "4TeEM-qHSXYRQWxrQioEF": "Un calcul pour déterminer si cette classe peut avoir des niveaux de classe ajoutés",
+    "FCdQw1K4vQj_se7Ve6yRB": "Utilisez ce nom dans les calculs pour référencer cette classe",
+    "ZEMvL6PhjpagHmRJkdzJu": "Trouver des niveaux de classe qui ont toutes ces balises",
+    "gDeOhXP1mwk3mW2dewYdr": "Niveaux de classe des bibliothèques",
+    "gIBplAWYI81r77s3sTpXi": "Trouvez également des niveaux de classe qui ont toutes ces balises à la place",
+    "i6JHJs93-3cdtKgGlLO78": "Condition active",
+    "uQdLc6H0MB7BPD0raOaS3": "Ignorez les niveaux de classe qui ont l'une de ces balises"
+  },
+  "ClassLevelForm": {
+    "2Tc7ICRIlCH8FgSApdoMk": "Cela devrait être le même que le nom de variable de la classe",
+    "bpcZoMroBg-QAfxBYey1o": "Nom de la variable de classe",
+    "qj0S__uMboirbUnWdLfQe": "Une brève description de ce que ce niveau de classe donne un personnage"
+  },
+  "ClassViewer": {
+    "tSWxRpWoywiupUiYO0z5j": "Niveaux manquants"
+  },
+  "CoinValue": {
+    "3tH0b_R7B-Ge65HtL6fgY": "{0} sp",
+    "Ig9s8fiNqqshG8DBauG-f": "{0} CP",
+    "JL2Z6mOZhL5dcBjOJcsvA": "{0} GP"
+  },
+  "ColorPicker": {
+    "zVC9ZXiQABvJOKMrkGhMn": "Clair"
+  },
+  "ConstantForm": {
+    "GTcn_A5mZ3nBpC96UMZye": "Calcul de la valeur constante, utilisez le «texte» pour une valeur de chaîne, [1,2,3] pour une matrice, ou 123 pour un nombre",
+    "aEv2NC1UXKBC9Z63kT9Jb": "Valeur"
+  },
+  "ConstantViewer": {
+    "FZU6EecvlbgCMNn9Zp0bK": "Calcul"
+  },
+  "ContainerForm": {
+    "6fXp2y5zObA-KKIPAiL3x": "Le contenu est en apesanteur",
+    "7KxFeshSgsphebWl6Y_Bt": "Poids",
+    "HNEQCQuOUM4yqpujztd1o": "La valeur de l'élément en pièces d'or, en utilisant des décimales pour les valeurs inférieures à 1 gp",
+    "l91vHznLv6GK7YVq9yldX": "Si ce conteneur et son contenu comptent pour le poids de la créature"
+  },
+  "ContainerViewer": {
+    "4zYbcpuZsRCmGn4ZdMZgd": "Contenu en apesanteur",
+    "iaSo2F9hn7VmSSzfwSvT1": "{0} lb",
+    "lp8QWZHKDIXv42JsZlygP": "{0} lb"
+  },
+  "CreatureForm": {
+    "5PEqzUXcmiqyy4GEbI-td": "Genre",
+    "9PvBygiElTUxuhV1RF7_H": "Déboguer",
+    "K_X3XLw_OiKsx5Gz8VKuE": "Un lien vers une image haute résolution",
+    "MA4ELYrt4w7ZRVwC3bfOy": "Paramètres",
+    "P51MPYDy7PxdpoBtc2LFA": "Un lien vers une image carrée plus petite à utiliser comme avatar",
+    "V_MJ_nHGtuaJusLxtXgXW": "Quelle fraction de vos dés à succès est réinitialisée à chaque repos long",
+    "XWmMUBmcC-yoX0EG2PN9H": "Masquer les boutons de repos",
+    "YGtqDhW93C1P2aAq-rV2Z": "Avatar",
+    "YqkxDZ7LW_pEaDFPqldKL": "Afficher l'onglet Arbre",
+    "_ZhX3D-JrJVeqpHO0AsNl": "Les journaux de cette créature seront publiés sur la chaîne Discord",
+    "bs0bv6TYL4PrUH7HYiCDK": "Graphique de dépendance",
+    "goOLNBH2M1q5u3b9JGUYd": "Alignement",
+    "hQuConId3Ue_R35EPFuP-": "Toutes les bibliothèques d'utilisateurs",
+    "nYF_x6EcP290XOfOW0l9g": "URL Discord Webhook",
+    "nkNPsjI4gGK83TDXhg5nl": "Afficher les sorts",
+    "oPFJK6gF8EdCf42k5Wmo4": "Multiplier de réinitialisation des dés",
+    "ordep68gu9FPcmPbN2qNQ": "Image",
+    "s9T8L5iBv84h03L1vzuPw": "Masquer les statistiques redondantes"
+  },
+  "CreatureFormDialog": {
+    "E8FYgkM99fJeGrtnCg-WL": "Détails du caractère"
+  },
+  "CreatureFromLibraryDialog": {
+    "2fkv6_3ZeC4V6p9sWUMJq": "Vous ne trouvez pas ce que vous recherchez?",
+    "3loR2KAjQfv3IEMsldc7S": "Insérer",
+    "8L5E1_uaQyxFnOopG7Rof": "Insérer des créatures",
+    "gKd4prmSqKxO3Tn3oNfV-": "Chargez plus",
+    "uLa16DXHE6l49-j3BQtaj": "{0} machines à sous"
+  },
+  "CreatureListTile": {
+    "nL5xZbaq_UDQ-vdzPXXwT": "Déplacé {0} vers {1}"
+  },
+  "CreaturePropertyDialog": {
+    "B4terf7fAZO4IqRVHKkbS": "Copié avec succès",
+    "aavm9J7YCtJKVzrKjx3We": "Copie",
+    "n-TofgX92mhX35Ou9XvPx": "Supprimé {0}"
+  },
+  "CreaturePropertyFromLibraryDialog": {
+    "uvUPhvghrAF_XEhB4GYfg": "Ajouter de la bibliothèque"
+  },
+  "CreatureTemplateForm": {
+    "DE13oKA3fiC13FVUIh_xD": "Une brève description de la créature montrée lorsque la créature est ajoutée à une table"
+  },
+  "DamageForm": {
+    "1wEkuz0UjFyeKTJq_F1cS": "Demi-dégâts",
+    "2ZYkiUwpnuyQEcaxZCnZ6": "Sauver à lancer DC",
+    "4T1RVOx5n7MiWgNTFONBl": "Utiliser",
+    "EnQgqwE5gfzy6PTTjZzY7": "Le type de dégâts est requis",
+    "K4tBJdCA-IX5x2x7_gFU_": "Dc",
+    "Le1gdU0LVDcAb318jQnpZ": "Utilisez le type de guérison pour restaurer les points de vie",
+    "Na3qN3IUrdyG-T4ivcu9E": "Les dégâts seront appliqués au personnage qui prendra l'action",
+    "elhIUdNqUin0tIr8HPASE": "Lancer de sauvegarde",
+    "tKvc9A04tf15QgW5I0HST": "Un calcul comprenant des jets de dés à infliger à la cible lorsqu'il est activé par une action",
+    "u1M7JtjYwhEame-Pp_QOk": "Les dommages seront appliqués à la cible de l'action",
+    "vSBUWgtZXUz-R3mygeDRb": "Type de dommages",
+    "vn1yigF-QkAGevxOv_hE6": "Dommages sur une sauvegarde réussie",
+    "wLt8NpiVWrumZ9fIkfU6I": "Quelle statistique les cibles de jet de sauvegarde",
+    "yn1Bes_MY4pX_6RMi7xQJ": "{0} n'est pas un nom de dégâts valide",
+    "zHu2ur9PIJmRoyqAo7Wmm": "Cible"
+  },
+  "DamageMultiplierForm": {
+    "AMAn3Zqxk3uTILNZ9tBHL": "{0} n'est pas un nom de dégâts valide",
+    "DtSkXDBKCytH1PP8OOCYO": "Appliquer uniquement aux dommages qui ont toutes ces balises",
+    "Dx09c5by0x2vyTqYHwR75": "Tags exclus",
+    "FfK6vlC9tBsHSLQLI1Wll": "Ne s'appliquez pas aux dommages qui ont aucune de ces balises",
+    "M3x4lMUUK8hPMBunTeJKW": "Multiplicateur",
+    "M7PrptCUqUxPZ7iWpme1O": "Tags requis",
+    "NgRyI3HHHG2iNgaWW1sfO": "Postuler par tag",
+    "uSIuxHLCTocxiiJ5q3abK": "Types de dégâts"
+  },
+  "DamageMultiplierViewer": {
+    "9cqY7yDMx3pdjzizi_zX3": "Étiquettes de dégâts requises",
+    "NYuY8i7lURiZ8pIEADEW9": "Tags de dégâts exclus",
+    "oWlXMZwuJvWlVZ-udcQJp": "Types de dégâts"
+  },
+  "DamageViewer": {
+    "VEpM2ZSTeCTr2zrlY2MHq": "Sur un jet de sauvegarde réussi",
+    "eWiuTWrUZM43skOm_Erhe": "Pas de dégâts"
+  },
+  "DeleteConfirmationDialog": {
+    "7_oqaObBgI5fk_suDAZ0V": "Annuler",
+    "NqZTumeNzQNE0i-F6-wQq": "Supprimer {0}",
+    "_95JuuAuQDlmbx8hH1rhy": "Tapez \"{0}\" pour supprimer permanentement.",
+    "lh_KKI_3wtSGXNz8pxZtG": "Cela ne peut pas être défait",
+    "qemK_cDjoxeMkRtXI05V_": "Confirmation",
+    "vQ64nw8OemMSa9GxOCc8n": "Supprimer pour toujours"
+  },
+  "DeleteUserAccountDialog": {
+    "0JXz-C-9ZuiCDymS9b_kK": "Supprimer en permanence le compte",
+    "8_1aagUg0_82yQc6bbvh0": "Êtes-vous sûr de vouloir supprimer votre compte?",
+    "K1g_WwnsJY0jxGUHv-dir": "Supprimer le compte utilisateur",
+    "Okq6Nsc3PmT-cHSklg-5O": "Nous supprimerons immédiatement votre compte et toutes vos données",
+    "SFAC1EqlY3krkcX62YN5u": "Ces bibliothèques {0} seront supprimées:",
+    "eZGDM8P-zOzTQqdyxS7kU": "Tapez votre nom d'utilisateur ou votre e-mail",
+    "f3jPR5PASLEBBF48CqI4a": "Cette bibliothèque sera supprimée:",
+    "mRk_m1E7isGvMZlg5MYRi": "Les comptes supprimés ne peuvent pas être récupérés",
+    "qmfJD9s12vzAb1-H9aKOe": "Ces caractères {0} seront supprimés:",
+    "t_qT3X6ZcdPYWJNNw_zzR": "Ce personnage sera supprimé:",
+    "uCrG-R-63SnvzAhdU2on5": "Pour vérifier le type «Supprimer mon compte»",
+    "vRIINpm1HCgWwkbyuEx73": "Supprimer mon compte",
+    "w5qWIj3NYmaKm-_sc_I5n": "Votre nom d'utilisateur sera disponible pour quiconque sur DiceCloud"
+  },
+  "DependencyLoopError": {
+    "OyA5OrFE1rOOA-egpVEmy": "Le caractère contient une boucle de dépendance.",
+    "sqx88C4gnBrRY5BmtrDCQ": "Un ensemble de propriétés peut avoir été calculé de manière incorrecte, car elles forment une boucle infinie:"
+  },
+  "DocEditForm": {
+    "B_3-X2h_ufATd8alPiO5O": "Corps",
+    "SA6oEM0EnAeoxVuV5HTAg": "Supprimé {0}",
+    "fdnsRCx5WMZngX4lcEfYv": "Icône",
+    "iYa364MzsI7qeI-Hqqvqp": "Seules des lettres, des chiffres et des tirets",
+    "ibL0uSJEY48oXcP1KRfhZ": "Titre d'URL",
+    "j7Vpqo3j1Sz29ubpKb0LR": "Ajouter un enfant",
+    "jLbuJuy5M6aZO3Y2egMz7": "Nouveau doc",
+    "pblwi8OgupFn22G1Nw-oY": "Supprimer",
+    "rlg1W1Bi9d_cFlgtCvR7K": "Publié",
+    "x69gyxffuSguaHXvQ56H7": "Titre"
+  },
+  "DocViewer": {
+    "iNP-rBL8YKwM1yrzfzANC": "Documentation Home"
+  },
+  "DocsPage": {
+    "owEFuhKAi0S5XmhIaiqMB": "Documentation",
+    "psOXcjyh3rff4DXBzu3PU": "Documentation introuvable",
+    "yq2nBdxazbemD05WqnEqD": "Doc non trouvé"
+  },
+  "Documentation": {
+    "2ldd4m3lp62jCu1hMzsEg": "Docs",
+    "WcxPO-zAU0XpZmw2KL8if": "Aide à documenter non trouvé pour {0}",
+    "kn_NC3-tQozB8uw3-4OHl": "Docloud Docs"
+  },
+  "EffectForm": {
+    "-IBot5cFFVU_fExJi4xIA": "Champ cible",
+    "-Joha5EoEp6cwj-ASgV6M": "Ajoutez cette valeur à la statistique",
+    "4OEUhBe2V-9J_ugMReImf": "Si cette statistique est la base d'un chèque, ce chèque sera à l'avantage",
+    "ALsVM2wCgI2BZU9bY8v9N": "Ajoutez une note de texte à cette statistique",
+    "C7bO5_RlI0jtDfzqVqgnE": "Cible un champ de calcul spécifique sur les propriétés affectées",
+    "FdsMEJRSYVdWsUasjpYJT": "La statistique sera au moins cette valeur",
+    "JMxHUgMOu5XlMqqlHiLNn": "Les compétences et les chèques ciblés échoueront toujours",
+    "NWwR2iYKigbP-fB4v7vLO": "Multipliez la statistique par cette valeur",
+    "SHtnMBKpVFp2Ihfkrztt2": "Le texte à afficher sur les statistiques affectées",
+    "WEtHJEmy9l5UiGuanUysJ": "Ensemble",
+    "YDbS6tLL9tGQssAHzz--u": "Quelles statistiques s'appliquera-t-elle",
+    "YMSdBEq2wJCbQq7Aor9uZ": "Avantage conditionnel",
+    "YiU5qaeVVCZsEO5UlwF09": "La statistique ne dépassera pas cette valeur",
+    "ZuLYLB4j2cuBWCdUzyy6a": "Bonus passif",
+    "gboBBKj7YU4dALGd2TiDh": "Nombre ou calcul pour déterminer la valeur de cet effet",
+    "gpZPc3mE5Auwup0o2E7as": "Si cette statistique est la base d'un chèque, ce chèque sera à l'avantage",
+    "iT7omfOfVjW5aAj9kCC7D": "Échouer",
+    "iwKzgNYrj70WgRM1Xoc5_": "Les statistiques prennent leur plus grande valeur de base, puis appliquent tous les autres effets",
+    "qP3ZqRZPSY87NPXcxXgsk": "Propriétés cibles",
+    "snD8tCJau7JV3nHgF0GuU": "Champ par défaut",
+    "xMY-6t6rOKYhJ9zLKbxjw": "La statistique sera définie sur cette valeur",
+    "xp_04nGt0LMA-JD9SJipV": "Cette valeur sera ajoutée au chèque passif"
+  },
+  "EffectTreeNode": {
+    "0I57EVJo4scr5yYDXGmqM": "Tags sélectionnés",
+    "UKIYCUaiTtgsJbcTnknaw": "Statistiques sélectionnées"
+  },
+  "EmailVerificationError": {
+    "dGAlXt2C_CR8kggghnqSK": "Erreur de vérification par e-mail"
+  },
+  "EmailVerificationSuccess": {
+    "Ir5NX1aI7JTHHc1_tiCcx": "E-mail vérifié",
+    "bHQ6O1DKlCkdryLwxDg89": "Votre adresse e-mail a été vérifiée"
+  },
+  "ExperienceForm": {
+    "K0h-Fle3qR_ZWmbROYmq2": "Niveaux",
+    "stG-qp6cp2s4HtvLJpANw": "Jalon"
+  },
+  "ExperienceInsertDialog": {
+    "lUM41t72OAQ2VxDFcg-_n": "Ajouter une expérience"
+  },
+  "ExperienceListDialog": {
+    "A30VArzop0zjb0nsj2KlN": "{0} niveaux de jalons",
+    "YD6W_BT_jL1nuVH14yxoP": "1 niveau d'étape",
+    "YlXwV3OKB1O5Ci5-gXbBG": "Aucune expérience",
+    "ZS8DXNBdmNBl0uKaCSGRR": "Expériences"
+  },
+  "FeatureForm": {
+    "DfGBuKMfTw9c8qtZ9A3pl": "Toujours activé",
+    "GL4EbIj5qEFQytx900y66": "Activé",
+    "OIE9HAppn9fn1Vf6y-9E7": "Cela apparaîtra dans la carte de fonctionnalité de la feuille de caractères",
+    "RxXMMLikrA240ehj7BMlt": "Le reste de la description qui ne correspond pas au résumé va ici",
+    "wYzh3YiPCU7yo9eHbY--A": "Désactivé"
+  },
+  "Feedback": {
+    "Npe9l37-6-jLe2GDpbQpd": "Rejoindre",
+    "_ZLqbT-i52icd_96z7L79": "DICECLOUD DISCORD SERVER",
+    "br1TqRF4Kxw4QNoATiVMu": "Pour donner des commentaires ou obtenir un support à l'aide de DiceCloud, rejoignez le serveur de discorde officiel"
+  },
+  "Files": {
+    "IWywNfV8ZQO6HrcEjyIEn": "Validation échouée du fichier:",
+    "OOKbEQsrTEYMnwfTyLg2W": "Le fichier ne pouvait pas être analysé",
+    "bPlqV9yZjulOsJlm1dUy6": "Le fichier doit être .json",
+    "hUMuHiGYqCw-VP3G4t4wy": "Fichier trop grand",
+    "lODNcxhbG9cYo2nyVaNI7": "Personnages archivés"
+  },
+  "FolderForm": {
+    "6pLWAMlfOogGtFQgY6953": "Fin",
+    "AMEeuqc52F4zSdf1l7lzL": "Onglet Actions",
+    "F5tJESMNnFj72GGaYpdMc": "Cachez les enfants de leurs emplacements par défaut",
+    "O-kWcvLytlG27QDmjJkNM": "Onglet des fonctionnalités",
+    "R1pe28ZEPjbwlgpZzdOBx": "Regroupement",
+    "R84OXV09jmFO1f9TeS-KR": "Groupes d'enfants sur une carte",
+    "S0H0vocXzZVoRQQHx5siF": "Commencer",
+    "TSUGqutjpC2kAk2I1SoHY": "Emplacement",
+    "XoCxPDCPQmESC8qqj1Pdm": "Onglet Journal",
+    "biy1hZYci_6ZL7SKH7CcP": "Après les compétences",
+    "eoyw-vjLBTxDNpUe8BBil": "Onglet d'inventaire",
+    "hRK_ceriRti6rJTrakw6i": "Onglet Statistiques",
+    "i-tGltjgjIXUurYmN2lKo": "Après les événements",
+    "jIoUBd6RjQ_1yhAWRbcjc": "Onglet de construction",
+    "l-49G-c7LldbKdGd9foKr": "Après les statistiques",
+    "njKBgocRx-pKTqtt0mrOB": "Commencer",
+    "p-iGQVvIZbSADeV-CLngl": "Onglet des sorts",
+    "tGBQcx5WJYa9oLyr6Ek8N": "Fin",
+    "uSVTWqY1bgp6pHX8JaHVa": "Languette",
+    "wkjm39H13dNoLVoGTvvZj": "Après les compétences"
+  },
+  "Friends": {
+    "LPnKzu_iwEkWKHDp0SVmF": "Amis"
+  },
+  "FunctionReference": {
+    "yTQBDcPtnTzcmAEOzeDj9": "Fonctions"
+  },
+  "HelpDialog": {
+    "ASKReWmAnD-whk6jutMR4": "Aide: {0}",
+    "Klueb_dCWM-dqLDCnrAvc": "Feuille de caractère",
+    "_W6JC_Hn33chN-g0ONcwz": "Aide à documenter non trouvé pour {0}"
+  },
+  "Home": {
+    "9CRckySuULPz5MD9axBve": "Moteur de caractère avancé",
+    "9XmQezuJY9CHkr2yXlG5y": "Mes personnages",
+    "AakehfukJAU2EA4nhtjaa": "DiceCloud est gratuit, financé via Patreon, et le code source est disponible sur GitHub sous une licence GPL.",
+    "BSKepuOqxaS6dcmfX5Y-J": "Bibliothèques personnalisées de contenu",
+    "Cp_QXBk3uXo20U6wMcUUU": "Impliquez-vous dans la communauté DiceCloud",
+    "Ixxwar7dgi3ZBPT0lvBkz": "Glisser-déposer le gestionnaire d'inventaire",
+    "NfNxTphXfuGzoeFs5Uht2": "Discord webhooks",
+    "Q8kGqjMJQ66X0YCH3JT0g": "Se connecter",
+    "QWoZj1vRIxYuF9u7qloDy": "Roulement de dés",
+    "XbWzTaqP9chSvLj_RPime": "Gratuit, open source, financé par la communauté",
+    "XeHB-ri_R1Fs3krM9WW1T": "Suivi des personnages gratuits, vérifiables et en temps réel pour la 5e édition",
+    "Y7uTRbv5hbEkIplOp6-XF": "Registre",
+    "_4yZPmCb1C06LE_hlL1th": "Feuilles de personnage imprimées",
+    "_6k6pNSuKlvfKOQ-0UUsF": "Tout personnaliser",
+    "_VJ621gBwFLfZZ34rnaHL": "Actions automatisées",
+    "fdNeOF7AbJX2Jvv2mcFNH": "Ajoutez de nouveaux scores de capacité, des compétences, des barres de santé et des statistiques à votre personnage. \nLa feuille entière est sous votre contrôle.",
+    "iZlOv0hl46b8FEd8hg8s3": "Statistiques vérifiables",
+    "jU4R7rz0mw_EnVTN8Xr5E": "Constructeur de personnages piratables",
+    "sZrF8-Jl7NrcNJFS76ngY": "Les personnages sont calculés en temps réel en fonction de leur équipement, de leurs fonctionnalités et de leurs buffs.",
+    "uodl_ID-ITNFfUK4ean3D": "Passez moins de temps à mélanger le papier et plus de temps à jouer au jeu"
+  },
+  "IconColorMenu": {
+    "SoA0wSX27fC-jNK_9Z9sk": "Couleur"
+  },
+  "IconPicker": {
+    "4f-71N_nnOTtIif2pKMOK": "Icônes de recherche"
+  },
+  "ImageInputDialog": {
+    "9SHk8YEQHCgYV91wogpZG": "Fichiers utilisateur",
+    "E9s5YhcazF4CjinGCQJp7": "Fermer",
+    "dcbgmuOVYglN2J7VpTBFU": "Sauvegarder",
+    "en5XFGMDi3f54ER1Z_HDe": "De l'URL",
+    "zb6ST-_z_zJvOhv-DPvag": "Lien direct vers l'image"
+  },
+  "ImageUploadInput": {
+    "aX-9RXc04raRTiRqK8pzo": "Télécharger l'image"
+  },
+  "InlineProficiency": {
+    "jN183F3ufg8Le9jkznJ4p": "Compétence"
+  },
+  "InsertPropertyDialog": {
+    "RY4p2NBWbpDUPdo37rkVw": "Nouveau"
+  },
+  "InventoryTab": {
+    "7csTJE-Hdc56U4SulNOzN": "Équipé",
+    "F1_i9vo8jx6iCoUpKf8lq": "{0} lb",
+    "IrsrK7LqyqtPrg7inEXZU": "Articles à l'écoute",
+    "N8fKkkzjtuW3gNWsyJ2AE": "Valeur nette",
+    "Qyw8J_ywquzZVrLGok-D8": "Transporté",
+    "frAYVmG8GPxQ4gvrSrlGy": "Poids transporté"
+  },
+  "InviteDialog": {
+    "KIjaabv6nsBAlAJM0yHqF": "Revoke Inviter",
+    "haRd4V-fi0dcc9y9IscFl": "Inviter",
+    "iY3kNH9LFIMWh-AkVTB2d": "Cette invitation est disponible",
+    "ouSgtRu2Z0wupJh1KBZQX": "Obtenez un lien d'invitation"
+  },
+  "InviteError": {
+    "W-8EMJsBuzqRMZC3GzCdm": "Inviter une erreur"
+  },
+  "InviteSuccess": {
+    "lI-3wT_8PfbybQ8vEBYxf": "Vous pouvez maintenant utiliser diceCloud",
+    "myoQ_oeTcPO92TLbFBVvu": "Inviter"
+  },
+  "ItemConsumedForm": {
+    "ZNi2pRgWHJ9mG8GR0jSv5": "Article",
+    "cdlMdmMAJ6I5CbT27PDB-": "Combien seront consommés",
+    "fx2euWM0B_hEtzWk9-XXS": "L'étiquette d'article qui sera consommée"
+  },
+  "ItemConsumedView": {
+    "ojSY3UghqfcmO7TeV4Lbh": "Sélectionner l'élément"
+  },
+  "ItemForm": {
+    "CCKYjd6Fr5AKUkkAftNPb": "Entrave",
+    "UWBTYL3LaLrPFw0VHu-XB": "Afficher le bouton d'incrément",
+    "Uhoi-fcO1xIaoI88kJCTM": "Le nom pluriel de votre article. \nSi le nom de votre article est le nom pluriel de «l'épée» serait des «épées»",
+    "Y_HLbO5UK3Ui8yWCsVTBp": "Nom pluriel",
+    "oQRP7GFX81t45GD91kkUX": "Le poids d'un seul élément en lbs. \nPeut être une valeur décimale"
+  },
+  "ItemViewer": {
+    "0eBVpSpRe4VzVWbPuTxDD": "{0} lb",
+    "v9VxAknaqvQ8HCBcydnxk": "{0} lb"
+  },
+  "LaunchCountdown": {
+    "d84YBRbn9AIGdo3D3YNpY": "{0} jours,",
+    "kONXEyhIFDGq7r2yDTzcW": "DICECLOUD Version 2 Beta sera lancée dans"
+  },
+  "LevelUpDialog": {
+    "Lf2o25z7r-baxgl6oUYbV": "Tout montrer",
+    "NiaDODaITliGrMRqgPbor": "Erreur de condition:",
+    "US_McJGWbG82XzLEXnW7N": "Les exigences des propriétés {0} n'ont pas été satisfaites",
+    "VcK3Z-0fwcRbNsNAR9tVP": "Essai fermé",
+    "kUtYdzmVh5iGbRH4YBDra": "{0} machines à sous"
+  },
+  "Library": {
+    "4M1dnsetmEUhDZmwRlchR": "Parcourir les bibliothèques communautaires",
+    "TogxtUDj1JJZZjtRIdghc": "Ajouter la collecte"
+  },
+  "LibraryAndNode": {
+    "gxwOHGEowqDZaBSviOxkY": "Afficher le deuxième arbre de bibliothèque"
+  },
+  "LibraryBrowser": {
+    "8u-n8n2IfWZ5zdPmBdPRp": "Bibliothèque ou collection de bibliothèque introuvable",
+    "d1bz0jB5EXhSj3VCKXMCS": "{0} abonnés",
+    "jUkc_CTXvxVrCeuhisZIo": "Nouvelle bibliothèque"
+  },
+  "LibraryBrowserDialog": {
+    "rEief-McLI6QrOAmbFPFz": "Bibliothèques communautaires"
+  },
+  "LibraryCollectionCreationDialog": {
+    "5XDN8RnSgbykb7y8Sl-U7": "Collection d'insertion",
+    "91vPMCkyY7wba30jPsufP": "Nouvelle collection",
+    "GbJh4HQgyhjYvVMuPW2on": "Nouvelle collection"
+  },
+  "LibraryCollectionEditDialog": {
+    "2pS42Hzay89QTxEjuq7DH": "Propriétaire de la collection",
+    "E0xemwvMGxun2_MvDmVB9": "Collection",
+    "UkpmWuRz7Xjp0SsJq0tR4": "Show in Community Library Browser"
+  },
+  "LibraryCollectionToolbar": {
+    "Er2XJ9n9t_8Lb9E1AOL94": "S'abonner",
+    "bwi-B64_VXVqzLOEzWCOg": "{0} abonnés",
+    "rz7QqB66JPkBOOtwxv57c": "Se désabonner"
+  },
+  "LibraryCreationDialog": {
+    "08g2uPx0s44itGzjyflWz": "Insérer une bibliothèque",
+    "IZrKqkZHdXwybtwrBlqxF": "Nouvelle bibliothèque",
+    "hu7zV_QaHHXsA5Fe4wjy7": "Nouvelle bibliothèque"
+  },
+  "LibraryEditDialog": {
+    "0wQO6njnWuA5HHQhpM8JJ": "Bibliothèque",
+    "zb7Jb6KHUrx9FSsntU_4O": "Propriétés récemment supprimées"
+  },
+  "LibraryNodeDialog": {
+    "3sQbBN1liQCyUbp2ndbRt": "Sélectionner",
+    "5itWo4EFXmS15ACjyfpJX": "`Supprimé {0}`,"
+  },
+  "LibrarySecondTree": {
+    "6uMkezm-URhBdu0Iggvzo": "Sélectionner la bibliothèque"
+  },
+  "Maintenance": {
+    "ZIsaWRSECZbz1xRv8wS6U": "DiceCloud est en direct.",
+    "bpjsWojulL3gpaBwFPbbP": "DiceCloud est actuellement sous maintenance",
+    "xn1iabUyQAcN50064OLqt": "Maison"
+  },
+  "MiniCharacterSheet": {
+    "alwWz7AahLvye1ydVWs8v": "Feuille de caractère"
+  },
+  "MoveLibraryNodeDialog": {
+    "6IRH2s4gwtFFrcHQt8dCd": "Sélectionner un nouvel emplacement"
+  },
+  "NotFound": {
+    "7lbBslOsULzLsLZPgFEO0": "Aucune page n'a été trouvée pour cette adresse"
+  },
+  "NotImplemented": {
+    "eSNx_dJzmWByTGfXK3VXw": "Cette page n'est pas disponible dans cette version de DiceCloud."
+  },
+  "NoteForm": {
+    "d0G5fv7VU_--LV_KXToNH": "Texte qui ne correspond pas au résumé",
+    "yLE_TlDCIWHZ-_KI8GonN": "Cela apparaîtra dans la carte dans la feuille de caractère"
+  },
+  "PatreonLevelTooLow": {
+    "-bIUc7XwwY0HD3HCkeQpG": "Vous devez être au moins un niveau d'aventurier (ou être invité par un patron d'un niveau supérieur) pour accéder à cette version bêta",
+    "MthXEAw6WyBg-N7IuQkiT": "Rejoindre maintenant",
+    "dqCkVkcBD6EAc45E1C2bi": "Votre niveau Patreon actuel est {0}"
+  },
+  "PointBuyForm": {
+    "1951B8ZI5gZRCs_ZAF8zn": "Min",
+    "76kViLsS2FQdKLp2NNGU9": "Fonction de coût",
+    "7KUBbb83xo02E0AS64Emj": "Valeur par défaut",
+    "7SXmECZCAm1p0xHhDWJHt": "Le coût total autorisé de toutes les lignes",
+    "7e2ucUDSxvPWwdSnsd4sZ": "Utilisez ce nom dans les calculs pour référencer cette ligne du tableau",
+    "C-0sxC0BtHnTenrNmBoWt": "Max",
+    "CysbomYf00kKzFpDDxu99": "La valeur minimale pour chaque ligne",
+    "D_arqDNLfaamuIiUdhgn7": "La valeur maximale pour chaque ligne",
+    "ggYiFpVMzvWnqg4qboE9A": "Total des points disponibles",
+    "hW_GGLTissf4OxOolFUD8": "Paramètres d'achat de points",
+    "hYmj6ak9yUk0V3eFBpqix": "La valeur de départ de la ligne",
+    "hmThDEHkPp9wU3rDXyN-l": "Nom de rangée",
+    "irbsTn6C6jeUiIhiuYplB": "Rangées",
+    "jNb11a1Q5rb-pBf_mSCxA": "Une fonction de `` valeur '' qui détermine le coût de chaque ligne"
+  },
+  "PointBuySpendForm": {
+    "ilJ6-BL2iYbPHYxFSdhP_": "Coût"
+  },
+  "PrintedAction": {
+    "9koQY1JmJbMnPI-2Yu6D-": "frapper",
+    "IrhNSkzJSRi84GhcibaA6": "Action",
+    "OAukBFTLqoIuE_boNY4qO": "Attaque",
+    "XNpxfsk_apluhNuXqmnbJ": "Action libre",
+    "fgwXlNTknRAXFw-2I49s2": "Coût: {0}",
+    "g7Zqf3Rk5ldnxHOK2LMgv": "{0} utilise",
+    "mfg8w8IEyp7lqOtrKA716": "Réaction",
+    "pB_7PTSkQGSC3ydYPKdk4": "Action bonus",
+    "vuRsPS5NyXpqYAo7DYbK0": "Longue action",
+    "yPJXNovDswPw3Tf_UrUvS": "Utilisations: {0}"
+  },
+  "PrintedBlockItem": {
+    "C--Y4P75TjKpuM26BDapb": "À l'échelle",
+    "SFhP2eWq7btddl4MHtwZj": "Nécessite une histoire",
+    "v0L6IN_s4eGkutY4PtxWs": "{0} lb",
+    "wbXUV1ycuSwK46o5GcG2o": "{0} lb"
+  },
+  "PrintedContainer": {
+    "C_cxBPHcLXi_zwduVst7t": "{0} lb",
+    "MRW7XJIjayibJ_5TV5YR-": "{0} lb"
+  },
+  "PrintedDamageMultipliers": {
+    "p5oBcNFeC2ebcPTxmWvab": "Vulnérabilité",
+    "uNx-Dyhk3Z17Q7dWuR4Bp": "Immunité",
+    "uP77KRfYo25L_qwnj-JQR": "Résistance"
+  },
+  "PrintedInventory": {
+    "hrFj1nG8nCwc74-o735nX": "Poids transporté: {0} lb",
+    "tCxZ6wkrOzchblKuamrP9": "Valeur nette:"
+  },
+  "PrintedLineItem": {
+    "YgWODeXdufy3Q4AwTBQ6w": "{0} lb"
+  },
+  "PrintedSpell": {
+    "DrvKag7gMXqeWyeGTQ8NC": "Temps de casting:",
+    "Ppfd_FuIo6pw_1YB8wX9B": "Pour frapper:"
+  },
+  "PrintedSpellList": {
+    "PE9H9_BfnSavYtCbs3TqA": "Bonus d'attaque de sort: {0}",
+    "XTB6WZwo91aavGzwnt5J7": "Spell Casting Capacité: {0}",
+    "rWBpTd-TcsU92Nie_i2G7": "Spell Save DC: {0}",
+    "u0S47qyExcVB5rY9sEGk-": "Modificateur de capacité de casting de sort: {0}",
+    "uL7BSeWd2J4DB_nDSh7vW": "Spellages maximaux préparés: {0}"
+  },
+  "PrintedStats": {
+    "6DeYa0E1ghGheY-O3b7iu": "Total: {0}",
+    "INiHkB9G-fGTkJrdfgXjS": "Compétences",
+    "Mk_m-2x5g-4jobcF7frTH": "Total: {0}",
+    "p0zRTFU33OBpZjmRBfSA4": "Machines à sous"
+  },
+  "ProficiencyForm": {
+    "XgrzFtMQF6IfD4jBvGqfA": "Quelles compétences que cette compétence s'applique"
+  },
+  "ProficiencyViewer": {
+    "fSzRlRx_9g9BQI5cWRfJ7": "Bonus de moitié de compétence"
+  },
+  "PropertyCard": {
+    "WKBCFII37aVYuOOkwgY6F": "Une carte de propriété pour le {0} n'est pas définie. \nVous devez signaler cette erreur."
+  },
+  "PropertyForm": {
+    "-9Y-RPAarunJWnLeLkRe8": "Les enfants peuvent être ajoutés après la création de cette propriété",
+    "ACu_jRxz32qDAe16Wit4A": "Combien de propriétés cela compte comme lors du remplissage d'une fente",
+    "F0m6HGixfZz0PawzG6Mm9": "Utilisé pour laisser les machines à sous trouver cette propriété dans une bibliothèque",
+    "G_YfY3xbu2WYu8bzJgULO": "Le type de propriété que ce remplissage de machines à sous prétend être lorsqu'il est recherché par une fente",
+    "M6byRruoaG1QJnLgCQJzH": "Toujours actif",
+    "MZRFbTU4dQcWdpVlXv9ah": "Recherche à partir de la feuille de caractère",
+    "Mn4WP5-Y0QLyoAm-5cO1-": "Une caculation pour déterminer si cette propriété peut être ajoutée à un caractère",
+    "XXwZiSyy3PLlHms5-hiEq": "Peut remplir les emplacements",
+    "hRA5h3_UC9k3Zk3iFywu8": "Tags de bibliothèque",
+    "ll5VOZBvTaDkanqmhdxY4": "Texte à afficher si la condition n'est pas remplie",
+    "nN8qiVQXkc18VOhirptoM": "Type de remplissage de l'emplacement",
+    "pfX-T7sDiiLNLZ4XYxmZe": "Texte d'erreur de condition",
+    "rOdph7uHJPkuF3rKxLiUA": "Quantité de fente remplie",
+    "reKPKGEnAfdHpBLoywE1w": "Condition",
+    "sZAVdib4BS4JqbPjOd-hh": "Les tags permettent à d'autres propriétés cibler cette propriété avec des interactions",
+    "vAMpUe37OijnEHSpa_exs": "Balises",
+    "xhQ1px8UKEwUfLt-2VIp_": "Toujours actif"
+  },
+  "PropertySelector": {
+    "atdz1RUUai4SWok0-7T4r": "Suggéré",
+    "wpde41ir6M054lGU8CLwk": "Plus"
+  },
+  "PropertyTargetTags": {
+    "kBSIIGERW9KuZeuu6r9E0": "Tags ciblés"
+  },
+  "PropertyViewer": {
+    "A2-Kaprp4titpzjHtBl0m": "Désactivé par:",
+    "EhamBkUEXXiR61RswQ_LF": "Statut",
+    "R2y59Jx1lSCn_iVM3UiTM": "Comportement de la bibliothèque",
+    "Sk44T3yriJNHryB4ttpXi": "Désactivé par les propres paramètres",
+    "ayyUiD347dMgQAbxzCUHn": "Inactif",
+    "ffr0YqqdylRGtGQSlp-eW": "Désactivé par l'ancêtre",
+    "hCNvG0nKgX-D86BdSbmsv": "Cette propriété ne peut pas encore être vue.",
+    "sIjkFiqjLqnIGsWsdWtDC": "Propriétés enfants"
+  },
+  "ReferenceForm": {
+    "JV4y24Ef5M3Y7FlHwHqkc": "Propriété liée"
+  },
+  "ReferenceViewer": {
+    "55UcYLqUq55tWKGdailva": "Propriété liée",
+    "QKA68iibE1CmNtSWoQlwD": "Erreur"
+  },
+  "Register": {
+    "1S2ehjyrUG5gkDTpEGCBw": "Mot de passe ne correspond pas",
+    "9zW2GcUch66RUVP8KvNdN": "Le courrier électronique doit être valide",
+    "W_CdFLZLh_HrlUiFd9T6G": "Un e-mail est requis",
+    "avHsf7o8zL3P_N7ma_IdP": "Inscrivez-vous avec Google",
+    "eT-l-HBPTmti3zIhNNzhX": "Le mot de passe est requis",
+    "i7xi3kzHqYrsjmgPGbpqz": "Mot de passe",
+    "mG7vo0cKtZOsVnLF4MJFc": "Mot de passe à nouveau",
+    "pjj23oD2_4P9_mRgSGFFy": "Le mot de passe est requis",
+    "yfTv252rVq9SqVdTJ3Yks": "Le nom est requis"
+  },
+  "ResetPassword": {
+    "OtXdcuhNszD9-49yGdYKR": "Réinitialiser le mot de passe",
+    "SZrjlfWj7iKEwWAci_IMZ": "Lien de réinitialisation du mot de passe envoyé à {0}",
+    "_Q83rGujQKiFN7eo7OHRT": "Nouveau mot de passe"
+  },
+  "ResetSelector": {
+    "i6eGWDKtSDJDxSkvSA9bB": "Réinitialiser",
+    "kWVeEgn9xE3ttsd7ywkDb": "Repose-court",
+    "qGXvcPldmk5aYt86yPZL-": "Repos long"
+  },
+  "ResourcesForm": {
+    "Km-PaY3fMC21nw6auR9tc": "Attributs",
+    "WQ8d9gNOItcvubseawFpk": "Ajouter des munitions",
+    "XMB8bNhaOgpKeNe0JgzJU": "Ajouter de la condition",
+    "_uqlTOKs4UrDFO6_R9I9o": "Munitions",
+    "cTQrUc6d5ziWYr0DAeawr": "Ajouter des ressources",
+    "lQGikx2mch-_nphcT4bTY": "Conditions"
+  },
+  "RollForm": {
+    "1tJlgrJOlIRP7yDDmCPzA": "Le calcul qui sera évalué lorsque le rouleau est déclenché par une action. \nLe résultat sera enregistré comme le nom de la variable dans le contexte du rouleau.",
+    "JWuj-egKYGNBCtSDcN9Pp": "Utilisez ce nom dans les formules d'action pour se référer au résultat de ce rouleau"
+  },
+  "SavingThrowTreeNode": {
+    "eobGIGqrXgbzEm1h0Rne9": "DC {0}"
+  },
+  "SelectCreaturesDialog": {
+    "UjUpHVRYzvCyqwNi7DV2w": "Il n'y a pas de créatures à ajouter ou vous les avez déjà ajoutés",
+    "gnUhOrXXmGGPWI9kQbpHI": "Ajouter des caractères",
+    "ooUpaVf3Q6Kb-Ot1Kc0k0": "Ajouter des caractères"
+  },
+  "SelectItemToConsume": {
+    "17lfXg063gROgEWSYNy5Y": "Aucun élément actif trouvé avec la balise \"{0}\""
+  },
+  "SelectLibraryNodeDialog": {
+    "NSHQWleuXmGAMAUWGoX2-": "Sélectionnez la propriété de la bibliothèque"
+  },
+  "SelectablePropertyDialog": {
+    "MSXU_s9svhgqzP1TjZxUV": "Type de propriété"
+  },
+  "SelectedCreatureBar": {
+    "2Fz98cxVXGhTN-LqYLLxV": "Buffs",
+    "Gpk8d2M8u_GVhell7SH4w": "Buffs",
+    "NgRLZ1KujlD3o3EtzLY3R": "Rouler",
+    "UCE8E-qK5tW0K20yPG11i": "Dossiers",
+    "UY94rrIn40QvhXb052leI": "Onglets",
+    "UcAwEN_Jmv7Lezh-o8g6S": "Vérifier",
+    "WTl6k0_UkGQshnCnlN3t6": "Onglets",
+    "Zg5aaw0sAM6W64-ocA_E4": "Spel",
+    "fhJpWpTQTpuCrtsOioWxJ": "Actions standard",
+    "gYC1yFaOl9zXhX_ppgoWx": "Onglets",
+    "mjZ672LJyHdhMi6YmHEJn": "Onglets",
+    "o3j9IwMnvU4lhem9IzY3y": "Onglets",
+    "oQYJ73IjGs_u96UbCpyo-": "Buffs",
+    "rsDz2jeDde3rZixCEIxLp": "Onglets",
+    "tpB9wyZt3UOVoVR9e_Tvm": "Ressources",
+    "xvb9H6sVfBt7HYtpMicQz": "Onglets"
+  },
+  "ShareDialog": {
+    "03VciIdW7WUj5zao5xU0A": "Partage",
+    "8hLNrY3cfCjnHG8Ibg4S2": "Partager",
+    "JXIZsDoMWYIDczc39na2p": "Lien",
+    "K1khMUyWf8QUMXhNncQ6S": "Fait",
+    "L9JNgV2bpSTg3G8XUlb08": "Peut modifier",
+    "R2-U-vaUgW5Qt_EcWFhR6": "Afficher uniquement",
+    "VqkQCmxb_c2wDNm0F8BEF": "Utilisateur introuvable",
+    "_g3AAll7JIJ6eKSezF40L": "Qui peut voir",
+    "gfqTAznIflA9gIuys0UG4": "Qui peut copier à partir de cette bibliothèque",
+    "m1248OmS-l17CkOjbMM98": "L'utilisateur est déjà le propriétaire",
+    "or0_zrIkepecbBUj6uZpY": "Transférer la propriété",
+    "u68iDg3Jq4sXvq9xARfLQ": "Retirer"
+  },
+  "SharedIcon": {
+    "kF8vLcL1xPgleTIoZwfyz": "Partagé comme vue uniquement",
+    "kqGIJFg86xcv4IzPhPKcg": "Partagé publiquement",
+    "q2o9ULMxirc3EO7lc_HJz": "Partagé avec l'autorisation d'édition"
+  },
+  "Sidebar": {
+    "BPQym8QzWFodXZjtBNfdd": "Fichiers",
+    "Ic_fWFzKEAoFGAzBaHGE0": "Se connecter",
+    "Rr1M41-BLJbeBDuSMqsqs": "Personnages",
+    "TLlr6aU-7D83jdG1gJHY8": "Paramètres du compte",
+    "ji7gEHWu4QoZQOsY9ZMJW": "Github",
+    "lO8RxJFgOO2O9Sl2b1pxT": "Barpe à table",
+    "pIDDy8BnVkf01Ysma7Gaj": "À propos",
+    "pxf1SzERzQzKgl3Anfi1F": "Retour"
+  },
+  "SignIn": {
+    "9Hgx-SDsbxdrMu3MW63bY": "Nom d'utilisateur ou e-mail",
+    "QkTkN_D5t8-ioQZJ7atHY": "La version 1 est toujours disponible à",
+    "RrDrojVv2enNOWDBv-TSC": "DiceCloud version 2 nécessite un nouveau compte à utiliser.",
+    "_I9mGXEz4iLE_orJVUX98": "Connectez-vous avec Google",
+    "jVS-KggdzH9X_7mE1FZR1": "Connectez-vous avec Patreon"
+  },
+  "SingleLibrary": {
+    "8o8zfT4rnslD95pstr578": "Bibliothèque",
+    "CqIJd_CZPYFyhxG7h2JmS": "Bibliothèque"
+  },
+  "SkillForm": {
+    "0RIVS1iiSps7zFgRhCU-i": "C'est la valeur de la compétence avant les effets appliqués",
+    "1yXeNttBJlQ8NHU6WBTN6": "Un jet de sauvegarde que le personnage peut faire: Save, etc.",
+    "3HmLC1Cet1hnDeYhuhOal": "Une compétence de feuille de personnage normale comme l'athlétisme, la tromperie ou l'enquête",
+    "3S6BJ3LTSnpNl_2YJ5xbn": "Appliquer des compétences aux balises ciblées",
+    "9c_kA3_kdX2DHMkeJluW5": "Une maîtrise de l'arme. \nAssurez-vous d'ajouter une compétence de base dans la section avancée.",
+    "FwTi5l87wO7XVQizFa3Bk": "Utilisez ce nom dans des formules pour référencer cette compétence",
+    "PfUrjVRAHmEX7AhfxnPTT": "Langue",
+    "XiqWCVYk6vLFjbduURJol": "Un contrôle de capacité qui pourrait inclure un bonus de compétence plus tard, par exemple. \nInitiative",
+    "_uUQIQfQJm94jRvJnoCa4": "Arme",
+    "bBD23OFYb7fRB1V9BS0P-": "Une maîtrise de l'outil. \nAssurez-vous d'ajouter une compétence de base dans la section avancée.",
+    "fIJDr4ZD2k-67ZQHSOJGZ": "Quelle capacité est cette compétence basée sur",
+    "fX2vgMPC31V0qW12rcolL": "Une maîtrise de l'armure. \nAssurez-vous d'ajouter une compétence de base dans la section avancée.",
+    "gAlgFXNb94543om00oR51": "Une compétence linguistique. \nAssurez-vous d'ajouter une compétence de base dans la section avancée.",
+    "go1fZMjOamVypbpskbqZD": "Maîtrise de la base",
+    "p09IUwxeRXWEUnNOBsawW": "Appliquer des compétences",
+    "s74pIwtTO9_roPkhjJO6f": "Une compétence qui ne apparaît pas dans la feuille, mais peut être utilisée par d'autres caclulations",
+    "xEYh2FhucUyfpFeOiCK1t": "Valeurs de base",
+    "xayNU3cxaIOtLz1iCrUX_": "Outil"
+  },
+  "SkillProficiency": {
+    "H3H4WWeJkDnYc9n0b8pee": "Bonus de moitié compétence arrondi",
+    "Lq-INVfia0gaEurWHuCvq": "Bonus à double compétence",
+    "c7_OrgWVaMZiroKapKs0O": "Compétent",
+    "rdG6DgAZ2pH5uGiEXs9ni": "Bonus de moitié compétence arrondi"
+  },
+  "SkillViewer": {
+    "SF0Q1ye2fl6S1zGeeWzTT": "Score passif",
+    "YZboQ2SYx9re2HQvMJ7cl": "Type de compétence",
+    "itiQzZR9_lCU6Hzv4oZIi": "Bonus de roulement"
+  },
+  "SlotFillDialog": {
+    "JOCKpSDFugjowLTFq53YA": "Créer un remplissage personnalisé",
+    "NByM949RvyOBiT8e1eRTh": "{0} machines à sous",
+    "e-lRRHd2WscTFKEJJO0As": "{0} avec des balises de bibliothèque:",
+    "sxHB4uZqjCnP9Hp62Pd6Y": "Les exigences des propriétés {0} n'ont pas été satisfaites"
+  },
+  "SlotForm": {
+    "5eIJH_EaVZYbtTJVTMGI9": "Emplacement de test",
+    "85H-J_AvQcQHHk9W2-7y9": "Chaque propriété à l'intérieur de cette fente doit être unique",
+    "Bc_sIklyCRDL6M65Qh0vM": "Autoriser les valeurs en double",
+    "Kcj4HuPhShey7KFdkYrD9": "Combien de propriétés correspondantes doivent être utilisées pour remplir cette fente",
+    "QmA82D5rtGFyDccgUb-Q5": "Test",
+    "S0uRmtKemCthlYlE7wCw4": "Les propriétés qui remplissent ce créneau doivent-elles être uniques?",
+    "VmZxwp5mQbb7zDHack9Lf": "Une caculation pour déterminer si cette fente doit être active",
+    "WIu_0M9OtcK660CQC62B2": "Unique",
+    "dvHDVcG6MuKwp7mIIZ9cO": "Les propriétés de cette machine à sous doivent être uniques sur tout le personnage",
+    "gWh0qAApOp9CLIt4Ejg7A": "N'importe quel type",
+    "o0Kugra9XSBHf4xAXvCkV": "Ignoré",
+    "x4sMsacAn8F6rdRJrNTdK": "Quel type de propriété est nécessaire pour remplir cette fente"
+  },
+  "SlotViewer": {
+    "9WI9Itx7bsoWd7NrhZQya": "Remplir",
+    "FywxjYDlOBu2Q4A2QWt9a": "Résultat de l'état",
+    "YeaR95LU7Hp_cR-LWFhoj": "Remplir de type",
+    "kaRJtkmHaLLLW56A5srsA": "Remplir la fente"
+  },
+  "SmartImageInput": {
+    "2mVywUR6Zdfpn4z-LSnCd": "Ajouter une image"
+  },
+  "SpellForm": {
+    "-N_9-nYmodzyCbogisGic": "Divination",
+    "2I910Z2ljzQsB4rom_Iaa": "Coulé sans machines à sous",
+    "2KoBs2FxRLtHNEQs-Bmiw": "Nécromancie",
+    "8z1c9fXQUFWv4fIiZxS0y": "Transmutation",
+    "9NG6wFrJrVLAHIN4-J0td": "Niveau 9",
+    "9vZpIPlQ0HnyTakitCf9Q": "Ressources consommées",
+    "B60Mk40GVdSVmceeTRBzX": "Le bonus pour attaquer si cette action a un jet d'attaque",
+    "D3SyskQRf0yvJr4iiqYny": "Niveau 3",
+    "GTo5F3pHuu3BbIYKib0wi": "Gamme",
+    "ImEk1BgyaLLO2At-kgNWP": "Évocation",
+    "JYWYIHI5jMCfFYmdr4evi": "Cantrip",
+    "M86-fX4wtA6kqG5cg-fkz": "Préparé",
+    "MSXjPwdG3SHxJZ3bZUoCm": "Illusion",
+    "NOKptK1axsbZR5GD25qsU": "Frapper",
+    "NpAGduLy-SOfauzGzvusg": "Limiter les utilisations",
+    "O5ypCXsK7hCS6k9_GsGa6": "Durée",
+    "S2_u5BV8zB47T3bBxIhos": "Cela apparaîtra dans la carte d'action de la feuille de caractères, résume ce que fait l'action",
+    "SPMNvqBQ6knw_RCmV5F91": "Niveau 7",
+    "Vex6w1JjvHUKls3pk7oFZ": "Le niveau de sort",
+    "W1uAlPfLyVbeDDAIKkger": "Niveau 8",
+    "X-CoR6o4seOvq1G2_aPJn": "Niveau 6",
+    "aWfYJtUzaoAMGF1yBC4w2": "Niveau 5",
+    "fYpzkMe6GPP_eKrEozRFH": "Niveau 4",
+    "gB89QO687cn7yLAKPwBEl": "Niveau 2",
+    "ihIrgJDVdlbOmy7EyMKsK": "Conjuration",
+    "k2avCP4iAc4PFukrCPbDo": "Niveau 1",
+    "nDLMtr_bs43vmERGMPWLY": "Enchantement",
+    "ozk71DlHhCBkpj7s7WDH_": "Toujours préparé",
+    "piPx3pA-W5h-qH0Z94ZsE": "École",
+    "ueR7vU7WQSNPP2pybozmv": "Temps de casting",
+    "z2plG0fUv_p1-oYE6_pND": "Abjuration"
+  },
+  "SpellListCard": {
+    "SpellsPrepared": "{0} / {1}",
+    "ZeBcPqjQ0fssXrHRwADpN": "Changer les sorts préparés"
+  },
+  "SpellListForm": {
+    "-S8t64gUIlS_M6wcwTYi2": "Sorts maximaux préparés",
+    "6oCOmu8CpiZy89q1l6Z_E": "Spell Save DC",
+    "BYthVQEmQLux4Ao3GDdcN": "Le bonus de roulement d'attaque des attaques de sorts faites par des sorts dans cette liste",
+    "KQA6DzSentAneUoHFTGBB": "Bonus de rouleau d'attaque",
+    "XFsGG3xbc6pmw8NWyO2YL": "Le sort sauve des sorts dans cette liste",
+    "lEY_HbzhVJhDadjXDzLHC": "Combien de sorts peut être préparé",
+    "pCjZEGorK8Kv5cAlHqt5A": "Quelle capacité est utilisée pour lancer des sorts dans cette liste de sorts",
+    "sJVB7VP-LJqBWgObeUqHZ": "Capacité de lancement de sorts"
+  },
+  "SpellListViewer": {
+    "5pFNrYOrJL0RyPPLWDKWE": "Modificateur de capacité de télévision",
+    "VfPi5M154nr9qT3z0QD21": "Spell Save DC"
+  },
+  "SpellSlotCard": {
+    "3XR3OdhgxKxmV21UZLK_T": "Lancer un sort"
+  },
+  "SpellViewer": {
+    "Gdc3WTq0-wImt_U4ceL2V": "Temps de casting",
+    "V-Z3NnFr9mXSirqS9aMnZ": "Composants",
+    "eS5_P_7EZ3OVlsvLNNttN": "Matériel ({0})"
+  },
+  "StatsTab": {
+    "0F8cXFPxbipesUAiEhvCU": "Buffs et conditions",
+    "HuxcSGUjObZNOlWVKkZG4": "Armure",
+    "IkRXr3DYE_0ZoSGU4o1kS": "Armes",
+    "RQgNf5Wl-hCuofuUrzaL3": "Frappez les dés",
+    "_POnH8ne4-_owhYxKHS9I": "Compétences",
+    "_jQpXIZVfYRZ0i-iIrTfv": "Outils",
+    "ayg1W622QCMCCW0App3Fb": "Sauver les lancers",
+    "r-uViLu0qKLbARRNmDes7": "Langues"
+  },
+  "Tabletop": {
+    "6gSMrObDVy6NK0SyiZKpy": "Soit il n'existe pas, soit vous n'avez pas la permission de le voir",
+    "mBDX3IqSBI-0TZTE62_WH": "Cette table n'a pas été trouvée"
+  },
+  "TabletopActionCard": {
+    "4D2gnIZxsYG5e5YEu7Tqj": "Cible unique uniquement",
+    "GhblVy6hAnkQ3-BYRIHJu": "Ne peut que cibler le soi",
+    "GwHGVWgXghbJ2gCo6tgp1": "{0} utilise",
+    "batQxupZ6H-O7Jh4N01Gq": "Sélectionner la cible"
+  },
+  "TabletopComponent": {
+    "i9XjzMNsJfev0By1HDVgt": "Ajouter la créature",
+    "ukjpAhydgbl3ACmRwn97v": "Ajouter du caractère"
+  },
+  "TabletopDialog": {
+    "RwfJt95TnyJ031jxBJvO_": "Table de table",
+    "_CUja7wu-7zhsnJDzWsNc": "Table de table sans nom",
+    "cIX0D4B7RV67K8WyWUPNk": "Modifier",
+    "cnSRbggl0Hal5qJfuDGY1": "Non implémenté"
+  },
+  "TabletopForm": {
+    "Dnp5nRtDPgzhw2HlU9CDw": "Maîtres de jeu",
+    "E6_8VX8CoYPr1EYRCQoFy": "L'utilisateur est déjà un joueur",
+    "G8L9YTh_9mMnHLXaSg8-k": "Joueur",
+    "T2eR8xKcGEaypPkX92TsU": "L'utilisateur est déjà un spectateur",
+    "UICbZ5qt1flJK6akgqxXH": "Autorisation",
+    "UqVDG2MYiKNKrGoVeRF1l": "Quiconque a un lien",
+    "Ye33lCxkLiuCk7ejTS-3B": "Propriétaire",
+    "Zg7wJZ4RUc2_phGc_LCWr": "URL d'image",
+    "_iKgwOiSJu9koKv_dHRm9": "Spectateur",
+    "bnTLZc-_n8le4z7FUD5sv": "Ajouter l'utilisateur",
+    "enRTOfb6gmE6wfvazG7tH": "Seules les personnes avec lesquelles je partage",
+    "fcVkX6ikAyHyFBZZoPlXG": "Maître de jeu",
+    "hagY-T8U6Kq54Bk3JKhQJ": "L'utilisateur est déjà un maître de jeu",
+    "j92FT1AXgEpXeD3KtPcQO": "Spectateurs",
+    "nOLcz4YcyQNTwJKSAWI0K": "Description",
+    "ogp8pUXHP7GwzGUlEkqSF": "Nom",
+    "quaePio9-ta0EePai": "Un lien vers une image de couverture pour cette tablette",
+    "w8-3hmBIm0WX2f98I5Nrp": "Joueurs"
+  },
+  "TabletopUserList": {
+    "4an3fI-5Ar6EtpFEkPfhm": "Faire du maître de jeu",
+    "5uJX4PpzIbL2f8EJNlHJH": "Faire le joueur",
+    "IFDo7qlOWO4KC5NtEyTCE": "Faire du spectateur"
+  },
+  "Tabletops": {
+    "-f4XUksqNpxYfvmhlXMI3": "Lancement",
+    "diBJJc3cKscIs3JIc6xTk": "Vous n'avez pas encore de dessus de table"
+  },
+  "TagTargeting": {
+    "67E8U7zI0B53kcwSNLy_Q": "Appliqué aux propriétés qui ont toutes les balises énumérées",
+    "Me5i0iAxJAdCJjLxln07K": "OU",
+    "ZKVnK8hVzGHqnDffr3gqb": "Ignorez les propriétés qui ont l'une de ces balises",
+    "o5IUFxjQjJTcdzzuShiuT": "Tags requis",
+    "uzOWxo9tayOigMMgYlzvY": "Également appliqué aux propriétés qui ont toutes ces balises"
+  },
+  "TierTooLowDialog": {
+    "bL24QnONUCJI6WmeiLm_p": "Votre niveau Patreon actuel est {0}",
+    "xlGzEYS9hP2IRHISxwgOu": "Vous devez être au moins un niveau d'aventurier (ou être invité par un patron d'un niveau supérieur) pour effectuer cette action"
+  },
+  "ToggleForm": {
+    "7fZcH1rGTNNHgVjtTYyLn": "Show sur la feuille de personnage",
+    "AgF6Okb4hfQAu7F8UKJEZ": "Calculé",
+    "BFti2l8oatI5k4RjxxCep": "Lorsque ce calcul renvoie une valeur qui n'est pas fausse ou zéro, les enfants seront actifs",
+    "M6rQs8-0oMxUoBhLi8Wvd": "Actif",
+    "P8L-khbCy8CwfqNtBTO8e": "Par balises cibles",
+    "SIbEAd9FLBez81YkexhXx": "Descendance",
+    "zRbIJijn1zNDHkomLg48I": "Propriétés activées ou désactivées"
+  },
+  "ToggleViewer": {
+    "DlX8XGoTN0_BQ27LVVilE": "État"
+  },
+  "TransferOwnershipDialog": {
+    "3ox8k9sufH6ntB2FWhQou": "Êtes-vous sûr de vouloir transférer la propriété à {0}?",
+    "JJ7wbGsjKaUUPzFuxA3mg": "Transfert",
+    "OCHfbjK5H12JX8OagYpm5": "à {0}",
+    "Px5OTlVYaC8IjfrwcXrps": "Cela ne peut être annulé que par l'utilisateur auquel vous transférez la propriété.",
+    "S-8nlRJZE_thhIOIbPtJK": "Vous aurez toujours l'autorisation de modification."
+  },
+  "TreeSearchInput": {
+    "BAArIlU-xLOyjxKLYTPg7": "Taper",
+    "U-oWTIZNTOO1Sx6gsV9ah": "Champ",
+    "n00nuv-ruVz9Ug_Vv51wY": "Texte",
+    "n_95TuiRQ2kxGGg75XOYg": "Recherche",
+    "ttDyIJdfuqSWgFT1FTJbI": "Trouver"
+  },
+  "TreeTab": {
+    "52XlDKKVBQDA26plR43LO": "Organiser"
+  },
+  "TriggerForm": {
+    "1kLSBTRguWTVkr1Bl34OJ": "Quand ce déclencheur se tirera",
+    "3g6bXRuWPHUd5UzDNIN2d": "Un calcul pour déterminer si ce déclencheur doit tirer",
+    "9ynLx9unJDKhHC_H8HtuQ": "Timing",
+    "F5P5mtqa7m0WJCf_h_p7i": "Type d'événement",
+    "UR1nS6CHflXegdBGP8nf5": "Ce qui fait tirer ce déclencheur",
+    "V4dU_S294du0JIB3PCtg-": "Quel événement d'action fait tirer ce déclencheur"
+  },
+  "UserImageCard": {
+    "JjwKnUf8xHiDd0lEKODTS": "Supprimer le fichier"
+  },
+  "UserImageList": {
+    "4eG2n_kbo95NmBJiZ8ldw": "Images",
+    "vQ1GH9ouCeobhAWFMUk9q": "Télécharger des archives"
+  },
+  "UsernameDialog": {
+    "e4NTr9gj8vs5TyzUzxsP0": "Le nom d'utilisateur est déjà pris",
+    "qTiHg5L8sTSGffTVEsQRA": "Mise à jour"
+  },
+  "propertyToolbar": {
+    "3WJJLkRDXXDD6ZvB1c_vq": "Se déplacer",
+    "IE6DYSJBNtIkV0fKaxSSe": "Créer une référence",
+    "rLTkCqt5aTaN2ONaDCh41": "Copier",
+    "xDkA3nUBYYRVoFc_hl-9i": "Aide",
+    "ysB83HvXqAxTwBSAvoMby": "Double",
+    "z42m_dYc0Dc3CryNnRe5K": "Copier à la bibliothèque"
+  },
+  "router": {
+    "EJunS06DZiQ-VbPaO-GL2": "Compte",
+    "Q3ZSspM1tZouuBzoLcY0_": "À propos de diceCloud",
+    "W2umY4yHN_krdS1Fail1K": "Liste de personnages",
+    "cPNbp74fWaIGYG1yzE2fL": "Collection de bibliothèque",
+    "leDI9g43CHfjO_JBc7DYC": "Succès de vérification par e-mail",
+    "viCm_a4Ir-pKkn0xY_HPc": "Patreon Tier trop bas"
+  }
+}

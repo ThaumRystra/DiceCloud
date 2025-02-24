@@ -44,7 +44,7 @@
       :disabled="!canContinue"
       @click="$emit('continue');"
     >
-      Done
+      {{ $t('ShareDialog.K1khMUyWf8QUMXhNncQ6S') }}
     </v-btn>
   </div>
 </template>

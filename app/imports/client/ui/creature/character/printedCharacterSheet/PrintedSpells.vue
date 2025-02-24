@@ -5,7 +5,7 @@
     <div
       class="label text-center octagon-border my-2 avoid-page-break-after"
     >
-      Spells
+      {{ $t('CharacterSheetDialog.D7iHe3wbPaZ2Jhsn9CXU8') }}
     </div>
     <column-layout
       v-if="spellsWithoutList && spellsWithoutList.length"

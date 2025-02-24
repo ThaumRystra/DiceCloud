@@ -73,7 +73,7 @@
             >
               $vuetify.icons.injustice
             </v-icon>
-            {{ totalWeight }} lb
+            {{ $t('PrintedBlockItem.wbXUV1ycuSwK46o5GcG2o', [totalWeight]) }}
           </v-layout>
           <v-layout align-center>
             <v-icon
@@ -82,7 +82,7 @@
             >
               $vuetify.icons.weight
             </v-icon>
-            {{ model.weight }} lb
+            {{ $t('PrintedBlockItem.v0L6IN_s4eGkutY4PtxWs', [model.weight]) }}
             <span
               v-if="model.quantity > 1"
               class="ml-1"
@@ -152,8 +152,8 @@ export default {
     },
     attunementText() {
       if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
+        if (this.model.attuned) return this.$t('PrintedBlockItem.C--Y4P75TjKpuM26BDapb');
+        return this.$t('PrintedBlockItem.SFhP2eWq7btddl4MHtwZj');
       }
       return undefined;
     }

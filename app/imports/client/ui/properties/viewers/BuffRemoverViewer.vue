@@ -3,21 +3,21 @@
     <v-row dense>
       <property-field
         v-if="model.target === 'self'"
-        name="Target"
+        :name="$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm')"
         value="Self"
       />
       <template v-if="!model.targetParentBuff">
         <property-field
           v-if="model.target === 'self'"
-          name="Target"
+          :name="$t('DamageForm.zHu2ur9PIJmRoyqAo7Wmm')"
           value="Self"
         />
         <property-field
-          name="When applied"
+          :name="$t('BuffRemoverViewer.WZ3mg83gpAZAz1rOdfrVp')"
           :value="model.removeAll ? 'Remove all matching buffs' : 'Remove 1 matching buff'"
         />
         <property-field
-          name="Targeted tags"
+          :name="$t('PropertyTargetTags.kBSIIGERW9KuZeuu6r9E0')"
         >
           <div>
             <div class="d-flex flex-wrap">
@@ -63,13 +63,9 @@
       reset(){
         let reset = this.model.reset
         if (reset === 'shortRest'){
-          return `Reset${
-            this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-          } on a short rest`;
+          return this.$t('BuffRemoverViewer.u9DbLAtokGvNrqXNt-5_d', [this.model.resetMultiplier && ' x' + this.model.resetMultiplier]);
         } else if (reset === 'longRest'){
-          return `Reset${
-            this.model.resetMultiplier && ' x' + this.model.resetMultiplier
-          } on a long rest`;
+          return this.$t('BuffRemoverViewer.Sbsbw_OCKL3p3Iud6hWcS', [this.model.resetMultiplier && ' x' + this.model.resetMultiplier]);
         } else {
           return undefined;
         }

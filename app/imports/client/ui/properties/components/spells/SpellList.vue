@@ -10,7 +10,7 @@
         :key="`${spell.level}-header`"
         class="item"
       >
-        {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+        {{ spell.level === 0 ? $t('CastSpellInput.REgZ3S1NFfWIy_H2OnVN0') : $t('CastSpellInput.kIe3SVoQpNiDIZha_1mam', [spell.level]) }}
       </v-subheader>
       <spell-list-tile
         v-else

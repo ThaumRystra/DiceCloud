@@ -2,28 +2,28 @@
   <div class="slot-viewer">
     <v-row dense>
       <property-field
-        name="Variable Name"
+        :name="$t('AttributeViewer.MNk7FUYtABwXmOJJeujzZ')"
         mono
         :value="model.variableName"
       />
       <property-field
-        name="Condition result"
+        :name="$t('SlotViewer.FywxjYDlOBu2Q4A2QWt9a')"
         :value="model.slotCondition && (model.slotCondition.value || model.slotCondition.calculation)"
       />
       <property-field
-        name="Fill with type"
+        :name="$t('SlotViewer.YeaR95LU7Hp_cR-LWFhoj')"
         :value="slotTypeName"
       />
       <property-field
-        name="Quantity"
+        :name="$t('AttributeConsumedForm.UmwJU_8ntBz-N8i0UgvKd')"
         :calculation="model.quantityExpected"
       />
       <property-field
-        name="Unique"
+        :name="$t('SlotForm.WIu_0M9OtcK660CQC62B2')"
         :value="uniqueText"
       />
       <property-field
-        name="Tags Required"
+        :name="$t('TagTargeting.o5IUFxjQjJTcdzzuShiuT')"
         :cols="{cols: 12}"
       >
         <div>
@@ -40,19 +40,19 @@
         </div>
       </property-field>
       <property-description
-        name="Description"
+        :name="$t('TabletopForm.nOLcz4YcyQNTwJKSAWI0K')"
         :model="model.description"
       />
       <property-field
         v-if="context.creatureId && (!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft)"
-        name="Fill"
+        :name="$t('SlotViewer.9WI9Itx7bsoWd7NrhZQya')"
         :cols="{cols: 12}"
       >
         <fill-slot-button :model="model">
           <v-icon left>
             mdi-plus
           </v-icon>
-          Fill Slot
+          {{ $t('SlotViewer.kaRJtkmHaLLLW56A5srsA') }}
         </fill-slot-button>
       </property-field>
     </v-row>
@@ -63,11 +63,6 @@
 import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
-
-const uniqueText = {
-  uniqueInSlot: 'Each property inside this slot should be unique',
-  uniqueInCreature: 'Properties in this slot should be unique across the whole character',
-}
 
 export default {
   components: {
@@ -86,8 +81,12 @@ export default {
     },
     uniqueText() {
       if (!this.model.unique) return;
-      return uniqueText[this.model.unique]
+      return {
+        uniqueInSlot: this.$t('SlotForm.85H-J_AvQcQHHk9W2-7y9'),
+        uniqueInCreature: this.$t('SlotForm.dvHDVcG6MuKwp7mIIZ9cO'),
+      }[this.model.unique];
     },
-  }
-}
+  },
+};
 </script>
+

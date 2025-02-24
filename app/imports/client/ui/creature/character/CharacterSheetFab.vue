@@ -127,8 +127,8 @@
     },
     methods: {
       getPropertyLabel(type){
-        if (type === 'buff') return 'Buff or Condition';
-        return type ? PROPERTIES[type].name : 'Property'
+        if (type === 'buff') return this.$t('CharacterSheetFab.6CEb8b7AnNofsOk2LXl8y');
+        return type ? PROPERTIES[type].name : this.$t('CharacterSheetFab.INXnPK501RhoZ_yH5gNsm')
       },
       addProperty(forcedType){
         let creatureId = this.creatureId;

@@ -1,0 +1,1308 @@
+{
+  "About": {
+    "1GLM0elvLeiwucyw3e5uR": "Special Thanks",
+    "4QV9cqMWOd323dgeXpPCo": "Vinton",
+    "CrdaAyGFSpnBU7T-Og1eE": "The Gravekeeper",
+    "D8JQa8plAJK2RApywL269": "The D&D party whose joy was the fuel powering the early versions of DiceCloud.",
+    "HYoADNUbUvPIUel0poPoX": "Paragon tier Patrons",
+    "KNjn21iiJo5DHGBgIQ3tl": "DiceCloud is a single-developer project started in 2014 with the aim of being a character sheet that stayed in sync between the DM and their players, and made it clear where every value in the sheet came from, and how it was calculated.",
+    "Lrh1aPjGD3MALdfGebrKh": "A Kobold\\'s Best Friend",
+    "UeguSsZrlTIc83c6rBSVb": "Cleric of Lewd",
+    "YNa86X1J0jVs-V0NST3KH": "The \"Heroes\" of Asaea",
+    "Zy6xUk3SJ9eEoWUu4QcJR": "ßlue",
+    "cAjcER2pzgHEO1GD-Op5I": "without her love, DiceCloud could not hope to exist",
+    "fYnP2TzDN7mwON9WkBT1c": "Kell of Nothing",
+    "fjyZXM3HxG6GZTi3YLLbQ": "Vibes",
+    "hOiVfViXRJmSNmmImZtjS": "Kira Ametrine",
+    "hlHatK1LPOfTe_86N4MbN": "Lord of Junk",
+    "iC49nkwMzoit5rspime5y": "Embodiment of Greed",
+    "m5HeWtWm_D9nmHi8pj01b": "Defender of Naptime",
+    "pVD6iUnr39mNwpPQlW1Wq": "Archwizard of the Odd",
+    "uF54mKfkoMk_c8vCeK0Yk": "Dai",
+    "xqU-Vsk2W2N0TT_U27-62": "Satherian"
+  },
+  "Account": {
+    "1CjTMGr4G6PAUTuIV-0u1": "Email",
+    "3pbzYvXPCos7z-eySLZl1": "Preferences",
+    "BQT0FX7Lp9l4T3qdkdTCX": "Link Google Account",
+    "Do9l1M5QOft47GPCr9we9": "Theme",
+    "IgPFoRX1GZ54XLutVgBXb": "File storage used",
+    "KZNInB0WcjkPLeppcCG7p": "Delete Account",
+    "PU_3e67f2QDSgm5Q3ewgD": "Add Email Address",
+    "Tr8I2Y3XgfC353GAuzeyB": "Change Username",
+    "U9BIXDXwbO63Izqnr9n7o": "Patreon",
+    "YVZoAq5bW7uKPFXn6___J": "Refresh Patreon status",
+    "dLdhXdRxWkcsh8CD0Y03f": "Link Patreon Account",
+    "eu6bZxqHLNIk6BIbkHXZS": "Sign Out",
+    "fiO_GPwbZvws6D-uV5Cmi": "Swap ability scores and modifiers",
+    "fwk5RkXcCocZfIDVw-C9r": "Character storage used",
+    "u5SaMzpfPswQRyVsHxfi3": "Invites",
+    "xdRICWNnL1zKFqlLV1YVe": "Username"
+  },
+  "ActionCard": {
+    "-bbCePxzaDImme9iZ2rxF": "{0} uses",
+    "5IbE7yubecegAHFjeu4mr": "Single target"
+  },
+  "ActionConditionForm": {
+    "4MHDOLH7O-fyg2mojtvs7": "This must be true for the action to be taken",
+    "D43JDV2GxwLXXBv68DIyi": "Condition error text"
+  },
+  "ActionConditionView": {
+    "kgjnKJ5eYeG-6_UGkEwDW": "No condition specified"
+  },
+  "ActionForm": {
+    "0I_y_C73SJXvF96894Q5d": "Event variable name",
+    "3ylc2njgCKwqOiWNQLFrF": "Event",
+    "7JkrChA5Oz7n_-wF0QxsW": "Log",
+    "7SSJSK3GiHrpECAN5kVK7": "How many times this action can be used before needing to be reset",
+    "AzFSRHVXHkOjHwzEBpW1S": "Must be set for the action to have an attack roll",
+    "DGVwhkixMi9ZS_UugfZrR": "You can take one free action on your turn without using an action or bonus action",
+    "HTFEl9P4nWPzp5aVQmtz4": "Uses used",
+    "IwoGz7GsJv8SJpY4hizQ8": "Target creature",
+    "L7CIoiuGHz6rNUNfQR0x1": "Free action",
+    "RTgX4kDybPn7w6k1h-xQU": "Long actions take longer than one turn to complete",
+    "SPian0NX_8UamXDgapfmE": "Multiple targets",
+    "Swu-7z8ZpCzf1wlyF0m3F": "Action type",
+    "UDRHVbObbwgfNGTG86O9l": "Limit Uses",
+    "WRR0YxFykMD9mmYmqe5no": "How many times this action has already been used: should be 0 in most cases",
+    "X-T-bN6vOll6c4GJ09EpL": "Single Target",
+    "YYTI642lXA_BdgxMerFqU": "Variable name of the event that this action represents",
+    "cZ7n7frApR4M5NF_lVStR": "Multiple Targets",
+    "cpAHLXjqzucwbDadtCQum": "Resources Consumed",
+    "dHGbl2jpHpaOGOSg3oGeJ": "When number of uses used should be reset to zero",
+    "hV4fQBRRTxnnMDEbFthkM": "Events are actions that happen to the character like rests or dawn",
+    "ji0n_ZaizHaR9NIcbiNYK": "This will appear in the action card in the character sheet, summarise what the action does. This text will be displayed in the log when the action is taken",
+    "kIN6lH7jJTD3RaF7WkyUy": "Uses",
+    "kPjD8rr_PnXqy-pMLGLXp": "Attack action",
+    "p7OvsLgcWG2GjhPpfy4aZ": "Attack actions replace a single attack when you choose to use your Action to attack",
+    "pTOkAuMdrx_hGI0E1xQl2": "Don't show in log",
+    "pW9GN3ykvnJUE5ozpy0zR": "Long action",
+    "qRNU4yeoGNycWekPlSaVt": "Base attack roll bonus",
+    "t_rdlLehNy3iLM13m8KHi": "Bonus action",
+    "uMqJz6So1tbWiONiw7coZ": "Summary",
+    "wvr48hnF1DbxApmRDC3R0": "Self",
+    "xmMtf1B_9pQbs427sDgXe": "Attack roll"
+  },
+  "ActionViewer": {
+    "2PAXZyo6dsMayT5h8Vxl9": "Targeting",
+    "LuJ5GbVYRabP8sH91Amw0": "To hit",
+    "Vs9l_E_xRjNrphvjnTfxg": "Attributes consumed",
+    "ZdLamTjTwN50xEr4pobC7": "`+model.type === `spell`? `Cast spell` : `Apply action",
+    "bN9dpIryBBN8_iI1JacWp": "Reset on a long rest",
+    "eUx-vcgpMRH8dtONDZPHm": "Items consumed",
+    "mPkSelm59kG9PgRpl7PuX": "Reset on a short rest"
+  },
+  "AdjustmentForm": {
+    "4pXn24qlhOEF6vsh4xKOF": "The amount of damage to apply, negative values will heal",
+    "AndV_m2mK4EKCnXer50C8": "Amount",
+    "EvtwZAc19U5OS5op-Q9I8": "{0}",
+    "GHSISPeV1o-lHDQGal1TZ": "Attribute",
+    "ZwwCxikfNMJtWSce4UeGm": "The value to set the stat to",
+    "a3GneFZJ3MOMwzxGWJgMq": "Operation",
+    "mBh1ceJrKc1DtmJldSJ-X": "Should the attribute be damaged by the amount, or set to the amount",
+    "v0y3nqMHVe0yEqxsRQSvV": "The attribute that will be damaged or healed"
+  },
+  "AdjustmentTreeNode": {
+    "VZaia8qVr9WSGXw50oSCe": "to self",
+    "gOVb9Z3tsjX8x6oCtbSmk": "{0} damage"
+  },
+  "AdjustmentViewer": {
+    "pDVyy7MwJYGrzQq0jDPC6": "Minus"
+  },
+  "Admin": {
+    "LXTHgSF1tubXs3CFnmXfg": "Current database version: {0}",
+    "RXGFbQYVBuIb-ZpEi04a5": "Git version: {0}",
+    "aVWrjxgTf04VdvWZfa52Y": "Migrate to database version {0}",
+    "kj687tcN7d_rd0NRQwjrq": "Expected database version: {0}",
+    "pULxpo5cEC6lP9yRWxhOv": "Back up the database before attempting any migration. A failed migration can result in profound data loss.",
+    "s9-XR2o7KdT_49MUfVuGS": "Database is up to date with latest version. Restart to enable navigation."
+  },
+  "AdvantageInput": {
+    "GOVw9p7PQMyvg1W3QMv1h": "Advantage",
+    "sN61sdTDUmZNRJhgdk3FT": "Disadvantage"
+  },
+  "ArchiveButton": {
+    "F2vhx6FY3BIjZIO3BYQvS": "Archive Characters"
+  },
+  "ArchiveDialog": {
+    "Mx1WdDHTLgSwrP-zeszcC": "Archive",
+    "UzLEAKMi-ia32kBmo_AyT": "No Character Slots Left"
+  },
+  "ArchiveFileCard": {
+    "dMQqaltiBjCM68nTo9Qua": "Restore",
+    "juxKLUr3OQaNg-lz75aiy": "Character Archive"
+  },
+  "AttributeConsumedForm": {
+    "0kRTLciPSV-Bjk6RFrzaX": "How much of the attribute will be consumed. If this amount is not available in the attribute, the action can't be taken",
+    "FcSQlAAP2P6TS3nRAo--6": "The attribute variable name that will be consumed",
+    "UmwJU_8ntBz-N8i0UgvKd": "Quantity"
+  },
+  "AttributeConsumedView": {
+  },
+  "AttributeEffect": {
+    "9iZBUqNtV818puHQ9S5mA": "Add",
+    "NbNtxtSkIF-eEvpQ6M1VH": "Base value",
+    "PWglsxP8zZNtoVCZtbg-l": "Minimum",
+    "TdH_tc2p6Vkb18y3GO7hY": "Passive bonus",
+    "UzlEh2YQm-EU6POm5FZsj": "Always fail",
+    "Y45EOUc4qxDGlx5Xzle92": "Multiply",
+    "dEk96gl0uh7EJIwSh--a6": "Maximum",
+    "sZxywbspgVnqysC8fZKES": "Conditional benefit"
+  },
+  "AttributeForm": {
+    "-DPKihK3NeCXQMc2LMjLB": "Allow decimal values",
+    "2Aiu6NaOCfyS8NLPk7Hpg": "Lower ordered health bars will take damage before higher ordered ones",
+    "5hpvJ6q4Hn5sFTyouCff6": "Ability score",
+    "5vD-GDW3cW8IXJrzxwTo_": "Use this name in calculations to reference this attribute",
+    "608eZxARAyNyX1lYJV1Bk": "Hit Dice Size",
+    "6n6iQ0mM-LNTUFGDgEicm": "Resource",
+    "DloW6vXDl_1prYmPob3-l": "Ability scores are your primary attributes, like Strength and Intelligence",
+    "EhZsX8JX9x74WuNSOX6Vg": "Damaged Colors",
+    "FJ9V5QOXAnquEGN-B1AzC": "Lower ordered health bars will take healing before higher ordered ones",
+    "FVjxPC24B3Rg5lGdqrrOC": "Health Bar",
+    "HfQFeTAfKd1zckW8iTKeZ": "Stat",
+    "Nhf3bIPS2M4dn_fb7Dt58": "Damage",
+    "QUnXaen7rDzDb624npbUE": "Utility",
+    "RvRkZRWrvDi4qFNjWDhAR": "Ignore healing",
+    "Slz4MMc-dVhiu6ZVMLEaf": "Hide when value is zero",
+    "USMFXb_H8L3dsdH48GYC-": "Resources are attributes that are spent to fuel actions, like sorcery points or ki",
+    "VaJqa5cUoqNj8brF0-of6": "Spell slot",
+    "Xn1zUjmLnCU61XnSN4zYO": "Prevent damage overflow",
+    "YZB2Nb2QgD78d7cH2n7-j": "Hide when total is zero",
+    "YvZi9u7WSXAXAJsQmHZqT": "Can be damaged into negative values",
+    "Zq1j6dv8EzkcCKupgbtJJ": "Hit dice",
+    "ac-HjaZ1jMyN5N8dDkBSR": "Modifiers are attributes that are added to rolls, like proficiency bonus",
+    "bEUH3HK4x3vEvSv1CQ4F-": "When damage should be reset to zero",
+    "c26Obti6Uq4ei1OCpx5Nt": "Health bar",
+    "ctttcmTh_0M7sdOTf4yhf": "Stats are attributes with a numerical value like speed or carrying capacity",
+    "hmMMXL0YrBcfQuwiKerBH": "Modifier",
+    "lPr7-xwYqNHO27hpZCuKM": "Spell slot level",
+    "pk4elR1L1G94TnzY6OcuS": "Empty",
+    "ruI-LEbISdtlav6qdW_0i": "Ignore damage",
+    "ryw9qPB4RinfRXhxwKs1T": "Damage reduces the attribute's final value",
+    "sg1vCF4ceatDzU2Y3bUbw": "Base Value",
+    "tVNWyR4ivKTYK5bCxDrNs": "Can be incremented above total",
+    "td2_WWmRFBpLx5m7y56QX": "Damage order",
+    "v6W1HsIGsKPTlCVeAvQVB": "Healing order",
+    "vWQj52YzUPPcXSMEZ6dvh": "Variable name",
+    "vcJiP4B7PJJz6TrD802Zy": "Prevent healing overflow",
+    "vu2VNBgUUq_qRRlUmh_wV": "This is the value of the attribute before effects are applied. Can be a number or a calculation",
+    "xB4J2J1mjkaLNKYgrGZrW": "Half",
+    "yRM4XSwze2YA1X0FZY8RI": "Behavior",
+    "zVUsvz7aiedOb83otUDoA": "Utility attributes aren\\'t displayed on your character sheet, but can be referenced or used in calculations"
+  },
+  "AttributeViewer": {
+    "AGm3xFqY_MvIqXyIH0lIw": "Hit dice size",
+    "JcSIdK2QZ6kcQFs94kJeh": "Overriden by another property with the same variable name",
+    "MNk7FUYtABwXmOJJeujzZ": "Variable Name",
+    "UPC_7nSq-oc8wxYsumxZL": "Constitution modifier",
+    "bIYmp9PJeOvM6OfGfRKdm": "Attribute type",
+    "kgj4Ky-O4dlLEDYQyGP2V": "Effects",
+    "tPFT2_kLfhaS8Od_i6cAK": "Overridden",
+    "zEu8A_0XCdLVyossItEYd": "`+model.damage !== undefined ? `Value / Total`: `Value",
+    "zS5I5I1HtvQ-bmZWAvNWK": "Not proficient"
+  },
+  "BranchForm": {
+    "0inXyGC_3HQLzxgO6z2f0": "Attack hit",
+    "0rJv1n_f8jRiwrqPracCR": "Which child to apply. An index of 2 will choose the 2nd child.",
+    "6AzVEkMDrx-6-awEDatgG": "Chooses one child property to apply based on the given index",
+    "BJXXvVRlZ5Er1_CD_SeuE": "If the condition is true, the child properties are applied",
+    "BiuNuKC-fpzPzYrjhNyFb": "Pause the action and let the user choose which child to apply",
+    "BkbdX3vJYOmRw4iwCl38h": "Applies each child property once per target",
+    "FhXVP8QcggmDUKoQJb9sD": "Apply to each target",
+    "FmQ75e44kBMrrHjwYzmQ1": "Branch Type",
+    "G_RfuTT8RD-P3Bk05R6f9": "Chooses one child property at random and applies it",
+    "Gi7ZFuJP58OUhkUBYnH-u": "Save failed",
+    "H0dAio0Zhb5B2-ccOMomc": "If the parent save is failed, the child properties are applied",
+    "IUf6-15AhyS4iQ3NBqVrm": "If the parent save is made, the child properties are applied",
+    "OFZphIXo_lqnX-vnPoQRc": "Calculated index",
+    "SomVaD-_G-stlmtSEeJ4w": "If condition is true",
+    "WyO5vhpvwBG4LmfAc60fz": "If the parent attack hits, the child properties are applied",
+    "XPK-8Ci9jaFYL0KeeseO1": "User choice",
+    "ZdtJxBggyw6XLDGuEtInK": "If the parent attack misses, the child properties are applied",
+    "cmCVz0se_9sHKBdxbp-9u": "Save succeeded",
+    "fxRhrS9aOD7kX4DLOegmY": "Random",
+    "qq_xhg0usIJNPJVpiKNNl": "Index",
+    "vftr_XM4oZjPUjH96B5qm": "Attack miss",
+    "w2jF6BdJcNceAcOoj-0Rh": "If this resolved to a true value, the child properties will be applied"
+  },
+  "BranchTreeNode": {
+    "49ehFme1kwg1Gv7qOjbrP": "On hit",
+    "5W3yB5wJV3feGAT6uF2By": "On miss",
+    "V2cQA7PkQhQPGd_MDXoKQ": "On save",
+    "Z7bMb_qdi4xS896SO-JrJ": "Each target",
+    "gev48hiSRP6hXvlH2OsTo": "Pick one at random",
+    "r1Nwfl4CB4r7UBX6pNsBN": "Pick one by index",
+    "sW4DuQTvkmSs8CszW8u0V": "On condition",
+    "xEwOD6Z0d9lsuEv2s4LWq": "On failed save"
+  },
+  "BuffForm": {
+    "pLP5I0DeEiydJilZcbWIS": "Don't freeze variables",
+    "ujGTNeS7Qt6UNdSi90bCY": "Hide remove button"
+  },
+  "BuffRemoverForm": {
+    "1Zvsru6SwSLDga99voeii": "Remove parent buff",
+    "597m5h8jhIy_9rID_47Yj": "Remove all buffs",
+    "IlQFf_rfodgD6E17Y8B4w": "Remove matching buffs",
+    "OYEP_6V-THVmJ4RRy2p7P": "Remove tagged buffs",
+    "X5fuj3rRPFrdLgikpzdha": "Remove 1 buff",
+    "koccxDVJa0JKkspKWF73T": "Target buffs",
+    "mfgWVnzACJzVST8OLqhdo": "Children",
+    "wP1izzQbSh60_E36Jwhdv": "Action Target"
+  },
+  "BuffRemoverViewer": {
+    "Sbsbw_OCKL3p3Iud6hWcS": "Reset{0} on a long rest",
+    "WZ3mg83gpAZAz1rOdfrVp": "When applied",
+    "u9DbLAtokGvNrqXNt-5_d": "Reset{0} on a short rest"
+  },
+  "BuffViewer": {
+    "-_McV2ZSvTi9dhJwS0-B9": "Reset{0} on a short rest",
+    "gitCC-1i-K2cEhlQFE5Bc": "Reset{0} on a long rest"
+  },
+  "BuildTab": {
+    "3dXHrz5Z_30gWc7znIQnx": "Slots",
+    "4wlPGHBE5ZzQlTH6vz8Y6": "{0} Milestone levels",
+    "_TZnAe6ytMIX9JAOy_ws7": "Get Missing Levels",
+    "gRil1dNLDdZLCZ882-jNh": "Level {0}",
+    "lu8EqIIRQm8jcSn4TLxah": "Level Up"
+  },
+  "BuildTreeNode": {
+    "p1QIkwdqRfb30jNEyO0ie": "Deleted {0}"
+  },
+  "CastSpellInput": {
+    "REgZ3S1NFfWIy_H2OnVN0": "Cantrips",
+    "U69b5DZ-gQ3uzAgPrdr7q": "{0}",
+    "kIe3SVoQpNiDIZha_1mam": "Level {0}"
+  },
+  "CastSpellWithSlotDialog": {
+    "3F4GREMFeI2XiZUbvbx4M": "Material",
+    "3W-UoUKx4ls6IAln-E9UR": "Spell",
+    "DZaTr8fsD1lKfYP8IL_fY": "Cast",
+    "G115jkwGBnIxXtwS_szGb": "Cast a Spell",
+    "JhkgAy7hkeEm0nlKxRUKb": "Concentration",
+    "O0qmYguCKrxO2cig4xp4l": "Slot",
+    "QOzOe_bLq5eVMrr18cOfi": "Cast without spell slot",
+    "ZJalW18LEJvZmvjZ7rbUG": "Verbal",
+    "Zv1zhDyEwLsYWudgaihbF": "Cast as ritual",
+    "_1NJvagH4wHdqwixdE6nU": "Somatic",
+    "pKKtVPJFsDi6EMWOmVbkP": "Ritual"
+  },
+  "CharacterCreationDialog": {
+    "ALoCn8fXt0dv34QiFx1jx": "Level",
+    "ANXfivoQBJ7vJA21ti7OF": "Biography",
+    "C5B9zZf15rhmo_2vfaQtc": "Back",
+    "EGyaTsNsK_I2KkiUB2hjV": "Create",
+    "JpT06KJNwEyJ4AD2XbbM_": "Name required",
+    "WND9g9jyBvyLplbYycyfB": "Next",
+    "g9OEQ6ODxw3182cFY8mfD": "New Character",
+    "h1v791IkWNs4KC1w7m6Yy": "New Character",
+    "uiuDKE-JU_7xjNfrbo7lh": "Libraries"
+  },
+  "CharacterDeleteDialog": {
+    "cz32NY5-KS9_JgprY2IwT": "Delete Character",
+    "qJSNB7_gDzHxyoaC_JSzu": "Type \"{0}\" to permanently delete the character"
+  },
+  "CharacterImportDialog": {
+    "DsbwUmVBwajKNXuIwg3r6": "The character needs to have their sharing permission set to \"anyone can view\"",
+    "E4IFoDL7aTpurrEN-fyqQ": "Import",
+    "Suo_pTaP9gmyyDoiXwEp-": "Import a character from another instance of DiceCloud",
+    "YeTuBenUiVxNWdSD1W1Sn": "Import character",
+    "iPECBoQB1saz_5K-9kltX": "This character\\'s sharing settings are not set to allow anyone to view",
+    "smZY0L2hAeglTEByUO2j4": "Not a valid character URL",
+    "x4oAHeV2B5uUemiIM3C8h": "No user ID. Are you logged in?"
+  },
+  "CharacterList": {
+    "-LdQ0twu89jMXeqAuTXUR": "You have exceeded your maximum number of character slots, archive or delete some characters.",
+    "1fhPDMlRilOSezFDoW21W": "add folder",
+    "5Lh6_XvKqv3A7OD7dR00y": "?",
+    "K22MZDa29C0xDYFiKlmBV": "import character",
+    "eO2z7wc1FenrOaPKWzQqN": "You have hit your maximum number of characters.",
+    "jH1ExOrhqUs1ztoD3HTtY": "Increase Patreon tier"
+  },
+  "CharacterLog": {
+    "uJ6zorsDB4vjbPaQrMyDz": "Compilation error"
+  },
+  "CharacterSheet": {
+    "F3kV7DDZvnmpPNhLMl-TT": "Either this character does not exist, or you don't have permission to view it.",
+    "PaDxTX6-CoFfTji1AYSHv": "Tree",
+    "QQp8e1dXwU9jDD9WyKx1T": "Character not found"
+  },
+  "CharacterSheetDialog": {
+    "0E9n7NRcJsKcvSOh8pJGk": "Inventory",
+    "7PhUWMOg_8wLLCCY7CKDz": "Features",
+    "D7iHe3wbPaZ2Jhsn9CXU8": "Spells",
+    "KOKK1cNcrY6O64cRo8aKa": "Journal",
+    "NnBUF4ZwE2sxY2H9laU5t": "Stats",
+    "biA0vlRWylo6EW8GckGOx": "Build",
+    "uEahuOj2R9wGkNQ-mmdBa": "Actions"
+  },
+  "CharacterSheetFab": {
+    "6CEb8b7AnNofsOk2LXl8y": "Buff or Condition",
+    "INXnPK501RhoZ_yH5gNsm": "Property"
+  },
+  "CharacterSheetPrinted": {
+    "6dUbDHnCRivEyMA8sIaHp": "Print Character Sheet",
+    "8ZVWk-T-i8_wx0EzlsQ3C": "Either this character does not exist, or you don't have permission to view it.",
+    "u3Sf8fJGPRW3gCON6DLhl": "Level {0}"
+  },
+  "CharacterSheetToolbar": {
+    "MEKfUHv4LuBXm7IaA_y2M": "Print",
+    "RTIYpVmEiPR-12DHpABiN": "Edit details",
+    "VQpJOOSLj9jVu_Ug2VkdW": "Unshare with me",
+    "emdD3PkZeGh4DggsQ8gXu": "Sheet owner",
+    "sI8Ova8fMZEX_gVBZX6xH": "Character"
+  },
+  "CheckInput": {
+    "ZOqgwwG1rCTTKIVrY23XB": "Ability",
+    "sKXmebGzd92GfO5RYbSPI": "Skill"
+  },
+  "ClassForm": {
+    "4TeEM-qHSXYRQWxrQioEF": "A calculation to determine if this class can have class levels added to it",
+    "FCdQw1K4vQj_se7Ve6yRB": "Use this name in calculations to reference this class",
+    "ZEMvL6PhjpagHmRJkdzJu": "Find class levels that have all of these tags",
+    "gDeOhXP1mwk3mW2dewYdr": "Class levels from libraries",
+    "gIBplAWYI81r77s3sTpXi": "Also find class levels that have all of these tags instead",
+    "i6JHJs93-3cdtKgGlLO78": "Active condition",
+    "uQdLc6H0MB7BPD0raOaS3": "Ignore class levels that have any of these tags"
+  },
+  "ClassLevelForm": {
+    "2Tc7ICRIlCH8FgSApdoMk": "This should be the same as the class's variable name",
+    "bpcZoMroBg-QAfxBYey1o": "Class variable name",
+    "qj0S__uMboirbUnWdLfQe": "A brief description of what this class level gives a character"
+  },
+  "ClassViewer": {
+    "tSWxRpWoywiupUiYO0z5j": "Missing Levels"
+  },
+  "CoinValue": {
+    "3tH0b_R7B-Ge65HtL6fgY": "{0} sp",
+    "Ig9s8fiNqqshG8DBauG-f": "{0} cp",
+    "JL2Z6mOZhL5dcBjOJcsvA": "{0} gp"
+  },
+  "ColorPicker": {
+    "zVC9ZXiQABvJOKMrkGhMn": "Clear"
+  },
+  "ConstantForm": {
+    "GTcn_A5mZ3nBpC96UMZye": "Calculation of the constant value, use 'text' for a string value, [1,2,3] for a matrix, or 123 for a number",
+    "aEv2NC1UXKBC9Z63kT9Jb": "Value"
+  },
+  "ConstantViewer": {
+    "FZU6EecvlbgCMNn9Zp0bK": "Calculation"
+  },
+  "ContainerForm": {
+    "6fXp2y5zObA-KKIPAiL3x": "Contents are weightless",
+    "7KxFeshSgsphebWl6Y_Bt": "Weight",
+    "HNEQCQuOUM4yqpujztd1o": "The value of the item in gold pieces, using decimals for values less than 1 gp",
+    "l91vHznLv6GK7YVq9yldX": "Whether this container and its contents count towards the creature's weight carried"
+  },
+  "ContainerViewer": {
+    "4zYbcpuZsRCmGn4ZdMZgd": "Contents weightless",
+    "iaSo2F9hn7VmSSzfwSvT1": "{0} lb",
+    "lp8QWZHKDIXv42JsZlygP": "{0} lb"
+  },
+  "CreatureForm": {
+    "5PEqzUXcmiqyy4GEbI-td": "Gender",
+    "9PvBygiElTUxuhV1RF7_H": "Debug",
+    "K_X3XLw_OiKsx5Gz8VKuE": "A link to a high resolution image",
+    "MA4ELYrt4w7ZRVwC3bfOy": "Settings",
+    "P51MPYDy7PxdpoBtc2LFA": "A link to a smaller, square image to use as an avatar",
+    "V_MJ_nHGtuaJusLxtXgXW": "What fraction of your hit dice are reset every long rest",
+    "XWmMUBmcC-yoX0EG2PN9H": "Hide rest buttons",
+    "YGtqDhW93C1P2aAq-rV2Z": "Avatar",
+    "YqkxDZ7LW_pEaDFPqldKL": "Show tree tab",
+    "_ZhX3D-JrJVeqpHO0AsNl": "This creature's logs will be posted to the discord channel",
+    "bs0bv6TYL4PrUH7HYiCDK": "Dependency Graph",
+    "goOLNBH2M1q5u3b9JGUYd": "Alignment",
+    "hQuConId3Ue_R35EPFuP-": "All user libraries",
+    "nYF_x6EcP290XOfOW0l9g": "Discord Webhook URL",
+    "nkNPsjI4gGK83TDXhg5nl": "Show spells tab",
+    "oPFJK6gF8EdCf42k5Wmo4": "Hit Dice reset multiplier",
+    "ordep68gu9FPcmPbN2qNQ": "Picture",
+    "s9T8L5iBv84h03L1vzuPw": "Hide redundant stats"
+  },
+  "CreatureFormDialog": {
+    "E8FYgkM99fJeGrtnCg-WL": "Character Details"
+  },
+  "CreatureFromLibraryDialog": {
+    "2fkv6_3ZeC4V6p9sWUMJq": "Can't find what you're looking for?",
+    "3loR2KAjQfv3IEMsldc7S": "Insert",
+    "8L5E1_uaQyxFnOopG7Rof": "Insert creatures",
+    "gKd4prmSqKxO3Tn3oNfV-": "Load More",
+    "uLa16DXHE6l49-j3BQtaj": "{0} slots"
+  },
+  "CreatureListTile": {
+    "nL5xZbaq_UDQ-vdzPXXwT": "Moved {0} to {1}"
+  },
+  "CreaturePropertyDialog": {
+    "B4terf7fAZO4IqRVHKkbS": "Copied successfully",
+    "aavm9J7YCtJKVzrKjx3We": "Copy",
+    "n-TofgX92mhX35Ou9XvPx": "Deleted {0}"
+  },
+  "CreaturePropertyFromLibraryDialog": {
+    "uvUPhvghrAF_XEhB4GYfg": "Add from library"
+  },
+  "CreatureRootDialog": {
+  },
+  "CreatureStorageStats": {
+  },
+  "CreatureTemplateForm": {
+    "DE13oKA3fiC13FVUIh_xD": "A brief description of the creature shown when the creature is added to a tabletop"
+  },
+  "DamageForm": {
+    "1wEkuz0UjFyeKTJq_F1cS": "Half damage",
+    "2ZYkiUwpnuyQEcaxZCnZ6": "Saving throw DC",
+    "4T1RVOx5n7MiWgNTFONBl": "Use &quot;~damage&quot; to reference the damage that would normally be dealt",
+    "EnQgqwE5gfzy6PTTjZzY7": "Damage type is required",
+    "K4tBJdCA-IX5x2x7_gFU_": "DC",
+    "Le1gdU0LVDcAb318jQnpZ": "Use the Healing type to restore hit points",
+    "Na3qN3IUrdyG-T4ivcu9E": "The damage will be applied to the character taking the action",
+    "elhIUdNqUin0tIr8HPASE": "Saving throw",
+    "tKvc9A04tf15QgW5I0HST": "A calculation including dice rolls of the damage to deal to the target when activated by an action",
+    "u1M7JtjYwhEame-Pp_QOk": "The damage will be applied to the target of the action",
+    "vSBUWgtZXUz-R3mygeDRb": "Damage Type",
+    "vn1yigF-QkAGevxOv_hE6": "Damage on successful save",
+    "wLt8NpiVWrumZ9fIkfU6I": "Which stat the saving throw targets",
+    "yn1Bes_MY4pX_6RMi7xQJ": "{0} is not a valid damage name",
+    "zHu2ur9PIJmRoyqAo7Wmm": "Target"
+  },
+  "DamageMultiplierForm": {
+    "AMAn3Zqxk3uTILNZ9tBHL": "{0} is not a valid damage name",
+    "DtSkXDBKCytH1PP8OOCYO": "Only apply to damage that has all of these tags",
+    "Dx09c5by0x2vyTqYHwR75": "Tags excluded",
+    "FfK6vlC9tBsHSLQLI1Wll": "Don't apply to damage that has any of these tags",
+    "M3x4lMUUK8hPMBunTeJKW": "Multiplier",
+    "M7PrptCUqUxPZ7iWpme1O": "Tags required",
+    "NgRyI3HHHG2iNgaWW1sfO": "Apply by tag",
+    "uSIuxHLCTocxiiJ5q3abK": "Damage Types"
+  },
+  "DamageMultiplierViewer": {
+    "9cqY7yDMx3pdjzizi_zX3": "Damage tags required",
+    "NYuY8i7lURiZ8pIEADEW9": "Damage tags excluded",
+    "oWlXMZwuJvWlVZ-udcQJp": "Damage types"
+  },
+  "DamageViewer": {
+    "VEpM2ZSTeCTr2zrlY2MHq": "On a successful saving throw",
+    "eWiuTWrUZM43skOm_Erhe": "No damage"
+  },
+  "DeleteConfirmationDialog": {
+    "7_oqaObBgI5fk_suDAZ0V": "Cancel",
+    "NqZTumeNzQNE0i-F6-wQq": "Delete {0}",
+    "_95JuuAuQDlmbx8hH1rhy": "Type \"{0}\" to permanenetly delete.",
+    "lh_KKI_3wtSGXNz8pxZtG": "This can't be undone",
+    "qemK_cDjoxeMkRtXI05V_": "Confirmation",
+    "vQ64nw8OemMSa9GxOCc8n": "Delete forever"
+  },
+  "DeleteUserAccountDialog": {
+    "0JXz-C-9ZuiCDymS9b_kK": "Permanently delete account",
+    "8_1aagUg0_82yQc6bbvh0": "Are you sure you want to delete your account?",
+    "K1g_WwnsJY0jxGUHv-dir": "Delete User Account",
+    "Okq6Nsc3PmT-cHSklg-5O": "We will immediately delete your account and all of your data",
+    "SFAC1EqlY3krkcX62YN5u": "These {0} libraries will be deleted:",
+    "eZGDM8P-zOzTQqdyxS7kU": "Type your username or email",
+    "f3jPR5PASLEBBF48CqI4a": "This library will be deleted:",
+    "mRk_m1E7isGvMZlg5MYRi": "Deleted accounts can not be recovered",
+    "qmfJD9s12vzAb1-H9aKOe": "These {0} characters will be deleted:",
+    "t_qT3X6ZcdPYWJNNw_zzR": "This character will be deleted:",
+    "uCrG-R-63SnvzAhdU2on5": "To verify type 'delete my account'",
+    "vRIINpm1HCgWwkbyuEx73": "delete my account",
+    "w5qWIj3NYmaKm-_sc_I5n": "Your username will become available to anyone on DiceCloud"
+  },
+  "DependencyLoopError": {
+    "OyA5OrFE1rOOA-egpVEmy": "The character contains a dependency loop.",
+    "sqx88C4gnBrRY5BmtrDCQ": "A set of properties may have been calculated incorrectly, because they form an infinite loop:"
+  },
+  "DocEditForm": {
+    "B_3-X2h_ufATd8alPiO5O": "Body",
+    "SA6oEM0EnAeoxVuV5HTAg": "Deleted {0}",
+    "fdnsRCx5WMZngX4lcEfYv": "Icon",
+    "iYa364MzsI7qeI-Hqqvqp": "Only letters, numbers, and dashes",
+    "ibL0uSJEY48oXcP1KRfhZ": "URL title",
+    "j7Vpqo3j1Sz29ubpKb0LR": "Add child",
+    "jLbuJuy5M6aZO3Y2egMz7": "New Doc",
+    "pblwi8OgupFn22G1Nw-oY": "Delete",
+    "rlg1W1Bi9d_cFlgtCvR7K": "Published",
+    "x69gyxffuSguaHXvQ56H7": "Title"
+  },
+  "DocViewer": {
+    "iNP-rBL8YKwM1yrzfzANC": "Documentation Home"
+  },
+  "DocsPage": {
+    "owEFuhKAi0S5XmhIaiqMB": "Documentation",
+    "psOXcjyh3rff4DXBzu3PU": "Documentation not found",
+    "yq2nBdxazbemD05WqnEqD": "Doc not found"
+  },
+  "Documentation": {
+    "2ldd4m3lp62jCu1hMzsEg": "Docs",
+    "WcxPO-zAU0XpZmw2KL8if": "Help document not found for {0}",
+    "kn_NC3-tQozB8uw3-4OHl": "DiceCloud Docs"
+  },
+  "EffectForm": {
+    "-IBot5cFFVU_fExJi4xIA": "Target field",
+    "-Joha5EoEp6cwj-ASgV6M": "Add this value to the stat",
+    "4OEUhBe2V-9J_ugMReImf": "If this stat is the basis for a check, that check will be at advantage",
+    "ALsVM2wCgI2BZU9bY8v9N": "Add a text note to this stat",
+    "C7bO5_RlI0jtDfzqVqgnE": "Target a specific calculation field on the affected properties",
+    "FdsMEJRSYVdWsUasjpYJT": "The stat will be at least this value",
+    "JMxHUgMOu5XlMqqlHiLNn": "Targeted skills and checks will always fail",
+    "NWwR2iYKigbP-fB4v7vLO": "Multiply the stat by this value",
+    "SHtnMBKpVFp2Ihfkrztt2": "The text to display on the affected stats",
+    "WEtHJEmy9l5UiGuanUysJ": "Set",
+    "YDbS6tLL9tGQssAHzz--u": "Which stats will this effect apply to",
+    "YMSdBEq2wJCbQq7Aor9uZ": "Conditional Benefit",
+    "YiU5qaeVVCZsEO5UlwF09": "The stat will not exceed this value",
+    "ZuLYLB4j2cuBWCdUzyy6a": "Passive Bonus",
+    "gboBBKj7YU4dALGd2TiDh": "Number or calculation to determine the value of this effect",
+    "gpZPc3mE5Auwup0o2E7as": "If this stat is the basis for a check, that check will be at advantage",
+    "iT7omfOfVjW5aAj9kCC7D": "Fail",
+    "iwKzgNYrj70WgRM1Xoc5_": "Stats take their largest base value, and then apply all other effects",
+    "qP3ZqRZPSY87NPXcxXgsk": "Target properties",
+    "snD8tCJau7JV3nHgF0GuU": "Default field",
+    "xMY-6t6rOKYhJ9zLKbxjw": "The stat will be set to this value",
+    "xp_04nGt0LMA-JD9SJipV": "This value will be added to the passive check"
+  },
+  "EffectTreeNode": {
+    "0I57EVJo4scr5yYDXGmqM": "Selected tags",
+    "UKIYCUaiTtgsJbcTnknaw": "Selected stats"
+  },
+  "EmailVerificationError": {
+    "dGAlXt2C_CR8kggghnqSK": "Email Verification Error"
+  },
+  "EmailVerificationSuccess": {
+    "Ir5NX1aI7JTHHc1_tiCcx": "Email Verified",
+    "bHQ6O1DKlCkdryLwxDg89": "Your email address has been verified"
+  },
+  "ExperienceForm": {
+    "K0h-Fle3qR_ZWmbROYmq2": "Levels",
+    "stG-qp6cp2s4HtvLJpANw": "Milestone"
+  },
+  "ExperienceInsertDialog": {
+    "lUM41t72OAQ2VxDFcg-_n": "Add Experience"
+  },
+  "ExperienceListDialog": {
+    "A30VArzop0zjb0nsj2KlN": "{0} Milestone levels",
+    "YD6W_BT_jL1nuVH14yxoP": "1 Milestone level",
+    "YlXwV3OKB1O5Ci5-gXbBG": "No experiences",
+    "ZS8DXNBdmNBl0uKaCSGRR": "Experiences"
+  },
+  "FeatureForm": {
+    "DfGBuKMfTw9c8qtZ9A3pl": "Always enabled",
+    "GL4EbIj5qEFQytx900y66": "Enabled",
+    "OIE9HAppn9fn1Vf6y-9E7": "This will appear in the feature card in the character sheet",
+    "RxXMMLikrA240ehj7BMlt": "The rest of the description that doesn't fit in the summary goes here",
+    "wYzh3YiPCU7yo9eHbY--A": "Disabled"
+  },
+  "Feedback": {
+    "Npe9l37-6-jLe2GDpbQpd": "Join",
+    "_ZLqbT-i52icd_96z7L79": "DiceCloud Discord server",
+    "br1TqRF4Kxw4QNoATiVMu": "To give feedback or get support using DiceCloud, join the official Discord server"
+  },
+  "Files": {
+    "IWywNfV8ZQO6HrcEjyIEn": "File failed validation:",
+    "OOKbEQsrTEYMnwfTyLg2W": "File could not be parsed",
+    "bPlqV9yZjulOsJlm1dUy6": "File must be .json",
+    "hUMuHiGYqCw-VP3G4t4wy": "File too large",
+    "lODNcxhbG9cYo2nyVaNI7": "Archived Characters"
+  },
+  "FolderForm": {
+    "6pLWAMlfOogGtFQgY6953": "End",
+    "AMEeuqc52F4zSdf1l7lzL": "Actions Tab",
+    "F5tJESMNnFj72GGaYpdMc": "Hide children from their default locations",
+    "O-kWcvLytlG27QDmjJkNM": "Features Tab",
+    "R1pe28ZEPjbwlgpZzdOBx": "Grouping",
+    "R84OXV09jmFO1f9TeS-KR": "Group children on a card",
+    "S0H0vocXzZVoRQQHx5siF": "Start",
+    "TSUGqutjpC2kAk2I1SoHY": "Location",
+    "XoCxPDCPQmESC8qqj1Pdm": "Journal Tab",
+    "biy1hZYci_6ZL7SKH7CcP": "After proficiencies",
+    "eoyw-vjLBTxDNpUe8BBil": "Inventory Tab",
+    "hRK_ceriRti6rJTrakw6i": "Stats Tab",
+    "i-tGltjgjIXUurYmN2lKo": "After events",
+    "jIoUBd6RjQ_1yhAWRbcjc": "Build Tab",
+    "l-49G-c7LldbKdGd9foKr": "After stats",
+    "njKBgocRx-pKTqtt0mrOB": "Start",
+    "p-iGQVvIZbSADeV-CLngl": "Spells Tab",
+    "tGBQcx5WJYa9oLyr6Ek8N": "End",
+    "uSVTWqY1bgp6pHX8JaHVa": "Tab",
+    "wkjm39H13dNoLVoGTvvZj": "After skills"
+  },
+  "Friends": {
+    "LPnKzu_iwEkWKHDp0SVmF": "Friends"
+  },
+  "FunctionReference": {
+    "yTQBDcPtnTzcmAEOzeDj9": "Functions"
+  },
+  "HelpDialog": {
+    "ASKReWmAnD-whk6jutMR4": "Help: {0}",
+    "Klueb_dCWM-dqLDCnrAvc": "Character Sheet",
+    "_W6JC_Hn33chN-g0ONcwz": "Help document not found for {0}"
+  },
+  "HexagonProgress": {
+  },
+  "HitDiceListTile": {
+  },
+  "Home": {
+    "9CRckySuULPz5MD9axBve": "Advanced Character Engine",
+    "9XmQezuJY9CHkr2yXlG5y": "My Characters",
+    "AakehfukJAU2EA4nhtjaa": "DiceCloud is free to use, funded via Patreon, and the source code is available on Github under a GPL license.",
+    "BSKepuOqxaS6dcmfX5Y-J": "Custom libraries of content",
+    "Cp_QXBk3uXo20U6wMcUUU": "Get involved in the DiceCloud community",
+    "Ixxwar7dgi3ZBPT0lvBkz": "Drag and drop inventory manager",
+    "NfNxTphXfuGzoeFs5Uht2": "Discord webhooks",
+    "Q8kGqjMJQ66X0YCH3JT0g": "Sign In",
+    "QWoZj1vRIxYuF9u7qloDy": "Dice rolling",
+    "XbWzTaqP9chSvLj_RPime": "Free, open source, community funded",
+    "XeHB-ri_R1Fs3krM9WW1T": "Free, Auditable, real-time character tracking for 5th edition",
+    "Y7uTRbv5hbEkIplOp6-XF": "Register",
+    "_4yZPmCb1C06LE_hlL1th": "Printed character sheets",
+    "_6k6pNSuKlvfKOQ-0UUsF": "Custom everything",
+    "_VJ621gBwFLfZZ34rnaHL": "Automated actions",
+    "fdNeOF7AbJX2Jvv2mcFNH": "Add new ability scores, skills, health-bars, and stats to your character. The entire sheet is under your control.",
+    "iZlOv0hl46b8FEd8hg8s3": "Auditable stats",
+    "jU4R7rz0mw_EnVTN8Xr5E": "Hackable character builder",
+    "sZrF8-Jl7NrcNJFS76ngY": "Characters are computed in real-time based on their equipment, features, and buffs.",
+    "uodl_ID-ITNFfUK4ean3D": "Spend less time shuffling paper, and more time playing the game"
+  },
+  "IconColorMenu": {
+    "SoA0wSX27fC-jNK_9Z9sk": "Color"
+  },
+  "IconPicker": {
+    "4f-71N_nnOTtIif2pKMOK": "Search icons"
+  },
+  "ImageInputDialog": {
+    "9SHk8YEQHCgYV91wogpZG": "User Files",
+    "E9s5YhcazF4CjinGCQJp7": "Close",
+    "dcbgmuOVYglN2J7VpTBFU": "Save",
+    "en5XFGMDi3f54ER1Z_HDe": "From URL",
+    "zb6ST-_z_zJvOhv-DPvag": "Direct link to image"
+  },
+  "ImageUploadInput": {
+    "aX-9RXc04raRTiRqK8pzo": "Upload Image"
+  },
+  "IncrementMenu": {
+  },
+  "InlineProficiency": {
+    "jN183F3ufg8Le9jkznJ4p": "Proficiency"
+  },
+  "InsertPropertyDialog": {
+    "RY4p2NBWbpDUPdo37rkVw": "New"
+  },
+  "InventoryTab": {
+    "7csTJE-Hdc56U4SulNOzN": "Equipped",
+    "F1_i9vo8jx6iCoUpKf8lq": "{0} lb",
+    "IrsrK7LqyqtPrg7inEXZU": "Items attuned",
+    "N8fKkkzjtuW3gNWsyJ2AE": "Net worth",
+    "Qyw8J_ywquzZVrLGok-D8": "Carried",
+    "frAYVmG8GPxQ4gvrSrlGy": "Weight Carried"
+  },
+  "InviteDialog": {
+    "KIjaabv6nsBAlAJM0yHqF": "Revoke Invite",
+    "haRd4V-fi0dcc9y9IscFl": "Invite",
+    "iY3kNH9LFIMWh-AkVTB2d": "This invite is available",
+    "ouSgtRu2Z0wupJh1KBZQX": "Get Invite Link"
+  },
+  "InviteError": {
+    "W-8EMJsBuzqRMZC3GzCdm": "Invite Error"
+  },
+  "InviteSuccess": {
+    "lI-3wT_8PfbybQ8vEBYxf": "You can now use DiceCloud",
+    "myoQ_oeTcPO92TLbFBVvu": "Invite Success"
+  },
+  "ItemConsumedForm": {
+    "ZNi2pRgWHJ9mG8GR0jSv5": "Item",
+    "cdlMdmMAJ6I5CbT27PDB-": "How many will be consumed",
+    "fx2euWM0B_hEtzWk9-XXS": "The item tag that will be consumed"
+  },
+  "ItemConsumedView": {
+    "ojSY3UghqfcmO7TeV4Lbh": "Select item"
+  },
+  "ItemForm": {
+    "CCKYjd6Fr5AKUkkAftNPb": "Attunement",
+    "UWBTYL3LaLrPFw0VHu-XB": "Show increment button",
+    "Uhoi-fcO1xIaoI88kJCTM": "The plural name of your item. If your item's name is 'sword' plural name would be 'swords'",
+    "Y_HLbO5UK3Ui8yWCsVTBp": "Plural name",
+    "oQRP7GFX81t45GD91kkUX": "The weight of a single item in lbs. Can be a decimal value"
+  },
+  "ItemViewer": {
+    "0eBVpSpRe4VzVWbPuTxDD": "{0} lb",
+    "v9VxAknaqvQ8HCBcydnxk": "{0} lb"
+  },
+  "LaunchCountdown": {
+    "d84YBRbn9AIGdo3D3YNpY": "{0} days,",
+    "kONXEyhIFDGq7r2yDTzcW": "DiceCloud version 2 beta will launch in"
+  },
+  "LevelUpDialog": {
+    "Lf2o25z7r-baxgl6oUYbV": "Show All",
+    "NiaDODaITliGrMRqgPbor": "Condition error:",
+    "US_McJGWbG82XzLEXnW7N": "Requirements of {0} properties were not met",
+    "VcK3Z-0fwcRbNsNAR9tVP": "Close Test",
+    "kUtYdzmVh5iGbRH4YBDra": "{0} slots"
+  },
+  "Library": {
+    "4M1dnsetmEUhDZmwRlchR": "Browse community libraries",
+    "TogxtUDj1JJZZjtRIdghc": "Add Collection"
+  },
+  "LibraryAndNode": {
+    "gxwOHGEowqDZaBSviOxkY": "Show second library tree"
+  },
+  "LibraryBrowser": {
+    "8u-n8n2IfWZ5zdPmBdPRp": "Library or Library Collection not found",
+    "d1bz0jB5EXhSj3VCKXMCS": "{0} subscribers",
+    "jUkc_CTXvxVrCeuhisZIo": "New library"
+  },
+  "LibraryBrowserDialog": {
+    "rEief-McLI6QrOAmbFPFz": "Community Libraries"
+  },
+  "LibraryCollectionCreationDialog": {
+    "5XDN8RnSgbykb7y8Sl-U7": "Insert Collection",
+    "91vPMCkyY7wba30jPsufP": "New Collection",
+    "GbJh4HQgyhjYvVMuPW2on": "New Collection"
+  },
+  "LibraryCollectionEditDialog": {
+    "2pS42Hzay89QTxEjuq7DH": "Collection owner",
+    "E0xemwvMGxun2_MvDmVB9": "Collection",
+    "UkpmWuRz7Xjp0SsJq0tR4": "Show in community library browser"
+  },
+  "LibraryCollectionToolbar": {
+    "Er2XJ9n9t_8Lb9E1AOL94": "Subscribe",
+    "bwi-B64_VXVqzLOEzWCOg": "{0} subscribers",
+    "rz7QqB66JPkBOOtwxv57c": "Unsubscribe"
+  },
+  "LibraryCreationDialog": {
+    "08g2uPx0s44itGzjyflWz": "Insert Library",
+    "IZrKqkZHdXwybtwrBlqxF": "New Library",
+    "hu7zV_QaHHXsA5Fe4wjy7": "New Library"
+  },
+  "LibraryEditDialog": {
+    "0wQO6njnWuA5HHQhpM8JJ": "Library owner",
+    "zb7Jb6KHUrx9FSsntU_4O": "Recently Deleted Properties"
+  },
+  "LibraryNodeDialog": {
+    "3sQbBN1liQCyUbp2ndbRt": "Select",
+    "5itWo4EFXmS15ACjyfpJX": "`Deleted {0}`,"
+  },
+  "LibrarySecondTree": {
+    "6uMkezm-URhBdu0Iggvzo": "Select Library"
+  },
+  "Maintenance": {
+    "ZIsaWRSECZbz1xRv8wS6U": "DiceCloud is live.",
+    "bpjsWojulL3gpaBwFPbbP": "DiceCloud is currently under maintenance",
+    "xn1iabUyQAcN50064OLqt": "Home"
+  },
+  "MiniCharacterSheet": {
+    "alwWz7AahLvye1ydVWs8v": "Character sheet"
+  },
+  "MoveLibraryNodeDialog": {
+    "6IRH2s4gwtFFrcHQt8dCd": "Select new location"
+  },
+  "NotFound": {
+    "7lbBslOsULzLsLZPgFEO0": "No page was found for this address"
+  },
+  "NotImplemented": {
+    "eSNx_dJzmWByTGfXK3VXw": "This page is not available in this version of DiceCloud."
+  },
+  "NoteForm": {
+    "d0G5fv7VU_--LV_KXToNH": "Text that does not fit in the summary",
+    "yLE_TlDCIWHZ-_KI8GonN": "This will appear in the card in the character sheet"
+  },
+  "PatreonLevelTooLow": {
+    "-bIUc7XwwY0HD3HCkeQpG": "You need to be at least Adventurer tier (or be invited by a Patron of a higher tier) to access this beta",
+    "MthXEAw6WyBg-N7IuQkiT": "Join now",
+    "dqCkVkcBD6EAc45E1C2bi": "Your current Patreon tier is {0}"
+  },
+  "PointBuyForm": {
+    "1951B8ZI5gZRCs_ZAF8zn": "Min",
+    "76kViLsS2FQdKLp2NNGU9": "Cost function",
+    "7KUBbb83xo02E0AS64Emj": "Default value",
+    "7SXmECZCAm1p0xHhDWJHt": "The total allowed cost of all rows",
+    "7e2ucUDSxvPWwdSnsd4sZ": "Use this name in calculations to reference this row of the table",
+    "C-0sxC0BtHnTenrNmBoWt": "Max",
+    "CysbomYf00kKzFpDDxu99": "The minimum value for each row",
+    "D_arqDNLfaamuIiUdhgn7": "The maximum value for each row",
+    "ggYiFpVMzvWnqg4qboE9A": "Total available points",
+    "hW_GGLTissf4OxOolFUD8": "Point buy settings",
+    "hYmj6ak9yUk0V3eFBpqix": "The starting value of the row",
+    "hmThDEHkPp9wU3rDXyN-l": "Row Name",
+    "irbsTn6C6jeUiIhiuYplB": "Rows",
+    "jNb11a1Q5rb-pBf_mSCxA": "A function of `value` that determines the cost of each row"
+  },
+  "PointBuySpendForm": {
+    "ilJ6-BL2iYbPHYxFSdhP_": "Cost"
+  },
+  "PrintedAction": {
+    "9koQY1JmJbMnPI-2Yu6D-": "to hit",
+    "IrhNSkzJSRi84GhcibaA6": "Action",
+    "OAukBFTLqoIuE_boNY4qO": "Attack",
+    "XNpxfsk_apluhNuXqmnbJ": "Free Action",
+    "fgwXlNTknRAXFw-2I49s2": "Cost: {0}",
+    "g7Zqf3Rk5ldnxHOK2LMgv": "{0} uses",
+    "mfg8w8IEyp7lqOtrKA716": "Reaction",
+    "pB_7PTSkQGSC3ydYPKdk4": "Bonus Action",
+    "vuRsPS5NyXpqYAo7DYbK0": "Long Action",
+    "yPJXNovDswPw3Tf_UrUvS": "Uses: {0}"
+  },
+  "PrintedBlockItem": {
+    "C--Y4P75TjKpuM26BDapb": "Attuned",
+    "SFhP2eWq7btddl4MHtwZj": "Requires attunement",
+    "v0L6IN_s4eGkutY4PtxWs": "{0} lb",
+    "wbXUV1ycuSwK46o5GcG2o": "{0} lb"
+  },
+  "PrintedContainer": {
+    "C_cxBPHcLXi_zwduVst7t": "{0} lb",
+    "MRW7XJIjayibJ_5TV5YR-": "{0} lb"
+  },
+  "PrintedDamageMultipliers": {
+    "p5oBcNFeC2ebcPTxmWvab": "Vulnerability",
+    "uNx-Dyhk3Z17Q7dWuR4Bp": "Immunity",
+    "uP77KRfYo25L_qwnj-JQR": "Resistance"
+  },
+  "PrintedInventory": {
+    "hrFj1nG8nCwc74-o735nX": "Weight Carried: {0} lb",
+    "tCxZ6wkrOzchblKuamrP9": "Net worth:"
+  },
+  "PrintedLineItem": {
+    "YgWODeXdufy3Q4AwTBQ6w": "{0} lb"
+  },
+  "PrintedSkill": {
+  },
+  "PrintedSpell": {
+    "DrvKag7gMXqeWyeGTQ8NC": "Casting time:",
+    "Ppfd_FuIo6pw_1YB8wX9B": "To hit:"
+  },
+  "PrintedSpellList": {
+    "PE9H9_BfnSavYtCbs3TqA": "Spell Attack Bonus: {0}",
+    "XTB6WZwo91aavGzwnt5J7": "Spell casting ability: {0}",
+    "rWBpTd-TcsU92Nie_i2G7": "Spell Save DC: {0}",
+    "u0S47qyExcVB5rY9sEGk-": "Spell casting ability modifier: {0}",
+    "uL7BSeWd2J4DB_nDSh7vW": "Maximum prepared spells: {0}"
+  },
+  "PrintedStats": {
+    "6DeYa0E1ghGheY-O3b7iu": "total: {0}",
+    "INiHkB9G-fGTkJrdfgXjS": "Proficiencies",
+    "Mk_m-2x5g-4jobcF7frTH": "Total: {0}",
+    "p0zRTFU33OBpZjmRBfSA4": "Spell Slots"
+  },
+  "ProficiencyForm": {
+    "XgrzFtMQF6IfD4jBvGqfA": "Which skills does this proficiency apply to"
+  },
+  "ProficiencyViewer": {
+    "fSzRlRx_9g9BQI5cWRfJ7": "Half proficiency bonus"
+  },
+  "PropertyCard": {
+    "WKBCFII37aVYuOOkwgY6F": "A property card for the {0} isn't defined. You should report this error."
+  },
+  "PropertyForm": {
+    "-9Y-RPAarunJWnLeLkRe8": "Children can be added after this property is created",
+    "ACu_jRxz32qDAe16Wit4A": "How many properties this counts as when filling a slot",
+    "F0m6HGixfZz0PawzG6Mm9": "Used to let slots find this property in a library",
+    "G_YfY3xbu2WYu8bzJgULO": "The property type that this slot filler pretends to be when being searched for by a slot",
+    "M6byRruoaG1QJnLgCQJzH": "Always active",
+    "MZRFbTU4dQcWdpVlXv9ah": "Searchable from character sheet",
+    "Mn4WP5-Y0QLyoAm-5cO1-": "A caclulation to determine if this property can be added to a character",
+    "XXwZiSyy3PLlHms5-hiEq": "Can fill slots",
+    "hRA5h3_UC9k3Zk3iFywu8": "Library Tags",
+    "ll5VOZBvTaDkanqmhdxY4": "Text to display if the condition isn't met",
+    "nN8qiVQXkc18VOhirptoM": "Slot fill type",
+    "pfX-T7sDiiLNLZ4XYxmZe": "Condition Error Text",
+    "rOdph7uHJPkuF3rKxLiUA": "Slot quantity filled",
+    "reKPKGEnAfdHpBLoywE1w": "Condition",
+    "sZAVdib4BS4JqbPjOd-hh": "Tags let other properties target this property with interactions",
+    "vAMpUe37OijnEHSpa_exs": "Tags",
+    "xhQ1px8UKEwUfLt-2VIp_": "Always active"
+  },
+  "PropertySelector": {
+    "atdz1RUUai4SWok0-7T4r": "Suggested",
+    "wpde41ir6M054lGU8CLwk": "More"
+  },
+  "PropertyTargetTags": {
+    "kBSIIGERW9KuZeuu6r9E0": "Targeted tags"
+  },
+  "PropertyViewer": {
+    "A2-Kaprp4titpzjHtBl0m": "Deactivated by:",
+    "EhamBkUEXXiR61RswQ_LF": "Status",
+    "R2y59Jx1lSCn_iVM3UiTM": "Library Behavior",
+    "Sk44T3yriJNHryB4ttpXi": "Deactivated by own settings",
+    "ayyUiD347dMgQAbxzCUHn": "Inactive",
+    "ffr0YqqdylRGtGQSlp-eW": "Deactivated by ancestor",
+    "hCNvG0nKgX-D86BdSbmsv": "This property can't be viewed yet.",
+    "sIjkFiqjLqnIGsWsdWtDC": "Child properties"
+  },
+  "ReferenceForm": {
+    "JV4y24Ef5M3Y7FlHwHqkc": "Linked Property"
+  },
+  "ReferenceViewer": {
+    "55UcYLqUq55tWKGdailva": "Linked property",
+    "QKA68iibE1CmNtSWoQlwD": "Error"
+  },
+  "Register": {
+    "1S2ehjyrUG5gkDTpEGCBw": "Passwords don\\'t match",
+    "9zW2GcUch66RUVP8KvNdN": "E-mail must be valid",
+    "W_CdFLZLh_HrlUiFd9T6G": "E-mail is required",
+    "avHsf7o8zL3P_N7ma_IdP": "Register in with Google",
+    "eT-l-HBPTmti3zIhNNzhX": "Password is required",
+    "i7xi3kzHqYrsjmgPGbpqz": "Password",
+    "mG7vo0cKtZOsVnLF4MJFc": "Password Again",
+    "pjj23oD2_4P9_mRgSGFFy": "Password is required",
+    "yfTv252rVq9SqVdTJ3Yks": "Name is required"
+  },
+  "ResetPassword": {
+    "OtXdcuhNszD9-49yGdYKR": "Reset Password",
+    "SZrjlfWj7iKEwWAci_IMZ": "Password reset link sent to {0}",
+    "_Q83rGujQKiFN7eo7OHRT": "New Password"
+  },
+  "ResetSelector": {
+    "i6eGWDKtSDJDxSkvSA9bB": "Reset",
+    "kWVeEgn9xE3ttsd7ywkDb": "Short rest",
+    "qGXvcPldmk5aYt86yPZL-": "Long rest"
+  },
+  "ResourceCardContent": {
+  },
+  "ResourcesForm": {
+    "Km-PaY3fMC21nw6auR9tc": "Attributes",
+    "WQ8d9gNOItcvubseawFpk": "Add Ammo",
+    "XMB8bNhaOgpKeNe0JgzJU": "Add Condition",
+    "_uqlTOKs4UrDFO6_R9I9o": "Ammo",
+    "cTQrUc6d5ziWYr0DAeawr": "Add Resource",
+    "lQGikx2mch-_nphcT4bTY": "Conditions"
+  },
+  "RollForm": {
+    "1tJlgrJOlIRP7yDDmCPzA": "The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll.",
+    "JWuj-egKYGNBCtSDcN9Pp": "Use this name in action formulae to refer to the result of this roll"
+  },
+  "SavingThrowTreeNode": {
+    "eobGIGqrXgbzEm1h0Rne9": "DC {0}"
+  },
+  "SelectCreaturesDialog": {
+    "UjUpHVRYzvCyqwNi7DV2w": "There are no creatures to add or you have already added them all",
+    "gnUhOrXXmGGPWI9kQbpHI": "Add characters",
+    "ooUpaVf3Q6Kb-Ot1Kc0k0": "Add Characters"
+  },
+  "SelectItemToConsume": {
+    "17lfXg063gROgEWSYNy5Y": "No active items found with the tag \"{0}\""
+  },
+  "SelectLibraryNodeDialog": {
+    "NSHQWleuXmGAMAUWGoX2-": "Select Library Property"
+  },
+  "SelectablePropertyDialog": {
+    "MSXU_s9svhgqzP1TjZxUV": "Property Type"
+  },
+  "SelectedCreatureBar": {
+    "2Fz98cxVXGhTN-LqYLLxV": "Buffs",
+    "Gpk8d2M8u_GVhell7SH4w": "Buffs",
+    "NgRLZ1KujlD3o3EtzLY3R": "Roll",
+    "UCE8E-qK5tW0K20yPG11i": "Folders",
+    "UY94rrIn40QvhXb052leI": "Tabs",
+    "UcAwEN_Jmv7Lezh-o8g6S": "Check",
+    "WTl6k0_UkGQshnCnlN3t6": "Tabs",
+    "Zg5aaw0sAM6W64-ocA_E4": "Cast Spell",
+    "fhJpWpTQTpuCrtsOioWxJ": "Standard Actions",
+    "gYC1yFaOl9zXhX_ppgoWx": "Tabs",
+    "mjZ672LJyHdhMi6YmHEJn": "Tabs",
+    "o3j9IwMnvU4lhem9IzY3y": "Tabs",
+    "oQYJ73IjGs_u96UbCpyo-": "Buffs",
+    "rsDz2jeDde3rZixCEIxLp": "Tabs",
+    "tpB9wyZt3UOVoVR9e_Tvm": "Resources",
+    "xvb9H6sVfBt7HYtpMicQz": "Tabs"
+  },
+  "ShareDialog": {
+    "03VciIdW7WUj5zao5xU0A": "Sharing",
+    "8hLNrY3cfCjnHG8Ibg4S2": "Share",
+    "JXIZsDoMWYIDczc39na2p": "Link",
+    "K1khMUyWf8QUMXhNncQ6S": "Done",
+    "L9JNgV2bpSTg3G8XUlb08": "Can edit",
+    "R2-U-vaUgW5Qt_EcWFhR6": "View only",
+    "VqkQCmxb_c2wDNm0F8BEF": "User not found",
+    "_g3AAll7JIJ6eKSezF40L": "Who can view",
+    "gfqTAznIflA9gIuys0UG4": "Who can copy from this library",
+    "m1248OmS-l17CkOjbMM98": "User is already the owner",
+    "or0_zrIkepecbBUj6uZpY": "Transfer Ownership",
+    "u68iDg3Jq4sXvq9xARfLQ": "Remove"
+  },
+  "SharedIcon": {
+    "kF8vLcL1xPgleTIoZwfyz": "Shared as view-only",
+    "kqGIJFg86xcv4IzPhPKcg": "Shared publically",
+    "q2o9ULMxirc3EO7lc_HJz": "Shared with edit permission"
+  },
+  "Sidebar": {
+    "BPQym8QzWFodXZjtBNfdd": "Files",
+    "Ic_fWFzKEAoFGAzBaHGE0": "Sign in",
+    "Rr1M41-BLJbeBDuSMqsqs": "Characters",
+    "TLlr6aU-7D83jdG1gJHY8": "Account Settings",
+    "ji7gEHWu4QoZQOsY9ZMJW": "Github",
+    "lO8RxJFgOO2O9Sl2b1pxT": "Tabletops",
+    "pIDDy8BnVkf01Ysma7Gaj": "About",
+    "pxf1SzERzQzKgl3Anfi1F": "Feedback"
+  },
+  "SignIn": {
+    "9Hgx-SDsbxdrMu3MW63bY": "Username or email",
+    "QkTkN_D5t8-ioQZJ7atHY": "Version 1 is still available at",
+    "RrDrojVv2enNOWDBv-TSC": "DiceCloud Version 2 requires a new account to use.",
+    "_I9mGXEz4iLE_orJVUX98": "Sign in with Google",
+    "jVS-KggdzH9X_7mE1FZR1": "Sign in with Patreon"
+  },
+  "SingleLibrary": {
+    "8o8zfT4rnslD95pstr578": "Library",
+    "CqIJd_CZPYFyhxG7h2JmS": "Library"
+  },
+  "SingleLibraryToolbar": {
+  },
+  "SkillForm": {
+    "0RIVS1iiSps7zFgRhCU-i": "This is the value of the skill before effects are applied",
+    "1yXeNttBJlQ8NHU6WBTN6": "A saving throw the character can make: Strength Save, etc.",
+    "3HmLC1Cet1hnDeYhuhOal": "A normal character sheet skill like Athletics, Deception, or Investigation",
+    "3S6BJ3LTSnpNl_2YJ5xbn": "Apply skill to targeted tags",
+    "9c_kA3_kdX2DHMkeJluW5": "A weapon proficiency. Be sure to add a base proficiency in the advanced section.",
+    "FwTi5l87wO7XVQizFa3Bk": "Use this name in formulae to reference this skill",
+    "PfUrjVRAHmEX7AhfxnPTT": "Language",
+    "XiqWCVYk6vLFjbduURJol": "An ability check that might include a proficiency bonus later eg. Initiative",
+    "_uUQIQfQJm94jRvJnoCa4": "Weapon",
+    "bBD23OFYb7fRB1V9BS0P-": "A tool proficiency. Be sure to add a base proficiency in the advanced section.",
+    "fIJDr4ZD2k-67ZQHSOJGZ": "Which ability is this skill based off of",
+    "fX2vgMPC31V0qW12rcolL": "A armor proficiency. Be sure to add a base proficiency in the advanced section.",
+    "gAlgFXNb94543om00oR51": "A language proficiency. Be sure to add a base proficiency in the advanced section.",
+    "go1fZMjOamVypbpskbqZD": "Base Proficiency",
+    "p09IUwxeRXWEUnNOBsawW": "Apply skill",
+    "s74pIwtTO9_roPkhjJO6f": "A skill that does not show up in the sheet, but can be used by other caclulations",
+    "xEYh2FhucUyfpFeOiCK1t": "Base Values",
+    "xayNU3cxaIOtLz1iCrUX_": "Tool"
+  },
+  "SkillProficiency": {
+    "H3H4WWeJkDnYc9n0b8pee": "Half proficiency bonus rounded up",
+    "Lq-INVfia0gaEurWHuCvq": "Double proficiency bonus",
+    "c7_OrgWVaMZiroKapKs0O": "Proficient",
+    "rdG6DgAZ2pH5uGiEXs9ni": "Half proficiency bonus rounded down"
+  },
+  "SkillViewer": {
+    "SF0Q1ye2fl6S1zGeeWzTT": "Passive score",
+    "YZboQ2SYx9re2HQvMJ7cl": "Skill type",
+    "itiQzZR9_lCU6Hzv4oZIi": "Roll bonus"
+  },
+  "SlotFillDialog": {
+    "JOCKpSDFugjowLTFq53YA": "Create custom filler",
+    "NByM949RvyOBiT8e1eRTh": "{0} slots",
+    "e-lRRHd2WscTFKEJJO0As": "{0} with library tags:",
+    "sxHB4uZqjCnP9Hp62Pd6Y": "Requirements of {0} properties were not met"
+  },
+  "SlotForm": {
+    "5eIJH_EaVZYbtTJVTMGI9": "Test Slot",
+    "85H-J_AvQcQHHk9W2-7y9": "Each property inside this slot should be unique",
+    "Bc_sIklyCRDL6M65Qh0vM": "Allow duplicate values",
+    "Kcj4HuPhShey7KFdkYrD9": "How many matching properties must be used to fill this slot",
+    "QmA82D5rtGFyDccgUb-Q5": "Test",
+    "S0uRmtKemCthlYlE7wCw4": "Do the properties that fill this slot need to be unique?",
+    "VmZxwp5mQbb7zDHack9Lf": "A caclulation to determine if this slot should be active",
+    "WIu_0M9OtcK660CQC62B2": "Unique",
+    "dvHDVcG6MuKwp7mIIZ9cO": "Properties in this slot should be unique across the whole character",
+    "gWh0qAApOp9CLIt4Ejg7A": "Any type",
+    "o0Kugra9XSBHf4xAXvCkV": "Ignored",
+    "x4sMsacAn8F6rdRJrNTdK": "What property type is needed to fill this slot"
+  },
+  "SlotViewer": {
+    "9WI9Itx7bsoWd7NrhZQya": "Fill",
+    "FywxjYDlOBu2Q4A2QWt9a": "Condition result",
+    "YeaR95LU7Hp_cR-LWFhoj": "Fill with type",
+    "kaRJtkmHaLLLW56A5srsA": "Fill Slot"
+  },
+  "SmartImageInput": {
+    "2mVywUR6Zdfpn4z-LSnCd": "Add image"
+  },
+  "SpellForm": {
+    "-N_9-nYmodzyCbogisGic": "Divination",
+    "2I910Z2ljzQsB4rom_Iaa": "Cast without spell slots",
+    "2KoBs2FxRLtHNEQs-Bmiw": "Necromancy",
+    "8z1c9fXQUFWv4fIiZxS0y": "Transmutation",
+    "9NG6wFrJrVLAHIN4-J0td": "Level 9",
+    "9vZpIPlQ0HnyTakitCf9Q": "Resources Consumed",
+    "B60Mk40GVdSVmceeTRBzX": "The bonus to attack if this action has an attack roll",
+    "D3SyskQRf0yvJr4iiqYny": "Level 3",
+    "GTo5F3pHuu3BbIYKib0wi": "Range",
+    "ImEk1BgyaLLO2At-kgNWP": "Evocation",
+    "JYWYIHI5jMCfFYmdr4evi": "Cantrip",
+    "M86-fX4wtA6kqG5cg-fkz": "Prepared",
+    "MSXjPwdG3SHxJZ3bZUoCm": "Illusion",
+    "NOKptK1axsbZR5GD25qsU": "To Hit",
+    "NpAGduLy-SOfauzGzvusg": "Limit Uses",
+    "O5ypCXsK7hCS6k9_GsGa6": "Duration",
+    "S2_u5BV8zB47T3bBxIhos": "This will appear in the action card in the character sheet, summarise what the action does",
+    "SPMNvqBQ6knw_RCmV5F91": "Level 7",
+    "Vex6w1JjvHUKls3pk7oFZ": "The spell level",
+    "W1uAlPfLyVbeDDAIKkger": "Level 8",
+    "X-CoR6o4seOvq1G2_aPJn": "Level 6",
+    "aWfYJtUzaoAMGF1yBC4w2": "Level 5",
+    "fYpzkMe6GPP_eKrEozRFH": "Level 4",
+    "gB89QO687cn7yLAKPwBEl": "Level 2",
+    "ihIrgJDVdlbOmy7EyMKsK": "Conjuration",
+    "k2avCP4iAc4PFukrCPbDo": "Level 1",
+    "nDLMtr_bs43vmERGMPWLY": "Enchantment",
+    "ozk71DlHhCBkpj7s7WDH_": "Always prepared",
+    "piPx3pA-W5h-qH0Z94ZsE": "School",
+    "ueR7vU7WQSNPP2pybozmv": "Casting Time",
+    "z2plG0fUv_p1-oYE6_pND": "Abjuration"
+  },
+  "SpellListCard": {
+    "SpellsPrepared": "{0}/{1} spells prepared",
+    "ZeBcPqjQ0fssXrHRwADpN": "Change prepared spells"
+  },
+  "SpellListForm": {
+    "-S8t64gUIlS_M6wcwTYi2": "Maximum prepared spells",
+    "6oCOmu8CpiZy89q1l6Z_E": "Spell save DC",
+    "BYthVQEmQLux4Ao3GDdcN": "The attack roll bonus of spell attacks made by spells in this list",
+    "KQA6DzSentAneUoHFTGBB": "Attack roll bonus",
+    "XFsGG3xbc6pmw8NWyO2YL": "The spell save DC of spells in this list",
+    "lEY_HbzhVJhDadjXDzLHC": "How many spells can be prepared",
+    "pCjZEGorK8Kv5cAlHqt5A": "Which ability is used to cast spells in this spell list",
+    "sJVB7VP-LJqBWgObeUqHZ": "Spellcasting ability"
+  },
+  "SpellListViewer": {
+    "5pFNrYOrJL0RyPPLWDKWE": "Spellcasting ability modifier",
+    "VfPi5M154nr9qT3z0QD21": "Spell Save DC"
+  },
+  "SpellSlotCard": {
+    "3XR3OdhgxKxmV21UZLK_T": "Cast a spell"
+  },
+  "SpellSlotListTile": {
+  },
+  "SpellViewer": {
+    "Gdc3WTq0-wImt_U4ceL2V": "Casting time",
+    "V-Z3NnFr9mXSirqS9aMnZ": "Components",
+    "eS5_P_7EZ3OVlsvLNNttN": "Material ({0})"
+  },
+  "StatsTab": {
+    "0F8cXFPxbipesUAiEhvCU": "Buffs and conditions",
+    "HuxcSGUjObZNOlWVKkZG4": "Armor",
+    "IkRXr3DYE_0ZoSGU4o1kS": "Weapons",
+    "RQgNf5Wl-hCuofuUrzaL3": "Hit Dice",
+    "_POnH8ne4-_owhYxKHS9I": "Skills",
+    "_jQpXIZVfYRZ0i-iIrTfv": "Tools",
+    "ayg1W622QCMCCW0App3Fb": "Saving Throws",
+    "r-uViLu0qKLbARRNmDes7": "Languages"
+  },
+  "Tabletop": {
+    "6gSMrObDVy6NK0SyiZKpy": "Either it does not exist, or you do not have permission to view it",
+    "mBDX3IqSBI-0TZTE62_WH": "This tabletop was not found"
+  },
+  "TabletopActionCard": {
+    "4D2gnIZxsYG5e5YEu7Tqj": "Single target only",
+    "GhblVy6hAnkQ3-BYRIHJu": "Can only target self",
+    "GwHGVWgXghbJ2gCo6tgp1": "{0} uses",
+    "batQxupZ6H-O7Jh4N01Gq": "Select target"
+  },
+  "TabletopBuffCard": {
+  },
+  "TabletopComponent": {
+    "i9XjzMNsJfev0By1HDVgt": "Add Creature",
+    "ukjpAhydgbl3ACmRwn97v": "Add Character"
+  },
+  "TabletopDialog": {
+    "RwfJt95TnyJ031jxBJvO_": "Tabletop",
+    "_CUja7wu-7zhsnJDzWsNc": "Unnamed Tabletop",
+    "cIX0D4B7RV67K8WyWUPNk": "Edit",
+    "cnSRbggl0Hal5qJfuDGY1": "Not implemented"
+  },
+  "TabletopForm": {
+    "Dnp5nRtDPgzhw2HlU9CDw": "Game Masters",
+    "E6_8VX8CoYPr1EYRCQoFy": "User is already a player",
+    "G8L9YTh_9mMnHLXaSg8-k": "Player",
+    "T2eR8xKcGEaypPkX92TsU": "User is already a spectator",
+    "UICbZ5qt1flJK6akgqxXH": "Permission",
+    "UqVDG2MYiKNKrGoVeRF1l": "Anyone with link",
+    "Ye33lCxkLiuCk7ejTS-3B": "Owner",
+    "Zg7wJZ4RUc2_phGc_LCWr": "Picture URL",
+    "_iKgwOiSJu9koKv_dHRm9": "Spectator",
+    "bnTLZc-_n8le4z7FUD5sv": "Add user",
+    "enRTOfb6gmE6wfvazG7tH": "Only people I share with",
+    "fcVkX6ikAyHyFBZZoPlXG": "Game Master",
+    "hagY-T8U6Kq54Bk3JKhQJ": "User is already a game master",
+    "j92FT1AXgEpXeD3KtPcQO": "Spectators",
+    "nOLcz4YcyQNTwJKSAWI0K": "Description",
+    "ogp8pUXHP7GwzGUlEkqSF": "Name",
+    "quaePio9-ta0EePai": "A link to a cover image for this tabletop",
+    "w8-3hmBIm0WX2f98I5Nrp": "Players"
+  },
+  "TabletopUserList": {
+    "4an3fI-5Ar6EtpFEkPfhm": "Make game master",
+    "5uJX4PpzIbL2f8EJNlHJH": "Make player",
+    "IFDo7qlOWO4KC5NtEyTCE": "Make spectator"
+  },
+  "Tabletops": {
+    "-f4XUksqNpxYfvmhlXMI3": "Launch",
+    "diBJJc3cKscIs3JIc6xTk": "You don't have any tabletops yet"
+  },
+  "TagTargeting": {
+    "67E8U7zI0B53kcwSNLy_Q": "Applied to properties that have all the listed tags",
+    "Me5i0iAxJAdCJjLxln07K": "OR",
+    "ZKVnK8hVzGHqnDffr3gqb": "Ignore properties that have any of these tags",
+    "o5IUFxjQjJTcdzzuShiuT": "Tags Required",
+    "uzOWxo9tayOigMMgYlzvY": "Also applied to properties that have all of these tags"
+  },
+  "TierTooLowDialog": {
+    "bL24QnONUCJI6WmeiLm_p": "Your current Patreon tier is {0}",
+    "xlGzEYS9hP2IRHISxwgOu": "You need to be at least Adventurer tier (or be invited by a Patron of a higher tier) to perform this action"
+  },
+  "ToggleForm": {
+    "7fZcH1rGTNNHgVjtTYyLn": "Show on character sheet",
+    "AgF6Okb4hfQAu7F8UKJEZ": "Calculated",
+    "BFti2l8oatI5k4RjxxCep": "When this calculation returns a value that isn't false or zero the children will be active",
+    "M6rQs8-0oMxUoBhLi8Wvd": "Active",
+    "P8L-khbCy8CwfqNtBTO8e": "By target tags",
+    "SIbEAd9FLBez81YkexhXx": "Descendants",
+    "zRbIJijn1zNDHkomLg48I": "Enabled or disable properties"
+  },
+  "ToggleViewer": {
+    "DlX8XGoTN0_BQ27LVVilE": "State"
+  },
+  "TransferOwnershipDialog": {
+    "3ox8k9sufH6ntB2FWhQou": "Are you sure you want to transfer ownership to {0}?",
+    "JJ7wbGsjKaUUPzFuxA3mg": "Transfer",
+    "OCHfbjK5H12JX8OagYpm5": "to {0}",
+    "Px5OTlVYaC8IjfrwcXrps": "This can only be undone by the user you are transferring ownership to.",
+    "S-8nlRJZE_thhIOIbPtJK": "You will still have edit permission."
+  },
+  "TreeDetailLayout": {
+  },
+  "TreeSearchInput": {
+    "BAArIlU-xLOyjxKLYTPg7": "Type",
+    "U-oWTIZNTOO1Sx6gsV9ah": "Field",
+    "n00nuv-ruVz9Ug_Vv51wY": "Text",
+    "n_95TuiRQ2kxGGg75XOYg": "Search",
+    "ttDyIJdfuqSWgFT1FTJbI": "Find"
+  },
+  "TreeTab": {
+    "52XlDKKVBQDA26plR43LO": "Organize"
+  },
+  "TriggerForm": {
+    "1kLSBTRguWTVkr1Bl34OJ": "When this trigger will fire",
+    "3g6bXRuWPHUd5UzDNIN2d": "A calculation to determine if this trigger should fire",
+    "9ynLx9unJDKhHC_H8HtuQ": "Timing",
+    "F5P5mtqa7m0WJCf_h_p7i": "Event Type",
+    "UR1nS6CHflXegdBGP8nf5": "What causes this trigger to fire",
+    "V4dU_S294du0JIB3PCtg-": "Which action event causes this trigger to fire"
+  },
+  "UserImageCard": {
+    "JjwKnUf8xHiDd0lEKODTS": "Delete file"
+  },
+  "UserImageList": {
+    "4eG2n_kbo95NmBJiZ8ldw": "Images",
+    "vQ1GH9ouCeobhAWFMUk9q": "Upload archive"
+  },
+  "UsernameDialog": {
+    "e4NTr9gj8vs5TyzUzxsP0": "Username is already taken",
+    "qTiHg5L8sTSGffTVEsQRA": "Update"
+  },
+  "dialogStackStore": {
+  },
+  "propertyToolbar": {
+    "3WJJLkRDXXDD6ZvB1c_vq": "Move",
+    "IE6DYSJBNtIkV0fKaxSSe": "Create Reference",
+    "rLTkCqt5aTaN2ONaDCh41": "Copy To",
+    "xDkA3nUBYYRVoFc_hl-9i": "Help",
+    "ysB83HvXqAxTwBSAvoMby": "Duplicate",
+    "z42m_dYc0Dc3CryNnRe5K": "Copy to library"
+  },
+  "router": {
+    "EJunS06DZiQ-VbPaO-GL2": "Account",
+    "Q3ZSspM1tZouuBzoLcY0_": "About DiceCloud",
+    "W2umY4yHN_krdS1Fail1K": "Character List",
+    "cPNbp74fWaIGYG1yzE2fL": "Library Collection",
+    "leDI9g43CHfjO_JBc7DYC": "Email Verification Success",
+    "viCm_a4Ir-pKkn0xY_HPc": "Patreon Tier Too Low"
+  }
+}

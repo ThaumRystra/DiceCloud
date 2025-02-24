@@ -47,7 +47,7 @@
               <v-card-text>
                 <v-switch
                   v-model="showSecondTree"
-                  label="Show second library tree"
+                  :label="$t('LibraryAndNode.gxwOHGEowqDZaBSviOxkY')"
                 />
               </v-card-text>
             </v-card>
@@ -57,7 +57,7 @@
           v-if="!libraryId || canEditLibrary"
           v-model="organize"
           hide-details
-          label="Organize"
+          :label="$t('TreeTab.52XlDKKVBQDA26plR43LO')"
           class="ml-1 mr-3 mt-2"
           style="flex-grow: 0; height: 32px;"
         />
