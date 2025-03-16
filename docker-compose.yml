@@ -16,9 +16,8 @@ services:
 
   dicecloud-app:
     container_name: dicecloud-app
-    image: dicecloud-app:2.1.0-SNAPSHOT
-    #build:
-    # context: ./
+    build:
+     context: ./
     environment:
       # Node Performance
       - NODE_OPTIONS=${NODE_OPTIONS}
