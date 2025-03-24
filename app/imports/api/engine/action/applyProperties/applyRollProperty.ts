@@ -44,7 +44,7 @@ export default async function applyRollProperty(
   }
 
   // If we didn't end up with a constant or a number of finite value, give up
-  if (reduced?.parseType !== 'constant' || !isFiniteNode(reduced)) {
+  if (!isFiniteNode(reduced)) {
     return applyDefaultAfterPropTasks(action, prop, task.targetIds, inputProvider);
   }
   const value = reduced.value;

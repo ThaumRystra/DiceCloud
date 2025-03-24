@@ -11,7 +11,7 @@ const changeAllowedLibraries = new ValidatedMethod({
   schema: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     allowedLibraries: {
       type: Array,
@@ -20,7 +20,7 @@ const changeAllowedLibraries = new ValidatedMethod({
     },
     'allowedLibraries.$': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     allowedLibraryCollections: {
       type: Array,
@@ -29,7 +29,7 @@ const changeAllowedLibraries = new ValidatedMethod({
     },
     'allowedLibraryCollections.$': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }),
   rateLimit: {
@@ -58,7 +58,7 @@ const toggleAllUserLibraries = new ValidatedMethod({
   schema: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     value: {
       type: Boolean,

@@ -1,28 +1,28 @@
 <template lang="html">
   <div class="creature-template-form">
-    <v-row dense>
+    <v-row>
       <v-col
         cols="12"
         md="6"
       >
-        <text-field
-          label="Picture URL"
+        <smart-image-input
+          label="Picture"
           hint="A link to a high resolution image"
           :value="model.picture"
           :error-messages="errors.picture"
-          @change="change('picture', ...arguments)"
+          @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
         />
       </v-col>
       <v-col
         cols="12"
         md="6"
       >
-        <text-field
-          label="Avatar picture URL"
+        <smart-image-input
+          label="Avatar"
           hint="A link to a smaller, square image to use as an avatar"
           :value="model.avatarPicture"
           :error-messages="errors.avatarPicture"
-          @change="change('avatarPicture', ...arguments)"
+          @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
         />
       </v-col>
     </v-row>
@@ -46,8 +46,12 @@
 
 <script lang="js">
 import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
 export default {
+  components: {
+    SmartImageInput,
+  },
   mixins: [propertyFormMixin],
 }
 </script>

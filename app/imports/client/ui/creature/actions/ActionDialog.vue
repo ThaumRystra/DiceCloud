@@ -1,20 +1,11 @@
 <template lang="html">
-  <div class="d-flex flex-column">
-    <v-toolbar
-      class="base-dialog-toolbar"
-    >
-      <v-btn
-        icon
-        @click="cancel"
+  <div class="overflow-visible">
+    <v-slide-x-reverse-transition hide-on-leave>
+      <v-card
+        :key="`${activeInput}`"
+        elevation="6"
+        class="action-dialog"
       >
-        <v-icon>mdi-arrow-left</v-icon>
-      </v-btn>
-      <v-toolbar-title>
-        Action
-      </v-toolbar-title>
-    </v-toolbar>
-    <div class="action-dialog-content">
-      <div class="action-dialog-layout d-flex">
         <component
           :is="activeInput"
           v-if="activeInput"
@@ -26,43 +17,23 @@
         />
         <div
           v-else
-          class="action-input"
-        />
-        <div
-          class="log-preview card-raised-background d-flex flex-column align-end justify-end"
-          style="flex-basis: 256px;"
+          class="log-preview card-raised-background"
         >
-          <v-card
-            v-if="allLogContent && allLogContent.length"
-            class="ma-2 log-entry"
-          >
-            <v-card-text
-              class="pa-2"
-            >
-              <log-content :model="allLogContent" />
-            </v-card-text>
-          </v-card>
+          <tabletop-log-stream-entry :model="simulatedLog" />
         </div>
-      </div>
-    </div>
-    <div class="action-dialog-actions pa-2 d-flex justify-end">
-      <v-btn
-        v-if="actionDone"
-        text
-        color="accent"
-        @click="finishAction"
-      >
-        Done
-      </v-btn>
-      <v-btn
-        v-else
-        text
-        color="accent"
-        @click="continueAction"
-      >
-        Next
-      </v-btn>
-    </div>
+        <v-btn
+          v-if="!activeInput" 
+          large
+          text
+          color="accent"
+          style="width: 100%"
+          class="done-button"
+          @click="finishAction"
+        >
+          Done
+        </v-btn>
+      </v-card>
+    </v-slide-x-reverse-transition>
   </div>
 </template>
 
@@ -79,6 +50,9 @@ import LogContent from '/imports/client/ui/log/LogContent.vue';
 //import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 import TargetsInput from '/imports/client/ui/creature/actions/input/TargetsInput.vue';
 import CastSpellInput from '/imports/client/ui/creature/actions/input/CastSpellInput.vue';
+import { runAction } from '/imports/api/engine/action/methods/runAction';
+import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
+import mutationToLogUpdates from '/imports/api/engine/action/functions/mutationToLogUpdates';
 
 export default {
   components: {
@@ -90,6 +64,7 @@ export default {
     //RollInput,
     TargetsInput,
     CastSpellInput,
+    TabletopLogStreamEntry,
   },
   props: {
     actionId: {
@@ -100,6 +75,10 @@ export default {
       type: Object,
       default: undefined,
     },
+    actionFinishedCallback: {
+      type: Function,
+      default: undefined,
+    }
   },
   data() {
     return {
@@ -112,6 +91,7 @@ export default {
       activeInputParams: {},
       userInput: undefined,
       userInputReady: true,
+      actionPromise: undefined,
     };
   },
   computed: {
@@ -121,17 +101,19 @@ export default {
     resultJson() {
       return JSON.stringify(this.actionResult, null, 2);
     },
-    allLogContent() {
+    simulatedLog() {
       const action = this.actionResult;
-      const contents = [];
-      action?.results?.forEach(result => {
-        result.mutations?.forEach(mutation => {
-          mutation.contents?.forEach(logContent => {
-            contents.push(logContent);
-          });
+      const content = [];
+      action?.results.forEach(result => {
+        result.mutations.forEach(mutation => {
+          content.push(...mutationToLogUpdates(mutation));
         });
       });
-      return contents;
+      return {
+        content,
+        creatureId: action?.creatureId,
+        tabletopId: action?.tabletopId,
+      }
     },
   },
   meteor: {
@@ -144,7 +126,7 @@ export default {
     this.startAction({ stepThrough: false });
   },
   methods: {
-    startAction({ stepThrough }) {
+    async startAction({ stepThrough }) {
       this.actionBusy = true;
       this.actionResult = {
         ...this.action,
@@ -152,13 +134,15 @@ export default {
         _isSimulation: undefined, 
         taskCount: undefined,
       };
-      applyAction(
-        this.actionResult, this, { simulate: true, stepThrough}
-      ).then(() => {
-        this.actionDone = true;
-        this.actionBusy = false;
-        this.activeInput = undefined;
+      await applyAction(this.actionResult, this, { simulate: true, stepThrough });
+      const actionResult = await runAction.callAsync({
+        actionId: this.actionResult._id,
+        decisions: this.actionResult._decisions
       });
+      this.actionDone = true;
+      this.actionBusy = false;
+      this.activeInput = undefined;
+      if (this.actionFinishedCallback) this.actionFinishedCallback(actionResult);
     },
     stepAction() {
       if (this.actionResult) {
@@ -172,7 +156,7 @@ export default {
       }
       this.resumeActionFn?.();
     },
-    finishAction() {
+    async finishAction() {
       this.$store.dispatch('popDialogStack', this.actionResult);
     },
     promiseInput() {
@@ -196,6 +180,8 @@ export default {
     },
     // inputProvider methods
     async targetIds(target) {
+      // Only get targets if we are on a tabletop
+      if (this.$router.currentRoute.name !== 'tabletop') return [];
       this.userInput = [];
       this.activeInputParams = {
         target,
@@ -240,8 +226,6 @@ export default {
     },
     async castSpell(suggestedParams) {
       this.userInput = suggestedParams;
-      console.log(this.action);
-      console.log(this.action.root);
       this.activeInputParams = {
         creatureId: this.action.creatureId,
       };
@@ -253,43 +237,19 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.base-dialog-toolbar {
-  z-index: 2;
-  border-radius: 2px 2px 0 0;
-}
-
-.action-dialog-content {
-  container-type: size;
-  flex-grow: 1;
-  overflow: auto;
-}
-
-.action-dialog-content, .action-dialog-layout {
-  height: 100%;
+.action-dialog {
+  max-height: min(100vh, 800px);
+  max-width: min(100vh, 1000px);
+  min-width: 300px;
 }
 
 .action-input {
-  flex-grow: 1;
-  height: 100%;
   overflow-y: auto;
 }
 
 .log-preview {
-  flex-basis: 256px;
-  height: 100%;
   overflow-y: auto;
+  flex-basis: 300px;
 }
-
-@container (max-width: 600px) {
-  .action-dialog-layout {
-    flex-direction: column;
-  }
-  .action-input {
-    height: unset;
-  }
-  .log-preview {
-    flex-basis: 300px;
-  }
-}
-
+ 
 </style>

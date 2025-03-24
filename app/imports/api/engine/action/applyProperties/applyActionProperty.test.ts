@@ -377,7 +377,7 @@ describe('Apply Action Properties', function () {
       {
         contents: [{
           inline: true,
-          name: 'Attribute damaged',
+          name: 'Stat damaged',
           value: '−2 Resource Name',
         }],
         targetIds: [creatureId],
@@ -435,7 +435,7 @@ describe('Apply Action Properties', function () {
         contents: [
           {
             inline: true,
-            name: 'Attribute restored',
+            name: 'Stat restored',
             value: '+13 Attribute Reset By testEvent Event',
           },
         ],

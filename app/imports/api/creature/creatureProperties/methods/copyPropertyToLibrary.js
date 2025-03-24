@@ -23,7 +23,7 @@ const copyPropertyToLibrary = new ValidatedMethod({
   validate: new SimpleSchema({
     propId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     parentRef: {
       type: RefSchema,

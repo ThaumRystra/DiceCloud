@@ -9,7 +9,7 @@ let Messages = new Mongo.Collection('messages');
 let MessagesSchema = new SimpleSchema({
   tabletopId: {
     type: String,
-    regEx: SimpleSchema.RegEx.id,
+    max: 32,
   },
   content: {
     type: String,
@@ -21,7 +21,7 @@ let MessagesSchema = new SimpleSchema({
   },
   userId: {
     type: String,
-    regEx: SimpleSchema.RegEx.id,
+    max: 32,
   },
   username: {
     type: String,
@@ -41,7 +41,7 @@ const sendMessage = new ValidatedMethod({
     },
     tabletopId: {
       type: String,
-      regEx: SimpleSchema.RegEx.id,
+      max: 32,
     },
   }).validator(),
 
@@ -77,7 +77,7 @@ const removeMessages = new ValidatedMethod({
   validate: new SimpleSchema({
     messageId: {
       type: String,
-      regEx: SimpleSchema.RegEx.id,
+      max: 32,
     },
   }).validator(),
 

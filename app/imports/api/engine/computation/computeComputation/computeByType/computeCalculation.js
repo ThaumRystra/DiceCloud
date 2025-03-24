@@ -119,7 +119,7 @@ export function aggregateCalculationEffects(calcObj, getEffectFromId) {
   if (aggregator.base) {
     calcObj.valueNode = call.create({
       functionName: 'max',
-      args: [calcObj.valueNode, aggregator.base]
+      args: [calcObj.valueNode, ...aggregator.base]
     });
   }
   // Add

@@ -13,7 +13,7 @@ import EngineActions from '/imports/api/engine/action/EngineActions';
 let schema = new SimpleSchema({
   creatureId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
 });
 

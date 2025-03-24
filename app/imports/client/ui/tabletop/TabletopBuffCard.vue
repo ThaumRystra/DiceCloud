@@ -4,51 +4,42 @@
     rounded
     :class="cardClasses"
   >
-    <div class="layout align-center px-3">
+    <div
+      class="action-header d-flex align-stretch px-3"
+      style="height: 72px;"
+      @click="$emit('open-details')"
+    >
       <div
-        class="action-header flex layout column justify-center pl-1"
-        style="height: 72px; cursor: pointer;"
-        @click="$emit('open-details')"
+        class="d-flex flex-grow-1 align-center"
+        style="cursor: pointer;"
+        @mouseover="hovering = true"
+        @mouseleave="hovering = false"
       >
-        <div class="action-title my-1 d-flex">
-          <property-icon
-            class="mr-2"
-            :model="model"
-            :color="model.color"
-          />
+        <property-icon
+          :model="model"
+          :color="model.color"
+        />
+        <div class="mx-3">
           {{ model.name || propertyName }}
         </div>
-        <div class="action-sub-title layout align-center">
-          <div
-            v-if="targetingError"
-            class="flex error--text"
-          >
-            {{ targetingError }}
-          </div>
-          <template v-else>
-            <div class="flex">
-              {{ model.actionType }}
-            </div>
-            <div v-if="Number.isFinite(model.usesLeft)">
-              {{ model.usesLeft }} uses
-            </div>
-          </template>
-        </div>
+      </div>
+      <div class="d-flex align-center">
+        <v-btn
+          icon
+          @click.stop="remove"
+        >
+          <v-icon>
+            mdi-delete
+          </v-icon>
+        </v-btn>
       </div>
     </div>
     <div class="px-3 pb-3">
       <template v-if=" model.description">
         <markdown-text :markdown="model.description.value || model.description.text" />
       </template>
-      <v-divider v-if="children && children.length" />
-      <tree-node-list
-        v-if="children && children.length"
-        start-expanded
-        :children="children"
-        :root="model.root"
-        @selected="e => $emit('sub-click', e)"
-      />
     </div>
+    <card-highlight :active="hovering" />
   </v-sheet>
 </template>
 
@@ -59,17 +50,20 @@ import doAction from '/imports/client/ui/creature/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
-import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
+import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
 export default {
   components: {
     MarkdownText,
     PropertyIcon,
-    TreeNodeList,
+    CardHighlight,
   },
   inject: {
     context: {
@@ -179,6 +173,22 @@ export default {
         snackbar({ text: e.message || e.reason || e.toString() });
       }).finally(() => {
         this.doActionLoading = false;
+      });
+    },
+    remove(){
+      const _id = this.model._id;
+      softRemoveProperty.call({_id});
+      if (this.embedded){
+        this.$emit('removed');
+      } else {
+        this.$store.dispatch('popDialogStack');
+      }
+      snackbar({
+        text: `Deleted ${getPropertyTitle(this.model)}`,
+        callbackName: 'undo',
+        callback(){
+          restoreProperty.call({_id});
+        },
       });
     },
     shwing() {

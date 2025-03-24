@@ -41,11 +41,13 @@ const constant: ConstantFactory = {
   },
 }
 
-export function isFiniteNode(node: ParseNode): node is FiniteNumberConstantNode {
-  return node.parseType === 'constant'
+export function isFiniteNode(node: ParseNode | undefined): node is FiniteNumberConstantNode {
+  return node
+    && node.parseType === 'constant'
     && node.valueType === 'number'
     && typeof node.value === 'number'
-    && isFinite(node.value);
+    && isFinite(node.value)
+    || false;
 }
 
 export default constant;

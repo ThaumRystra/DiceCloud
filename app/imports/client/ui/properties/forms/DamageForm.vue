@@ -171,7 +171,6 @@ export default {
   },
   methods: {
     saveChange({ path, value, ack }) {
-      console.log({ path, value, ack });
       this.$emit('change', {path: [ 'save', ...path ], value, ack})
       this.$emit('change', {path: [ 'silent' ], value: true, ack})
     },

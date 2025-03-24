@@ -136,6 +136,7 @@ export default {
         {
           _id: { $nin: folderChars },
           $or: [{ readers: userId }, { writers: userId }, { owner: userId }],
+          type: 'pc',
         },
         { sort: { name: 1 } }
       ).map(characterTransform);

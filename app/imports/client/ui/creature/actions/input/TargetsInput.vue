@@ -1,5 +1,8 @@
 <template>
   <div class="choice-input">
+    <v-card-title>
+      {{ target === 'singleTarget' ? 'Target' : 'Targets' }}
+    </v-card-title>
     <v-list-item
       v-for="creature in creatures"
       :key="creature._id"
@@ -37,9 +40,14 @@
       </v-list-item-content>
     </v-list-item>
     <v-btn
+      large
+      text
+      color="accent"
+      class="mt-4"
+      style="width: 100%"
       @click="$emit('continue');"
     >
-      Done
+      {{ !value.length ? 'No target' : 'Continue' }}
     </v-btn>
   </div>
 </template>
@@ -73,6 +81,10 @@ export default {
         newValue = [...this.value, id];
       }
       this.$emit('input', newValue);
+      // If we are selecting a single creature, we are done
+      if (this.target === 'singleTarget') {
+        this.$emit('continue');
+      }
     },
   },
   meteor: {

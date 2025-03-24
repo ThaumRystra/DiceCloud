@@ -33,8 +33,6 @@
 
 <script lang="js">
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
-import doAction from '/imports/client/ui/creature/actions/doAction';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
   components: {
@@ -56,23 +54,19 @@ export default {
   }},
   methods: {
     castSpell() {
-      this.castSpellLoading = true;
-      doAction({
-        creatureId: this.model.root.id,
-        propId: this.model._id,
-        $store: this.$store, 
-        elementId: `spell-slot-card-${this.model._id}`
-      }).catch(error => {
-        snackbar({ text: error.reason || error.message || error.toString() });
-        console.error(error);
-      }).finally(() => {
-        this.castSpellLoading = false;
+      // push spell cast dialog
+      this.$store.commit('pushDialogStack', {
+        component: 'cast-spell-with-slot-dialog',
+        elementId: 'spell-slot-card',
+        data: {
+          creatureId: this.creatureId,
+        },
       });
     },
     clickProperty({ _id }) {
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
-        elementId: 'cast-spell-btn',
+        elementId: `spell-slot-card-${_id}`,
         data: { _id },
       });
     },

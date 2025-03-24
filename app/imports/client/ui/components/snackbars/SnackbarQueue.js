@@ -5,7 +5,6 @@ const globalState = Vue.observable({ queue: [] });
 let lastSnackbarId = 0;
 
 function snackbar(data) {
-  console.log(data);
   globalState.queue.push({
     data, //{text OR content, callback, callbackName} // content is logContent
     id: ++lastSnackbarId,

@@ -1,39 +1,18 @@
-import { Mongo } from 'meteor/mongo';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
-import ChildSchema, { TreeDoc } from '/imports/api/parenting/ChildSchema';
+import ChildSchema from '/imports/api/parenting/ChildSchema';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
 import { storedIconsSchema } from '/imports/api/icons/Icons';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { ConvertToUnion, InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { Simplify } from 'type-fest';
+import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 
-// TODO make this a union type of all CreatureProperty types
-const CreatureProperties: Mongo.Collection<any> = new Mongo.Collection('creatureProperties');
-
-export interface CreatureProperty extends TreeDoc {
-  _id: string
-  _migrationError?: string
-  tags: string[]
-  type: string
-  disabled?: boolean
-  icon?: {
-    name: string
-    shape: string
-  },
-  libraryNodeId?: string
-  slotQuantityFilled?: number
-  inactive?: boolean
-  deactivatedByAncestor?: boolean
-  deactivatedBySelf?: boolean
-  deactivatedByToggle?: boolean
-  deactivatingToggleId?: boolean
-  dirty?: boolean
-}
-
-const CreaturePropertySchema = new SimpleSchema({
+const PreComputeCreaturePropertySchema = TypedSimpleSchema.from({
   _id: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   _migrationError: {
     type: String,
@@ -64,7 +43,7 @@ const CreaturePropertySchema = new SimpleSchema({
   // Reference to the library node that this property was copied from
   libraryNodeId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
   // Fill more than one quantity in a slot, like feats and ability score
@@ -75,13 +54,12 @@ const CreaturePropertySchema = new SimpleSchema({
   },
 });
 
-const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
+const DenormalisedOnlyCreaturePropertySchema = TypedSimpleSchema.from({
   // Denormalised flag if this property is inactive on the sheet for any reason
   // Including being disabled, or a descendant of a disabled property
   inactive: {
     type: Boolean,
     optional: true,
-    index: 1,
     removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive by an inactive
@@ -90,7 +68,6 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   deactivatedByAncestor: {
     type: Boolean,
     optional: true,
-    index: 1,
     removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of its own
@@ -98,7 +75,6 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   deactivatedBySelf: {
     type: Boolean,
     optional: true,
-    index: 1,
     removeBeforeCompute: true,
   },
   // Denormalised flag if this property was made inactive because of a toggle
@@ -106,12 +82,11 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   deactivatedByToggle: {
     type: Boolean,
     optional: true,
-    index: 1,
     removeBeforeCompute: true,
   },
   deactivatingToggleId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
     removeBeforeCompute: true,
   },
@@ -127,7 +102,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
   'triggerIds.before.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'triggerIds.after': {
     type: Array,
@@ -135,7 +110,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
   'triggerIds.after.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'triggerIds.afterChildren': {
     type: Array,
@@ -143,7 +118,7 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
   'triggerIds.afterChildren.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   // When this is true on any property, the creature needs to be recomputed
   dirty: {
@@ -154,22 +129,39 @@ const DenormalisedOnlyCreaturePropertySchema = new SimpleSchema({
   },
 });
 
-CreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
+const CreaturePropertySchema = PreComputeCreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
-for (const key in propertySchemasIndex) {
-  const schema = new SimpleSchema({});
-  schema.extend(propertySchemasIndex[key]);
-  schema.extend(CreaturePropertySchema);
-  schema.extend(ColorSchema);
-  schema.extend(ChildSchema);
-  schema.extend(SoftRemovableSchema);
-  // Use the any schema as a default schema for the collection
-  if (key === 'any') {
-    // @ts-expect-error don't have types for .attachSchema
-    CreatureProperties.attachSchema(schema);
-  }
-  // TODO make this an else branch and remove all {selector: {type: any}} options
-  // @ts-expect-error don't have types for .attachSchema
+export type CreaturePropertyTypes = {
+  [T in PropertyType]: Simplify<
+    { type: T }
+    & InferType<typeof propertySchemasIndex[T]>
+  > & Simplify<
+    Exclude<InferType<typeof CreaturePropertySchema>, 'type'>
+    & InferType<typeof ColorSchema>
+    & InferType<typeof ChildSchema>
+    & InferType<typeof SoftRemovableSchema>
+  >
+}
+
+export type CreatureProperty = ConvertToUnion<CreaturePropertyTypes>;
+
+const CreatureProperties = new Mongo.Collection<CreatureProperty>('creatureProperties');
+
+const genericCreaturePropertySchema = TypedSimpleSchema.from({})
+  .extend(CreaturePropertySchema)
+  .extend(ColorSchema)
+  .extend(ChildSchema)
+  .extend(SoftRemovableSchema);
+
+// Attach the default schema
+CreatureProperties.attachSchema(genericCreaturePropertySchema);
+
+// Attach the schemas for each type
+let key: keyof typeof propertySchemasIndex;
+for (key in propertySchemasIndex) {
+  const schema = TypedSimpleSchema.from({})
+    .extend(propertySchemasIndex[key])
+    .extend(genericCreaturePropertySchema)
   CreatureProperties.attachSchema(schema, {
     selector: { type: key }
   });

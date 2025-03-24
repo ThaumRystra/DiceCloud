@@ -729,7 +729,7 @@ export function calculateNestedSetOperations(docs: TreeDoc[]) {
     const top = stack[stack.length - 1];
     if (visitedNodes.has(top)) {
       // We've arrived at this node again for some reason, this shouldn't happen
-      console.log('visited already, parent loop maybe?')
+      console.warn('visited already, parent loop maybe?')
       stack.pop();
     } else if (visitedChildren.has(top)) {
       // We've arrived at this node after visiting the children,
@@ -793,7 +793,7 @@ export function applyNestedSetProperties<T extends TreeDoc>(docs: T[]): Forest<T
     }
     if (visitedNodes.has(top)) {
       // We've arrived at this node again for some reason, this shouldn't happen
-      console.log('visited already, parent loop maybe?')
+      console.warn('visited already, parent loop maybe?')
       stack.pop();
     } else if (visitedChildren.has(top)) {
       // We've arrived at this node after visiting the children,

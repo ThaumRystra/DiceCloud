@@ -1,59 +1,11 @@
 import SimpleSchema from 'simpl-schema';
-import ColorSchema, { Colored } from '/imports/api/properties/subSchemas/ColorSchema';
-import SharingSchema, { Shared } from '/imports/api/sharing/SharingSchema';
+import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
+import SharingSchema from '/imports/api/sharing/SharingSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import type { Simplify } from 'type-fest';
 
-export type Creature = Colored & Shared & {
-  // Strings
-  _id: string,
-  name?: string,
-  alignment?: string,
-  gender?: string,
-  picture?: string,
-  avatarPicture?: string,
-
-  // Libraries
-  allowedLibraries?: string[],
-  allowedLibraryCollections?: string[],
-
-  // Stats that are computed and denormalized outside of recomputation
-  denormalizedStats?: {
-    xp: number,
-    milestoneLevels: number,
-  },
-  propCount?: number,
-  // Does the character need a recompute?
-  dirty?: boolean,
-  // Version of computation engine that was last used to compute this creature
-  computeVersion?: string,
-  type: 'pc' | 'npc' | 'monster',
-  computeErrors?: {
-    type: string,
-    details?: any,
-  }[],
-
-  // Tabletop
-  tabletopId?: string,
-  initiativeRoll?: number,
-
-  settings: {
-    useVariantEncumbrance?: true,
-    hideSpellcasting?: true,
-    hideRestButtons?: true,
-    swapStatAndModifier?: true,
-    hideUnusedStats?: true,
-    showTreeTab?: true,
-    hideSpellsTab?: true,
-    hideCalculationErrors?: true,
-    hitDiceResetMultiplier?: number,
-    discordWebhook?: string,
-  },
-};
-
-//set up the collection for creatures
-const Creatures = new Mongo.Collection<Creature>('creatures');
-
-const CreatureSettingsSchema = new SimpleSchema({
+const CreatureSettingsSchema = TypedSimpleSchema.from({
   //slowed down by carrying too much?
   useVariantEncumbrance: {
     type: Boolean,
@@ -108,24 +60,7 @@ const CreatureSettingsSchema = new SimpleSchema({
   },
 });
 
-const IconGroupSchema = new SimpleSchema({
-  name: {
-    type: String,
-    max: STORAGE_LIMITS.name,
-    optional: true,
-  },
-  iconIds: {
-    type: Array,
-    max: 4,
-    defaultValue: [],
-  },
-  'iconIds.$': {
-    type: String,
-    max: STORAGE_LIMITS.variableName,
-  },
-});
-
-const CreatureSchema = new SimpleSchema({
+const CreatureSchema = TypedSimpleSchema.from({
   // Strings
   name: {
     type: String,
@@ -162,7 +97,7 @@ const CreatureSchema = new SimpleSchema({
   },
   'allowedLibraries.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   allowedLibraryCollections: {
     type: Array,
@@ -171,7 +106,7 @@ const CreatureSchema = new SimpleSchema({
   },
   'allowedLibraryCollections.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
 
   // Stats that are computed and denormalised outside of recomputation
@@ -223,12 +158,16 @@ const CreatureSchema = new SimpleSchema({
     blackbox: true,
     optional: true,
   },
+  lastComputedAt: {
+    type: Date,
+    optional: true,
+  },
 
   // Tabletop
   tabletopId: {
     index: 1,
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
   initiativeRoll: {
@@ -241,15 +180,15 @@ const CreatureSchema = new SimpleSchema({
     type: CreatureSettingsSchema,
     defaultValue: {},
   },
-});
+})
+  .extend(ColorSchema)
+  .extend(SharingSchema);
 
-CreatureSchema.extend(ColorSchema);
-CreatureSchema.extend(SharingSchema);
+export type Creature = Simplify<{ _id: string } & InferType<typeof CreatureSchema>>;
 
-//@ts-expect-error attachSchema not defined
+//set up the collection for creatures
+const Creatures = new Mongo.Collection<Creature>('creatures');
 Creatures.attachSchema(CreatureSchema);
-
-
 
 export default Creatures;
 export { CreatureSchema };

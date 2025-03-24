@@ -12,15 +12,19 @@ type BaseDoActionParams = {
   creatureId: string;
   $store: Store<any>;
   elementId: string;
+  callback?: (action: EngineAction) => void;
+  replaceDialog?: boolean;
 }
 
 type DoTaskParams = BaseDoActionParams & {
   task: Task;
   propId?: undefined;
+  targetIds?: undefined;
 }
 
 type DoActionParams = BaseDoActionParams & {
   propId: string;
+  targetIds: string[];
   task?: undefined;
 }
 
@@ -30,12 +34,18 @@ type DoActionParams = BaseDoActionParams & {
  * the decisions the user makes, then applying the  action as a method call to the server with the
  * saved decisions, which will persist the action results.
  */
-export default async function doAction({ propId, creatureId, $store, elementId, task }: DoActionParams | DoTaskParams): Promise<any | void> {
+export default async function doAction({
+  propId, creatureId, $store, elementId, task, targetIds, callback, replaceDialog
+}: DoActionParams | DoTaskParams): Promise<any | void> {
   if (!task) {
+    targetIds ??= [];
     if (!propId) throw new Meteor.Error('no-prop-id', 'Either propId or task must be provided');
+    const prop = getSingleProperty(creatureId, propId);
+    if (!prop) throw new Meteor.Error('not-found', 'Property not found');
     task = {
-      prop: getSingleProperty(creatureId, propId),
-      targetIds: [],
+      prop,
+      targetIds,
+      subtaskFn: undefined,
     };
   }
   // Create the action
@@ -58,32 +68,31 @@ export default async function doAction({ propId, creatureId, $store, elementId, 
   // create a dialog that will re-apply the action, but with the ability to actually get input
   // Either way, call the action method afterwards
   try {
+    if (!action._id) throw new Meteor.Error('no-action-id', 'Action ID is required');
     const finishedAction = await applyAction(
       action, getErrorOnInputRequestProvider(action._id), { simulate: true }
     );
+    if (replaceDialog) {
+      $store.dispatch('popDialogStack', finishedAction);
+    }
     return callActionMethod(finishedAction);
   } catch (e) {
     if (e !== 'input-requested') throw e;
-    return new Promise<void>((resolve, reject) => {
-      $store.commit('pushDialogStack', {
+    return new Promise<void>((resolve) => {
+      $store.commit(replaceDialog ? 'replaceDialog' : 'pushDialogStack', {
         component: 'action-dialog',
         elementId,
         data: {
           actionId,
           task,
+          actionFinishedCallback: resolve,
         },
-        async callback(action: EngineAction) {
-          try {
-            if (action) await callActionMethod(action);
-            resolve();
-          }
-          catch (e) {
-            reject(e);
-          }
-          return elementId;
+        callback(action: any) {
+          resolve();
+          return callback?.(action);
         },
       });
-    })
+    });
   }
 }
 
@@ -96,7 +105,7 @@ const throwInputRequestedError = () => {
   throw 'input-requested';
 }
 
-function getErrorOnInputRequestProvider(actionId) {
+function getErrorOnInputRequestProvider(actionId: string) {
   const errorOnInputRequest: InputProvider = {
     targetIds: throwInputRequestedError,
     nextStep: throwInputRequestedError,
@@ -104,7 +113,6 @@ function getErrorOnInputRequestProvider(actionId) {
     choose: throwInputRequestedError,
     advantage: throwInputRequestedError,
     check: throwInputRequestedError,
-    castSpell: throwInputRequestedError,
   }
   return errorOnInputRequest;
 }

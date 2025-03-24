@@ -10,7 +10,7 @@ export default async function applyCreatureTemplateProperty(
   //Log the Creature that is about to be summoned
   let logValue = prop.description?.value
   if (prop.description?.text) {
-    recalculateInlineCalculations(prop.description, action, 'reduce', userInput);
+    await recalculateInlineCalculations(prop.description, action, 'reduce', userInput);
     logValue = prop.description?.value;
   }
   // There are no targets for creature templates

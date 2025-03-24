@@ -42,9 +42,17 @@ const inputProviderForTests: InputProvider = {
   async check(suggestedParams) {
     return suggestedParams;
   },
-  async castSpell(suggestedParams) {
-    return suggestedParams;
-  },
 }
+
+export const critInputProvider: InputProvider = {
+  ...inputProviderForTests,
+  async rollDice(dice = []) {
+    // when rolling 1d20, crit, otherwise use the normal test roll provider
+    if (dice.length === 1 && dice[0].diceSize === 20 && dice[0].number === 1) {
+      return [[20]];
+    }
+    return inputProviderForTests.rollDice(dice);
+  },
+};
 
 export default inputProviderForTests;

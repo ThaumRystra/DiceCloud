@@ -1,45 +1,12 @@
-import { ActionBase, ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
+import { ActionSchema, ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
-export interface Spell extends ActionBase {
-  name?: string
-  type: 'spell'
-  alwaysPrepared?: boolean
-  prepared?: boolean
-  castWithoutSpellSlots?: boolean
-  hasAttackRoll?: boolean
-  castingTime?: string
-  range?: string
-  duration?: string
-  verbal?: boolean
-  somatic?: boolean
-  concentration?: boolean
-  material?: string
-  ritual?: boolean
-  level?: number
-  school?: string
-}
-
-export function isSpell(prop: CreatureProperty): prop is Spell {
-  return prop.type === 'spell';
-}
-
-const magicSchools = [
-  'abjuration',
-  'conjuration',
-  'divination',
-  'enchantment',
-  'evocation',
-  'illusion',
-  'necromancy',
-  'transmutation',
-];
-
-const SpellSchema = new SimpleSchema({})
+const SpellSchema = createPropertySchema({})
   .extend(ActionSchema)
-  .extend({
+  .extend(TypedSimpleSchema.from({
     name: {
       type: String,
       optional: true,
@@ -111,14 +78,23 @@ const SpellSchema = new SimpleSchema({})
     school: {
       type: String,
       defaultValue: 'abjuration',
-      allowedValues: magicSchools,
+      allowedValues: [
+        'abjuration',
+        'conjuration',
+        'divination',
+        'enchantment',
+        'evocation',
+        'illusion',
+        'necromancy',
+        'transmutation',
+      ] as const,
     },
-  });
+  }));
 
-const ComputedOnlySpellSchema = new SimpleSchema({})
+const ComputedOnlySpellSchema = createPropertySchema({})
   .extend(ComputedOnlyActionSchema);
 
-const ComputedSpellSchema = new SimpleSchema({})
+const ComputedSpellSchema = TypedSimpleSchema.from({})
   .extend(SpellSchema)
   .extend(ComputedOnlySpellSchema);
 

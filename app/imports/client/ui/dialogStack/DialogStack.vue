@@ -26,6 +26,7 @@
           v-bind="dialog.data"
           class="unsized-dialog dialog-component"
           :data-element-id="dialog.elementId"
+          :data-id="dialog._id"
           :data-index="index"
           :style="getDialogStyle(index)"
           :elevation="6"
@@ -37,6 +38,7 @@
           :ref="index"
           class="dialog"
           :data-element-id="dialog.elementId"
+          :data-id="dialog._id"
           :data-index="index"
           :style="getDialogStyle(index)"
           :elevation="6"
@@ -65,7 +67,7 @@
   // Use in combination with browser's animation speed override to do slow-mod debugging
   const animationSpeed = 1;
 
-  const unsizedDialogs = new Set(['image-preview-dialog']);
+  const unsizedDialogs = new Set(['image-preview-dialog', 'action-dialog']);
 
   export default {
     components: {
@@ -74,6 +76,7 @@
     data(){return {
       hiddenElements: [],
       shake: false,
+      leavingPromise: undefined,
     }},
     computed: {
       dialogs(){
@@ -129,21 +132,22 @@
         const num = length - 1;
         const left = (num - index) * -OFFSET;
         const top = (num - index) * -OFFSET;
-        return `left: calc(${left}px + 50%); top: calc(${top}px + 50%)`;
+        return `left: calc(${left}px + 50%); top: calc(${top}px + 50%);${index < num ? ' filter: brightness(0.7);': ''}`;
       },
       getTopElementByDataId(elementId, offset = 0){
         let stackLength = this.$store.state.dialogStack.dialogs.length - offset;
         if (stackLength){
           let topDialog = this.$refs[stackLength - 1][0];
-          // First look in the active window, then look elsewhere
-          return topDialog.$el.querySelector(`.v-window-item--active [data-id='${elementId}']`) ?? 
-            topDialog.$el.querySelector(`[data-id='${elementId}']`);
+          return topDialog.$el.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+            ?? topDialog.$el.querySelector(`[data-id='${elementId}']`)
+            ?? document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+            ?? document.querySelector(`[data-id='${elementId}']`);
         } else {
-          return document.querySelector(`.v-window-item--active [data-id='${elementId}']`) ??
-            document.querySelector(`[data-id='${elementId}']`);
+          return document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+            ?? document.querySelector(`[data-id='${elementId}']`);
         }
       },
-      async enter(target, done){
+      async enter(target, done) {
         if (!target || !target.attributes['data-element-id']){
           done();
           return;
@@ -166,7 +170,16 @@
 
         // Instantly mock the source
         target.style.transition = 'none';
-        mockElement({ source, target });
+        // If we are using unsized dialogs, first let it layout with no opacity, then mock and
+        // carry on, otherwise it has no size
+        if (target.classList.contains('unsized-dialog')) {
+          target.style.opacity = '0';
+          await new Promise(requestAnimationFrame);
+          mockElement({ source, target });
+          target.style.opacity = '1';
+        } else {
+          mockElement({ source, target });
+        }
 
         // Wait one frame before hiding the source so we know our mock is in place
         await new Promise(requestAnimationFrame);
@@ -185,11 +198,9 @@
         source.style.transition = originalStyle.sourceTransition;
         setTimeout(done, 300 / animationSpeed);
       },
-      leave(target, done){
+      async leave(target, done) {
         // Give minimongo time to update documents we might need to animate to
-        setTimeout(() => this.doLeave(target, done));
-      },
-      async doLeave(target, done){
+        await new Promise(requestAnimationFrame);
         let elementId;
         let hiddenElement = this.hiddenElements.pop();
         let returnElementId = await this.$store.state.dialogStack.currentReturnElement;
@@ -202,11 +213,14 @@
           }
           elementId = target.attributes['data-element-id'].value;
         }
+        const replacing = this.$store.state.dialogStack.replacingDialog === target.attributes['data-id'].value;
         let source = this.getTopElementByDataId(elementId);
-        if (!source){
-          console.warn(`Can't find source for ${elementId}`);
+        if (!source || replacing){
           if (hiddenElement) hiddenElement.style.opacity = '';
-          else console.warn('No hidden element to reveal', hiddenElement);
+          // Just fade out gracefully
+          target.style.transition = 'all 0.3s ease';
+          target.style.opacity = '0';
+          await timeout(300 / animationSpeed);
           done();
           return;
         }

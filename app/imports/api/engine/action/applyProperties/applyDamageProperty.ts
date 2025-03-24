@@ -21,13 +21,16 @@ export default async function applyDamageProperty(
   task: PropTask, action: EngineAction, result: TaskResult, inputProvider: InputProvider
 ) {
   const prop = task.prop;
-  const scope = getEffectiveActionScope(action);
-
-  // Skip if there is no parse node to work with
-  if (!prop.amount?.parseNode) return;
+  const scope = await getEffectiveActionScope(action);
 
   // Choose target
   const damageTargets = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+  // Skip if there is no parse node to work with
+  if (!prop.amount?.valueNode) {
+    return applyDefaultAfterPropTasks(action, prop, damageTargets, inputProvider);
+  }
+
   // Determine if the hit is critical
   const criticalHit = await getConstantValueFromScope('~criticalHit', scope)
     && prop.damageType !== 'healing'; // Can't critically heal
@@ -91,9 +94,9 @@ export default async function applyDamageProperty(
   }
 
   // Memoise the damage suffix for the log
-  const suffix = (criticalHit ? ' critical ' : ' ') +
+  const suffix = (criticalHit ? 'critical ' : '') +
     prop.damageType +
-    (prop.damageType !== 'healing' ? ' damage ' : '');
+    (prop.damageType !== 'healing' ? ' damage' : '');
 
   // If there is a save, calculate the save damage
   let damageOnSave, saveProp, saveRoll;

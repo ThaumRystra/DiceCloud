@@ -3,48 +3,60 @@
     <div
       v-for="(contentGroup, index) in contentByTargetId"
       :key="index"
+      class="d-flex justify-space-between mb-2"
     >
-      <h3
-        v-if="contentGroup.targetIds.length"
-        class="content-target-ids"
+      <div class="d-flex flex-wrap">
+        <div
+          v-for="(content, contentIndex) in contentGroup.content"
+          :key="contentIndex"
+          class="mx-2 my-1"
+          :class="{'full-width': !content.inline}"
+        >
+          <div
+            class="content-name text-body"
+          >
+            {{ content.name }}
+          </div>
+          <markdown-text
+            v-if="content.value"
+            class="content-value text-body-2"
+            :markdown="content.value"
+          />
+          <div
+            v-else
+            style="min-height: 12px;"
+          />
+        </div>
+      </div>
+      <div
+        v-if="contentGroup.targetIds && contentGroup.targetIds.length"
+        class="content-target-ids d-flex flex-column justify-center" 
       >
-        <v-icon>mdi-chevron-right</v-icon>
-        <v-list-item-avatar
+        <v-tooltip
           v-for="creature in contentGroup.targetCreatures"
           :key="creature._id"
-          :color="model.color || 'grey'"
-          size="32"
+          left
         >
-          <img
-            v-if="creature.avatarPicture"
-            :src="creature.avatarPicture"
-            :alt="creature.name"
-          >
-          <span v-else>
-            {{ creature.name && creature.name[0] || '?' }}
-          </span>
-        </v-list-item-avatar>
-      </h3>
-      <div
-        v-for="(content, contentIndex) in contentGroup.content"
-        :key="contentIndex"
-        class="content-line"
-      >
-        <h4
-          class="content-name"
-          style="min-height: 12px;"
-        >
-          {{ content.name }}
-        </h4>
-        <markdown-text
-          v-if="content.value"
-          class="content-value"
-          :markdown="content.value"
-        />
-        <div
-          v-else
-          style="min-height: 12px;"
-        />
+          <template #activator="{ on, attrs }">
+            <v-list-item-avatar
+              :color="model.color || 'grey'"
+              size="28"
+              class="ma-2"
+              v-bind="attrs"
+              v-on="on"
+            >
+              <img
+                v-if="creature.avatarPicture"
+                :src="creature.avatarPicture"
+                :alt="creature.name"
+              >
+              <span v-else>
+                {{ creature.name && creature.name[0] || '?' }}
+              </span>
+            </v-list-item-avatar>
+          </template>
+          <span>{{ creature.name }}</span>
+        </v-tooltip>
       </div>
     </div>
   </div>
@@ -89,7 +101,7 @@ export default {
           }
           currentContent = {
             targetIds: contentItem.targetIds,
-            targetCreatures: contentItem.targetIds.map(getCreature),
+            targetCreatures: contentItem.targetIds?.map(getCreature) ?? [],
             content: [contentItem],
           };
         } else {
@@ -104,19 +116,12 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.content-line {
-  min-height: 24px;
-  margin-top: 8px;
-  margin-bottom: 2px;
-}
-/** change the first content line to have no margin top*/
-.content-line:first-of-type {
-  margin-top: 0;
-}
-
-.content-line .details {
-  display: inline-block;
-}
+  .full-width {
+    width: 100%;
+  }
+  .content-target-ids {
+    border-left: solid 1px hsl(0deg 0% 50% / 20%);
+  }
 </style>
 
 <style lang="css">

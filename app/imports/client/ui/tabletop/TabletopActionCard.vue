@@ -135,7 +135,7 @@ export default {
     },
     targets: {
       type: Array,
-      default: undefined,
+      required: true,
     },
   },
   data() {
@@ -221,8 +221,10 @@ export default {
       doAction({
         propId: this.model._id,
         creatureId: this.model.root.id,
+        targetIds: this.targets,
         $store: this.$store,
         elementId: 'do-action-button',
+        callback: action => action?._id || this.model._id,
       }).catch((e) => {
         console.error(e);
         snackbar({ text: e.message || e.reason || e.toString() });
@@ -249,6 +251,7 @@ export default {
     height .3s ease;
   max-width: 100vw;
   position: relative;
+  max-height: calc(100vh - 144px);
 }
 .action-card.tabletop-active {
   margin-top: -100px;

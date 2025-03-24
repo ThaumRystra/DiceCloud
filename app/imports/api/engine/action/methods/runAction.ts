@@ -1,5 +1,4 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import SimpleSchema from 'simpl-schema';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { getCreature } from '/imports/api/engine/loadCreatures';
@@ -10,7 +9,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 
 export const runAction = new ValidatedMethod({
   name: 'actions.runAction',
-  validate: null,
+  validate: null, //TODO
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 10,
@@ -31,7 +30,6 @@ export const runAction = new ValidatedMethod({
     await applyAction(action, userInput);
 
     // Persist changes
-    const writePromise = writeActionResults(action);
-    return writePromise;
+    return writeActionResults(action);
   },
 });

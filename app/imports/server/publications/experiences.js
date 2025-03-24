@@ -6,7 +6,7 @@ import { assertViewPermission } from '/imports/api/creature/creatures/creaturePe
 let schema = new SimpleSchema({
   creatureId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
 });
 

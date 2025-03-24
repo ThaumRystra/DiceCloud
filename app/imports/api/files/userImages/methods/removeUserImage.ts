@@ -9,7 +9,7 @@ const removeUserImage = new ValidatedMethod({
   validate: new SimpleSchema({
     'fileId': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

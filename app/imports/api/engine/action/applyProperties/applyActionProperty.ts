@@ -18,7 +18,21 @@ export default async function applyActionProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
 ): Promise<void> {
   const prop = task.prop;
+  if (prop.type !== 'action' && prop.type !== 'spell') {
+    throw new Meteor.Error('wrong-property', `Expected an action or a spell, got ${prop.type} instead`);
+  }
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
+
+  // If the action is a a spell, make sure we have spell slot defined
+  if (prop.type === 'spell') {
+    const scope = await getEffectiveActionScope(action);
+    if (!('slotLevel' in scope)) {
+      result.pushScope = {
+        '~slotLevel': { value: prop.level },
+        'slotLevel': { value: prop.level },
+      };
+    }
+  }
 
   //Log the name and summary, check that the property has enough resources to fire
   if (prop.summary?.text) {
@@ -31,7 +45,7 @@ export default async function applyActionProperty(
   }, targetIds);
 
   // Check Uses
-  if (prop.usesLeft <= 0) {
+  if (prop.usesLeft !== undefined && prop.usesLeft <= 0) {
     result.appendLog({
       name: 'Error',
       value: `${getPropertyTitle(prop)} does not have enough uses left`,
@@ -52,7 +66,7 @@ export default async function applyActionProperty(
 
   await spendResources(action, prop, targetIds, result, userInput);
 
-  const attack: CalculatedField = prop.attackRoll || prop.attackRollBonus;
+  const attack = prop.attackRoll;
 
   // Attack if there is an attack roll
   if (attack && attack.calculation) {

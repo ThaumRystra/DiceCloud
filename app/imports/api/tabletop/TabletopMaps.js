@@ -10,7 +10,7 @@ let TabletopMapschema = new SimpleSchema({
   },
   texture: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   position: {
     type: Object,
@@ -36,7 +36,7 @@ let TabletopMapschema = new SimpleSchema({
   // If this map was copied from a library map, this ID will be set
   libraryMapId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
 });

@@ -1,14 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
-import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
-
-export interface Item extends CreatureProperty {
-  type: 'item'
-  name?: string
-  plural?: string
-  quantity: number
-}
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
 const ItemSchema = createPropertySchema({
   name: {
@@ -23,7 +16,7 @@ const ItemSchema = createPropertySchema({
     max: STORAGE_LIMITS.name,
   },
   description: {
-    type: 'inlineCalculationFieldToCompute',
+    type: 'inlineCalculationFieldToCompute' as const,
     optional: true,
   },
   // Number currently held
@@ -80,7 +73,7 @@ const ItemSchema = createPropertySchema({
   },
   'ammoTriggerIds.before.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'ammoTriggerIds.after': {
     type: Array,
@@ -88,7 +81,7 @@ const ItemSchema = createPropertySchema({
   },
   'ammoTriggerIds.after.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'ammoTriggerIds.afterChildren': {
     type: Array,
@@ -96,18 +89,18 @@ const ItemSchema = createPropertySchema({
   },
   'ammoTriggerIds.afterChildren.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
 });
 
 const ComputedOnlyItemSchema = createPropertySchema({
   description: {
-    type: 'computedOnlyInlineCalculationField',
+    type: 'computedOnlyInlineCalculationField' as const,
     optional: true,
   },
 });
 
-const ComputedItemSchema = new SimpleSchema({})
+const ComputedItemSchema = TypedSimpleSchema.from({})
   .extend(ItemSchema)
   .extend(ComputedOnlyItemSchema);
 

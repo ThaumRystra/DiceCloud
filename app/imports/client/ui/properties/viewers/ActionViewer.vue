@@ -187,6 +187,16 @@ export default {
   },
   methods: {
     doAction() {
+      if (this.model.type === 'spell') {
+        return this.$store.commit('pushDialogStack', {
+          component: 'cast-spell-with-slot-dialog',
+          elementId: 'cast-spell',
+          data: {
+            creatureId: this.model.root.id,
+            spellId: this.model._id,
+          },
+        });
+      }
       this.doActionLoading = true;
       doAction({
         creatureId: this.model.root.id,

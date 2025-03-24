@@ -76,7 +76,7 @@ const userSchema = new SimpleSchema({
   },
   'subscribedLibraries.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   subscribedLibraryCollections: {
     type: Array,
@@ -85,7 +85,7 @@ const userSchema = new SimpleSchema({
   },
   'subscribedLibraryCollections.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   subscribedCharacters: {
     type: Array,
@@ -94,7 +94,7 @@ const userSchema = new SimpleSchema({
   },
   'subscribedCharacters.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   fileStorageUsed: {
     type: Number,
@@ -280,7 +280,7 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
   validate: new SimpleSchema({
     libraryId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     subscribe: {
       type: Boolean,
@@ -312,7 +312,7 @@ Meteor.users.subscribeToLibraryCollection = new ValidatedMethod({
   validate: new SimpleSchema({
     libraryCollectionId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     subscribe: {
       type: Boolean,

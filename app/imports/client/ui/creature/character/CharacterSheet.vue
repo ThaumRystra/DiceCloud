@@ -1,18 +1,7 @@
 <template>
   <div class="character-sheet fill-height">
     <v-fade-transition mode="out-in">
-      <div
-        v-if="!$subReady.singleCharacter"
-        key="character-loading"
-        class="fill-height layout justify-center align-center"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="64"
-        />
-      </div>
-      <div v-else-if="!creature">
+      <div v-if="!creature">
         <v-layout
           column
           align-center
@@ -139,11 +128,10 @@ import CharacterTab from '/imports/client/ui/creature/character/characterSheetTa
 import BuildTab from '/imports/client/ui/creature/character/characterSheetTabs/BuildTab.vue';
 import TreeTab from '/imports/client/ui/creature/character/characterSheetTabs/TreeTab.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
-import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
-import CharacterSheetInitiative from '/imports/client/ui/creature/character/CharacterSheetInitiative.vue';
+import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 
 export default {
   components: {
@@ -156,7 +144,6 @@ export default {
     BuildTab,
     TreeTab,
     CharacterSheetFab,
-    CharacterSheetInitiative,
   },
   props: {
     creatureId: {
@@ -165,7 +152,7 @@ export default {
     },
     embedded: Boolean,
   },
-  // @ts-ignore
+  // @ts-expect-error reactive provide not typed
   reactiveProvide: {
     name: 'context',
     include: ['creatureId', 'editPermission'],
@@ -197,30 +184,25 @@ export default {
       changed: ({ name }) =>
         this.$store.commit('setPageTitle', name || 'Character Sheet'),
     });
-    let that = this;
-    this.logObserver = CreatureLogs.find({
-      creatureId: this.creatureId,
-    }).observe({
-      added({ content }) {
-        if (!that.$subReady.singleCharacter) return;
-        if (that.$store.state.rightDrawer) return;
-        snackbar({ content });
-      },
-    });
+    if (this.$route.name === 'characterSheet') {
+      let that = this;
+      this.logObserver = CreatureLogs.find({
+        creatureId: this.creatureId,
+      }).observe({
+        added({ content }) {
+          if (!that.$subReady.singleCharacter) return;
+          if (that.$store.state.rightDrawer) return;
+          if (that.$store.state.dialogStack.dialogs.length) return;
+          snackbar({ content });
+        },
+      });
+    }
   },
   beforeDestroy() {
-    this.nameObserver.stop();
-    this.logObserver.stop();
+    this.nameObserver?.stop();
+    this.logObserver?.stop();
   },
   meteor: {
-    $subscribe: {
-      'singleCharacter'() {
-        return [this.creatureId];
-      },
-      'otherTabletopCreatures'() {
-        return [this.creatureId];
-      },
-    },
     creature() {
       return Creatures.findOne(this.creatureId, {
         fields: { variables: 0 }

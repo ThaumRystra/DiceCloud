@@ -30,6 +30,7 @@
           transition: 'opacity 0.2s ease',
         }"
         :model="selectedProp"
+        :targets="targets"
         data-id="tabletop-action-card"
         @close-menu="menuOpen = false"
         @dialog-opened="menuOpen = false"
@@ -186,6 +187,10 @@ export default {
       type: String,
       default: undefined,
     },
+    targets: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
@@ -217,9 +222,6 @@ export default {
     }
   },
   methods: {
-    log(e) {
-      console.log(e);
-    },
     hoverIcon(e, icon) {
       if (this.selectedIcon) return;
       // this.menuX = e.clientX - (e.clientX % 44);
@@ -285,16 +287,11 @@ export default {
     openStandardAction(standardId) {
       this.menuOpen = false;
       if (standardId === 'cast-spell') {
-        doAction({
-          creatureId: this.creatureId,
-          $store: this.$store,
-          elementId: standardId,
-          task: {
-            subtaskFn: 'castSpell',
-            targetIds: [],
-            params: {
-              spellId: undefined,
-            },
+        this.$store.commit('pushDialogStack', {
+          component: 'cast-spell-with-slot-dialog',
+          elementId: 'cast-spell',
+          data: {
+            creatureId: this.creatureId,
           },
         });
       }

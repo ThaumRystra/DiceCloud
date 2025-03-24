@@ -1,11 +1,11 @@
 import walkDown from '/imports/api/engine/computation/utility/walkdown';
 import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies';
 import { Forest, TreeNode } from '/imports/api/parenting/parentingFunctions';
-import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { ComputationProperty } from '/imports/api/engine/computation/CreatureComputation';
 import CreatureComputation from '/imports/api/engine/computation/CreatureComputation';
 
 export default function computeToggleDependencies(
-  node: TreeNode<CreatureProperty>, computation: CreatureComputation, forest: Forest<CreatureProperty>
+  node: TreeNode<ComputationProperty>, computation: CreatureComputation, forest: Forest<ComputationProperty>
 ) {
   const prop = node.doc
   // Only for toggles

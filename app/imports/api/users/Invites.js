@@ -8,12 +8,12 @@ let Invites = new Mongo.Collection('invites');
 let InviteSchema = new SimpleSchema({
   inviter: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     index: 1,
   },
   invitee: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
     index: 1,
   },
@@ -89,7 +89,7 @@ const getInviteToken = new ValidatedMethod({
   validate: new SimpleSchema({
     inviteId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -160,7 +160,7 @@ const revokeInvite = new ValidatedMethod({
   validate: new SimpleSchema({
     inviteId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

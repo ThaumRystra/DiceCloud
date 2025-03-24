@@ -42,7 +42,7 @@ let ExperienceSchema = new SimpleSchema({
   // ID of the journal this entry belongs to
   journalId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     index: 1,
   }
 });

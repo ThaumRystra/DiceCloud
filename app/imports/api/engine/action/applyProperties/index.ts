@@ -31,6 +31,7 @@ const applyPropertyByType: {
   note,
   roll,
   savingThrow,
+  spell: action,
   propertySlot: folder,
   toggle,
   trigger,

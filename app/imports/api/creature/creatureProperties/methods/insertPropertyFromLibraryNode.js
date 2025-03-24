@@ -23,7 +23,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     },
     'nodeIds.$': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     parentRef: {
       type: RefSchema,

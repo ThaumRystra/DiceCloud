@@ -13,7 +13,7 @@ const removeTabletop = new ValidatedMethod({
   validate: new SimpleSchema({
     tabletopId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
 

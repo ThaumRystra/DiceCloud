@@ -156,7 +156,10 @@ function linkEffects(dependencyGraph, prop, computation) {
       ) {
         // If the field wasn't specified and we're targeting an attribute or
         // skill, just treat it like a normal effect on its variable name
-        dependencyGraph.addLink(targetProp.variableName, prop._id, 'effect');
+        // But ensure only a single link is created
+        if (!dependencyGraph.hasLink(targetProp.variableName, prop._id)) {
+          dependencyGraph.addLink(targetProp.variableName, prop._id, 'effect');
+        }
       } else {
         // Otherwise target a field on that property
         const key = prop.targetField || getDefaultCalculationField(targetProp);

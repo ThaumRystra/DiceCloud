@@ -1,40 +1,53 @@
 import { EJSON } from 'meteor/ejson';
 import createGraph, { Graph } from 'ngraph.graph';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
+import type { Creature } from '/imports/api/creature/creatures/Creatures';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
-interface CreatureProperty {
-  _id: string;
-  type: string;
-}
+export type ComputationProperty = CreatureProperty & {
+  _computationDetails: {
+    calculations: any[],
+    emptyCalculations: any[],
+    inlineCalculations: any[],
+    toggleAncestors: any[],
+  }
+};
 
 export default class CreatureComputation {
   originalPropsById: Record<string, CreatureProperty>;
   propsById: Record<string, CreatureProperty>;
   propsWithTag: Record<string, string[]>;
   scope: Record<string, any>;
-  props: Array<CreatureProperty>;
+  props: ComputationProperty[];
   dependencyGraph: Graph<any, string>;
   errors: Array<object>;
-  creature: object;
+  creature: Creature;
   variables: object;
 
-  constructor(properties: Array<CreatureProperty>, creature: object, variables: object) {
+  constructor(properties: Array<CreatureProperty>, creature: Creature, variables: object) {
     // Set up fields
     this.originalPropsById = {};
     this.propsById = {};
     this.propsWithTag = {};
     this.scope = {};
-    this.props = properties;
     this.dependencyGraph = createGraph();
     this.errors = [];
     this.creature = creature;
     this.variables = variables;
 
-    // Store properties for easy access later
-    properties.forEach(prop => {
+    // Store properties and index for easy access later
+    this.props = properties.map(originalProp => {
+      const prop: ComputationProperty = Object.assign(EJSON.clone(originalProp), {
+        _computationDetails: {
+          calculations: [],
+          emptyCalculations: [],
+          inlineCalculations: [],
+          toggleAncestors: [],
+        }
+      });
       // Store a copy of the unmodified prop
       // EJSON clone is ~4x faster than lodash cloneDeep for EJSONable objects
-      this.originalPropsById[prop._id] = EJSON.clone(prop);
+      this.originalPropsById[prop._id] = originalProp;
       // Store by id
       this.propsById[prop._id] = prop;
 
@@ -50,6 +63,8 @@ export default class CreatureComputation {
 
       // Store the prop in the dependency graph
       this.dependencyGraph.addNode(prop._id, prop);
+
+      return prop;
     });
   }
 }

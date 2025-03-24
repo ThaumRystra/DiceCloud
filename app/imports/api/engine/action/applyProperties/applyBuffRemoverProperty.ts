@@ -1,5 +1,5 @@
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
-import TaskResult from 'imports/api/engine/action/tasks/TaskResult';
+import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import { findLast, filter, difference, intersection } from 'lodash';
 import { getPropertiesOfType, getPropertyAncestors } from '/imports/api/engine/loadCreatures';
@@ -27,6 +27,10 @@ export default async function applyBuffRemoverProperty(
     return applyTaskToEachTarget(action, task, targetIds, userInput);
   }
 
+  if (!targetIds.length) {
+    return applyDefaultAfterPropTasks(action, prop, task.targetIds, userInput);
+  }
+
   if (targetIds.length !== 1) {
     throw 'At this step, only a single target is supported'
   }
@@ -49,9 +53,10 @@ export default async function applyBuffRemoverProperty(
   } else {
     // Get all the buffs targeted by tags
     const allBuffs = getPropertiesOfType(targetId, 'buff');
-    const targetedBuffs = filter(allBuffs, buff => {
+    const targetedBuffs = filter(allBuffs, (buff): boolean => {
       if (buff.inactive) return false;
       if (buffRemoverMatchTags(prop, buff)) return true;
+      return false;
     });
     // Remove the buffs
     if (prop.removeAll) {
@@ -61,7 +66,7 @@ export default async function applyBuffRemoverProperty(
       });
     } else {
       // Sort in reverse order
-      targetedBuffs.sort((a, b) => b.order - a.order);
+      targetedBuffs.sort((a, b) => b.left - a.left);
       // Remove the one with the highest order
       const buff = targetedBuffs[0];
       if (buff) {

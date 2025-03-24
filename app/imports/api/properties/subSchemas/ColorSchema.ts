@@ -1,10 +1,6 @@
-import SimpleSchema from 'simpl-schema';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
-export interface Colored {
-  color?: string,
-}
-
-const ColorSchema = new SimpleSchema({
+const ColorSchema = TypedSimpleSchema.from({
   color: {
     type: String,
     // match hex colors of the form #A23 or #A23f56

@@ -35,7 +35,7 @@ const InitiativeSchema = new SimpleSchema({
   },
   activeCreature: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
 });

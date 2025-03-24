@@ -117,7 +117,6 @@ export default {
     },
   },
   methods: {
-    log: console.log,
     insertLibrary(){
       if (this.paidBenefits){
         this.$store.commit('pushDialogStack', {

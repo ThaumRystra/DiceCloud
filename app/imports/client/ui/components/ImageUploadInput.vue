@@ -85,7 +85,6 @@ export default {
       }, false);
 
       uploadInstance.on('start', function () {
-        console.log('start')
         self.progress = 0;
         self.uploadIndeterminate = false;
         // Remove errors
@@ -93,24 +92,20 @@ export default {
       });
 
       uploadInstance.on('end', function (error, fileObj) {
-        console.log('end', error)
         self.resetState();
         self.$emit('uploaded', UserImages.link(fileObj));
       });
 
       uploadInstance.on('uploaded', function (error, fileObj) {
-        console.log('uploaded')
         self.progress = 0;
       });
 
       uploadInstance.on('error', function (error, fileObj) {
-        console.log('error', error)
         self.fileUploadError = error.reason || error.message || error.toString();
       });
 
       uploadInstance.on('progress', function (progress, fileObj) {
         // Update our progress bar with actual progress
-        console.log('progress')
         self.uploadIndeterminate = false;
         self.progress = progress;
       });

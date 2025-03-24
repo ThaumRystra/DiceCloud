@@ -29,7 +29,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     parent: {
       type: RefSchema,

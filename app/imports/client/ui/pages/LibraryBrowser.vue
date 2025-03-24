@@ -144,7 +144,6 @@ export default {
           subscribe,
         }, ack);
       } else {
-        console.log('sub fail')
         ack('Library or Library Collection not found')
       }
     },

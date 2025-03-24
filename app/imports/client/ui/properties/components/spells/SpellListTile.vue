@@ -21,18 +21,13 @@
         {{ spellComponents }}
       </v-list-item-subtitle>
     </v-list-item-content>
-    <v-list-item-action>
+    <v-list-item-action v-if="preparingSpells || showInfoButton">
       <smart-checkbox
         v-if="preparingSpells"
         :value="model.prepared || model.alwaysPrepared"
         :disabled="model.alwaysPrepared || context.editPermission === false"
         @click.native.stop="() => {}"
         @change="setPrepared"
-      />
-      <drag-handle
-        v-else-if="!hideHandle"
-        :disabled="context.editPermission === false"
-        style="height: 100%; width: 40px; cursor: move;"
       />
       <v-btn
         v-else-if="showInfoButton"
@@ -59,7 +54,6 @@ export default {
   },
   props: {
     preparingSpells: Boolean,
-    hideHandle: Boolean,
     showInfoButton: Boolean,
     disabled: Boolean,
   },

@@ -20,18 +20,18 @@ export interface EngineAction {
 const ActionSchema = new SimpleSchema({
   creatureId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     // @ts-expect-error index not defined
     index: 1,
   },
   rootPropId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
   tabletopId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
     // @ts-expect-error index not defined
     index: 1,
@@ -53,7 +53,7 @@ const ActionSchema = new SimpleSchema({
   // Should re-run the action identically from this point
   'results.$.propId': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'results.$.targetIds': {
     type: Array,
@@ -61,7 +61,7 @@ const ActionSchema = new SimpleSchema({
   },
   'results.$.targetIds.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   // Changes that override the local scope
   'results.$.scope': {
@@ -94,7 +94,7 @@ const ActionSchema = new SimpleSchema({
   },
   'results.$.mutations.$.targetIds.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   'results.$.mutations.$.updates': {
     type: Array,
@@ -105,7 +105,7 @@ const ActionSchema = new SimpleSchema({
   },
   'results.$.mutations.$.updates.$.propId': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   // Required, because CreatureProperties.update requires a selector of { type }
   'results.$.mutations.$.updates.$.type': {
@@ -130,7 +130,6 @@ const ActionSchema = new SimpleSchema({
   },
 });
 
-// @ts-expect-error Collections2 lacks TypeScript support
 EngineActions.attachSchema(ActionSchema);
 
 export default EngineActions;

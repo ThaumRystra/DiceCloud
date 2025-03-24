@@ -5,7 +5,7 @@ import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { organizeDoc } from '/imports/api/parenting/organizeMethods';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import getParentRefByTag from './getParentByTag';
 
 // Equipping or unequipping an item will also change its parent
 const equipItem = new ValidatedMethod({

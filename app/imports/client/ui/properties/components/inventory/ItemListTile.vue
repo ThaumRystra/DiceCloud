@@ -42,21 +42,28 @@
 </template>
 
 <script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
 import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default {
   components: {
     IncrementButton,
+    PropertyIcon,
   },
-  mixins: [treeNodeViewMixin],
   inject: {
     context: { default: {} }
   },
   props: {
+    itemId: {
+      type: String,
+      required: true,
+    },
+    selected: Boolean,
+    hideIcon: Boolean,
     preparingSpells: Boolean,
   },
   data() {
@@ -103,6 +110,11 @@ export default {
       });
     }
   },
+  meteor: {
+    model() {
+      return CreatureProperties.findOne(this.itemId);
+    }
+  }
 }
 </script>
 

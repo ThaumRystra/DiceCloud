@@ -28,9 +28,6 @@ export default function getReplayChoicesInputProvider(actionId: string, decision
     check() {
       return Promise.resolve(decisionStack.pop());
     },
-    castSpell() {
-      return Promise.resolve(decisionStack.pop());
-    },
   }
   return replaySavedInput;
 }

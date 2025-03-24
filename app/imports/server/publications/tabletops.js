@@ -112,6 +112,10 @@ Meteor.publish('tabletop', function (tabletopId) {
         initiativeRoll: 1,
         settings: 1,
         propCount: 1,
+        readers: 1,
+        writers: 1,
+        owner: 1,
+        public: 1,
       },
       limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
     });

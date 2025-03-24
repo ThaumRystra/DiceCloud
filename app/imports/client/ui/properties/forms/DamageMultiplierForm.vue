@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     error(e) {
-      console.log({ e })
+      console.error(e)
     }
   }
 };

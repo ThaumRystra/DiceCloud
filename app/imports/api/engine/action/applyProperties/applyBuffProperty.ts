@@ -26,18 +26,25 @@ export default async function applyBuffProperty(
   const prop = EJSON.clone(task.prop);
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
 
+  // Log the buff and return if there are no targets
+  if (!targetIds.length) {
+    await logBuff(prop, targetIds, action, userInput, result);
+    await applyAfterTasksSkipChildren(action, prop, targetIds, userInput);
+    return;
+  }
+
   // Get the buff and its descendants
   const propList = [
     EJSON.clone(prop),
     ...getPropertyDescendants(action.creatureId, prop._id),
   ];
 
-  // Crystalize the variables
+  // Crystallize the variables
   if (!prop.skipCrystalization) {
-    await crystalizeVariables(action, propList, task, result);
+    await crystallizeVariables(action, propList, task, result);
   }
 
-  targetIds.forEach(target => {
+  for (const target of targetIds) {
     // Create a per-target mutation
     const mutation: Mutation = { targetIds: [target], contents: [] };
 
@@ -55,16 +62,7 @@ export default async function applyBuffProperty(
     });
 
     //Log the buff
-    let logValue = prop.description?.value
-    if (prop.description?.text) {
-      recalculateInlineCalculations(prop.description, action, 'reduce', userInput);
-      logValue = prop.description?.value;
-    }
-    result.appendLog({
-      name: getPropertyTitle(prop),
-      value: logValue,
-      silenced: prop.silent,
-    }, [target]);
+    await logBuff(prop, targetIds, action, userInput, result);
 
     // remove all the computed fields
     targetPropList = cleanProps(targetPropList);
@@ -74,24 +72,34 @@ export default async function applyBuffProperty(
 
     // Add the mutation to the results
     result.mutations.push(mutation);
-  });
-  applyAfterTasksSkipChildren(action, prop, targetIds, userInput);
+  }
+  await applyAfterTasksSkipChildren(action, prop, targetIds, userInput);
+}
+
+async function logBuff(prop, targetIds, action, userInput, result) {
+  //Log the buff
+  let logValue = prop.description?.value
+  if (prop.description?.text) {
+    await recalculateInlineCalculations(prop.description, action, 'reduce', userInput);
+    logValue = prop.description?.value;
+  }
+  result.appendLog({
+    name: getPropertyTitle(prop),
+    ...logValue && { value: logValue },
+    silenced: prop.silent,
+  }, targetIds);
 }
 
 /**
  * Replaces all variables with their resolved values
  * except variables of the form `~target.thing.total` become `thing.total`
  */
-async function crystalizeVariables(
+async function crystallizeVariables(
   action: EngineAction, propList: any[], task: PropTask, result: TaskResult
 ) {
   const scope = await getEffectiveActionScope(action);
   for (const prop of propList) {
-    if (prop._skipCrystalize) {
-      delete prop._skipCrystalize;
-      return;
-    }
-    // Iterate through all the calculations and crystalize them
+    // Iterate through all the calculations and crystallize them
     for (const calcKey of computedSchemas[prop.type].computedFields()) {
       await applyFnToKeyAsync(prop, calcKey, async (prop, key) => {
         const calcObj = get(prop, key);

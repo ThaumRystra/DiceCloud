@@ -17,7 +17,7 @@
         class="flex-grow-0"
         style="flex-basis: 300px;"
         :loading="searchLoading"
-        @change="searchValue = searchInput || undefined"
+        @change="searchValue = (searchInput && searchInput.trim()) || undefined"
         @click:clear="searchValue = undefined"
       />
     </template>
@@ -377,19 +377,6 @@ export default {
             creatureProperty.order = order;
             insertProperty.call({ creatureProperty, parentRef });
             setTimeout(() => $store.dispatch('popDialogStack'), 200);
-
-            /* Maybe replace the dialog with the edit version? 
-             * It's a bit jank, but a common use case
-            $store.commit('replaceDialog', {
-              component: 'creature-property-dialog',
-              //elementId: `?`,
-              data: {
-                _id,
-                startInEditTab: true,
-              },
-            });
-            */
-           
           }
         }
       });

@@ -51,24 +51,8 @@
         <v-icon>mdi-check</v-icon>
       </v-btn>
     </template>
-    <!-- Disabled because it changes the height of the card
-    <v-card-text
-      v-if="preparedError || preparingSpells"
-      :class="{'error--text' : preparedError}"
-      class="pb-0"
-    >
-      <div v-if="model.maxPrepared && model.maxPrepared.value">
-        {{ numPrepared }}/{{ model.maxPrepared.value }} spells prepared
-      </div>
-      <v-switch
-        v-model="preparingSpells"
-        label="Change prepared spells"
-      />
-    </v-card-text>
-    -->
     <spell-list
       :spells="spells"
-      :parent-ref="{id: model._id, collection: 'creatureProperties'}"
       :preparing-spells="preparingSpells"
     />
   </toolbar-card>
@@ -113,7 +97,7 @@ export default {
       return CreatureProperties.find(filter, {
         sort: {
           level: 1,
-          order: 1,
+          left: 1,
         }
       });
     },

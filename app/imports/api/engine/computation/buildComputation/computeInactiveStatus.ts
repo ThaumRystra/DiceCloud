@@ -1,7 +1,6 @@
-import { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { TreeNode } from '/imports/api/parenting/parentingFunctions';
 import walkDown from '/imports/api/engine/computation/utility/walkdown';
-import { TreeNode } from '/imports/api/parenting/parentingFunctions';
-import { isSpell } from '/imports/api/properties/Spells';
 
 export default function computeInactiveStatus(node: TreeNode<CreatureProperty>): void {
   const prop = node.doc;
@@ -21,7 +20,7 @@ export default function computeInactiveStatus(node: TreeNode<CreatureProperty>):
 
 function isActive(prop: CreatureProperty): boolean {
   if (prop.disabled) return false;
-  if (isSpell(prop)) {
+  if (prop.type === 'spell') {
     return !!prop.prepared || !!prop.alwaysPrepared;
   }
   return true;

@@ -68,8 +68,8 @@
           <v-card-text class="px-0">
             <item-list
               equipment
-              :items="equippedItems"
-              :parent-ref="equipmentParentRef"
+              :item-ids="equippedItemIds"
+              :parent="equipmentParent"
             />
           </v-card-text>
         </toolbar-card>
@@ -81,8 +81,8 @@
           </v-toolbar-title>
           <v-card-text class="px-0">
             <item-list
-              :items="carriedItems"
-              :parent-ref="carriedParentRef"
+              :item-ids="carriedItemIds"
+              :parent="carriedParent"
             />
           </v-card-text>
         </toolbar-card>
@@ -112,7 +112,7 @@ import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/client/ui/properties/components/inventory/ContainerCard.vue';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import getParentByTag from '/imports/api/creature/creatureProperties/methods/getParentByTag';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
@@ -141,7 +141,6 @@ export default {
       tabName: 'inventory',
     };
   },
-  // @ts-ignore Meteor isn't defined on vue
   meteor: {
     folderIds() {
       return CreatureProperties.find({
@@ -191,7 +190,7 @@ export default {
         sort: { left: 1 },
       });
     },
-    carriedItems() {
+    carriedItemIds() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
         $nor: [getFilter.descendantsOfAll(this.containers)],
@@ -205,9 +204,10 @@ export default {
         deactivatedByToggle: { $ne: true },
       }, {
         sort: { left: 1 },
-      });
+        fields: { _id: 1 },
+      }).map(prop => prop._id);
     },
-    equippedItems() {
+    equippedItemIds() {
       return CreatureProperties.find({
         ...getFilter.descendantsOfRoot(this.creatureId),
         type: 'item',
@@ -216,27 +216,22 @@ export default {
         inactive: { $ne: true },
       }, {
         sort: { left: 1 },
-      });
+        fields: { _id: 1 },
+      }).map(prop => prop._id);
     },
-    equipmentParentRef() {
-      return getParentRefByTag(
+    equipmentParent() {
+      return getParentByTag(
         this.creatureId, BUILT_IN_TAGS.equipment
-      ) || getParentRefByTag(
+      ) || getParentByTag(
         this.creatureId, BUILT_IN_TAGS.inventory
-      ) || {
-        id: this.creatureId,
-        collection: 'creatures'
-      };
+      );
     },
-    carriedParentRef() {
-      return getParentRefByTag(
+    carriedParent() {
+      return getParentByTag(
         this.creatureId, BUILT_IN_TAGS.carried
-      ) || getParentRefByTag(
+      ) || getParentByTag(
         this.creatureId, BUILT_IN_TAGS.inventory
-      ) || {
-        id: this.creatureId,
-        collection: 'creatures'
-      };
+      );
     },
   },
   computed: {

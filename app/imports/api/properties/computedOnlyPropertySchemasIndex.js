@@ -1,4 +1,3 @@
-import SimpleSchema from 'simpl-schema';
 import { ComputedOnlyActionSchema } from '/imports/api/properties/Actions';
 import { ComputedOnlyAdjustmentSchema } from '/imports/api/properties/Adjustments';
 import { ComputedOnlyAttributeSchema } from '/imports/api/properties/Attributes';
@@ -59,7 +58,6 @@ const propertySchemasIndex = {
   spellList: ComputedOnlySpellListSchema,
   toggle: ComputedOnlyToggleSchema,
   trigger: ComputedOnlyTriggerSchema,
-  any: new SimpleSchema({}),
 };
 
 export default propertySchemasIndex;

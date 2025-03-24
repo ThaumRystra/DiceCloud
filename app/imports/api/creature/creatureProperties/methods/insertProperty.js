@@ -5,7 +5,7 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { fetchDocByRef, rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import getParentRefByTag from '/imports/api/creature/creatureProperties/methods/getParentRefByTag';
+import getParentRefByTag from './getParentByTag';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
 
 const insertProperty = new ValidatedMethod({
@@ -52,7 +52,7 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
     },
     creatureId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     tag: {
       type: String,

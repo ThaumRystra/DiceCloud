@@ -24,7 +24,7 @@ const duplicateLibraryNode = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     }
   }).validator(),
   mixins: [RateLimiterMixin],

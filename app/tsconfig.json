@@ -16,7 +16,7 @@
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
-    "noImplicitAny": false,
+    "noErrorTruncation": true,
     "outDir": "build",
     "paths": {
       "/*": [

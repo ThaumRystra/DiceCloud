@@ -415,12 +415,12 @@ import doAction from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
 function walkDown(forest, callback){
-  let stack = [...forest];
+  let stack = [...forest].reverse();
   while(stack.length){
     let node = stack.pop();
     const { skipChildren } = callback(node) ?? { skipChildren: false };
     if (!skipChildren) {
-      stack.push(...node.children);
+      stack.push(...[...node.children].reverse());
     }
   }
 }
@@ -557,7 +557,7 @@ export default {
       if (creature.settings.hideUnusedStats) {
         filter.hide = { $ne: true };
       }
-      const allProps = CreatureProperties.find(filter, { sort: { left: -1 } }).fetch();
+      const allProps = CreatureProperties.find(filter, { sort: { left: 1 } }).fetch();
       const forest = docsToForest(allProps);
       const properties = { folder: {}, attribute: {}, skill: {} };
       walkDown(forest, node => {
@@ -569,9 +569,6 @@ export default {
           if (!propArray) {
             propArray = [];
             set(properties, propPath, propArray);
-          }
-          if (!propArray?.push) {
-            console.log({propArray});
           }
           propArray.push(prop);
         }

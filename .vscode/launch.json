@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Meteor: Test",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/app",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run-script",
+        "test"
+      ],
+      "outputCapture": "std",
+    }
+  ]
+}

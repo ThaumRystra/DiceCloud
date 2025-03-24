@@ -17,6 +17,7 @@
         />
         <tree-node-list
           group="library-node-expansion"
+          :root="{collection: 'libraryNodes', id: id}"
           :children="propertyChildren"
           @selected="clickChild"
         />
@@ -26,7 +27,7 @@
 </template>
 
 <script lang="js">
-import { filterToForest } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
@@ -71,7 +72,11 @@ export default {
       return LibraryNodes.findOne(this.id);
     },
     propertyChildren() {
-      return filterToForest(LibraryNodes, this.id, {});
+      const descendants = LibraryNodes.find({
+        ...getFilter.descendants(this.model),
+        removed: { $ne: true },
+      }).fetch();
+      return docsToForest(descendants);
     },
   }
 }

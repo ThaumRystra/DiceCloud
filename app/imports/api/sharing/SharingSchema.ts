@@ -1,5 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
 export interface Shared {
   owner: string,
@@ -9,17 +10,15 @@ export interface Shared {
   readersCanCopy?: true,
 }
 
-const SharingSchema = new SimpleSchema({
+const SharingSchema = TypedSimpleSchema.from({
   owner: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
-    //@ts-expect-error index not defined
+    max: 32,
     index: 1
   },
   readers: {
     type: Array,
     defaultValue: [],
-    //@ts-expect-error index not defined
     index: 1,
     maxCount: STORAGE_LIMITS.readersCount,
   },
@@ -30,7 +29,6 @@ const SharingSchema = new SimpleSchema({
   writers: {
     type: Array,
     defaultValue: [],
-    //@ts-expect-error index not defined
     index: 1,
     maxCount: STORAGE_LIMITS.writersCount,
   },
@@ -41,7 +39,6 @@ const SharingSchema = new SimpleSchema({
   public: {
     type: Boolean,
     defaultValue: false,
-    //@ts-expect-error index not defined
     index: 1,
   },
   readersCanCopy: {

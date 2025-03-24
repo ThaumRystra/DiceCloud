@@ -28,7 +28,7 @@
         :key="bar._id"
         :model="bar"
         :height="4"
-        style="opacity: 0.7; margin-top: 2px"
+        style="opacity: 0.8; margin-top: 2px"
       />
     </v-img>
     <div class="d-flex justify-center">
@@ -37,8 +37,8 @@
           v-if="showTargetBtn"
           :color="targeted ? 'accent' : ''"
           :elevation="targeted ? 8 : 2"
-          fab
           small
+          fab
           @click.stop.prevent="targeted ? $emit('untarget') : $emit('target')"
         >
           <v-icon>{{ targeted ? 'mdi-target' : 'mdi-target' }}</v-icon>
@@ -50,12 +50,10 @@
 
 <script lang="js">
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
 
 export default {
   components: {
-    CardHighlight,
     HealthBarProgress,
   },
   props: {
@@ -87,21 +85,9 @@ export default {
   },
   meteor: {
     healthBars() {
-      const folderIds = CreatureProperties.find({
-        'root.id': this.model._id,
-        type: 'folder',
-        groupStats: true,
-        hideStatsGroup: true,
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, { fields: { _id: 1 } }).map(folder => folder._id);
-
       // Get the properties that need to be shown as a health bar
       return CreatureProperties.find({
         'root.id': this.model._id,
-        'parentId': {
-          $nin: folderIds,
-        },
         type: 'attribute',
         attributeType: 'healthBar',
         healthBarNoDamage: { $ne: true },

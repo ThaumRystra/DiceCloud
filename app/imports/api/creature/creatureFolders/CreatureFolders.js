@@ -16,11 +16,11 @@ let creatureFolderSchema = new SimpleSchema({
   },
   'creatures.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   owner: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     index: 1,
   },
   archived: {

@@ -34,7 +34,6 @@ const SingleLibraryToolbar = () => import('/imports/client/ui/library/SingleLibr
 const Tabletops = () => import('/imports/client/ui/pages/Tabletops.vue');
 const Tabletop = () => import('/imports/client/ui/pages/Tabletop.vue');
 const TabletopToolbar = () => import('/imports/client/ui/tabletop/TabletopToolbar.vue');
-const TabletopRightDrawer = () => import('/imports/client/ui/tabletop/TabletopRightDrawer.vue');
 const Admin = () => import('/imports/client/ui/pages/Admin.vue');
 const Maintenance = () => import('/imports/client/ui/pages/Maintenance.vue');
 const Files = () => import('/imports/client/ui/pages/Files.vue');
@@ -216,7 +215,6 @@ RouterFactory.configure(router => {
     components: {
       default: Tabletop,
       toolbar: TabletopToolbar,
-      rightDrawer: TabletopRightDrawer,
     },
     beforeEnter: ensureLoggedIn,
   }, {

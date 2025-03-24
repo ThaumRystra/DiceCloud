@@ -13,7 +13,7 @@ export default async function recalculateInlineCalculations(
   if (!inlineCalcObj?.inlineCalculations?.length) return;
   // Recalculate each calculation with the current scope
   for (const calc of inlineCalcObj.inlineCalculations) {
-    await recalculateCalculation(calc, action, undefined, userInput);
+    await recalculateCalculation(calc, action, parseLevel, userInput);
   }
   // Embed the new calculated values
   embedInlineCalculations(inlineCalcObj);

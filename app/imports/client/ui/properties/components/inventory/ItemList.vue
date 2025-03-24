@@ -11,16 +11,16 @@
       ghost-class="ghost"
       draggable=".item"
       handle=".handle"
-      :animation="200"
+      :revert-on-spill="true"
       @change="change"
     >
       <item-list-tile
-        v-for="item in dataItems"
-        :key="item._id"
+        v-for="itemId in dataItems"
+        :key="itemId"
         class="item"
-        :data-id="item._id"
-        :model="item"
-        @click="clickProperty(item._id)"
+        :data-id="itemId"
+        :item-id="itemId"
+        @click="clickProperty(itemId)"
       />
     </draggable>
   </v-list>
@@ -29,8 +29,10 @@
 <script lang="js">
 import draggable from 'vuedraggable';
 import ItemListTile from '/imports/client/ui/properties/components/inventory/ItemListTile.vue';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default {
   components: {
@@ -41,13 +43,13 @@ export default {
     context: { default: {} }
   },
   props: {
-    items: {
+    itemIds: {
       type: Array,
       default: () => [],
     },
-    parentRef: {
+    parent: {
       type: Object,
-      required: true,
+      default: () => undefined,
     },
     preparingSpells: Boolean,
     equipment: Boolean,
@@ -57,20 +59,13 @@ export default {
       dataItems: [],
     }
   },
-  computed: {
-    levels() {
-      let levels = new Set();
-      this.items.forEach(item => levels.add(item.level));
-      return levels;
+  watch: {
+    itemIds(value) {
+      this.dataItems = value;
     },
   },
-  watch: {
-    items(value) {
-      this.dataItems = value;
-    }
-  },
   mounted() {
-    this.dataItems = this.items;
+    this.dataItems = this.itemIds;
   },
   methods: {
     clickProperty(_id) {
@@ -82,37 +77,58 @@ export default {
     },
     change({ added, moved }) {
       let event = added || moved;
-      if (event) {
-        // If this item is now adjacent to another, set the order accordingly
-        let order;
-        let before = this.dataItems[event.newIndex - 1];
-        let after = this.dataItems[event.newIndex + 1];
-        if (before && before._id) {
-          order = before.order + 0.5;
-        } else if (after && after._id) {
-          order = after.order - 0.5;
-        } else {
-          order = -0.5;
-        }
-        let doc = event.element;
-        organizeDoc.callAsync({
-          docRef: {
-            id: doc._id,
-            collection: 'creatureProperties',
-          },
-          parentRef: this.parentRef,
-          order,
-        });
-        if (doc.type === 'item' && doc.equipped != this.equipment) {
-          updateCreatureProperty.call({
-            _id: doc._id,
-            path: ['equipped'],
-            value: !!this.equipment,
-          });
-        }
+      if (! event) return;
+      // If this item is now adjacent to another, set the order accordingly
+      let order;
+      const beforeId = this.dataItems[event.newIndex - 1]
+      const afterId = this.dataItems[event.newIndex + 1]
+      const before = beforeId && CreatureProperties.findOne(beforeId);
+      const after = afterId && CreatureProperties.findOne(afterId);
+      if (before) {
+        order = before.right + 0.5;
+      } else if (after) {
+        order = after.left - 0.5;
+      } else if (this.parent) {
+        order = this.parent.left + 0.5;
+      } else {
+        order = 0.5;
       }
-      setTimeout(() => this.dataItems = this.items, 0);
+      let docId = event.element;
+      const doc = CreatureProperties.findOne(docId);
+      if (!doc) return;
+      moveWithinRoot.callAsync({
+        docRef: {
+          id: docId,
+          collection: 'creatureProperties',
+        },
+        newPosition: order,
+      }, (e) => {
+        if (e) {
+          console.error(e);
+          snackbar({ text: e.reason || e.message || e.toString() });
+        }
+      });
+      if (doc.type === 'item' && doc.equipped !== this.equipment) {
+        updateCreatureProperty.call({
+          _id: docId,
+          path: ['equipped'],
+          value: !!this.equipment,
+        }, (e) => {
+          if (e) {
+            this.dataItems = this.itemIds
+            console.error(e);
+            snackbar({ text: e.reason || e.message || e.toString() });
+          }
+        });
+
+      }
     },
   }
 }
 </script>
+
+<style lang="css" scoped>
+.ghost {
+  opacity: 0.1;
+}
+</style>

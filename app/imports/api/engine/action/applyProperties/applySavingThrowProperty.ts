@@ -46,7 +46,6 @@ export default async function applySavingThrowProperty(
   // If there are no save targets, apply all children as if the save both
   // succeeded and failed
   if (!targetId) {
-    console.warn('no target, returning early');
     result.pushScope = {
       ['~saveFailed']: { value: true },
       ['~saveSucceeded']: { value: true },

@@ -1,7 +1,7 @@
-import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
-const RollDetailsSchema = new SimpleSchema({
+const RollDetailsSchema = TypedSimpleSchema.from({
   number: {
     type: Number,
   },

@@ -154,7 +154,6 @@ const parserFunctions: { [name: string]: ParserFunction } = {
 
       // mark the N smallest elements as dropped
       for (let i = 0; i < numberToDrop; i += 1) {
-        console.log('dropped ' + sortedArray[i].value);
         sortedArray[i].disabled = true;
         sortedArray[i].disabledBy = 'dropLowest';
       }

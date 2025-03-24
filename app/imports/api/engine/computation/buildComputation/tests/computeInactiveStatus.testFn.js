@@ -12,7 +12,7 @@ export default function () {
 
   // Items
   active('itemUnequippedId', 'Unequipped items should be active');
-  byAncestor('itemUnequippedChildId', 'Children of unequipped items should be inactive');
+  byAncestor('itemUnEQChildId', 'Children of unequipped items should be inactive');
   active('itemEquippedId', 'Equipped items should be active');
   active('itemEquippedChildId', 'Children of equipped items should be active');
 
@@ -56,7 +56,7 @@ var testProperties = [
     parentId: 'charId',
   }),
   clean({
-    _id: 'itemUnequippedChildId',
+    _id: 'itemUnEQChildId',
     type: 'folder',
     parentId: 'itemUnequippedId',
   }),

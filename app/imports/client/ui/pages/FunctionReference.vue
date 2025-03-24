@@ -51,7 +51,6 @@ export default {
         let f = functions[name];
         fns.push({name, ...f});
       }
-      console.log(fns);
       return fns;
     }
   }

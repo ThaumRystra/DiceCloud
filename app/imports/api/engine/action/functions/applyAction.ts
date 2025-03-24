@@ -40,6 +40,7 @@ export default async function applyAction(action: EngineAction, userInput: Input
     !action.task.targetIds?.length
     && action.tabletopId
     && 'prop' in action.task
+    && 'target' in action.task.prop
     && (
       action.task.prop?.target === 'singleTarget' ||
       action.task.prop?.target === 'multipleTargets'

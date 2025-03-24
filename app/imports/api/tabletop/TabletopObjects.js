@@ -10,7 +10,7 @@ let TabletopObjectSchema = new SimpleSchema({
   },
   texture: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   position: {
     type: Object,

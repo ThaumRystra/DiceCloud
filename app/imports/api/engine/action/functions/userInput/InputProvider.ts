@@ -35,10 +35,6 @@ type InputProvider = {
    * Get the details of a check or save
    */
   check(suggestedParams: CheckParams): Promise<CheckParams>;
-  /**
-   * Get the details of casting a spell
-   */
-  castSpell(suggestedParams: Partial<CastSpellParams>): Promise<CastSpellParams>;
 }
 
 export type Advantage = 0 | 1 | -1;
@@ -51,12 +47,6 @@ export type CheckParams = {
   contest?: true;
   targetSkillVariableName?: string;
   targetAbilityVariableName?: string;
-}
-
-export type CastSpellParams = {
-  spellId: string,
-  slotId: string | undefined,
-  ritual: boolean,
 }
 
 export default InputProvider;

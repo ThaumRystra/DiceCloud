@@ -22,11 +22,11 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
     },
     'libraryNodeIds.$': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     tabletopId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
 
@@ -95,7 +95,7 @@ function insertSubProperties(node, creatureId: string) {
 
   for (const node of nodes) {
     node.root = {
-      '_id': creatureId,
+      id: creatureId,
       collection: 'creatures',
     };
   }

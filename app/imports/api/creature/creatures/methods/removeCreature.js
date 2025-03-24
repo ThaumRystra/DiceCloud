@@ -21,7 +21,7 @@ const removeCreature = new ValidatedMethod({
   validate: new SimpleSchema({
     charId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

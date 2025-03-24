@@ -3,11 +3,15 @@ import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { CalculatedField } from './computedField';
 
-export interface InlineCalculation {
+export type InlineCalculationFieldToCompute = {
+  text?: string,
+}
+
+export type ComputedOnlyInlineCalculationField = {
   text?: string,
   hash?: number,
   value?: string,
-  inlineCalculations: CalculatedField[],
+  inlineCalculations?: CalculatedField[],
 }
 
 // Get schemas that apply fields directly so they can be gracefully extended
@@ -45,6 +49,7 @@ function computedOnlyInlineCalculationField(field) {
       type: String,
       optional: true,
       max: STORAGE_LIMITS.inlineCalculationField,
+      // @ts-expect-error removeBeforeCompute is an extension of SimpleSchema
       removeBeforeCompute: true,
     },
     [`${field}.inlineCalculations`]: {

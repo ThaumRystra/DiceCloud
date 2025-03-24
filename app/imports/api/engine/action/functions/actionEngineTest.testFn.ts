@@ -1,10 +1,10 @@
 import '/imports/api/simpleSchemaConfig.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { propsFromForest } from '/imports/api/properties/tests/propTestBuilder.testFn';
+import propsFromForest, { ForestProp } from '/imports/api/engine/computation/utility/propsFromForest.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import computeCreature from '/imports/api/engine/computeCreature';
-import { loadCreature } from '/imports/api/engine/loadCreatures';
+import { loadCreature, unloadAllCreatures } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { LogContent, Mutation, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
@@ -14,6 +14,7 @@ import inputProvider from './userInput/inputProviderForTests.testFn';
  */
 export async function removeAllCreaturesAndProps() {
   if (Meteor.isServer) {
+    unloadAllCreatures();
     return Promise.all([
       CreatureProperties.removeAsync({}),
       Creatures.removeAsync({}),
@@ -38,7 +39,7 @@ export async function createTestCreature(creature: TestCreature) {
     name: creature.name || 'Test Creature',
     owner: Random.id(),
     dirty: true,
-  });
+  } as any);
   const propsInserted = propsFromForest(creature.props, creature._id).map(prop => {
     return CreatureProperties.insertAsync(prop);
   });
@@ -47,16 +48,16 @@ export async function createTestCreature(creature: TestCreature) {
   await computeCreature(creature._id,);
 }
 
-type TestCreature = {
+export type TestCreature = {
   _id: string;
   name?: string;
-  props: any[];
+  props: ForestProp[];
 }
 
 /**
  * get a list of random Ids
  */
-export const getRandomIds = (count) => new Array(count).fill(undefined).map(() => Random.id());
+export const getRandomIds = (count: number) => new Array(count).fill(undefined).map(() => Random.id());
 
 /**
  * Creates a new Engine Action and applies the specified creature property
@@ -64,7 +65,7 @@ export const getRandomIds = (count) => new Array(count).fill(undefined).map(() =
  * @param userInputFn A function that simulates user input
  * @returns The Engine Action with mutations resulting from running the action
  */
-export async function runActionById(propId, targetIds?, userInput = inputProvider) {
+export async function runActionById(propId: string, targetIds?: string[], userInput = inputProvider) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop, targetIds);
   const action = await EngineActions.findOneAsync(actionId);

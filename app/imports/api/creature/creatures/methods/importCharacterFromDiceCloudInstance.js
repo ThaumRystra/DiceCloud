@@ -16,7 +16,8 @@ if (Meteor.isServer) {
 
 function importApiCreature(apiCreature, userId) {
   const apiVersion = apiCreature.meta?.schemaVersion ?? 2;
-  const creatureId = apiCreature.creatures[0]._id;
+  const creature = apiCreature.creatures[0];
+  const creatureId = creature._id;
   if (SCHEMA_VERSION < apiVersion) {
     throw new Meteor.Error('Incompatible',
       'The creature on the remote server is from a newer version of DiceCloud')
@@ -25,16 +26,17 @@ function importApiCreature(apiCreature, userId) {
   // Migrate and verify the archive meets the current schema
   migrateApiCreature(apiCreature);
 
+
   // Asset that the api creature is (mildly) safe
   verifyArchiveSafety({
-    creature: apiCreature.creatures[0],
+    creature,
     properties: apiCreature.creatureProperties ?? [],
     experiences: apiCreature.experiences ?? [],
     logs: apiCreature.logs ?? [],
   });
 
   // Don't upload creatures twice
-  const existingCreature = Creatures.findOne(apiCreature.creatures[0]._id, {
+  const existingCreature = Creatures.findOne(creature._id, {
     fields: { _id: 1 }
   });
 
@@ -42,7 +44,13 @@ function importApiCreature(apiCreature, userId) {
     'The creature you are trying to import already exists in this database.')
 
   // Ensure the user owns the restored creature
-  apiCreature.creatures[0].owner = userId;
+  creature.owner = userId;
+  // Remove the sharing permissions, the ids of users on this instance aren't going to match
+  creature.readers = [];
+  creature.writers = [];
+
+  // Mark the creature as dirty so that it recomputes
+  creature.dirty = true;
 
   // Ensure there is only 1 creature being imported
   if (apiCreature.creatures.length !== 1) {
@@ -53,7 +61,7 @@ function importApiCreature(apiCreature, userId) {
 
   // Insert the creature sub documents
   // They still have their original _id's
-  Creatures.insert(apiCreature.creatures[0]);
+  Creatures.insert(creature);
   try {
     // Add all the properties
     if (apiCreature.creatureProperties && apiCreature.creatureProperties.length) {

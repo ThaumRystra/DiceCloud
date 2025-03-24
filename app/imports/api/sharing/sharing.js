@@ -52,7 +52,7 @@ const updateUserSharePermissions = new ValidatedMethod({
     docRef: RefSchema,
     userId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     role: {
       type: String,
@@ -100,7 +100,7 @@ const transferOwnership = new ValidatedMethod({
     docRef: RefSchema,
     userId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

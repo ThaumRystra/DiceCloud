@@ -2,6 +2,7 @@
   <v-list-item
     :key="model._id"
     :data-id="`spell-slot-list-tile-${model._id}`"
+    :disabled="disabled"
     class="spell-slot-list-tile"
     v-bind="$attrs"
     v-on="hasClickListener ? {click} : {}"
@@ -27,13 +28,12 @@
           </div>
         </div>
         <div
-          v-else
+          v-else-if="canEdit"
           class="layout align-center slot-bubbles"
         >
           <smart-btn
             v-for="i in model.total"
             :key="i"
-            :disabled="disabled(i)"
             icon
             single-click
             @click="ack => damageProperty({
@@ -50,6 +50,23 @@
               }}
             </v-icon>
           </smart-btn>
+        </div>
+        <div
+          v-else
+          class="layout align-center slot-bubbles view-only"
+          :class="{'disabled-icon': disabled}"
+        >
+          <v-icon
+            v-for="i in model.total"
+            :key="i"
+            class="ma-1"
+          >
+            {{
+              i > model.value ?
+                'mdi-radiobox-blank' :
+                'mdi-radiobox-marked'
+            }}
+          </v-icon>
         </div>
       </v-list-item-title>
       <v-list-item-title v-else>
@@ -80,19 +97,21 @@ export default {
       required: true,
     },
     dark: Boolean,
+    viewOnly: Boolean,
+    disabled: Boolean,
   },
   computed: {
     hasClickListener() {
       return this.$listeners && !!this.$listeners.click;
+    },
+    canEdit() {
+      return this.context.editPermission && !this.viewOnly;
     },
   },
   methods: {
     signed: numberToSignedString,
     click(e) {
       this.$emit('click', e);
-    },
-    disabled(i) {
-      return !this.context.editPermission;
     },
     damageProperty({ type, value, ack }) {
       const model = this.model;
@@ -141,6 +160,10 @@ export default {
 
 .theme--dark .spell-slot-list-tile.hover {
   background: #515151 !important;
+}
+
+.disabled-icon {
+  opacity: 0.3;
 }
 
 .content {

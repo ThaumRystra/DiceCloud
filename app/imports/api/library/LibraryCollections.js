@@ -30,7 +30,7 @@ const LibraryCollectionSchema = new SimpleSchema({
   },
   'libraries.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   showInMarket: {
     index: 1,
@@ -78,7 +78,7 @@ const updateLibraryCollection = new ValidatedMethod({
   schema: {
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
     update: {
       type: LibraryCollectionSchema

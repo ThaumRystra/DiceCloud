@@ -9,6 +9,7 @@ import InputProvider from '/imports/api/engine/action/functions/userInput/InputP
 import applyCheckTask from '/imports/api/engine/action/tasks/applyCheckTask';
 import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
 import applyCastSpellTask from '/imports/api/engine/action/tasks/applyCastSpellTask';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
 
 // DamagePropTask promises a number of actual damage done
 export default async function applyTask(
@@ -79,6 +80,14 @@ export default async function applyTask(
     action.results.push(result);
 
     // Apply the property
-    return applyProperties[prop.type]?.(task, action, result, inputProvider);
+    if (!applyProperties[prop.type]) {
+      result.appendLog({
+        name: 'Warning',
+        value: `Could not apply ${getPropertyName(prop.type)}, only certain properties can be run as part of an action`,
+        silenced: false,
+      }, task.targetIds);
+      return;
+    }
+    return applyProperties[prop.type](task, action, result, inputProvider);
   }
 }

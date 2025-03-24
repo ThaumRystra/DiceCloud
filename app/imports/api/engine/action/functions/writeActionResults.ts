@@ -1,11 +1,11 @@
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
 import mutationToPropUpdates from './mutationToPropUpdates';
 import mutationToLogUpdates from '/imports/api/engine/action/functions/mutationToLogUpdates';
-import { union } from 'lodash';
+import { union, uniq } from 'lodash';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import bulkWrite from '/imports/api/engine/shared/bulkWrite';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import Creatures from '/imports/api/creature/creatures/Creatures';
+import computeCreature from '/imports/api/engine/computeCreature';
 
 export default async function writeActionResults(action: EngineAction) {
   if (!action._id) throw new Meteor.Error('type-error', 'Action does not have an _id');
@@ -27,19 +27,17 @@ export default async function writeActionResults(action: EngineAction) {
     content: logContents,
     creatureId: action.creatureId,
     tabletopId: action.tabletopId,
+    actionId: action._id,
   });
 
-  // Write the bulk updates
-  const bulkWritePromise = bulkWrite(creaturePropUpdates, CreatureProperties);
+  // Write the bulk updates, force them to sequential mode means we immediately get the results
+  // in the subscription, rather than waiting for oplog tailing to catch up
+  const bulkWritePromise = bulkWrite(creaturePropUpdates, CreatureProperties, true);
 
-  // Mark the creatures as dirty
-  const creaturePromise = Creatures.updateAsync({
-    _id: { $in: [action.creatureId, ...allTargetIds] },
-  }, {
-    $set: { dirty: true },
-  }, {
-    multi: true,
-  });
+  await Promise.all([engineActionPromise, logPromise, bulkWritePromise]);
 
-  return Promise.all([engineActionPromise, logPromise, bulkWritePromise, creaturePromise]);
+  // Recompute the creatures involved
+  const recomputePromises = uniq([action.creatureId, ...allTargetIds]).map(creatureId => computeCreature(creatureId));
+
+  return Promise.all(recomputePromises);
 }

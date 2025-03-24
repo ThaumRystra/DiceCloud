@@ -43,11 +43,16 @@ let CreatureLogSchema = new SimpleSchema({
     type: String,
     index: 1,
   },
-  // The tabletops this log is associated with
+  // The tabletop this log is associated with
   tabletopId: {
     type: String,
     optional: true,
     index: 1,
+  },
+  // The action that caused this log entry
+  actionId: {
+    type: String,
+    optional: true,
   },
   creatureName: {
     type: String,
@@ -192,7 +197,7 @@ const logRoll = new ValidatedMethod({
     },
     creatureId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
       optional: true,
     },
   }).validator(),

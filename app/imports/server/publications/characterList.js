@@ -33,6 +33,7 @@ Meteor.publish('characterList', function () {
           picture: 1,
           avatarPicture: 1,
           public: 1,
+          type: 1,
         }
       }
       ),

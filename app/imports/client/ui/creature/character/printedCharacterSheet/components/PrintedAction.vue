@@ -76,7 +76,7 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { getFilter, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
+import { getFilter, docsToForest } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 
@@ -166,7 +166,7 @@ export default {
           return prop.left > range.left && prop.right < range.right;
         });
       });
-      return nodeArrayToTree(descendants);
+      return docsToForest(descendants);
     },
   },
 }

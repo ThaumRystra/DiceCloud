@@ -1,24 +1,17 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import type { Simplify } from 'type-fest';
 
 export interface Reference {
   collection: string,
   id: string,
 }
 
-export interface TreeDoc {
-  _id: string,
-  root: Reference,
-  parentId?: string,
-  left: number,
-  right: number,
-  removed?: true,
-}
-
-const RefSchema = new SimpleSchema({
+const RefSchema = TypedSimpleSchema.from({
   id: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   },
   collection: {
     type: String,
@@ -26,13 +19,13 @@ const RefSchema = new SimpleSchema({
   },
 });
 
-const ChildSchema = new SimpleSchema({
+const ChildSchema = TypedSimpleSchema.from({
   root: {
     type: Object,
   },
   'root.id': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     index: 1,
   },
   'root.collection': {
@@ -43,11 +36,11 @@ const ChildSchema = new SimpleSchema({
   // Undefined parent id implies the root is the parent
   parentId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     optional: true,
   },
   /**
-   * The tree structure goes as follows where the numbering follows a counterclockwise depth first
+   * The tree structure goes as follows where the numbering follows a counter-clockwise depth first
    * path around the tree. The canonical structure comes from the root and parentId references,
    * while the left and right numbering is used to optimize ancestor queries.
    * 
@@ -82,6 +75,8 @@ export const treeDocFields = {
   left: 1,
   right: 1,
 }
+
+export type TreeDoc = Simplify<{ _id: string } & InferType<typeof ChildSchema>>;
 
 export default ChildSchema;
 export { RefSchema };

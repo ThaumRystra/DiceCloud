@@ -45,7 +45,7 @@ let userIdsSchema = new SimpleSchema({
   },
   'ids.$': {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
   }
 })
 

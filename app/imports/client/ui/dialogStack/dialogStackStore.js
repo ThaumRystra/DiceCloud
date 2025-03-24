@@ -9,6 +9,7 @@ const dialogStackStore = {
     dialogs: [],
     currentResult: null,
     currentReturnElement: null,
+    replacingDialog: null,
   },
   mutations: {
     pushDialogStack(state, { component, data, elementId, callback }) {
@@ -23,17 +24,21 @@ const dialogStackStore = {
       });
       updateHistory();
     },
-    replaceDialog(state, { component, data }) {
+    replaceDialog(state, { component, data, elementId, callback }) {
       if (!state.dialogs.length) {
         throw new Meteor.Error('can\'t replace dialog if no dialogs are open');
       }
       let currentDialog = state.dialogs[state.dialogs.length - 1]
+      state.replacingDialog = currentDialog._id;
       Vue.set(state.dialogs, state.dialogs.length - 1, {
-        _id: currentDialog._id,
+        _id: Random.id(),
         component,
         data,
-        elementId: currentDialog.elementId,
-        callback: currentDialog.callback,
+        elementId: elementId || currentDialog._id,
+        callback: (...args) => {
+          callback?.(...args);
+          return currentDialog.callback?.(...args);
+        },
       });
     },
     popDialogStackMutation(state, result) {

@@ -2,10 +2,10 @@
 // in the UI because of incompatibility with latency compensation. If the
 // duplicate redraws can be fixed, this is a strictly better way of processing
 // writes
-export default function bulkWrite(bulkWriteOps, collection): void | Promise<any> {
+export default async function bulkWrite<T>(bulkWriteOps, collection: Mongo.Collection<T>, forceSequential?: true): Promise<any> {
   if (!bulkWriteOps.length) return;
   // bulkWrite is only available on the server
-  if (!Meteor.isServer) {
+  if (!Meteor.isServer || forceSequential) {
     return writePropertiesSequentially(bulkWriteOps, collection);
   }
   return collection.rawCollection().bulkWrite(

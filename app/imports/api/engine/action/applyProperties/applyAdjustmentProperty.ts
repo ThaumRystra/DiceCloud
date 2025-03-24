@@ -20,6 +20,11 @@ export default async function applyAdjustmentProperty(
 
   // Get the operation and value and push the damage hooks to the queue
   if (!prop.amount) {
+    result.appendLog({
+      name: 'Error',
+      value: 'Attribute damage does not have an amount set',
+      silenced: prop.silent,
+    }, damageTargetIds);
     return;
   }
 
@@ -27,26 +32,30 @@ export default async function applyAdjustmentProperty(
   await recalculateCalculation(prop.amount, action, 'reduce', userInput);
   const value = +prop.amount.value;
   if (!isFinite(value)) {
-    return;
-  }
-
-  if (!damageTargetIds?.length) {
-    return;
-  }
-
-  if (damageTargetIds.length !== 1) {
-    throw 'At this step, only a single target is supported'
-  }
-  const targetId = damageTargetIds[0];
-  const statId = getVariables(targetId)?.[prop.stat]?._propId;
-  const stat = statId && getSingleProperty(targetId, statId);
-  if (!stat?.type) {
     result.appendLog({
       name: 'Error',
-      value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
+      value: 'Attribute damage does not have a finite amount set',
       silenced: prop.silent,
     }, damageTargetIds);
     return;
+  }
+
+  if (damageTargetIds.length && damageTargetIds.length !== 1) {
+    throw new Meteor.Error('1 target Expected', 'At this step, only a single target is supported');
+  }
+  const targetId = damageTargetIds[0];
+  let stat;
+  if (targetId) {
+    const statId = getVariables(targetId)?.[prop.stat]?._propId;
+    stat = statId && getSingleProperty(targetId, statId);
+    if (!stat?.type) {
+      result.appendLog({
+        name: 'Error',
+        value: `Could not apply attribute damage, creature does not have \`${prop.stat}\` set`,
+        silenced: prop.silent,
+      }, damageTargetIds);
+      return;
+    }
   }
   await applyTask(action, {
     targetIds: damageTargetIds,
@@ -55,7 +64,7 @@ export default async function applyAdjustmentProperty(
       title: getPropertyTitle(prop),
       operation: prop.operation,
       value,
-      targetProp: stat,
+      targetProp: stat ?? { _id: 'dummyStat', name: prop.stat, type: 'attribute' },
     },
   }, userInput);
   return applyDefaultAfterPropTasks(action, prop, damageTargetIds, userInput);

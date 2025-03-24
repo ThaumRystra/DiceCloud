@@ -5,7 +5,6 @@
   <draggable
     v-model="dataItems"
     :group="'item-list'"
-    :animation="200"
     :sort="false"
     ghost-class="item-to-creature-ghost"
     draggable=".no-real-items"
@@ -67,7 +66,7 @@
 <script lang="js">
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 import draggable from 'vuedraggable';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import { moveBetweenRoots } from '/imports/api/parenting/organizeMethods';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 export default {
@@ -91,44 +90,44 @@ export default {
     };
   },
   methods: {
-    dropItem({ added }) {
+    async dropItem({ added }) {
       const item = added?.element;
       if (!item?._id) return;
       const docRef = { collection: 'creatureProperties', id: item._id };
-
+      
       // Create the undo function
-      const oldOrder = item.order;
-      const oldParent = item.parent;
-      // TODO organize doc needs to be replaced with organize between roots
-      const undo = () => organizeDoc.callAsync({
-        docRef,
-        parentRef: oldParent,
-        order: (oldOrder || 0) - 0.5,
-        skipClient: true, // The client no longer has the doc subscribed, so we can't simulate
-      }, (error) => {
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason || error.message || error.toString() });
-        }
-      });
-
-      // TODO organize doc needs to be replaced with organize between roots
-      organizeDoc.callAsync({
-        docRef,
-        parentRef: { collection: 'creatures', id: this.model._id },
-        order: -0.5,
-      }, (error) => {
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.reason || error.message || error.toString() });
-        } else {
-          snackbar({
-            text: `Moved ${item.name || 'item'} to ${this.model.name || 'another character'}`,
-            callbackName: 'undo',
-            callback: undo,
+      const oldRoot = item.root;
+      const oldOrder = item.left;
+      const undo = async () => {
+        try {
+          await moveBetweenRoots.callAsync({
+            docRef,
+            newRootRef: oldRoot,
+            newPosition: (oldOrder || 1) - 0.5,
+            skipClient: true, // The client will no longer have the doc subscribed, so we can't simulate
           });
+        } catch (e) {
+          console.error(e);
+          snackbar({ text: e.reason || e.message || e.toString() });
         }
-      });
+      }
+
+      try {
+        await moveBetweenRoots.callAsync({
+          docRef,
+          newRootRef: { collection: 'creatures', id: this.model._id },
+          newPosition: 0.5,
+        });
+        snackbar({
+          text: `Moved ${item.name || 'item'} to ${this.model.name || 'another character'}`,
+          callbackName: 'undo',
+          callback: undo,
+        });
+      } catch (e) {
+        console.error(e);
+        snackbar({ text: e.reason || e.message || e.toString() });
+      }
+
     },
   }
 }

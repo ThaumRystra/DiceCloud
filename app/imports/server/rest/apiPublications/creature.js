@@ -14,7 +14,7 @@ JsonRoutes.add('get', 'api/creature/:id', function (req, res) {
     new SimpleSchema({
       creatureId: {
         type: String,
-        regEx: SimpleSchema.RegEx.Id,
+        max: 32,
       },
     }).validate({ creatureId });
   } catch (e) {

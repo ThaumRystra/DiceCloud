@@ -7,7 +7,6 @@
     ghost-class="ghost"
     draggable=".creature"
     handle=".handle"
-    :animation="200"
     @change="draggableChange"
   >
     <creature-list-tile
@@ -71,19 +70,6 @@
       draggableChange({added, moved}){
         let event = added || moved;
         if (event){
-          /*
-          // If this item is now adjacent to another, set the order accordingly
-          let order;
-          let before = this.dataCreatures[event.newIndex - 1];
-          let after = this.dataCreatures[event.newIndex + 1];
-          if (before && before._id){
-            order = before.order + 0.5;
-          } else if (after && after._id) {
-            order = after.order - 0.5;
-          } else {
-            order = -0.5;
-          }
-          */
           let doc = event.element;
           moveCreatureToFolder.call({
             creatureId: doc._id,

@@ -3,25 +3,21 @@
     class="tabletop layout column"
     style="height: 100%;"
   >
-    <tabletop-map
-      class="play-area"
-      style="
-      position: fixed;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    "
-    />
     <v-container
       fluid
     >
       <v-row
         dense
-        class="initiative-row flex-grow-0"
-        style="flex-wrap: nowrap; overflow-x: auto; padding-bottom: 50px; min-width: 200px;"
+        class="initiative-row flex-grow-0 overflow-x-auto"
+        style="flex-wrap: nowrap; padding-bottom: 64px; min-width: 200px;"
         @wheel="transformScroll($event)"
       >
+        <v-btn
+          icon
+          @click="toggleDrawer"
+        >
+          <v-icon> mdi-menu </v-icon>
+        </v-btn>
         <tabletop-creature-card
           v-for="creature in creatures"
           :key="creature._id"
@@ -71,9 +67,19 @@
           </v-btn>
         </div>
       </v-row>
+      <div
+        class="d-flex align-stretch"
+        style="max-height: calc(100vh - 364px); margin-top: -24px;"
+      >
+        <v-spacer />
+        <tabletop-log-stream
+          :tabletop-id="$route.params.id"
+          class="pl-4"
+          style="overflow: auto; max-width: 500px;"
+        />
+      </div>
     </v-container>
     <v-footer
-      inset
       class="pa-0"
       style="
         background: none; 
@@ -89,12 +95,25 @@
       <v-slide-y-reverse-transition mode="out-in">
         <selected-creature-bar
           :key="activeCreatureId"
+          ref="selectedCreatureBar"
           :creature-id="activeCreatureId"
+          :targets="targets"
           @active-action-change="activeActionId = $event"
           @remove="removeCreature(activeCreatureId)"
         />
       </v-slide-y-reverse-transition>
     </v-footer>
+    <tabletop-map
+      class="play-area"
+      style="
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -50;
+      "
+    />
   </div>
 </template>
 
@@ -102,6 +121,7 @@
 import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop';
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
+import TabletopLogStream from '/imports/client/ui/tabletop/TabletopLogStream.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -110,6 +130,8 @@ import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar
 import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { mapMutations } from 'vuex';
+import doAction from '/imports/client/ui/creature/actions/doAction';
 
 const getProperties = function (creatureId, selector = {}) {
   return CreatureProperties.find({
@@ -132,6 +154,7 @@ export default {
     TabletopCreatureCard,
     TabletopMap,
     SelectedCreatureBar,
+    TabletopLogStream,
   },
   props: {
     model: {
@@ -154,8 +177,26 @@ export default {
     activeCreatureId(id) {
       this.$root.$emit('active-tabletop-character-change', id);
     },
-    activeActionId(id) {
+    activeActionId() {
       this.targets = [];
+    },
+    targets(val) {
+      if (val.length === 1 && this.activeAction?.target === 'singleTarget') {
+        doAction({
+          propId: this.activeActionId,
+          creatureId: this.activeCreatureId,
+          targetIds: this.targets,
+          $store: this.$store,
+          elementId: 'tabletop-action-card',
+          callback: action => action?._id || this.activeActionId,
+        }).catch((e) => {
+          console.error(e);
+          snackbar({ text: e.message || e.reason || e.toString() });
+        }).finally(() => {
+          this.doActionLoading = false;
+        });
+        this.$refs.selectedCreatureBar.selectedIcon = undefined;
+      }
     },
   },
   meteor: {
@@ -165,10 +206,11 @@ export default {
     actions(){
       return getProperties(this.activeCreatureId, { type: 'action', actionType: { $ne: 'event'} });
     },
+    activeAction() {
+      return CreatureProperties.findOne(this.activeActionId);
+    },
     moreTargets() {
-      // Disable portrait targeting for now, they aren't used by the action engine yet
-      return false;
-      const activeAction = CreatureProperties.findOne(this.activeActionId);
+      const activeAction = this.activeAction;
       if (!activeAction) return;
       if (activeAction.target === 'singleTarget') {
         return this.targets.length === 0;
@@ -186,6 +228,9 @@ export default {
     },
   },
   methods: {
+    ...mapMutations([
+      'toggleDrawer',
+    ]),
     addCreature() {
       this.$store.commit('pushDialogStack', {
         component: 'select-creatures-dialog',

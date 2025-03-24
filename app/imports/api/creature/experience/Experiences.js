@@ -39,7 +39,7 @@ let ExperienceSchema = new SimpleSchema({
   },
   creatureId: {
     type: String,
-    regEx: SimpleSchema.RegEx.Id,
+    max: 32,
     index: 1,
   },
 });
@@ -76,7 +76,7 @@ const insertExperience = new ValidatedMethod({
     },
     'creatureIds.$': {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -105,7 +105,7 @@ const removeExperience = new ValidatedMethod({
   validate: new SimpleSchema({
     experienceId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -146,7 +146,7 @@ const recomputeExperiences = new ValidatedMethod({
   validate: new SimpleSchema({
     creatureId: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id,
+      max: 32,
     },
   }).validator(),
   mixins: [RateLimiterMixin],

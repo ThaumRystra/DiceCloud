@@ -1,3 +1,4 @@
+import { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask | ResetTask | CastSpellTask;
@@ -9,14 +10,8 @@ type BaseTask = {
   silent?: boolean | undefined;
 }
 
-type Prop = {
-  _id: string;
-  type: string;
-  [key: string]: any,
-}
-
 export type PropTask = BaseTask & {
-  prop: Prop;
+  prop: CreatureProperty;
   subtaskFn?: undefined;
   silent?: undefined;
 }
@@ -30,13 +25,13 @@ export type DamagePropTask = BaseTask & {
     title?: string;
     operation: 'increment' | 'set';
     value: number;
-    targetProp: Prop;
+    targetProp: CreatureProperty;
   };
 }
 
 export type ItemAsAmmoTask = BaseTask & {
   subtaskFn: 'consumeItemAsAmmo';
-  prop: Prop;
+  prop: CreatureProperty;
   silent?: undefined;
   params: {
     value: number;
@@ -57,10 +52,12 @@ export type ResetTask = BaseTask & {
 }
 
 export type CastSpellTask = BaseTask & {
-  prop?: Prop | undefined;
+  prop: CreaturePropertyTypes['spell'];
   silent?: undefined;
   subtaskFn: 'castSpell';
   params: {
-    spellId: string | undefined;
+    slotId: string | undefined;
+    ritual: boolean | undefined;
+    withoutSpellSlot: boolean | undefined;
   };
 }

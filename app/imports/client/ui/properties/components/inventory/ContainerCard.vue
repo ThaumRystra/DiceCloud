@@ -35,8 +35,8 @@
     </template>
     <v-card-text class="px-0">
       <item-list
-        :items="items"
-        :parent-ref="{id: model._id, collection: 'creatureProperties'}"
+        :item-ids="itemIds"
+        :parent="model"
       />
     </v-card-text>
   </toolbar-card>
@@ -92,7 +92,7 @@ export default {
     },
   },
   meteor: {
-    items() {
+    itemIds() {
       return CreatureProperties.find({
         'parentId': this.model._id,
         type: { $in: ['item', 'container'] },
@@ -102,7 +102,8 @@ export default {
         deactivatedByToggle: { $ne: true },
       }, {
         sort: { left: 1 },
-      });
+        fields: { _id: 1 }
+      }).map(prop => prop._id);
     },
   }
 };
