@@ -1,4 +1,3 @@
-version: '3.7'
 services:
   dicecloud-db:
     container_name: dicecloud-db
@@ -6,21 +5,49 @@ services:
     command:
       - --storageEngine=wiredTiger
     volumes:
-      - ./dicecloud/data/db:/data/db
+      - /data/dicecloud/db:/data/db
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=meteor
-      - MONGO_INITDB_ROOT_PASSWORD=meteor
-  dicecloud:
-    container_name: dicecloud
-    build:
-      context: ./
-    environment:
-    #update ROOT_URL, PORT, and MAIL_URL for your environment
-      - ROOT_URL=http://localhost:3000
-      - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017
-      - PORT=3000
-      - NODE_ENV=production
-      - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true}}
-      - MAIL_URL=smtp://EMAIL:PASSWORD@SERVER:PORT
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     ports:
-      - '3000:3000' #The internal port should match the port set in the environmental variables
+      - '${MONGO_PORT}:27017'
+    networks:
+      - dicecloud
+
+  dicecloud-app:
+    container_name: dicecloud-app
+    build:
+     context: ./
+    environment:
+      # Node Performance
+      - NODE_OPTIONS=${NODE_OPTIONS}
+      - WEBAPP_THREAD_POOL_SIZE=${WEBAPP_THREAD_POOL_SIZE}
+      
+      # Node Environment
+      - NODE_ENV=${NODE_ENV}
+      - NODE_MODULES_CACHE=${NODE_MODULES_CACHE}
+      - GZIP=${GZIP}
+      
+      # Meteor Settings
+      - METEOR_ALLOW_SUPERUSER=${METEOR_ALLOW_SUPERUSER}
+      - METEOR_DISABLE_OPTIMISTIC_CACHING=${METEOR_DISABLE_OPTIMISTIC_CACHING}
+      - METEOR_NO_RELEASE_CHECK=${METEOR_NO_RELEASE_CHECK}
+      - METEOR_DISABLE_OPLOG=${METEOR_DISABLE_OPLOG}
+      
+      # Application Settings
+      - ROOT_URL=${ROOT_URL}
+      - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@dicecloud-db
+      - PORT=${PORT}
+      - METEOR_SETTINGS=${METEOR_SETTINGS}
+      - MAIL_URL=${MAIL_URL}
+    ports:
+      - '${PORT}:${PORT}' #The internal port should match the port set in the environmental variables
+    depends_on:
+      - dicecloud-db
+    networks:
+      - dicecloud
+
+networks:
+  dicecloud:
+    name: dicecloud
+    driver: bridge
