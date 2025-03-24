@@ -22,18 +22,15 @@ services:
       # Node Performance
       - NODE_OPTIONS=${NODE_OPTIONS}
       - WEBAPP_THREAD_POOL_SIZE=${WEBAPP_THREAD_POOL_SIZE}
-      
       # Node Environment
       - NODE_ENV=${NODE_ENV}
       - NODE_MODULES_CACHE=${NODE_MODULES_CACHE}
       - GZIP=${GZIP}
-      
       # Meteor Settings
       - METEOR_ALLOW_SUPERUSER=${METEOR_ALLOW_SUPERUSER}
       - METEOR_DISABLE_OPTIMISTIC_CACHING=${METEOR_DISABLE_OPTIMISTIC_CACHING}
       - METEOR_NO_RELEASE_CHECK=${METEOR_NO_RELEASE_CHECK}
       - METEOR_DISABLE_OPLOG=${METEOR_DISABLE_OPLOG}
-      
       # Application Settings
       - ROOT_URL=${ROOT_URL}
       - MONGO_URL=mongodb://${MONGO_USER}:${MONGO_PASSWORD}@dicecloud-db
