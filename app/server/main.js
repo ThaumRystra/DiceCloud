@@ -8,6 +8,7 @@ import '/imports/server/config/SyncedCronConfig';
 import '/imports/server/config/redisCaching';
 import '/imports/server/publications/index';
 import '/imports/server/cron/deleteSoftRemovedDocuments';
+import '/imports/server/cron/archiveOldCreatures';
 import '/imports/api/parenting/organizeMethods';
 import '/imports/api/users/patreon/updatePatreonOnLogin';
 import '/imports/migrations/server/index';

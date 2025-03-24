@@ -20,7 +20,7 @@ services:
       - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017
       - PORT=3000
       - NODE_ENV=production
-      - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true}}
+      - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true},"archiveAfterDays":1}
       - MAIL_URL=smtp://EMAIL:PASSWORD@SERVER:PORT
     ports:
       - '3000:3000' #The internal port should match the port set in the environmental variables

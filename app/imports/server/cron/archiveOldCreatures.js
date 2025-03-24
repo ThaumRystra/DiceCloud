@@ -26,7 +26,7 @@ Meteor.startup(() => {
   SyncedCron.add({
     name: 'archiveOldCreatures',
     schedule: function (parser) {
-      return parser.text('every 1 hour');
+      return parser.text('every 2 minutes');
     },
     job: archiveOldCreatures,
   });
