@@ -35,6 +35,7 @@ export function getArchiveObj(creatureId) {
 }
 
 export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creatureId, callback) {
+  console.log("Archiving creature " + creatureId);
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
   ArchiveCreatureFiles.write(buffer, {
