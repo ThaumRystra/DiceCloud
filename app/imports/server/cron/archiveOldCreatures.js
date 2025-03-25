@@ -9,6 +9,7 @@ Meteor.startup(() => {
    * Archive all creatures older than the configured amount of days.
    */
   const archiveOldCreatures = function () {
+    console.log("archiver " + archiveAfterDays);
     if (typeof archiveAfterDays != 'number') {
       return;
     }
