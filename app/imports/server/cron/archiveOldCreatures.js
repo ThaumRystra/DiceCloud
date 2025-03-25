@@ -18,12 +18,7 @@ Meteor.startup(() => {
     console.log("archiving all creatures after " + expire);
     Creatures.find({ lastComputedAt: { $lt: expire }}, { _id: 1 }).forEach( creature => {
       console.log("archiving " + creature._id);
-      archiveCreature(creature._id, function (error) {
-        console.log("Archive callback")
-        if (error) {
-          console.error(JSON.stringify(error, null, 2));
-        }
-      });
+      archiveCreature(creature._id);
     });
   }
 
