@@ -48,7 +48,7 @@ You'll need to have installed:
 
 Now open a terminal in the installation folder and run the following commands:
 ```sh
-  git clone https://github.com/ThaumRystra/DiceCloud dicecloud
+  git clone https://forgejo.spacetime.technology/arbel/DiceCloud.git dicecloud
   cd dicecloud
 ```
 edit the `ROOT_URL` line in `docker-compose.yml` file to use your domain or keep it as localhost (for use on the same computer)
