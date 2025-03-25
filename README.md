@@ -33,7 +33,7 @@ changes on the fly. Let's look at a hypothetical example.
 > your armor class goes back to reflecting the fact that you have natural armor
 > from being a dragonborn. Your character sheet keeps up and you
 > ultimately get more time to play the game. Huzzah!
-
+---
 Getting started
 ---------------
 
@@ -59,3 +59,10 @@ run:
   docker ps
   # this should show two containers running for dicecloud and dicecloud-db
 ```
+---
+### notes:
+the current version of dicecloud has an issue with library editing.
+
+if you need library editing *(not the public libraries)* you can use the image tagged `old-schema` instead of `latest`
+
+plase report any issues with the container image to `@arbel_arad` on discord or `@arbel:matrix.spacetime.technology` on matrix

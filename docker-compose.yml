@@ -14,7 +14,7 @@ services:
 
   dicecloud:
     container_name: dicecloud
-    image: forgejo.spacetime.technology/arbel/dicecloud:develop
+    image: forgejo.spacetime.technology/arbel/dicecloud:latest
     environment:
       # Node Performance
       - NODE_OPTIONS=--max-old-space-size=512
