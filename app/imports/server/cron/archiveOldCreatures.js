@@ -2,14 +2,14 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import archiveCreature from '/imports/api/creature/archive/methods/archiveCreatureToFile';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import { SyncedCron } from 'meteor/littledata:synced-cron';
-const archiveAfterDays = !!Meteor.settings?.archiveAfterDays;
+const archiveAfterDays = Meteor.settings?.archiveAfterDays;
 
 Meteor.startup(() => {
   /**
    * Archive all creatures older than the configured amount of days.
    */
   const archiveOldCreatures = function () {
-    console.log("archiver " + archiveAfterDays);
+    console.log("archiver " + archiveAfterDays + " type: " + typeof archiveAfterDays);
     if (typeof archiveAfterDays != 'number') {
       return;
     }
