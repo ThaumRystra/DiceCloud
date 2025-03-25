@@ -15,8 +15,11 @@ Meteor.startup(() => {
     }
     const now = new Date();
     const expire = new Date(now.getTime() - (archiveAfterDays * 24 * 60 * 60 * 1000));
+    console.log("archiving all creatures after " + expire);
     Creatures.find({ lastComputeTime: { $lt: expire }}, { _id: 1 }).forEach( creature => {
+      console.log("archiving " + creature._id);
       archiveCreature(creature._id, function (error) {
+        console.log("Archive callback")
         if (error) {
           console.error(JSON.stringify(error, null, 2));
         }
