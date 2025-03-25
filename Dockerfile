@@ -50,7 +50,7 @@ RUN npm install && npm ci --omit=dev && \
     find . -type d -name "tests" -exec rm -rf {} + && \
     npm cache clean --force
 
-# ===== STAGE 2: Runtime otimizado =====
+# ===== STAGE 2: Optimized Runtime =====
 FROM node:${NODE_VERSION}-alpine AS runtime
 
 # Non-root user and bundle setup
