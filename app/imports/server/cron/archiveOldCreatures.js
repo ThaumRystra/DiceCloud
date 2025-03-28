@@ -1,5 +1,5 @@
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import archiveCreature from '/imports/api/creature/archive/methods/archiveCreatureToFile';
+import { archiveCreature } from '/imports/api/creature/archive/methods/archiveCreatureToFile';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import { SyncedCron } from 'meteor/littledata:synced-cron';
 const archiveAfterDays = Meteor.settings?.archiveAfterDays;
