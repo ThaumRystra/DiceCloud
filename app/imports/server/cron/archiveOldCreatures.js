@@ -9,15 +9,12 @@ Meteor.startup(() => {
    * Archive all creatures older than the configured amount of days.
    */
   const archiveOldCreatures = function () {
-    console.log("archiver " + archiveAfterDays + " type: " + typeof archiveAfterDays);
     if (typeof archiveAfterDays != 'number') {
       return;
     }
     const now = new Date();
     const expire = new Date(now.getTime() - (archiveAfterDays * 24 * 60 * 60 * 1000));
-    console.log("archiving all creatures after " + expire);
     Creatures.find({ lastComputedAt: { $lt: expire }}, { _id: 1 }).forEach( creature => {
-      console.log("archiving " + creature._id);
       archiveCreature(creature._id);
     });
   }
