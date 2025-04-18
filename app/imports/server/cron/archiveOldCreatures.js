@@ -15,7 +15,7 @@ Meteor.startup(() => {
     const now = new Date();
     const expire = new Date(now.getTime() - (archiveAfterDays * 24 * 60 * 60 * 1000));
     Creatures.find({ lastComputedAt: { $lt: expire }}, { _id: 1 }).forEach( creature => {
-      archiveCreature(creature._id);
+      archiveCreature(creature._id, true);
     });
   }
 

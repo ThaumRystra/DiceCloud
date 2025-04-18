@@ -34,7 +34,7 @@ export function getArchiveObj(creatureId) {
   return archiveCreature;
 }
 
-export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creatureId, callback) {
+export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creatureId, autoArchive, callback) {
   const archive = getArchiveObj(creatureId);
   const buffer = Buffer.from(JSON.stringify(archive, null, 2));
   ArchiveCreatureFiles.write(buffer, {
@@ -45,6 +45,7 @@ export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creat
       schemaVersion: SCHEMA_VERSION,
       creatureId: archive.creature._id,
       creatureName: archive.creature.name,
+      auto: !!autoArchive,
     },
   }, (error, fileRef) => {
     if (error) {
@@ -90,7 +91,7 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({ creatureId }) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer) {
-      archiveCreature(creatureId);
+      archiveCreature(creatureId, false);
     } else {
       removeCreatureWork(creatureId);
     }
