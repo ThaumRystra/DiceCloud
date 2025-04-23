@@ -9,6 +9,7 @@ import VERSION from '/imports/constants/VERSION';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import { rebuildCreatureNestedSets } from '/imports/api/parenting/parentingFunctions';
 import EngineActions from '/imports/api/engine/action/EngineActions';
+import { restoreSoftArchive } from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
 
 let schema = new SimpleSchema({
   creatureId: {
@@ -36,10 +37,14 @@ Meteor.publish('singleCharacter', function (creatureId) {
         public: 1,
         computeVersion: 1,
         tabletopId: 1,
+        archiveId: 1,
       }
     });
     try { assertViewPermission(permissionCreature, userId) }
     catch (e) { return [] }
+    if (permissionCreature && permissionCreature.archiveId) {
+      restoreSoftArchive(permissionCreature._id);
+    }
     loadCreature(creatureId, self);
     if (permissionCreature?.computeVersion !== VERSION && computation.firstRun) {
       try {

@@ -9,6 +9,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
+import { toSoftArchive } from '/imports/api/creature/archive/methods/softArchiveCreature';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
@@ -53,7 +54,11 @@ export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creat
       callback(error);
     } else if (!Meteor.settings.useS3) {
       // If we aren't using s3, remove the creature and call the callback
-      removeCreatureWork(creatureId);
+      if (autoArchive) {
+        toSoftArchive(creatureId, fileRef._id);
+      } else {
+        removeCreatureWork(creatureId);
+      }
       callback();
     } else {
       // Wait for s3Result event that occurs when the s3 attempt to write ends.
@@ -65,7 +70,11 @@ export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creat
         ArchiveCreatureFiles.off('s3Result', resultHandler);
         // Remove the creature if there was no error
         if (!s3Error) {
-          removeCreatureWork(creatureId);
+          if (autoArchive) {
+            toSoftArchive(creatureId, fileRef._id);
+          } else {
+            removeCreatureWork(creatureId);
+          }
         }
         // Alert the callback that we're done
         callback(s3Error);
@@ -74,6 +83,26 @@ export const archiveCreature = Meteor.wrapAsync(function archiveCreatureFn(creat
     }
   }, true);
 });
+
+export function softArchiveToArchive(creatureId) {
+  let creature = Creatures.findOne({ _id: creatureId });
+  Creatures.remove({ _id: creatureId });
+  ArchiveCreatureFiles.update(
+    { 
+      _id: creature.archiveId,
+      'meta.creatureId': creature._id,
+      'meta.auto': true,
+    },
+    {
+      $set: { 'meta.auto': false },
+    }, error => {
+      this.archiveActionLoading = false;
+      if (!error) return;
+      console.error(error);
+      snackbar({text: error.reason});
+    }
+  );
+}
 
 const archiveCreatureToFile = new ValidatedMethod({
   name: 'Creatures.methods.archiveCreatureToFile',
@@ -91,7 +120,12 @@ const archiveCreatureToFile = new ValidatedMethod({
   async run({ creatureId }) {
     assertOwnership(creatureId, this.userId);
     if (Meteor.isServer) {
-      archiveCreature(creatureId, false);
+      let creature = Creatures.findOne({ _id: creatureId }, { fields: { archiveId: 1 }});
+      if (creature.archiveId) {
+        softArchiveToArchive(creatureId);
+      } else {
+        archiveCreature(creatureId, false);
+      }
     } else {
       removeCreatureWork(creatureId);
     }

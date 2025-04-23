@@ -101,4 +101,84 @@ const restoreCreaturefromFile = new ValidatedMethod({
   },
 });
 
+export const restoreSoftArchive = Meteor.wrapAsync(async function restoreSoftArchiveFn(creatureId, callback) {
+  if (!Meteor.isServer) return;
+
+  // Verify that the creature and archive match
+  const existingCreature = Creatures.findOne(
+    { _id: creatureId }, 
+    {
+      fields: { 
+        _id: 1,
+        owner: 1,
+        archiveId: 1,
+      },
+    }
+  );
+  if (!existingCreature) throw new Meteor.Error('Doesn\'t exist',
+    'The creature you are trying to restore doesn\'t exist');
+
+  if (!existingCreature.archiveId) throw new Meteor.Error('No Linked Archive',
+    'The creature doesn\'t have a linked archive.');
+
+  const archiveFile = ArchiveCreatureFiles.findOne({ 
+    _id: existingCreature.archiveId, 
+    userId: existingCreature.owner,
+    'meta.auto': true,
+    'meta.creatureId': creatureId,
+  });
+
+  const archive = await ArchiveCreatureFiles.readJSONFile(archiveFile);
+  
+  if (SCHEMA_VERSION < archive.meta.schemaVersion) {
+    throw new Meteor.Error('Incompatible',
+      'The archive file is from a newer version. Update required to read.')
+  }
+
+  // Migrate and verify the archive meets the current schema
+  migrateArchive(archive);
+
+  // Asset that the archive is safe
+  verifyArchiveSafety(archive);
+
+  try {
+    // Add all the properties
+    if (archive.properties && archive.properties.length) {
+      CreatureProperties.batchInsert(archive.properties);
+    }
+    if (archive.experiences && archive.experiences.length) {
+      Experiences.batchInsert(archive.experiences);
+    }
+    if (archive.logs && archive.logs.length) {
+      CreatureLogs.batchInsert(archive.logs);
+    }
+
+    Creatures.update(
+      { _id: creatureId },
+      { $unset: { 
+        archiveId: true,
+      }}
+    );
+  } catch (e) {
+    // If the above fails, delete the inserted creature
+    CreatureVariables.remove({ _creatureId: creatureId });
+    CreatureProperties.remove(getFilter.descendantsOfRoot(creatureId));
+    CreatureLogs.remove({ creatureId });
+    Experiences.remove({ creatureId });
+    Creatures.update(
+      { _id: creatureId },
+      { $set: { 
+        archiveId: archiveFile._id,
+      }}
+    );
+    console.log(e);
+    throw e;
+  }
+  //Remove the archive once the restore succeeded
+  ArchiveCreatureFiles.remove({ _id: archiveFile._id });
+  // Update the user's file storage limits
+  incrementFileStorageUsed(archiveFile.userId, -archiveFile.size);
+  callback();
+});
+
 export default restoreCreaturefromFile;

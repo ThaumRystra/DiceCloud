@@ -34,6 +34,11 @@ Meteor.publish('characterList', function () {
           avatarPicture: 1,
           public: 1,
           type: 1,
+          archiveId: { $cond: {
+            if: "$archiveId",
+            then: true,
+            else: null,
+          }}
         }
       }
       ),

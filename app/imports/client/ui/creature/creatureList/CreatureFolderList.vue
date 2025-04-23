@@ -8,7 +8,7 @@
     <creature-list
       :creatures="creatures"
       :selection="selection"
-      :selected-creature="selectedCreature"
+      :selected-creature-id="selectedCreatureId"
       :dense="dense"
       @creature-selected="id => $emit('creature-selected', id)"
     />
@@ -34,7 +34,7 @@
           :creatures="folder.creatures"
           :folder-id="folder._id"
           :selection="selection"
-          :selected-creature="selectedCreature"
+          :selected-creature-id="selectedCreatureId"
           :dense="dense"
           @creature-selected="id => $emit('creature-selected', id)"
         />
@@ -62,7 +62,7 @@ export default {
       default: () => [],
     },
     selection: Boolean,
-    selectedCreature: {
+    selectedCreatureId: {
       type: String,
       default: undefined,
     },

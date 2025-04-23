@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 
 const removeArchiveCreature = new ValidatedMethod({
@@ -29,6 +30,15 @@ const removeArchiveCreature = new ValidatedMethod({
     if (!userId || userId !== this.userId) {
       throw new Meteor.Error('Permission denied',
         'You can only restore creatures you own');
+    }
+    if (file.meta.auto) {
+      Creatures.remove(
+        {
+          _id: file.meta.creatureId,
+          owner: this.userId,
+          archiveId: file._id,
+        }
+      );
     }
     //Remove the archive once the restore succeeded
     ArchiveCreatureFiles.remove({ _id: fileId });

@@ -4,16 +4,23 @@
       {{ model.meta.creatureName }}
     </v-card-title>
     <v-card-subtitle>
-      {{ model.size }}
+      {{ model.size }} {{ model.meta.auto ? "(Automatically Archived)" : ""}}
     </v-card-subtitle>
     <v-card-actions>
       <v-btn
-        v-if="characterSlots > 0"
+        v-if="characterSlots > 0 && !model.meta.auto"
         text
         :loading="restoreLoading"
         @click="restore(model._id)"
       >
         Restore
+      </v-btn>
+      <v-btn
+        v-else-if="model.meta.auto"
+        text
+        :to="model.url"
+      >
+        Open
       </v-btn>
       <v-flex />
       <v-btn
