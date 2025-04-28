@@ -15,7 +15,7 @@
       class="creature"
       :model="creature"
       :selection="selection"
-      :is-selected="selectedCreatureId === creature._id || selectedCreatureIds.has(creature)"
+      :is-selected="selectedCreatureId === creature._id || selectedCreatureIds.has(creature._id)"
       v-bind="selection ? {} : {to: creature.url}"
       :dense="dense"
       :data-id="dense ? undefined : creature._id"
