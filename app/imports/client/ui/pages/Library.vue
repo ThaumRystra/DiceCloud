@@ -34,7 +34,7 @@
               text
               to="/community-libraries"
             >
-              Browse community libraries
+              {{ $t('library.browse') }}
             </v-btn>
             <v-btn
               v-if="paidBenefits"
@@ -44,7 +44,7 @@
               :loading="loadingInsertLibraryCollection"
               @click="insertLibraryCollection"
             >
-              Add Collection
+              {{ $t('library.addCollection') }}
             </v-btn>
           </div>
           <v-btn

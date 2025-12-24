@@ -25,7 +25,7 @@
           />
           <v-card v-else-if="!doc">
             <v-card-title>
-              Help document not found for {{ title }}
+              {{ $t('documentation.notFound') }} {{ title }}
             </v-card-title>
           </v-card>
         </v-fade-transition>

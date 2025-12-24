@@ -173,5 +173,64 @@
     },
     "importCharacter": "Importar Personagem",
     "addFolder": "Criar uma pasta"
+  },
+  "docsPage": {
+    "notFound": "Documentação não encontrada"
+  },
+  "documentation": {
+    "notFound": "Documentação de ajuda não encontrada para"
+  },
+  "emailVerificationError": {
+    "title": "Erro na verificação do email"
+  },
+  "emailVerificationSuccess": {
+    "title": "Email Verificado",
+    "subtitle": "Endereço de email verificado"
+  },
+  "feedback": {
+    "discordServer": "DiceCloud Discord server",
+    "discordDescriptionServer": "Para dar feedback ou obter suporte ao usar DiceCloud, junte-se ao servidor Discord oficial",
+    "join": "Entrar"
+  },
+  "filePage": {
+    "archivedChar": "Personagens arquivados",
+    "images": "Imagens",
+    "uploadArchive": "Upload Arquivo",
+    "uploadImage": "Upload Imagem",
+    "errors": {
+      "mustBeJson": "Arquivo deve ser .json",
+      "fileTooLarge": "Arquivo muito grande",
+      "fileCouldntBeParsed": "Arquivo não pode ser analisado",
+      "fileFailedValidation": "Arquivo falhou na validação: "
+    }
+  },
+  "inviteError": {
+    "title": "Erro de convite"
+  },
+  "inviteSuccess": {
+    "title": "Convite bem-sucedido",
+    "description": "Você pode agora usar DiceCloud"
+  },
+  "launchCountdown": {
+    "title": "DiceCloud versão 2 beta lançará em",
+    "description": "dias,"
+  },
+  "library": {
+    "browse": "Pesquise nas bibliotecas da comunidade",
+    "addCollection": "Adicionar na coleção"
+  },
+  "maintenance": {
+    "title": "DiceCloud está atualmente em manutenção"
+  },
+  "notFound": {
+    "title": "Nenhuma página foi encontrada para esta endereço"
+  },
+  "notImplemented": {
+    "title": "Esta página não está disponível nesta versão do DiceCloud."
+  },
+  "patreonLevelTooLow": {
+    "currentTier": "Seu tier atual do Patreon é",
+    "description": "Você precisa ser pelo menos um tier de Adventurer (ou ser convidado por um Patron de um tier mais alto) para acessar esta beta",
+    "joinNow": "Entrar agora"
   }
 }

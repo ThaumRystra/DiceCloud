@@ -9,7 +9,7 @@
       404
     </h1>
     <h1 class="ma-4 text-h3">
-      No page was found for this address
+      {{ $t('notFound.title') }}
     </h1>
   </v-layout>
 </template>

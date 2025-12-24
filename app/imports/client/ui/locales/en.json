@@ -173,5 +173,64 @@
     },
     "importCharacter": "Import Character",
     "addFolder": "Add Folder"
+  },
+  "docsPage": {
+    "notFound": "Documentation not found"
+  },
+  "documentation": {
+    "notFound": "Help document not found for"
+  },
+  "emailVerificationError": {
+    "title": "Email Verification Error"
+  },
+  "emailVerificationSuccess": {
+    "title": "Email Verified",
+    "subtitle": "Your email address has been verified"
+  },
+  "feedback": {
+    "discordServer": "DiceCloud Discord server",
+    "discordDescriptionServer": "To give feedback or get support using DiceCloud, join the official Discord server",
+    "join": "Join"
+  },
+  "filePage": {
+    "archivedChar": "Archived Characters",
+    "images": "Image",
+    "uploadArchive": "Upload Archive",
+    "uploadImage": "Upload Image",
+    "errors": {
+      "mustBeJson": "File must be .json",
+      "fileTooLarge": "File too large",
+      "fileCouldntBeParsed": "File could not be parsed",
+      "fileFailedValidation": "File failed validation: "
+    }
+  },
+  "inviteError": {
+    "title": "Invite Error"
+  },
+  "inviteSuccess": {
+    "title": "Invite Success",
+    "description": "You can now use DiceCloud"
+  },
+  "launchCountdown": {
+    "title": "DiceCloud version 2 beta will launch in",
+    "description": "days,"
+  },
+  "library": {
+    "browse": "Browse community libraries",
+    "addCollection": "Add Collection"
+  },
+  "maintenance": {
+    "title": "DiceCloud is currently under maintenance"
+  },
+  "notFound": {
+    "title": "No page was found for this address"
+  },
+  "notImplemented": {
+    "title": "This page is not available in this version of DiceCloud."
+  },
+  "patreonLevelTooLow": {
+    "currentTier": "Your current Patreon tier is",
+    "description": "You need to be at least Adventurer tier (or be invited by a Patron of a higher tier) to access this beta",
+    "joinNow": "Join now"
   }
 }

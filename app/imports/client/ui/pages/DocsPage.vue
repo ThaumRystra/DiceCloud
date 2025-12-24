@@ -27,7 +27,7 @@
           cols="12"
           md="8"
         >
-          <h1>Documentation not found</h1>
+          <h1>{{ $t('docsPage.notFound') }}</h1>
         </v-col>
       </v-row>
       <doc-edit-form
