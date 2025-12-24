@@ -9,7 +9,7 @@
       404
     </h1>
     <h1 class="ma-4 text-h3">
-      {{ $t('notFound.title') }}
+      {{ $t('pages.notFound.title') }}
     </h1>
   </v-layout>
 </template>

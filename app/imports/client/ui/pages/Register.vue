@@ -16,7 +16,7 @@
         <v-text-field
           v-model="email"
           type="text"
-          label="Email"
+          :label="$t('pages.register.email')"
           :rules="emailRules"
           class="ma-2"
           outlined
@@ -26,7 +26,7 @@
         <v-text-field
           v-model="username"
           type="text"
-          label="Username"
+          :label="$t('pages.register.username')"
           :rules="usernameRules"
           class="ma-2"
           outlined
@@ -36,7 +36,7 @@
         <v-text-field
           v-model="password"
           type="password"
-          label="Password"
+          :label="$t('pages.register.password')"
           :rules="passwordRules"
           class="ma-2"
           outlined
@@ -46,7 +46,7 @@
         <v-text-field
           v-model="password2"
           type="password"
-          label="Password Again"
+          :label="$t('pages.register.password2')"
           :rules="password2Rules"
           class="ma-2"
           outlined
@@ -62,7 +62,7 @@
             color="accent"
             @click="submit"
           >
-            Register
+            {{ $t('pages.register.register') }}
           </v-btn>
         </v-layout>
       </v-layout>
@@ -79,7 +79,7 @@
         color="accent"
         @click="googleLogin"
       >
-        Register in with Google
+        {{ $t('pages.register.googleLogin') }}
       </v-btn>
     </v-layout>
   </div>
@@ -91,26 +91,36 @@
       return {
         valid: true,
         username: '',
-        usernameRules: [
-          v => !!v || 'Name is required',
-        ],
         email: '',
-        emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
-        ],
         password: '',
-        passwordRules: [
-          v => !!v || 'Password is required',
-        ],
         password2: '',
-        password2Rules: [
-          v => !!v || 'Password is required',
-          v => v == this.password || 'Passwords don\'t match',
-        ],
         error: '',
         googleError: '',
       }
+    },
+    computed: {
+      usernameRules() {
+        return [
+          v => !!v || this.$t('pages.register.errors.nameIsRequired'),
+        ];
+      },
+      emailRules() {
+        return [
+          v => !!v || this.$t('pages.register.errors.emailIsRequired'),
+          v => /.+@.+/.test(v) || this.$t('pages.register.errors.emailIsInvalid'),
+        ];
+      },
+      passwordRules() {
+        return [
+          v => !!v || this.$t('pages.register.errors.passwordIsRequired'),
+        ];
+      },
+      password2Rules() {
+        return [
+          v => !!v || this.$t('pages.register.errors.passwordIsRequired'),
+          v => v === this.password || this.$t('pages.register.errors.passwordsDontMatch'),
+        ];
+      },
     },
     methods: {
       submit () {

@@ -47,7 +47,7 @@
                     :color="card.subscribed ? '': 'accent'"
                     @click="ack => changeSubscribe(card, ack)"
                   >
-                    {{ card.subscribed ? 'Unsubscribe' : 'Subscribe' }}
+                    {{ card.subscribed ? $t("pages.libraryBrowser.unsubscribe") : $t("pages.libraryBrowser.subscribe") }}
                   </smart-btn>
                 </v-card-actions>
               </v-card>

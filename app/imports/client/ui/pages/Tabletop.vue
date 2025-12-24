@@ -40,8 +40,8 @@
           cols="12"
           md="8"
         >
-          <p>This tabletop was not found</p>
-          <p>Either it does not exist, or you do not have permission to view it</p>
+          <p>{{ $t("pages.tabletop.notFound") }}</p>
+          <p>{{ $t("pages.tabletop.notFoundDescription") }}</p>
         </v-col>
       </v-row>
     </v-container>

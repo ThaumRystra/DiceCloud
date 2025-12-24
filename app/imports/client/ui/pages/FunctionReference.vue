@@ -7,7 +7,7 @@
       >
         <v-card>
           <v-card-text class="markdown">
-            <h1>Functions</h1>
+            <h1>{{ $t("pages.functionReference.title") }}</h1>
             <div
               v-for="fn in functions"
               :key="fn.name"

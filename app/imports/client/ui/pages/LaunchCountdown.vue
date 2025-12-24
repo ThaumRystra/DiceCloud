@@ -6,7 +6,7 @@
     class="fill-height"
   >
     <h1>
-      {{ $t('launchCountdown.title') }}
+      {{ $t('pages.launchCountdown.title') }}
     </h1>
     <h1 style="font-size: 64px;">
       <countdown
@@ -16,7 +16,7 @@
       >
         <template slot-scope="props">
           <span v-if="props.days">
-            {{ props.days }} {{ $t('launchCountdown.days') }}
+            {{ props.days }} {{ $t('pages.launchCountdown.description') }}
           </span>{{ props.hours }}:{{ formatNumber(props.minutes) }}:{{ formatNumber(props.seconds) }}
         </template>
       </countdown>

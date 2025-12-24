@@ -15,7 +15,7 @@
             class="white--text ma-2 text-center"
             style="max-width: 1200px;"
           >
-            {{ $t('about.description') }}
+            {{ $t('pages.about.description') }}
           </p>
         </v-layout>
       </v-parallax>
@@ -23,12 +23,12 @@
     <section class="layout column align-center ma-2 mt-4">
       <div>
         <h3 class="text-h5 mb-2">
-          {{ $t('about.specialThanks') }}
+          {{ $t('pages.about.specialThanks') }}
         </h3>
         <p>
-          <b>Sam;</b> {{ $t('about.sam') }}
+          <b>Sam;</b> {{ $t('pages.about.sam') }}
         </p><p>
-          <b>The "Heroes" of Asaea</b> {{ $t('about.heroes') }}
+          <b>The "Heroes" of Asaea</b> {{ $t('pages.about.heroes') }}
         </p>
         <h3 class="text-h6">
           Paragon tier Patrons

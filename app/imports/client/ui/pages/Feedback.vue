@@ -13,10 +13,10 @@
       <v-card-title primary-title>
         <div>
           <h3 class="text-h5 mb-0">
-            {{ $t('feedback.discordServer') }}
+            {{ $t('pages.feedback.discordServer') }}
           </h3>
           <div>
-            {{ $t('feedback.discordDescriptionServer') }}
+            {{ $t('pages.feedback.discordDescriptionServer') }}
           </div>
         </div>
       </v-card-title>
@@ -27,7 +27,7 @@
           color="primary"
           href="https://discord.gg/qEvdfeB"
         >
-          {{ $t('feedback.join') }}
+          {{ $t('pages.feedback.join') }}
         </v-btn>
       </v-card-actions>
     </v-card>

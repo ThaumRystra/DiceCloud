@@ -16,10 +16,10 @@
           cols="12"
         >
           <h1 class="text-h4 mb-4">
-            {{ $t('home.title') }}
+            {{ $t('pages.home.title') }}
           </h1>
           <h4 class="subheading">
-            {{ $t('home.subtitle') }}
+            {{ $t('pages.home.subtitle') }}
           </h4>
         </v-col>
       </v-row>
@@ -35,7 +35,7 @@
           to="/register"
           class="mr-4"
         >
-          {{ $t('home.register') }}
+          {{ $t('pages.home.register') }}
         </v-btn>
         <v-btn
           color="accent"
@@ -44,7 +44,7 @@
           large
           to="/sign-in"
         >
-          {{ $t('home.signIn') }}
+          {{ $t('pages.home.signIn') }}
         </v-btn>
       </v-layout>
       <v-layout
@@ -59,7 +59,7 @@
           to="/character-list"
           class="mr-4"
         >
-          {{ $t('home.myCharacters') }}
+          {{ $t('pages.home.myCharacters') }}
         </v-btn>
       </v-layout>
     </section>
@@ -86,10 +86,10 @@
             mdi-currency-usd-off
           </v-icon>
           <h3 class="mb-2">
-            {{ $t('home.freeOpen') }}
+            {{ $t('pages.home.freeOpen') }}
           </h3>
           <p>
-            {{ $t('home.freeOpenDescription') }}
+            {{ $t('pages.home.freeOpenDescription') }}
           </p>
         </v-layout>
         <v-layout
@@ -103,10 +103,10 @@
             mdi-ballot-outline
           </v-icon>
           <h3 class="mb-2">
-            {{ $t('home.customEverything') }}
+            {{ $t('pages.home.customEverything') }}
           </h3>
           <p>
-            {{ $t('home.customEverythingDescription') }}
+            {{ $t('pages.home.customEverythingDescription') }}
           </p>
         </v-layout>
         <v-layout
@@ -120,10 +120,10 @@
             mdi-file-tree-outline
           </v-icon>
           <h3 class="mb-2">
-            {{ $t('home.advancedCharacters') }}
+            {{ $t('pages.home.advancedCharacters') }}
           </h3>
           <p>
-            {{ $t('home.advancedCharactersDescription') }}
+            {{ $t('pages.home.advancedCharactersDescription') }}
           </p>
         </v-layout>
       </v-layout>
@@ -153,7 +153,7 @@
     </section>
     <section class="text-center grey darken-3 white--text pa-5">
       <h1>
-        {{ $t('home.getInvolved') }}
+        {{ $t('pages.home.getInvolved') }}
       </h1>
       <v-layout
         wrap
@@ -197,14 +197,14 @@ export default {
     },
     // TODO: The translation doesn't work here
     highlightCards: [
-      { text: this.$t('home.highlightCards.automatedActions'), img: 'actions.webp' },
-      { text: this.$t('home.highlightCards.auditableStats'), img: 'auditable.webp' },
-      { text: this.$t('home.highlightCards.diceRolling'), img: 'automated-dice-rolls.webp' },
-      { text: this.$t('home.highlightCards.hackableChar'), img: 'build-system.webp' },
-      { text: this.$t('home.highlightCards.dragAndDrop'), img: 'inventory.webp' },
-      { text: this.$t('home.highlightCards.customLibraries'), img: 'libraries-of-content.webp' },
-      { text: this.$t('home.highlightCards.discordWebhooks'), img: 'send-to-discord.webp' },
-      { text: this.$t('home.highlightCards.printedCharacters'), img: 'printing.webp' },
+      { text: this.$t('pages.home.highlightCards.automatedActions'), img: 'actions.webp' },
+      { text: this.$t('pages.home.highlightCards.auditableStats'), img: 'auditable.webp' },
+      { text: this.$t('pages.home.highlightCards.diceRolling'), img: 'automated-dice-rolls.webp' },
+      { text: this.$t('pages.home.highlightCards.hackableChar'), img: 'build-system.webp' },
+      { text: this.$t('pages.home.highlightCards.dragAndDrop'), img: 'inventory.webp' },
+      { text: this.$t('pages.home.highlightCards.customLibraries'), img: 'libraries-of-content.webp' },
+      { text: this.$t('pages.home.highlightCards.discordWebhooks'), img: 'send-to-discord.webp' },
+      { text: this.$t('pages.home.highlightCards.printedCharacters'), img: 'printing.webp' },
     ],
   }},
   meteor: {

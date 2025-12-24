@@ -6,10 +6,10 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        {{ $t('emailVerificationSuccess.title') }}
+        {{ $t('pages.emailVerificationSuccess.title') }}
       </h2>
       <h3>
-        {{ $t('emailVerificationSuccess.subtitle') }}
+        {{ $t('pages.emailVerificationSuccess.subtitle') }}
       </h3>
     </v-layout>
   </div>

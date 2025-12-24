@@ -16,7 +16,7 @@
         <v-text-field
           v-model="name"
           type="text"
-          label="Username or email"
+          :label="$t('pages.signIn.usernameOrEmail')"
           :rules="nameRules"
           class="ma-2"
           outlined
@@ -26,7 +26,7 @@
         <v-text-field
           v-model="password"
           type="password"
-          label="Password"
+          :label="$t('pages.signIn.password')"
           :rules="passwordRules"
           class="ma-2"
           outlined
@@ -37,7 +37,7 @@
           text
           to="/reset-password"
         >
-          Reset Password
+          {{ $t('pages.signIn.resetPassword') }}
         </v-btn>
         <div
           v-if="error"
@@ -52,21 +52,21 @@
             class="ma-2"
             @click="submit"
           >
-            Sign In
+            {{ $t('pages.signIn.signIn') }}
           </v-btn>
           <v-btn
             color="accent"
             :to="{ name: 'register', query: { redirect: $route.query.redirect} }"
             class="ma-2"
           >
-            Register
+            {{ $t('pages.signIn.register') }}
           </v-btn>
         </v-layout>
         <div class="text-caption mt-4 px-4">
           <p>
-            DiceCloud Version 2 requires a new account to use.
+            {{ $t('pages.signIn.diceV2') }}
           </p><p>
-            Version 1 is still available at <a href="https://v1.dicecloud.com">v1.dicecloud.com</a>
+            {{ $t('pages.signIn.diceV1') }} <a href="https://v1.dicecloud.com">v1.dicecloud.com</a>
           </p>
         </div>
       </v-layout>
@@ -84,7 +84,7 @@
         class="ma-2"
         @click="googleLogin"
       >
-        Sign in with Google
+        {{ $t('pages.signIn.googleLogin') }}
       </v-btn>
       <div class="error--text">
         {{ patreonError }}
@@ -94,7 +94,7 @@
         class="ma-2"
         @click="patreonLogin"
       >
-        Sign in with Patreon
+        {{ $t('pages.signIn.signInPatreon') }}
       </v-btn>
     </v-layout>
   </div>
@@ -106,11 +106,11 @@ export default {
     valid: true,
     name: '',
     nameRules: [
-      v => !!v || 'Name is required',
+      v => !!v || this.$t('pages.signIn.errors.nameIsRequired'),
     ],
     password: '',
     passwordRules: [
-      v => !!v || 'Password is required',
+      v => !!v || this.$t('pages.signIn.errors.passwordIsRequired'),
     ],
     error: '',
     googleError: '',

@@ -112,125 +112,198 @@
     "thisCannotBeUndone": "Isso pode ser desfeito apenas pelo usuário que receberá a ficha.",
     "youEditPermission": "Você ainda terá permissão de edição."
   },
-  "home": {
-    "title": "Gratuito, Auditável, controle de personagens em tempo real para 5ª edição",
-    "subtitle": "Gaste menos tempo montando ficha e mais tempo jogando o jogo",
-    "register": "Cadastre-se",
-    "signIn": "Entrar",
-    "myCharacters": "Meus Personagens",
-    "freeOpen": "Gratuito, código aberto, financiado pela comunidade",
-    "freeOpenDescription": "DiceCloud é gratuito para uso, financiado via Patreon, e o código-fonte está disponível no Github sob uma licença GPL.",
-    "customEverything": "Customize tudo",
-    "customEverythingDescription": "Adicione novos pontos de habilidade, habilidades, barras de vida e status para seu personagem. A ficha inteira está sob seu controle.",
-    "advancedCharacters": "Engine de personagem avançada",
-    "advancedCharactersDescription": "Personagens são calculados em tempo real com base em seus equipamentos, habilidades e buffs.",
-    "getInvolved": "Entre na comunidade DiceCloud",
-    "highlightCards": {
-      "automatedActions": "Ações automatizadas",
-      "auditableStats": "Status auditáveis",
-      "diceRolling": "Rolagem de dados",
-      "hackableChar": "Personagens customizáveis",
-      "dragAndDrop": "Gerenciador de inventário drag and drop",
-      "customLibraries": "Bibliotecas de conteúdo personalizadas",
-      "discordWebhooks": "Webhooks do Discord",
-      "printedCharacters": "Fichas de personagem impressas"
-    }
-  },
-  "about": {
-    "description": "O DiceCloud é um projeto desenvolvido por um só desenvolvedor que começou em 2014 com o objetivo de ser uma ficha de personagem que ficasse sincronizada entre o mestre e seus jogadores, e deixasse claro de onde vinha cada valor da ficha e como era calculado.",
-    "specialThanks": "Agradecimentos Especiais",
-    "sam": "Sem seu amor, DiceCloud não esperava existir",
-    "heroes": "O grupo de jogadores que trouxeram alegria para alimentar as versões iniciais do DiceCloud."
-  },
-  "account": {
-  "fileStorageUsed": "Armazenamento usado",
-  "characterStorageUsed": "Armazenamento de personagens usado",
-  "preferences": "Preferências",
-  "theme": "Tema",
-  "swapAbilityScoresAndModifiers": "Swap pontos de habilidade e modificadores",
-  "username": "Nome de usuário",
-  "changeUsername": "Mudar nome de usuário",
-  "email": "Email",
-  "patreon": "Patreon",
-  "refreshPatreonStatus": "Atualizar status do Patreon",
-  "linkGoogleAccount": "Link Google Account",
-  "linkPatreonAccount": "Link Patreon Account",
-  "signOut": "Sair",
-  "invites": "Convites",
-  "deleteAccount": "Deletar conta"
-  },
-  "themes": {
-    "dark": "Escuro",
-    "matchDeviceTheme": "Dispositivo",
-    "light": "Claro"
-  },
-  "characterList": {
-    "alert": {
-      "exceededLimit": "Você excedeu o número máximo de slots de personagem, arquive ou delete alguns personagens.",
-      "limit": "Você atingiu o número máximo de personagens.",
-      "or": "ou",
-      "increasePatreon": "Aumente o seu tier no Patreon"
+  "pages": {
+    "home": {
+      "title": "Gratuito, Auditável, controle de personagens em tempo real para 5ª edição",
+      "subtitle": "Gaste menos tempo montando ficha e mais tempo jogando o jogo",
+      "register": "Cadastre-se",
+      "signIn": "Entrar",
+      "myCharacters": "Meus Personagens",
+      "freeOpen": "Gratuito, código aberto, financiado pela comunidade",
+      "freeOpenDescription": "DiceCloud é gratuito para uso, financiado via Patreon, e o código-fonte está disponível no Github sob uma licença GPL.",
+      "customEverything": "Customize tudo",
+      "customEverythingDescription": "Adicione novos pontos de habilidade, habilidades, barras de vida e status para seu personagem. A ficha inteira está sob seu controle.",
+      "advancedCharacters": "Engine de personagem avançada",
+      "advancedCharactersDescription": "Personagens são calculados em tempo real com base em seus equipamentos, habilidades e buffs.",
+      "getInvolved": "Entre na comunidade DiceCloud",
+      "highlightCards": {
+        "automatedActions": "Ações automatizadas",
+        "auditableStats": "Status auditáveis",
+        "diceRolling": "Rolagem de dados",
+        "hackableChar": "Personagens customizáveis",
+        "dragAndDrop": "Gerenciador de inventário drag and drop",
+        "customLibraries": "Bibliotecas de conteúdo personalizadas",
+        "discordWebhooks": "Webhooks do Discord",
+        "printedCharacters": "Fichas de personagem impressas"
+      }
     },
-    "importCharacter": "Importar Personagem",
-    "addFolder": "Criar uma pasta"
-  },
-  "docsPage": {
-    "notFound": "Documentação não encontrada"
-  },
-  "documentation": {
-    "notFound": "Documentação de ajuda não encontrada para"
-  },
-  "emailVerificationError": {
-    "title": "Erro na verificação do email"
-  },
-  "emailVerificationSuccess": {
-    "title": "Email Verificado",
-    "subtitle": "Endereço de email verificado"
-  },
-  "feedback": {
-    "discordServer": "DiceCloud Discord server",
-    "discordDescriptionServer": "Para dar feedback ou obter suporte ao usar DiceCloud, junte-se ao servidor Discord oficial",
-    "join": "Entrar"
-  },
-  "filePage": {
-    "archivedChar": "Personagens arquivados",
-    "images": "Imagens",
-    "uploadArchive": "Upload Arquivo",
-    "uploadImage": "Upload Imagem",
-    "errors": {
-      "mustBeJson": "Arquivo deve ser .json",
-      "fileTooLarge": "Arquivo muito grande",
-      "fileCouldntBeParsed": "Arquivo não pode ser analisado",
-      "fileFailedValidation": "Arquivo falhou na validação: "
+    "about": {
+      "description": "O DiceCloud é um projeto desenvolvido por um só desenvolvedor que começou em 2014 com o objetivo de ser uma ficha de personagem que ficasse sincronizada entre o mestre e seus jogadores, e deixasse claro de onde vinha cada valor da ficha e como era calculado.",
+      "specialThanks": "Agradecimentos Especiais",
+      "sam": "Sem seu amor, DiceCloud não esperava existir",
+      "heroes": "O grupo de jogadores que trouxeram alegria para alimentar as versões iniciais do DiceCloud."
+    },
+    "account": {
+      "fileStorageUsed": "Armazenamento usado",
+      "characterStorageUsed": "Armazenamento de personagens usado",
+      "preferences": "Preferências",
+      "theme": "Tema",
+      "swapAbilityScoresAndModifiers": "Swap pontos de habilidade e modificadores",
+      "username": "Nome de usuário",
+      "changeUsername": "Mudar nome de usuário",
+      "email": "Email",
+      "patreon": "Patreon",
+      "refreshPatreonStatus": "Atualizar status do Patreon",
+      "linkGoogleAccount": "Link Google Account",
+      "linkPatreonAccount": "Link Patreon Account",
+      "signOut": "Sair",
+      "invites": "Convites",
+      "deleteAccount": "Deletar conta"
+    },
+    "themes": {
+      "dark": "Escuro",
+      "matchDeviceTheme": "Dispositivo",
+      "light": "Claro"
+    },
+    "characterList": {
+      "alert": {
+        "exceededLimit": "Você excedeu o número máximo de slots de personagem, arquive ou delete alguns personagens.",
+        "limit": "Você atingiu o número máximo de personagens.",
+        "or": "ou",
+        "increasePatreon": "Aumente o seu tier no Patreon"
+      },
+      "importCharacter": "Importar Personagem",
+      "addFolder": "Criar uma pasta"
+    },
+    "docsPage": {
+      "notFound": "Documentação não encontrada"
+    },
+    "documentation": {
+      "notFound": "Documentação de ajuda não encontrada para"
+    },
+    "emailVerificationError": {
+      "title": "Erro na verificação do email"
+    },
+    "emailVerificationSuccess": {
+      "title": "Email Verificado",
+      "subtitle": "Endereço de email verificado"
+    },
+    "feedback": {
+      "discordServer": "DiceCloud Discord server",
+      "discordDescriptionServer": "Para dar feedback ou obter suporte ao usar DiceCloud, junte-se ao servidor Discord oficial",
+      "join": "Entrar"
+    },
+    "filePage": {
+      "archivedChar": "Personagens arquivados",
+      "images": "Imagens",
+      "uploadArchive": "Upload Arquivo",
+      "uploadImage": "Upload Imagem",
+      "errors": {
+        "mustBeJson": "Arquivo deve ser .json",
+        "fileTooLarge": "Arquivo muito grande",
+        "fileCouldntBeParsed": "Arquivo não pode ser analisado",
+        "fileFailedValidation": "Arquivo falhou na validação: "
+      }
+    },
+    "inviteError": {
+      "title": "Erro de convite"
+    },
+    "inviteSuccess": {
+      "title": "Convite bem-sucedido",
+      "description": "Você pode agora usar DiceCloud"
+    },
+    "launchCountdown": {
+      "title": "DiceCloud versão 2 beta lançará em",
+      "description": "dias,"
+    },
+    "library": {
+      "browse": "Pesquise nas bibliotecas da comunidade",
+      "addCollection": "Adicionar na coleção"
+    },
+    "maintenance": {
+      "title": "DiceCloud está atualmente em manutenção"
+    },
+    "notFound": {
+      "title": "Nenhuma página foi encontrada para esta endereço"
+    },
+    "notImplemented": {
+      "title": "Esta página não está disponível nesta versão do DiceCloud."
+    },
+    "patreonLevelTooLow": {
+      "currentTier": "Seu tier atual do Patreon é",
+      "description": "Você precisa ser pelo menos um tier de Adventurer (ou ser convidado por um Patron de um tier mais alto) para acessar esta beta",
+      "joinNow": "Entrar agora"
+    },
+    "register": {
+      "email": "Email",
+      "username": "Nome de usuário",
+      "password": "Senha",
+      "password2": "Senha novamente",
+      "register": "Cadastrar",
+      "googleLogin": "Cadastrar com Google",
+      "errors": {
+        "nameIsRequired": "Nome de usuário é obrigatório",
+        "emailIsRequired": "Email é obrigatório",
+        "emailIsInvalid": "Email deve ser válido",
+        "passwordIsRequired": "Senha é obrigatória",
+        "passwordsDontMatch": "As senhas não coincidem"
+      }
+    },
+    "resetPassword": {
+      "password": "Nova Senha",
+      "password2": "Senha novamente",
+      "email": "Email",
+      "resetPassword": "Redefinir senha",
+      "errors": {
+        "emailIsRequired": "E-mail é obrigatório",
+        "emailIsInvalid": "E-mail deve ser válido",
+        "passwordIsRequired": "Senha é obrigatória",
+        "passwordsDontMatch": "As senhas não coincidem"
+      },
+      "passwordResetLink": "Link de redefinição de senha enviado para "
+    },
+    "signIn": {
+      "usernameOrEmail": "Nome de usuário ou email",
+      "password": "Senha",
+      "resetPassword": "Redefinir senha",
+      "signIn": "Entrar",
+      "register": "Cadastrar",
+      "diceV2": "DiceCloud Version 2 requer uma nova conta para usar.",
+      "diceV1": "Version 1 ainda está disponível em",
+      "googleLogin": "Entrar com Google",
+      "signInPatreon": "Entrar com Patreon",
+      "errors": {
+        "nameIsRequired": "Nome de usuário é obrigatório",
+        "emailIsRequired": "Email é obrigatório",
+        "emailIsInvalid": "Email deve ser válido",
+        "passwordIsRequired": "Senha é obrigatória",
+        "passwordsDontMatch": "As senhas não coincidem"
+      }
+    },
+    "friends": {
+      "title": "Amigos"
+    },
+    "admin": {
+      "currentDatabaseVersion": "Versão atual do banco de dados:",
+      "databaseIsUpToDate": "Banco de dados está atualizado com a versão mais recente. Reinicie para habilitar a navegação.",
+      "expectedDatabaseVersion": "Versão esperada do banco de dados:",
+      "gitVersion": "Versão do Git:",
+      "backUpTheDatabase": "Faça backup do banco de dados antes de tentar qualquer migração. Uma migração falhada pode resultar em perda de dados profunda.",
+      "migrateTo": "Migrar para a versão do banco de dados"
+    },
+    "functionReference": {
+      "title": "Funções"
+    },
+    "libraryBrowser": {
+      "Unsubscribe": "Cancelar Inscrição",
+      "Subscribe": "Inscrever-se"
+    },
+    "tabletop": {
+      "notFound": "Esta mesa não foi encontrada",
+      "notFoundDescription": "Pode não existir ou você pode não ter permissão para vê-la"
+    },
+    "tabletops": {
+      "dontHaveAny": "Você não tem nenhuma mesa"
     }
-  },
-  "inviteError": {
-    "title": "Erro de convite"
-  },
-  "inviteSuccess": {
-    "title": "Convite bem-sucedido",
-    "description": "Você pode agora usar DiceCloud"
-  },
-  "launchCountdown": {
-    "title": "DiceCloud versão 2 beta lançará em",
-    "description": "dias,"
-  },
-  "library": {
-    "browse": "Pesquise nas bibliotecas da comunidade",
-    "addCollection": "Adicionar na coleção"
-  },
-  "maintenance": {
-    "title": "DiceCloud está atualmente em manutenção"
-  },
-  "notFound": {
-    "title": "Nenhuma página foi encontrada para esta endereço"
-  },
-  "notImplemented": {
-    "title": "Esta página não está disponível nesta versão do DiceCloud."
-  },
-  "patreonLevelTooLow": {
-    "currentTier": "Seu tier atual do Patreon é",
-    "description": "Você precisa ser pelo menos um tier de Adventurer (ou ser convidado por um Patron de um tier mais alto) para acessar esta beta",
-    "joinNow": "Entrar agora"
   }
 }

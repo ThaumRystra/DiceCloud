@@ -6,16 +6,16 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        {{ $t('patreonLevelTooLow.currentTier') }} {{ tier.name }}
+        {{ $t('pages.patreonLevelTooLow.currentTier') }} {{ tier.name }}
       </h2>
       <h3>
-        {{ $t('patreonLevelTooLow.description') }}
+        {{ $t('pages.patreonLevelTooLow.description') }}
       </h3>
       <v-btn
         href="https://www.patreon.com/join/dicecloud/checkout?rid=3002853"
         color="accent"
       >
-        {{ $t('patreonLevelTooLow.joinNow') }}
+        {{ $t('pages.patreonLevelTooLow.joinNow') }}
       </v-btn>
     </v-layout>
   </div>

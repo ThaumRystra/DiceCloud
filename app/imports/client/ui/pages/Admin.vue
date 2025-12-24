@@ -4,14 +4,14 @@
       <v-col cols="12">
         <v-card>
           <v-card-text>
-            <h4>Current database version: {{ versions && versions.dbVersion }}</h4>
+            <h4>{{ $t("pages.admin.currentDatabaseVersion") }} {{ versions && versions.dbVersion }}</h4>
             <h4 v-if="schemaVersion == versions.dbVersion ">
-              Database is up to date with latest version. Restart to enable navigation.
+              {{ $t("pages.admin.databaseIsUpToDate") }}
             </h4>
             <h4 v-else>
-              Expected database version: {{ schemaVersion }}
+              {{ $t("pages.admin.expectedDatabaseVersion") }} {{ schemaVersion }}
             </h4>
-            <h4>Git version: {{ versions && versions.gitVersion }}</h4>
+            <h4>{{ $t("pages.admin.gitVersion") }} {{ versions && versions.gitVersion }}</h4>
             <v-alert
               v-if="versionError"
               type="error"
@@ -29,15 +29,14 @@
               type="warning"
               outlined
             >
-              Back up the database before attempting any migration. A failed
-              migration can result in profound data loss.
+              {{ $t("pages.admin.backUpTheDatabase") }}
             </v-alert>
             <v-btn
               :disabled="!(schemaVersion > (versions && versions.dbVersion))"
               :loading="loadingMigration"
               @click="migrate"
             >
-              Migrate to database version {{ schemaVersion }}
+              {{ $t("pages.admin.migrateTo") }} {{ schemaVersion }}
             </v-btn>
             <v-alert
               v-if="migrateError"

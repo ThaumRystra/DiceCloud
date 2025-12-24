@@ -16,19 +16,19 @@
             v-if="characterSpaceLeft < 0"
             type="error"
           >
-            {{ $t('characterList.alert.exceededLimit') }}
+            {{ $t('pages.characterList.alert.exceededLimit') }}
           </v-alert>
           <v-alert
             v-else-if="characterSpaceLeft === 0"
             type="info"
           >
-            {{ $t('characterList.alert.limit') }}
+            {{ $t('pages.characterList.alert.limit') }}
             <archive-button
               small
               text
               class="mx-2"
             />
-            {{ $t('characterList.alert.or') }}
+            {{ $t('pages.characterList.alert.or') }}
             <v-btn
               href="https://www.patreon.com/join/dicecloud/"
               class="mx-2"
@@ -36,7 +36,7 @@
               small
               text
             >
-              {{ $t('characterList.alert.increasePatreon') }}
+              {{ $t('pages.characterList.alert.increasePatreon') }}
               <v-icon right>
                 mdi-patreon
               </v-icon>
@@ -55,14 +55,14 @@
               data-id="import-character-button"
               @click="importCharacter"
             >
-              {{ $t('characterList.importCharacter') }}
+              {{ $t('pages.characterList.importCharacter') }}
             </v-btn>
             <v-btn
               text
               :loading="loadingInsertFolder"
               @click="insertFolder"
             >
-              {{ $t('characterList.addFolder') }}
+              {{ $t('pages.characterList.addFolder') }}
             </v-btn>
           </div>
           <v-btn

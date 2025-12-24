@@ -4,7 +4,7 @@
       :value="true"
       type="info"
     >
-      {{ $t('notImplemented.title') }}
+      {{ $t('pages.notImplemented.title') }}
     </v-alert>
   </div>
 </template>

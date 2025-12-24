@@ -6,10 +6,10 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        {{ $t('inviteSuccess.title') }}
+        {{ $t('pages.inviteSuccess.title') }}
       </h2>
       <h3>
-        {{ $t('inviteSuccess.description') }}
+        {{ $t('pages.inviteSuccess.description') }}
       </h3>
     </v-layout>
   </div>

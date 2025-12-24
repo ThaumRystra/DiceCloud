@@ -9,7 +9,7 @@
       v-if="maintenanceMode"
       class="ma-4 text-h3"
     >
-      {{ $t('maintenance.title') }}
+      {{ $t('pages.maintenance.title') }}
     </h1>
     <template v-else>
       <h1
