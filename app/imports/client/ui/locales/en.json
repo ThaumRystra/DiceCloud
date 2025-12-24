@@ -288,5 +288,73 @@
     "singleLibrary": {
       "title": "Library"
     }
+  },
+  "layouts": {
+    "sidebar": {
+      "signIn": "Sign In",
+      "accountSettings": "Account Settings",
+      "links": {
+        "home": "Home",
+        "characters": "Characters",
+        "library": "Library",
+        "tabletops": "Tabletops",
+        "friends": "Friends",
+        "files": "Files",
+        "documentation": "Documentation",
+        "feedback": "Feedback",
+        "about": "About",
+        "patreon": "Patreon",
+        "github": "Github"
+      }
+    }
+  },
+  "dialogStack": {
+    "deleteConfirmation": {
+      "delete": "Delete",
+      "thisCantBeUndone": "This can't be undone",
+      "typeToDelete": "Type",
+      "toPermanentlyDelete": "to permanently delete.",
+      "deleteForever": "Delete forever",
+      "cancel": "Cancel"
+    },
+    "helpDialog": {
+      "title": "Help:",
+      "helpDocumentNotFound": "Help document not found for",
+      "close": "Close"
+    }
+  },
+  "components": {
+    "iconPicker": {
+      "searchIcons": "Search icons",
+      "clear": "clear"
+    },
+    "treeSearch": {
+      "search": "Search",
+      "type": "Type",
+      "field": "Field",
+      "text": "Text",
+      "clear": "Clear",
+      "find": "Find"
+    },
+    "resetSelector": {
+      "reset": "Reset",
+      "shortRest": "Short rest",
+      "longRest": "Long rest"
+    },
+    "colorPicker": {
+      "clear": "Clear",
+      "done": "Done"
+    },
+    "propertyToolbar": {
+      "help": "Help",
+      "duplicate": "Duplicate",
+      "copyTo": "Copy To",
+      "createReference": "Create Reference",
+      "move": "Move",
+      "copyToLibrary": "Copy to library",
+      "delete": "Delete",
+      "done": "Done",
+      "edit": "Edit"
+    }
   }
 }

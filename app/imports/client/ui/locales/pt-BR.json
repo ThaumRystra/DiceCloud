@@ -305,5 +305,58 @@
     "tabletops": {
       "dontHaveAny": "Você não tem nenhuma mesa"
     }
+  },
+  "layouts": {
+    "sidebar": {
+      "signIn": "Logar",
+      "accountSettings": "Configurações da Conta",
+      "links": {
+        "home": "Início",
+        "characters": "Personagens",
+        "library": "Biblioteca",
+        "tabletops": "Mesas",
+        "friends": "Amigos",
+        "files": "Arquivos",
+        "documentation": "Documentação",
+        "feedback": "Feedback",
+        "about": "Sobre",
+        "patreon": "Patreon",
+        "github": "Github"
+      }
+    }
+  },
+  "components": {
+    "iconPicker": {
+      "searchIcons": "Buscar ícones",
+      "clear": "Limpar"
+    },
+    "treeSearch": {
+      "search": "Buscar",
+      "type": "Tipo",
+      "field": "Campo",
+      "text": "Texto",
+      "clear": "Limpar",
+      "find": "Buscar"
+    },
+    "resetSelector": {
+      "reset": "Redefinir",
+      "shortRest": "Descanso curto",
+      "longRest": "Descanso longo"
+    },
+    "colorPicker": {
+      "clear": "Limpar",
+      "done": "Concluído"
+    },
+    "propertyToolbar": {
+      "help": "Ajuda",
+      "duplicate": "Duplicar",
+      "copyTo": "Copiar Para",
+      "createReference": "Criar Referência",
+      "move": "Mover",
+      "copyToLibrary": "Copiar para biblioteca",
+      "delete": "Excluir",
+      "done": "Concluído",
+      "edit": "Editar"
+    }
   }
 }

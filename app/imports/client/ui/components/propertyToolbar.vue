@@ -55,7 +55,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Help
+                  {{ $t('components.propertyToolbar.help') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -69,7 +69,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Duplicate
+                  {{ $t('components.propertyToolbar.duplicate') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -83,7 +83,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Copy To
+                  {{ $t('components.propertyToolbar.copyTo') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -97,7 +97,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Create Reference
+                  {{ $t('components.propertyToolbar.createReference') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -111,7 +111,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Move
+                  {{ $t('components.propertyToolbar.move') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -125,7 +125,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Copy to library
+                  {{ $t('components.propertyToolbar.copyToLibrary') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -139,7 +139,7 @@
             >
               <v-list-item-content>
                 <v-list-item-title>
-                  Delete
+                  {{ $t('components.propertyToolbar.delete') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -159,8 +159,9 @@
       outlined
       @click="$emit('toggle-editing')"
     >
-      <span style="width: 44px;">
-        {{ editing ? 'Done' : 'Edit' }}
+      <!-- Changed to fix-content because in PT the text is too long -->
+      <span style="width: fit-content;">
+        {{ editing ? $t('components.propertyToolbar.done') : $t('components.propertyToolbar.edit') }}
       </span>
       <v-slide-y-transition
         hide-on-leave

@@ -41,7 +41,7 @@
         <div class="layout row align-center">
           <text-field
             ref="iconSearchField"
-            label="Search icons"
+            :label="$t('components.iconPicker.searchIcons')"
             append-icon="mdi-magnify"
             clearable
             hide-details
@@ -53,7 +53,7 @@
             text
             @click="select()"
           >
-            clear
+            {{ $t('components.iconPicker.clear') }}
           </v-btn>
         </div>
         <v-layout
