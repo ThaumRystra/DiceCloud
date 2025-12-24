@@ -1,0 +1,177 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "loading": "Carregando...",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "search": "Buscar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "done": "Concluído",
+    "yes": "Sim",
+    "no": "Não",
+    "ok": "OK",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso"
+  },
+  "nav": {
+    "characters": "Personagens",
+    "library": "Biblioteca",
+    "tabletop": "Mesa",
+    "settings": "Configurações",
+    "home": "Início",
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "account": "Conta"
+  },
+  "character": {
+    "create": "Criar Personagem",
+    "newCharacter": "Novo Personagem",
+    "name": "Nome do Personagem",
+    "level": "Nível",
+    "class": "Classe",
+    "race": "Raça",
+    "background": "Antecedente",
+    "alignment": "Alinhamento",
+    "experiencePoints": "Pontos de Experiência",
+    "hitPoints": "Pontos de Vida",
+    "armorClass": "Classe de Armadura",
+    "speed": "Deslocamento",
+    "initiative": "Iniciativa",
+    "proficiencyBonus": "Bônus de Proficiência",
+    "stats": "Status",
+    "actions": "Ações",
+    "spells": "Magias",
+    "inventory": "Inventário",
+    "features": "Habilidades",
+    "journal": "Diário",
+    "build": "Ficha"
+  },
+  "abilities": {
+    "strength": "Força",
+    "dexterity": "Destreza",
+    "constitution": "Constituição",
+    "intelligence": "Inteligência",
+    "wisdom": "Sabedoria",
+    "charisma": "Carisma"
+  },
+  "tabletop": {
+    "addCharacter": "Adicionar Personagem",
+    "addCreature": "Adicionar Criatura",
+    "gameMasters": "Mestres",
+    "players": "Jogadores",
+    "spectators": "Espectadores",
+    "owner": "Dono",
+    "initiative": "Iniciativa",
+    "round": "Rodada"
+  },
+  "actions": {
+    "attack": "Atacar",
+    "cast": "Conjurar",
+    "use": "Usar",
+    "roll": "Rolar",
+    "damage": "Dano",
+    "heal": "Curar",
+    "rest": "Descansar",
+    "shortRest": "Descanso Curto",
+    "longRest": "Descanso Longo"
+  },
+  "errors": {
+    "notFound": "Não encontrado",
+    "unauthorized": "Você não tem permissão para realizar esta ação",
+    "invalidInput": "Entrada inválida",
+    "serverError": "Erro no servidor. Tente novamente mais tarde."
+  },
+  "share": {
+    "title": "Compartilhamento",
+    "whoCanView": "Quem pode ver",
+    "onlyPeopleIShareWith": "Apenas as pessoas que eu compartilho",
+    "anyoneWithLink": "Qualquer um com link",
+    "whoCanCopy": "Quem pode copiar",
+    "onlyPeopleWithEditPermission": "Apenas as pessoas com permissão de edição",
+    "anyoneWithReadPermission": "Qualquer um com permissão de leitura",
+    "textFieldPlaceholder": "Usuário ou email",
+    "shareButton": "Compartilhar",
+    "permission": {
+      "reader": "Apenas leitura",
+      "writer": "Pode editar"
+    },
+    "transferOwnership": "Transferir Ficha",
+    "remove": "Remover",
+    "confirm": "Confirmar"
+  },
+  "transferOwnershipDialog": {
+    "title": "Transferir Ficha",
+    "confirm": "Transferir para",
+    "areYouSure": "Você tem certeza que deseja transferir a ficha deste personagem para ",
+    "thisCannotBeUndone": "Isso pode ser desfeito apenas pelo usuário que receberá a ficha.",
+    "youEditPermission": "Você ainda terá permissão de edição."
+  },
+  "home": {
+    "title": "Gratuito, Auditável, controle de personagens em tempo real para 5ª edição",
+    "subtitle": "Gaste menos tempo montando ficha e mais tempo jogando o jogo",
+    "register": "Cadastre-se",
+    "signIn": "Entrar",
+    "myCharacters": "Meus Personagens",
+    "freeOpen": "Gratuito, código aberto, financiado pela comunidade",
+    "freeOpenDescription": "DiceCloud é gratuito para uso, financiado via Patreon, e o código-fonte está disponível no Github sob uma licença GPL.",
+    "customEverything": "Customize tudo",
+    "customEverythingDescription": "Adicione novos pontos de habilidade, habilidades, barras de vida e status para seu personagem. A ficha inteira está sob seu controle.",
+    "advancedCharacters": "Engine de personagem avançada",
+    "advancedCharactersDescription": "Personagens são calculados em tempo real com base em seus equipamentos, habilidades e buffs.",
+    "getInvolved": "Entre na comunidade DiceCloud",
+    "highlightCards": {
+      "automatedActions": "Ações automatizadas",
+      "auditableStats": "Status auditáveis",
+      "diceRolling": "Rolagem de dados",
+      "hackableChar": "Personagens customizáveis",
+      "dragAndDrop": "Gerenciador de inventário drag and drop",
+      "customLibraries": "Bibliotecas de conteúdo personalizadas",
+      "discordWebhooks": "Webhooks do Discord",
+      "printedCharacters": "Fichas de personagem impressas"
+    }
+  },
+  "about": {
+    "description": "O DiceCloud é um projeto desenvolvido por um só desenvolvedor que começou em 2014 com o objetivo de ser uma ficha de personagem que ficasse sincronizada entre o mestre e seus jogadores, e deixasse claro de onde vinha cada valor da ficha e como era calculado.",
+    "specialThanks": "Agradecimentos Especiais",
+    "sam": "Sem seu amor, DiceCloud não esperava existir",
+    "heroes": "O grupo de jogadores que trouxeram alegria para alimentar as versões iniciais do DiceCloud."
+  },
+  "account": {
+  "fileStorageUsed": "Armazenamento usado",
+  "characterStorageUsed": "Armazenamento de personagens usado",
+  "preferences": "Preferências",
+  "theme": "Tema",
+  "swapAbilityScoresAndModifiers": "Swap pontos de habilidade e modificadores",
+  "username": "Nome de usuário",
+  "changeUsername": "Mudar nome de usuário",
+  "email": "Email",
+  "patreon": "Patreon",
+  "refreshPatreonStatus": "Atualizar status do Patreon",
+  "linkGoogleAccount": "Link Google Account",
+  "linkPatreonAccount": "Link Patreon Account",
+  "signOut": "Sair",
+  "invites": "Convites",
+  "deleteAccount": "Deletar conta"
+  },
+  "themes": {
+    "dark": "Escuro",
+    "matchDeviceTheme": "Dispositivo",
+    "light": "Claro"
+  },
+  "characterList": {
+    "alert": {
+      "exceededLimit": "Você excedeu o número máximo de slots de personagem, arquive ou delete alguns personagens.",
+      "limit": "Você atingiu o número máximo de personagens.",
+      "or": "ou",
+      "increasePatreon": "Aumente o seu tier no Patreon"
+    },
+    "importCharacter": "Importar Personagem",
+    "addFolder": "Criar uma pasta"
+  }
+}

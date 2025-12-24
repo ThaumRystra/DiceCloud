@@ -8,6 +8,7 @@ import router from '/imports/client/ui/router';
 import '/imports/client/ui/components/global/globalIndex';
 import '/imports/client/ui/markdownCofig';
 import vuetify from '/imports/client/ui/vuetify';
+import i18n from '/imports/client/ui/i18n';
 
 Vue.use(VueMeteorTracker);
 Vue.config.meteor.freeze = true;
@@ -24,6 +25,7 @@ Meteor.startup(() => {
     router,
     store,
     vuetify,
+    i18n,
     ...AppLayout,
   }).$mount('#app');
 });

@@ -1,24 +1,24 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Sharing
+      {{ $t('share.title') }}
     </v-toolbar-title>
     <div v-if="model">
       <smart-select
-        label="Who can view"
+        :label="$t('share.whoCanView')"
         :items="[
-          {text: 'Only people I share with', value: 'false'},
-          {text: 'Anyone with link', value: 'true'}
+          {text: $t('share.onlyPeopleIShareWith'), value: 'false'},
+          {text: $t('share.anyoneWithLink'), value: 'true'}
         ]"
         :value="!!model.public + ''"
         @change="(value, ack) => setSheetPublic({value, ack})"
       />
       <smart-select
         v-if="docRef.collection === 'libraries'"
-        label="Who can copy from this library"
+        :label="$t('share.whoCanCopy')"
         :items="[
-          {text: 'Only people with edit permission', value: 'false'},
-          {text: 'Anyone with read permission', value: 'true'}
+          {text: $t('share.onlyPeopleWithEditPermission'), value: 'false'},
+          {text: $t('share.anyoneWithReadPermission'), value: 'true'}
         ]"
         :value="!!model.readersCanCopy + ''"
         @change="(value, ack) => setReadersCanCopy({value, ack})"
@@ -34,7 +34,7 @@
       />
       <div class="layout">
         <text-field
-          label="Username or email"
+          :label="$t('share.textFieldPlaceholder')"
           :value="userSearched"
           :debounce-time="300"
           @change="(value, ack) => getUser({value, ack})"
@@ -44,7 +44,7 @@
           :disabled="userFoundState !== 'found'"
           @click="updateSharing(userId, 'reader')"
         >
-          Share
+          {{ $t('share.shareButton') }}
         </v-btn>
       </div>
       <v-list
@@ -60,7 +60,7 @@
               {{ user.username || user._id }}
             </v-list-item-title>
             <v-list-item-subtitle>
-              {{ user.permission === 'writer' ? 'Can edit' : 'Can view' }}
+              {{ user.permission === 'writer' ? $t('share.permission.writer') : $t('share.permission.reader') }}
             </v-list-item-subtitle>
           </v-list-item-content>
           <v-list-item-action>
@@ -85,7 +85,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-pencil</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Can edit</v-list-item-title>
+                  <v-list-item-title>{{ $t('share.permission.writer') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item
                   v-if="user.permission === 'writer'"
@@ -94,7 +94,7 @@
                   <v-list-item-action>
                     <v-icon>mdi-eye</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>View only</v-list-item-title>
+                  <v-list-item-title>{{ $t('share.permission.reader') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item
                   v-if="user.permission === 'writer'"
@@ -103,13 +103,13 @@
                   <v-list-item-action>
                     <v-icon>mdi-signature</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Transfer Ownership</v-list-item-title>
+                  <v-list-item-title>{{ $t('share.transferOwnership') }}</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="updateSharing(user._id, 'none')">
                   <v-list-item-action>
                     <v-icon>mdi-delete</v-icon>
                   </v-list-item-action>
-                  <v-list-item-title>Remove</v-list-item-title>
+                  <v-list-item-title>{{ $t('share.remove') }}</v-list-item-title>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -129,7 +129,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Done
+      {{ $t('share.confirm') }}
     </v-btn>
   </dialog-base>
 </template>

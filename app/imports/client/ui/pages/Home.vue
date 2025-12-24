@@ -16,10 +16,10 @@
           cols="12"
         >
           <h1 class="text-h4 mb-4">
-            Free, Auditable, real-time character tracking for 5th edition
+            {{ $t('home.title') }}
           </h1>
           <h4 class="subheading">
-            Spend less time shuffling paper, and more time playing the game
+            {{ $t('home.subtitle') }}
           </h4>
         </v-col>
       </v-row>
@@ -35,7 +35,7 @@
           to="/register"
           class="mr-4"
         >
-          Register
+          {{ $t('home.register') }}
         </v-btn>
         <v-btn
           color="accent"
@@ -44,7 +44,7 @@
           large
           to="/sign-in"
         >
-          Sign In
+          {{ $t('home.signIn') }}
         </v-btn>
       </v-layout>
       <v-layout
@@ -59,7 +59,7 @@
           to="/character-list"
           class="mr-4"
         >
-          My Characters
+          {{ $t('home.myCharacters') }}
         </v-btn>
       </v-layout>
     </section>
@@ -86,11 +86,10 @@
             mdi-currency-usd-off
           </v-icon>
           <h3 class="mb-2">
-            Free, open source, community funded
+            {{ $t('home.freeOpen') }}
           </h3>
           <p>
-            DiceCloud is free to use, funded via Patreon,
-            and the source code is available on Github under a GPL license.
+            {{ $t('home.freeOpenDescription') }}
           </p>
         </v-layout>
         <v-layout
@@ -104,11 +103,10 @@
             mdi-ballot-outline
           </v-icon>
           <h3 class="mb-2">
-            Custom everything
+            {{ $t('home.customEverything') }}
           </h3>
           <p>
-            Add new ability scores, skills, health-bars, and stats to your character.
-            The entire sheet is under your control.
+            {{ $t('home.customEverythingDescription') }}
           </p>
         </v-layout>
         <v-layout
@@ -122,11 +120,10 @@
             mdi-file-tree-outline
           </v-icon>
           <h3 class="mb-2">
-            Advanced Character Engine
+            {{ $t('home.advancedCharacters') }}
           </h3>
           <p>
-            Characters are computed in real-time based on their equipment,
-            features, and buffs.
+            {{ $t('home.advancedCharactersDescription') }}
           </p>
         </v-layout>
       </v-layout>
@@ -156,7 +153,7 @@
     </section>
     <section class="text-center grey darken-3 white--text pa-5">
       <h1>
-        Get involved in the DiceCloud community
+        {{ $t('home.getInvolved') }}
       </h1>
       <v-layout
         wrap
@@ -198,15 +195,16 @@ export default {
       lg: 3,
       xl: 2,
     },
+    // TODO: The translation doesn't work here
     highlightCards: [
-      { text: 'Automated actions', img: 'actions.webp' },
-      { text: 'Auditable stats', img: 'auditable.webp' },
-      { text: 'Dice rolling', img: 'automated-dice-rolls.webp' },
-      { text: 'Hackable character builder', img: 'build-system.webp' },
-      { text: 'Drag and drop inventory manager', img: 'inventory.webp' },
-      { text: 'Custom libraries of content', img: 'libraries-of-content.webp' },
-      { text: 'Discord webhooks', img: 'send-to-discord.webp' },
-      { text: 'Printed character sheets', img: 'printing.webp' },
+      { text: this.$t('home.highlightCards.automatedActions'), img: 'actions.webp' },
+      { text: this.$t('home.highlightCards.auditableStats'), img: 'auditable.webp' },
+      { text: this.$t('home.highlightCards.diceRolling'), img: 'automated-dice-rolls.webp' },
+      { text: this.$t('home.highlightCards.hackableChar'), img: 'build-system.webp' },
+      { text: this.$t('home.highlightCards.dragAndDrop'), img: 'inventory.webp' },
+      { text: this.$t('home.highlightCards.customLibraries'), img: 'libraries-of-content.webp' },
+      { text: this.$t('home.highlightCards.discordWebhooks'), img: 'send-to-discord.webp' },
+      { text: this.$t('home.highlightCards.printedCharacters'), img: 'printing.webp' },
     ],
   }},
   meteor: {

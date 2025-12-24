@@ -9,11 +9,11 @@
     >
       <v-list>
         <v-subheader>
-          File storage used
+          {{ $t('account.fileStorageUsed') }}
         </v-subheader>
         <file-storage-stats />
         <v-subheader>
-          Character storage used
+          {{ $t('account.characterStorageUsed') }}
         </v-subheader>
         <v-list-item>
           <v-list-item-title>
@@ -21,23 +21,23 @@
           </v-list-item-title>
         </v-list-item>
         <v-subheader class="mb-4">
-          Preferences
+          {{ $t('account.preferences') }}
         </v-subheader>
         <v-list-item>
           <smart-toggle
             label="Theme"
             :value="darkMode === true ? 'true' : darkMode === false ? 'false' : darkMode === null ? 'unset': undefined"
             :options="[
-              {name: 'Dark', value: 'true', icon: 'mdi-brightness-5'},
-              {name: 'Match device theme', value: 'unset'},
-              {name: 'Light', value: 'false', icon: 'mdi-brightness-7'},
+              {name: $t('themes.dark'), value: 'true', icon: 'mdi-brightness-5'},
+              {name: $t('themes.matchDeviceTheme'), value: 'unset'},
+              {name: $t('themes.light'), value: 'false', icon: 'mdi-brightness-7'},
             ]"
             @change="setDarkMode"
           />
         </v-list-item>
         <v-list-item>
           <smart-switch
-            label="Swap ability scores and modifiers"
+            :label="$t('account.swapAbilityScoresAndModifiers')"
             :value="
               user &&
                 user.preferences &&
@@ -48,7 +48,7 @@
         </v-list-item>
 
         <v-subheader>
-          Username
+          {{ $t('account.username') }}
         </v-subheader>
         <v-list-item data-id="username">
           <v-list-item-action>
@@ -62,7 +62,7 @@
                   <v-icon>mdi-pencil</v-icon>
                 </v-btn>
               </template>
-              <span>Change Username</span>
+              <span>{{ $t('account.changeUsername') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
@@ -71,7 +71,7 @@
         </v-list-item>
 
         <v-subheader>
-          Email
+          {{ $t('account.email') }}
         </v-subheader>
         <v-list-item
           v-for="email in emails"
@@ -147,7 +147,7 @@
                   <v-icon>mdi-refresh</v-icon>
                 </v-btn>
               </template>
-              <span>Refresh Patreon status</span>
+              <span>{{ $t('account.refreshPatreonStatus') }}</span>
             </v-tooltip>
           </v-list-item-action>
           <v-list-item-title>
@@ -159,7 +159,7 @@
             color="primary"
             @click="linkWithGoogle"
           >
-            Link Google Account
+            {{ $t('account.linkGoogleAccount') }}
           </v-btn>
         </v-list-item>
         <v-list-item v-if="!user.services.patreon">
@@ -167,7 +167,7 @@
             color="primary"
             @click="linkWithPatreon"
           >
-            Link Patreon Account
+            {{ $t('account.linkPatreonAccount') }}
           </v-btn>
         </v-list-item>
       </v-list>
@@ -178,14 +178,14 @@
           color="accent"
           @click="signOut"
         >
-          Sign Out
+          {{ $t('account.signOut') }}
         </v-btn>
       </v-layout>
       <template v-if="invites.length">
         <v-divider class="mt-3 mb-3" />
         <v-subheader>
           <h1>
-            Invites
+            {{ $t('account.invites') }}
           </h1>
         </v-subheader>
         <v-list>
@@ -221,7 +221,7 @@
           data-id="delete-account-btn"
           @click="deleteAccount"
         >
-          Delete Account
+          {{ $t('account.deleteAccount') }}
         </v-btn>
       </v-layout>
     </v-card>

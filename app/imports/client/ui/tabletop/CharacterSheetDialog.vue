@@ -25,31 +25,31 @@
       )"
     >
       <v-btn>
-        <span>Stats</span>
+        <span>{{ $t('character.stats') }}</span>
         <v-icon>mdi-chart-box</v-icon>
       </v-btn>
       <v-btn>
-        <span>Actions</span>
+        <span>{{ $t('character.actions') }}</span>
         <v-icon>mdi-lightning-bolt</v-icon>
       </v-btn>
       <v-btn v-if="!creature.settings.hideSpellsTab">
-        <span>Spells</span>
+        <span>{{ $t('character.spells') }}</span>
         <v-icon>mdi-fire</v-icon>
       </v-btn>
       <v-btn>
-        <span>Inventory</span>
+        <span>{{ $t('character.inventory') }}</span>
         <v-icon>mdi-cube</v-icon>
       </v-btn>
       <v-btn>
-        <span>Features</span>
+        <span>{{ $t('character.features') }}</span>
         <v-icon>mdi-text</v-icon>
       </v-btn>
       <v-btn>
-        <span>Journal</span>
+        <span>{{ $t('character.journal') }}</span>
         <v-icon>mdi-book-open-variant</v-icon>
       </v-btn>
       <v-btn>
-        <span>Build</span>
+        <span>{{ $t('character.build') }}</span>
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
     </v-bottom-navigation>

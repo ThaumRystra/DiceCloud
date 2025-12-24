@@ -1,0 +1,177 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "loading": "Loading...",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning"
+  },
+  "nav": {
+    "characters": "Characters",
+    "library": "Library",
+    "tabletop": "Tabletop",
+    "settings": "Settings",
+    "home": "Home",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "account": "Account"
+  },
+  "character": {
+    "create": "Create Character",
+    "newCharacter": "New Character",
+    "name": "Character Name",
+    "level": "Level",
+    "class": "Class",
+    "race": "Race",
+    "background": "Background",
+    "alignment": "Alignment",
+    "experiencePoints": "Experience Points",
+    "hitPoints": "Hit Points",
+    "armorClass": "Armor Class",
+    "speed": "Speed",
+    "initiative": "Initiative",
+    "proficiencyBonus": "Proficiency Bonus",
+    "stats": "Stats",
+    "actions": "Actions",
+    "spells": "Spells",
+    "inventory": "Inventory",
+    "features": "Features",
+    "journal": "Journal",
+    "build": "Build"
+  },
+  "abilities": {
+    "strength": "Strength",
+    "dexterity": "Dexterity",
+    "constitution": "Constitution",
+    "intelligence": "Intelligence",
+    "wisdom": "Wisdom",
+    "charisma": "Charisma"
+  },
+  "tabletop": {
+    "addCharacter": "Add Character",
+    "addCreature": "Add Creature",
+    "gameMasters": "Game Masters",
+    "players": "Players",
+    "spectators": "Spectators",
+    "owner": "Owner",
+    "initiative": "Initiative",
+    "round": "Round"
+  },
+  "actions": {
+    "attack": "Attack",
+    "cast": "Cast",
+    "use": "Use",
+    "roll": "Roll",
+    "damage": "Damage",
+    "heal": "Heal",
+    "rest": "Rest",
+    "shortRest": "Short Rest",
+    "longRest": "Long Rest"
+  },
+  "errors": {
+    "notFound": "Not found",
+    "unauthorized": "You are not authorized to perform this action",
+    "invalidInput": "Invalid input",
+    "serverError": "Server error. Please try again later."
+  },
+  "share": {
+    "title": "Sharing",
+    "whoCanView": "Who can view",
+    "onlyPeopleIShareWith": "Only people I share with",
+    "anyoneWithLink": "Anyone with link",
+    "whoCanCopy": "Who can copy",
+    "onlyPeopleWithEditPermission": "Only people with edit permission",
+    "anyoneWithReadPermission": "Anyone with read permission",
+    "textFieldPlaceholder": "Username or email",
+    "shareButton": "Share",
+    "permission": {
+      "reader": "View only",
+      "writer": "Can edit"
+    },
+    "transferOwnership": "Transfer Ownership",
+    "remove": "Remove",
+    "confirm": "Done"
+  },
+  "transferOwnershipDialog": {
+    "title": "Transfer Ownership",
+    "confirm": "Transfer to",
+    "areYouSure": "Are you sure you want to transfer ownership of this character to ",
+    "thisCannotBeUndone": "This can only be undone by the user you are transferring ownership to.",
+    "youEditPermission": "You will still have edit permission."
+  }, 
+  "home": {
+    "title": "Free, Auditable, real-time character tracking for 5th edition",
+    "subtitle": "Spend less time shuffling paper, and more time playing the game",
+    "register": "Register",
+    "signIn": "Sign In",
+    "myCharacters": "My Characters",
+    "freeOpen": "Free, open source, community funded",
+    "freeOpenDescription": "DiceCloud is free to use, funded via Patreon, and the source code is available on Github under a GPL license.",
+    "customEverything": "Custom everything",
+    "customEverythingDescription": "Add new ability scores, skills, health-bars, and stats to your character. The entire sheet is under your control.",
+    "advancedCharacters": "Advanced Character Engine",
+    "advancedCharactersDescription": "Characters are computed in real-time based on their equipment, features, and buffs.",
+    "getInvolved": "Get involved in the DiceCloud community",
+    "highlightCards": {
+      "automatedActions": "Automated actions",
+      "auditableStats": "Auditable stats",
+      "diceRolling": "Dice rolling",
+      "hackableChar": "Hackable character builder",
+      "dragAndDrop": "Drag and drop inventory manager",
+      "customLibraries": "Custom libraries of content",
+      "discordWebhooks": "Discord webhooks",
+      "printedCharacters": "Printed character sheets"
+    }
+  },
+  "about": {
+    "description": "DiceCloud is a single-developer project started in 2014 with the aim of being a character sheet that stayed in sync between the DM and their players, and made it clear where every value in the sheet came from, and how it was calculated.",
+    "specialThanks": "Special Thanks",
+    "sam": "without her love, DiceCloud could not hope to exist",
+    "heroes": "The D&D party whose joy was the fuel powering the early versions of DiceCloud."
+  },
+  "account": {
+    "fileStorageUsed": "File storage used",
+    "characterStorageUsed": "Character storage used",
+    "preferences": "Preferences",
+    "theme": "Theme",
+    "swapAbilityScoresAndModifiers": "Swap ability scores and modifiers",
+    "username": "Username",
+    "changeUsername": "Change Username",
+    "email": "Email",
+    "patreon": "Patreon",
+    "refreshPatreonStatus": "Refresh Patreon Status",
+    "linkGoogleAccount": "Link Google Account",
+    "linkPatreonAccount": "Link Patreon Account",
+    "signOut": "Sign Out",
+    "invites": "Invites",
+    "deleteAccount": "Delete Account"
+  },
+  "themes": {
+    "dark": "Dark",
+    "matchDeviceTheme": "Match device theme",
+    "light": "Light"
+  },
+  "characterList": {
+    "alert": {
+      "exceededLimit": "You have exceeded your maximum number of character slots, archive or delete some characters.",
+      "limit": "You have hit your maximum number of characters.",
+      "or": "or",
+      "increasePatreon": "Increase Patreon tier"
+    },
+    "importCharacter": "Import Character",
+    "addFolder": "Add Folder"
+  }
+}

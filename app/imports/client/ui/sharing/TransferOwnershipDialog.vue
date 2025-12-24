@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Transfer Ownership
+      {{ $t('transferOwnershipDialog.title') }}
     </v-toolbar-title>
     <v-alert
       type="error"
@@ -14,11 +14,11 @@
       </template>
       <template v-else>
         <p>
-          Are you sure you want to transfer ownership to {{ user.username || user._id }}?
+          {{ $t('transferOwnershipDialog.areYouSure') }} {{ user.username || user._id }}?
         </p><p>
-          This can only be undone by the user you are transferring ownership to.
+          {{ $t('transferOwnershipDialog.thisCannotBeUndone') }}
         </p><p>
-          You will still have edit permission.
+          {{ $t('transferOwnershipDialog.youEditPermission') }}
         </p>
       </template>
     </v-alert>
@@ -27,9 +27,9 @@
         color="accent"
         @click="transfer"
       >
-        Transfer
+        {{ $t('transferOwnershipDialog.confirm') }}
         <template v-if="user.username">
-          to {{ user.username }}
+          {{ user.username }}
         </template>
       </v-btn>
     </v-layout>

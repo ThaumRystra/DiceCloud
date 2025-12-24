@@ -54,7 +54,7 @@
             <v-icon left>
               mdi-plus
             </v-icon>
-            Add Character
+            {{ $t('tabletop.addCharacter') }}
           </v-btn>
           <v-btn
             data-id="creatures-from-library"
@@ -63,7 +63,7 @@
             <v-icon left>
               mdi-plus
             </v-icon>
-            Add Creature
+            {{ $t('tabletop.addCreature') }}
           </v-btn>
         </div>
       </v-row>
