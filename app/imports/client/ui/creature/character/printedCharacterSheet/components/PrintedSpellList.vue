@@ -7,19 +7,19 @@
       {{ model.name }}
     </div>
     <div>
-      Spell Save DC: {{ model.dc && model.dc.value }}
+      {{ $t('creature.character.printedCharacterSheet.spellList.saveDc') }}: {{ model.dc && model.dc.value }}
     </div>
     <div v-if="model.ability">
-      Spell casting ability: {{ model.ability }}
+      {{ $t('creature.character.printedCharacterSheet.spellList.ability') }}: {{ model.ability }}
     </div>
     <div v-if="model.ability">
-      Spell casting ability modifier: {{ model.abilityMod }}
+      {{ $t('creature.character.printedCharacterSheet.spellList.abilityMod') }}: {{ model.abilityMod }}
     </div>
     <div>
-      Spell Attack Bonus: {{ model.attackRollBonus && model.attackRollBonus.value }}
+      {{ $t('creature.character.printedCharacterSheet.spellList.attackBonus') }}: {{ model.attackRollBonus && model.attackRollBonus.value }}
     </div>
     <div>
-      Maximum prepared spells: {{ model.maxPrepared && model.maxPrepared.value }}
+      {{ $t('creature.character.printedCharacterSheet.spellList.maxPrepared') }}: {{ model.maxPrepared && model.maxPrepared.value }}
     </div>
     <property-description
       text

@@ -19,11 +19,10 @@
           justify-center
         >
           <h2 style="margin: 48px 28px 16px">
-            Character not found
+            {{ $t('creature.character.printedCharacterSheet.notFound') }}
           </h2>
           <h3>
-            Either this character does not exist, or you don't have permission
-            to view it.
+            {{ $t('creature.character.printedCharacterSheet.notFoundDescription') }}
           </h3>
         </v-layout>
       </div>
@@ -48,10 +47,10 @@
                 {{ creature.gender }} {{ race }}
               </dir>
               <div v-if="level && classes && classes.length === 1">
-                Level {{ level }} {{ classes[0].name }}
+                {{ $t('creature.character.printedCharacterSheet.level') }} {{ level }} {{ classes[0].name }}
               </div>
               <div v-else-if="level">
-                Level {{ level }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
+                {{ $t('creature.character.printedCharacterSheet.level') }} {{ level }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
               </div>
             </div>
             <qrcode-vue
@@ -145,14 +144,14 @@ export default {
   },
   watch: {
     'creature.name'(value) {
-      this.$store.commit('setPageTitle', value ? ('Print ' + value) : 'Print Character Sheet');
+      this.$store.commit('setPageTitle', value ? (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + value) : (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + this.$t('creature.character.characterSheet.characterSheet')));
     },
   },
   mounted() {
     this.$store.commit('setPageTitle',
       (this.creature && this.creature.name) ?
-        ('Print ' + this.creature.name) :
-        'Print Character Sheet'
+        (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + this.creature.name) :
+        (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + this.$t('creature.character.characterSheet.characterSheet'))
     );
     this.nameObserver = Creatures.find({
       creatureId: this.creatureId,
@@ -160,9 +159,9 @@ export default {
       fields: { name: 1 },
     }).observe({
       added: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+        this.$store.commit('setPageTitle', name ? (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + name) : (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + this.$t('creature.character.characterSheet.characterSheet'))),
       changed: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+        this.$store.commit('setPageTitle', name ? (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + name) : (this.$t('creature.character.printedCharacterSheet.printPrefix') + ' ' + this.$t('creature.character.characterSheet.characterSheet'))),
     });
   },
   beforeDestroy() {

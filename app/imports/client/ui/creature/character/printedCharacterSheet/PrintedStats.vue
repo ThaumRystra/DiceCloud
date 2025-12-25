@@ -113,7 +113,7 @@
         <div class="double-border">
           <div>
             <b>
-              Total:
+              {{ $t('creature.character.printedCharacterSheet.stats.total') }}:
             </b>
             <span>
               {{ healthBar.total }}
@@ -140,7 +140,7 @@
         <div class="double-border">
           <div>
             <b>
-              Total:
+              {{ $t('creature.character.printedCharacterSheet.stats.total') }}:
             </b>
             <span
               v-for="hitDie in hitDice"
@@ -155,7 +155,7 @@
             style="text-align: center;"
             class="label"
           >
-            Hit Dice
+            {{ $t('creature.character.printedCharacterSheet.stats.hitDice') }}
           </div>
         </div>
       </div>
@@ -177,7 +177,7 @@
           <div
             v-if="resource.total > 8"
           >
-            total: {{ resource.total }}
+            {{ $t('creature.character.printedCharacterSheet.stats.total') }}: {{ resource.total }}
             <div style="height: 60px;" />
           </div>
           <div
@@ -220,7 +220,7 @@
             * {{ effect.text }}
           </div>
           <div class="label text-center">
-            Saving Throws
+            {{ $t('creature.character.printedCharacterSheet.stats.savingThrows') }}
           </div>
         </div>
       </div>
@@ -245,7 +245,7 @@
             * {{ effect.text }}
           </div>
           <div class="label text-center">
-            Skills
+            {{ $t('creature.character.printedCharacterSheet.stats.skills') }}
           </div>
         </div>
       </div>
@@ -254,19 +254,19 @@
           class="double-border"
         >
           <p>
-            <b>Weapons:</b> {{ weapons.map(p => p.name).join(', ') }}
+            <b>{{ $t('creature.character.printedCharacterSheet.stats.weapons') }}:</b> {{ weapons.map(p => p.name).join(', ') }}
           </p>
           <p>
-            <b>Armor:</b> {{ armors.map(p => p.name).join(', ') }}
+            <b>{{ $t('creature.character.printedCharacterSheet.stats.armor') }}:</b> {{ armors.map(p => p.name).join(', ') }}
           </p>
           <p>
-            <b>Tools:</b> {{ tools.map(p => p.name).join(', ') }}
+            <b>{{ $t('creature.character.printedCharacterSheet.stats.tools') }}:</b> {{ tools.map(p => p.name).join(', ') }}
           </p>
           <p>
-            <b>Languages:</b> {{ languages.map(p => p.name).join(', ') }}
+            <b>{{ $t('creature.character.printedCharacterSheet.stats.languages') }}:</b> {{ languages.map(p => p.name).join(', ') }}
           </p>
           <div class="label text-center">
-            Proficiencies
+            {{ $t('creature.character.printedCharacterSheet.stats.proficiencies') }}
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@
       >
         <div class="double-border">
           <div class="label text-center">
-            Spell Slots
+            {{ $t('creature.character.printedCharacterSheet.stats.spellSlots') }}
           </div>
           <div
             v-for="spellSlot in spellSlots"
@@ -290,7 +290,7 @@
             <div
               v-if="spellSlot.total > 8"
             >
-              Total: {{ spellSlot.total }}
+              {{ $t('creature.character.printedCharacterSheet.stats.total') }}: {{ spellSlot.total }}
             </div>
             <div
               v-else

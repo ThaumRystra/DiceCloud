@@ -325,6 +325,21 @@
       }
     }
   },
+  "dialogStack": {
+    "deleteConfirmation": {
+      "delete": "Excluir",
+      "thisCantBeUndone": "Isso não pode ser desfeito",
+      "typeToDelete": "Digite",
+      "toPermanentlyDelete": "para excluir permanentemente.",
+      "deleteForever": "Excluir permanentemente",
+      "cancel": "Cancelar"
+    },
+    "helpDialog": {
+      "title": "Ajuda:",
+      "helpDocumentNotFound": "Documentação de ajuda não encontrada para",
+      "close": "Fechar"
+    }
+  },
   "components": {
     "iconPicker": {
       "searchIcons": "Buscar ícones",
@@ -357,6 +372,205 @@
       "delete": "Excluir",
       "done": "Concluído",
       "edit": "Editar"
+    }
+  },
+  "creature": {
+    "character": {
+      "characterSheet": {
+        "notFound": "Personagem não encontrado",
+        "notFoundDescription": "Pode não existir ou você pode não ter permissão para vê-lo",
+        "stats": "Status",
+        "actions": "Ações",
+        "spells": "Feitiços",
+        "inventory": "Inventário",
+        "features": "Habilidades",
+        "journal": "Diário",
+        "build": "Build"
+      },
+      "characterCreationDialog": {
+        "title": "Novo Personagem",
+        "biography": "Biografia",
+        "libraries": "Bibliotecas",
+        "build": "Build",
+        "fields": {
+          "name": "Nome",
+          "race": "Espécie",
+          "class": "Classe",
+          "gender": "Gênero",
+          "alignment": "Alinhamento",
+          "level": "Nível"
+        },
+        "allUserLibraries": "Todas as Bibliotecas",
+        "cancel": "Cancelar",
+        "create": "Criar",
+        "back": "Voltar",
+        "next": "Próximo"
+      },
+      "characterDeleteDialog": {
+        "title": "Excluir Personagem",
+        "typeToDelete": "Digite",
+        "toPermanentlyDelete": "para excluir permanentemente o personagem",
+        "deleteForever": "Excluir permanentemente",
+        "cancel": "Cancelar"
+      },
+      "characterImportDialog": {
+        "title": "Importar Personagem",
+        "importCharacter": "Importar um personagem de outra instância do DiceCloud",
+        "importCharacterDescription": "O personagem precisa ter sua permissão de compartilhamento definida como \"qualquer um pode ver\"",
+        "import": "Importar",
+        "cancel": "Cancelar",
+        "errors": {
+          "noUserId": "Sem ID de usuário. Você está logado?",
+          "ackNoUserId": "Esta configuração de compartilhamento do personagem não permite que qualquer um veja"
+        }
+      },
+      "characterSheetToolbar": {
+        "sheetOwner": "Dono da ficha",
+        "share": "Compartilhar",
+        "unshareWithMe": "Cancelar compartilhamento comigo",
+        "print": "Imprimir",
+        "editDetails": "Editar detalhes",
+        "delete": "Excluir",
+        "tab": {
+          "stats": "Status",
+          "actions": "Ações",
+          "spells": "Feitiços",
+          "inventory": "Inventário",
+          "features": "Habilidades",
+          "journal": "Diário",
+          "build": "Build",
+          "tree": "Árvore"
+        }
+      },
+      "creatureRootDialog": {
+        "close": "Fechar"
+      },
+      "miniCharacterSheet": {
+        "characterSheet": "Ficha do personagem"
+      },
+      "characterSheetTabs": {
+        "buildTab": {
+          "hidden": "oculto",
+          "level": "Nível",
+          "milestoneLevels": "Milestone levels",
+          "gettingMissingLevels": "Obtendo Níveis Faltantes",
+          "levelUp": "Subir de Nível",
+          "slots": "Slots"
+        },
+        "inventoryTab": {
+          "weightCarried": "Peso Carregado",
+          "netWorth": "Patrimônio",
+          "itemsAttuned": "Itens Sintonizados",
+          "equipped": "Equipado",
+          "carried": "Carregado"
+        },
+        "statsTab": {
+          "buffsAndConditions": "Buffs e Condições",
+          "hitDice": "Dados de Vida",
+          "hitPoints": "Pontos de Vida",
+          "savingThrows": "Testes de Resistência",
+          "skills": "Habilidades",
+          "weapons": "Armas",
+          "armor": "Armadura",
+          "equipment": "Equipamento",
+          "tools": "Ferramentas",
+          "languages": "Idiomas"
+        }
+      },
+      "errors": {
+        "dependencyLoopError": {
+          "theCharacterContains": "O personagem contém um loop de dependência.",
+          "aSetOfPropertiesMayHaveBeenCalculatedIncorrectly": "Um conjunto de propriedades pode ter sido calculado incorretamente, porque formam um loop infinito:"
+        }
+      },
+      "printedCharacterSheet": {
+        "notFound": "Personagem não encontrado",
+        "notFoundDescription": "Pode não existir ou você pode não ter permissão para vê-lo",
+        "level": "Nível",
+        "printPrefix": "Imprimir",
+        "inventory": {
+          "title": "Inventário",
+          "weightCarried": "Peso",
+          "netWorth": "Patrimônio",
+          "itemsAttuned": "Itens Sintonizados",
+          "equipped": "Equipado",
+          "carried": "Carregando",
+          "each": "cada",
+          "lb": "lb",
+          "contents": "conteúdo",
+          "attuned": "Sintonizado",
+          "requiresAttunement": "Requer sintonização"
+        },
+        "spells": {
+          "title": "Magias"
+        },
+        "stats": {
+          "total": "Total",
+          "hitDice": "Dados de Vida",
+          "savingThrows": "Testes de Resistência",
+          "skills": "Habilidades",
+          "weapons": "Armas",
+          "armor": "Armadura",
+          "tools": "Ferramentas",
+          "languages": "Idiomas",
+          "proficiencies": "Proficiências",
+          "spellSlots": "Espaços de Magia",
+          "shield": "Escudo"
+        },
+        "actions": {
+          "uses": "usos",
+          "cost": "Custo",
+          "usesCap": "Usos",
+          "toHit": "para acertar",
+          "types": {
+            "action": "Ação",
+            "bonus": "Ação Bônus",
+            "attack": "Ataque",
+            "reaction": "Reação",
+            "free": "Ação Livre",
+            "long": "Ação Longa"
+          }
+        },
+        "damageMultipliers": {
+          "immunity": "Imunidade",
+          "resistance": "Resistência",
+          "vulnerability": "Vulnerabilidade",
+          "for": "Para",
+          "except": "Exceto"
+        },
+        "skill": {
+          "fail": "falha"
+        },
+        "spell": {
+          "level": {
+            "cantrip": "truque",
+            "0": "truque",
+            "1": "1º nível",
+            "2": "2º nível",
+            "3": "3º nível",
+            "4": "4º nível",
+            "5": "5º nível",
+            "6": "6º nível",
+            "7": "7º nível",
+            "8": "8º nível",
+            "9": "9º nível",
+            "generic": "{level}º nível"
+          },
+          "ritual": "(ritual)",
+          "toHit": "Para acertar",
+          "castingTime": "Tempo de execução",
+          "range": "Alcance",
+          "components": "Componentes",
+          "duration": "Duração"
+        },
+        "spellList": {
+          "saveDc": "CD de Resistência de Magia",
+          "ability": "Habilidade de conjuração",
+          "abilityMod": "Modificador de habilidade de conjuração",
+          "attackBonus": "Bônus de Ataque de Magia",
+          "maxPrepared": "Máximo de magias preparadas"
+        }
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      New Character
+      {{ $t('creature.character.characterCreationDialog.title') }}
     </v-toolbar-title>
     <v-stepper
       slot="unwrapped-content"
@@ -16,7 +16,7 @@
           step="1"
           :rules="[() => biographyAlert || true]"
         >
-          Biography
+          {{ $t('creature.character.characterCreationDialog.biography') }}
           <small v-if="biographyAlert">{{ biographyAlert }}</small>
         </v-stepper-step>
         <v-divider />
@@ -25,7 +25,7 @@
           :complete="step > 2"
           step="2"
         >
-          Libraries
+          {{ $t('creature.character.characterCreationDialog.libraries') }}
         </v-stepper-step>
       </v-stepper-header>
 
@@ -34,24 +34,24 @@
           <v-text-field
             v-model="name"
             outlined
-            label="Name"
+            :label="$t('creature.character.characterCreationDialog.fields.name')"
             class="mt-1"
             :error="!name"
           />
           <v-text-field
             v-model="alignment"
             outlined
-            label="Alignment"
+            :label="$t('creature.character.characterCreationDialog.fields.alignment')"
           />
           <v-text-field
             v-model="gender"
             outlined
-            label="Gender"
+            :label="$t('creature.character.characterCreationDialog.fields.gender')"
           />
           <v-text-field
             v-model.number="startingLevel"
             outlined
-            label="Level"
+            :label="$t('creature.character.characterCreationDialog.fields.level')"
             type="number"
             height="20"
             min="0"
@@ -61,7 +61,7 @@
         <v-stepper-content step="2">
           <v-switch
             v-model="allSubscribedLibraries"
-            label="All user libraries"
+            :label="$t('creature.character.characterCreationDialog.allUserLibraries')"
           />
           <library-list
             selection
@@ -80,14 +80,14 @@
         text
         @click="$emit('pop')"
       >
-        Cancel
+        {{ $t('creature.character.characterCreationDialog.cancel') }}
       </v-btn>
       <v-btn
         v-if="step > 1"
         text
         @click="step--"
       >
-        Back
+        {{ $t('creature.character.characterCreationDialog.back') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -95,7 +95,7 @@
         color="accent"
         @click="step++"
       >
-        Next
+        {{ $t('creature.character.characterCreationDialog.next') }}
       </v-btn>
       <v-btn
         :disabled="!!biographyAlert"
@@ -103,7 +103,7 @@
         :color="step < 2? '' : 'accent'"
         @click="submit"
       >
-        Create
+        {{ $t('creature.character.characterCreationDialog.create') }}
       </v-btn>
     </template>
   </dialog-base>

@@ -48,7 +48,7 @@
             <span
               class="ml-1"
             >
-              contents
+              {{ $t('creature.character.printedCharacterSheet.inventory.contents') }}
             </span>
           </v-layout>
         </div>
@@ -65,7 +65,7 @@
             >
               $vuetify.icons.weight
             </v-icon>
-            {{ model.weight }} lb
+            {{ model.weight }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
           </v-layout>
 
           <v-layout
@@ -78,11 +78,11 @@
             >
               $vuetify.icons.injustice
             </v-icon>
-            {{ model.contentsWeight }} lb
+            {{ model.contentsWeight }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
             <span
               class="ml-1"
             >
-              contents
+              {{ $t('creature.character.printedCharacterSheet.inventory.contents') }}
             </span>
           </v-layout>
         </div>

@@ -356,5 +356,205 @@
       "done": "Done",
       "edit": "Edit"
     }
+  },
+  "creature": {
+    "character": {
+      "characterSheet": {
+        "characterSheet": "Character Sheet",
+        "notFound": "Character not found",
+        "notFoundDescription": "Either it does not exist, or you do not have permission to view it",
+        "stats": "Stats",
+        "actions": "Actions",
+        "spells": "Spells",
+        "inventory": "Inventory",
+        "features": "Features",
+        "journal": "Journal",
+        "build": "Build"
+      },
+      "characterCreationDialog": {
+        "title": "New Character",
+        "biography": "Biography",
+        "libraries": "Libraries",
+        "build": "Build",
+        "fields": {
+          "name": "Name",
+          "race": "Race",
+          "class": "Class",
+          "gender": "Gender",
+          "alignment": "Alignment",
+          "level": "Level"
+        },
+        "allUserLibraries": "All User Libraries",
+        "cancel": "Cancel",
+        "create": "Create",
+        "back": "Back",
+        "next": "Next"
+      },
+      "characterDeleteDialog": {
+        "title": "Delete Character",
+        "typeToDelete": "Type",
+        "toPermanentlyDelete": "to permanently delete the character",
+        "deleteForever": "Delete forever",
+        "cancel": "Cancel"
+      },
+      "characterImportDialog": {
+        "title": "Import Character",
+        "importCharacter": "Import a character from another instance of DiceCloud",
+        "importCharacterDescription": "The character needs to have their sharing permission set to \"anyone can view\"",
+        "import": "Import",
+        "cancel": "Cancel",
+        "errors": {
+          "noUserId": "No user ID. Are you logged in?",
+          "ackNoUserId": "This character's sharing settings are not set to allow anyone to view"
+        }
+      },
+      "characterSheetToolbar": {
+        "sheetOwner": "Sheet owner",
+        "share": "Sharing",
+        "unshareWithMe": "Unshare with me",
+        "print": "Print",
+        "editDetails": "Edit details",
+        "delete": "Delete",
+        "tab": {
+          "stats": "Stats",
+          "actions": "Actions",
+          "spells": "Spells",
+          "inventory": "Inventory",
+          "features": "Features",
+          "journal": "Journal",
+          "build": "Build",
+          "tree": "Tree"
+        }
+      },
+      "creatureRootDialog": {
+        "close": "Close"
+      },
+      "miniCharacterSheet": {
+        "characterSheet": "Character sheet"
+      },
+      "characterSheetTabs": {
+        "buildTab": {
+          "hidden": "hidden",
+          "level": "Level",
+          "milestoneLevels": "Milestone levels",
+          "gettingMissingLevels": "Getting Missing Levels",
+          "levelUp": "Level Up",
+          "slots": "Slots"
+        },
+        "inventoryTab": {
+          "weightCarried": "Weight Carried",
+          "netWorth": "Net worth",
+          "itemsAttuned": "Items attuned",
+          "equipped": "Equipped",
+          "carried": "Carried"
+        },
+        "statsTab": {
+          "buffsAndConditions": "Buffs and conditions",
+          "hitDice": "Hit Dice",
+          "hitPoints": "Hit Points",
+          "savingThrows": "Saving Throws",
+          "skills": "Skills",
+          "weapons": "Weapons",
+          "armor": "Armor",
+          "equipment": "Equipment",
+          "tools": "Tools",
+          "languages": "Languages"
+        }
+      },
+      "errors": {
+        "dependencyLoopError": {
+          "theCharacterContains": "The character contains a dependency loop.",
+          "aSetOfPropertiesMayHaveBeenCalculatedIncorrectly": "A set of properties may have been calculated incorrectly, because they form an infinite loop:"
+        }
+      },
+      "printedCharacterSheet": {
+        "notFound": "Character not found",
+        "notFoundDescription": "Either this character does not exist, or you don't have permission to view it.",
+        "level": "Level",
+        "printPrefix": "Print",
+        "inventory": {
+          "title": "Inventory",
+          "weightCarried": "Weight Carried",
+          "netWorth": "Net worth",
+          "itemsAttuned": "Items attuned",
+          "equipped": "Equipped",
+          "carried": "Carried",
+          "each": "each",
+          "lb": "lb",
+          "contents": "contents",
+          "attuned": "Attuned",
+          "requiresAttunement": "Requires attunement"
+        },
+        "spells": {
+          "title": "Spells"
+        },
+        "stats": {
+          "total": "Total",
+          "hitDice": "Hit Dice",
+          "savingThrows": "Saving Throws",
+          "skills": "Skills",
+          "weapons": "Weapons",
+          "armor": "Armor",
+          "tools": "Tools",
+          "languages": "Languages",
+          "proficiencies": "Proficiencies",
+          "spellSlots": "Spell Slots",
+          "shield": "Shield"
+        },
+        "actions": {
+          "uses": "uses",
+          "cost": "Cost",
+          "usesCap": "Uses",
+          "toHit": "to hit",
+          "types": {
+            "action": "Action",
+            "bonus": "Bonus Action",
+            "attack": "Attack",
+            "reaction": "Reaction",
+            "free": "Free Action",
+            "long": "Long Action"
+          }
+        },
+        "damageMultipliers": {
+          "immunity": "Immunity",
+          "resistance": "Resistance",
+          "vulnerability": "Vulnerability",
+          "for": "For",
+          "except": "Except"
+        },
+        "skill": {
+          "fail": "fail"
+        },
+        "spell": {
+          "level": {
+            "cantrip": "cantrip",
+            "0": "cantrip",
+            "1": "1st-level",
+            "2": "2nd-level",
+            "3": "3rd-level",
+            "4": "4th-level",
+            "5": "5th-level",
+            "6": "6th-level",
+            "7": "7th-level",
+            "8": "8th-level",
+            "9": "9th-level",
+            "generic": "{level}-level"
+          },
+          "ritual": "(ritual)",
+          "toHit": "To hit",
+          "castingTime": "Casting time",
+          "range": "Range",
+          "components": "Components",
+          "duration": "Duration"
+        },
+        "spellList": {
+          "saveDc": "Spell Save DC",
+          "ability": "Spell casting ability",
+          "abilityMod": "Spell casting ability modifier",
+          "attackBonus": "Spell Attack Bonus",
+          "maxPrepared": "Maximum prepared spells"
+        }
+      }
+    }
   }
 }

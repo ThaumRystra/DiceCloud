@@ -52,7 +52,7 @@
               v-if="model.quantity > 1"
               class="ml-1"
             >
-              each
+              {{ $t('creature.character.printedCharacterSheet.inventory.each') }}
             </span>
           </v-layout>
         </div>
@@ -73,7 +73,7 @@
             >
               $vuetify.icons.injustice
             </v-icon>
-            {{ totalWeight }} lb
+            {{ totalWeight }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
           </v-layout>
           <v-layout align-center>
             <v-icon
@@ -82,12 +82,12 @@
             >
               $vuetify.icons.weight
             </v-icon>
-            {{ model.weight }} lb
+            {{ model.weight }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
             <span
               v-if="model.quantity > 1"
               class="ml-1"
             >
-              each
+              {{ $t('creature.character.printedCharacterSheet.inventory.each') }}
             </span>
           </v-layout>
         </div>
@@ -152,8 +152,8 @@ export default {
     },
     attunementText() {
       if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
+        if (this.model.attuned) return this.$t('creature.character.printedCharacterSheet.inventory.attuned');
+        return this.$t('creature.character.printedCharacterSheet.inventory.requiresAttunement');
       }
       return undefined;
     }

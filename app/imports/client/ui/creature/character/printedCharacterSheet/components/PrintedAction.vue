@@ -18,7 +18,7 @@
       v-if="Number.isFinite(model.uses)"
       class="action-sub-title d-flex align-center"
     >
-      {{ model.uses }} uses
+      {{ model.uses }} {{ $t('creature.character.printedCharacterSheet.actions.uses') }}
     </div>
     <div>
       <div
@@ -31,14 +31,14 @@
           :key="attributeConsumed._id"
           class="layout align-center justify-start"
         >
-          Cost: {{ attributeConsumed.quantity && attributeConsumed.quantity.value }} {{ attributeConsumed.statName || attributeConsumed.variableName }}
+          {{ $t('creature.character.printedCharacterSheet.actions.cost') }}: {{ attributeConsumed.quantity && attributeConsumed.quantity.value }} {{ attributeConsumed.statName || attributeConsumed.variableName }}
         </div>
         <div
           v-for="itemConsumed in model.resources.itemsConsumed"
           :key="itemConsumed._id"
         >
           <template v-if="itemConsumed.itemName">
-            Uses: {{ itemConsumed.quantity && itemConsumed.quantity.value || 0 }} {{ itemConsumed.itemName || itemConsumed.tag }}
+            {{ $t('creature.character.printedCharacterSheet.actions.usesCap') }}: {{ itemConsumed.quantity && itemConsumed.quantity.value || 0 }} {{ itemConsumed.itemName || itemConsumed.tag }}
           </template>
         </div>
       </div>
@@ -53,7 +53,7 @@
           {{ rollBonus }}
         </span>
         <span>
-          to hit
+          {{ $t('creature.character.printedCharacterSheet.actions.toHit') }}
         </span>
       </div>
       <tree-node-list
@@ -131,12 +131,12 @@ export default {
     },
     actionTypeName() {
       return {
-        'action': 'Action',
-        'bonus': 'Bonus Action',
-        'attack': 'Attack',
-        'reaction': 'Reaction',
-        'free': 'Free Action',
-        'long': 'Long Action'
+        'action': this.$t('creature.character.printedCharacterSheet.actions.types.action'),
+        'bonus': this.$t('creature.character.printedCharacterSheet.actions.types.bonus'),
+        'attack': this.$t('creature.character.printedCharacterSheet.actions.types.attack'),
+        'reaction': this.$t('creature.character.printedCharacterSheet.actions.types.reaction'),
+        'free': this.$t('creature.character.printedCharacterSheet.actions.types.free'),
+        'long': this.$t('creature.character.printedCharacterSheet.actions.types.long')
       }[this.model.actionType] || this.model.actionType
     },
   },

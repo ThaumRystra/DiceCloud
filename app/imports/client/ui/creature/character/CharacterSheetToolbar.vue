@@ -55,7 +55,7 @@
                     {{ ownerName }}
                   </v-list-item-title>
                   <v-list-item-subtitle>
-                    Sheet owner
+                    {{ $t('creature.character.characterSheetToolbar.sheetOwner') }}
                   </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
@@ -66,21 +66,21 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-cancel
-                  </v-icon> Unshare with me
+                  </v-icon> {{ $t('creature.character.characterSheetToolbar.unshareWithMe') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item :to="printUrl">
                 <v-list-item-title>
                   <v-icon left>
                     mdi-printer
-                  </v-icon> Print
+                  </v-icon> {{ $t('creature.character.characterSheetToolbar.print') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item @click="showCharacterForm">
                 <v-list-item-title>
                   <v-icon left>
                     mdi-pencil
-                  </v-icon> Edit details
+                  </v-icon> {{ $t('creature.character.characterSheetToolbar.editDetails') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item
@@ -90,7 +90,7 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-share-variant
-                  </v-icon> Sharing
+                  </v-icon> {{ $t('creature.character.characterSheetToolbar.share') }}
                 </v-list-item-title>
               </v-list-item>
               <v-list-item
@@ -100,7 +100,7 @@
                 <v-list-item-title>
                   <v-icon left>
                     mdi-delete
-                  </v-icon> Delete
+                  </v-icon> {{ $t('creature.character.characterSheetToolbar.delete') }}
                 </v-list-item-title>
               </v-list-item>
             </v-list>
@@ -140,28 +140,28 @@
           )"
         >
           <v-tab>
-            Stats
+            {{ $t('creature.character.characterSheetToolbar.tab.stats') }}
           </v-tab>
           <v-tab>
-            Actions
+            {{ $t('creature.character.characterSheetToolbar.tab.actions') }}
           </v-tab>
           <v-tab v-if="!creature.settings.hideSpellsTab">
-            Spells
+            {{ $t('creature.character.characterSheetToolbar.tab.spells') }}
           </v-tab>
           <v-tab>
-            Inventory
+            {{ $t('creature.character.characterSheetToolbar.tab.inventory') }}
           </v-tab>
           <v-tab>
-            Features
+            {{ $t('creature.character.characterSheetToolbar.tab.features') }}
           </v-tab>
           <v-tab>
-            Journal
+            {{ $t('creature.character.characterSheetToolbar.tab.journal') }}
           </v-tab>
           <v-tab>
-            Build
+            {{ $t('creature.character.characterSheetToolbar.tab.build') }}
           </v-tab>
           <v-tab v-if="creature.settings.showTreeTab">
-            Tree
+            {{ $t('creature.character.characterSheetToolbar.tab.tree') }}
           </v-tab>
         </v-tabs>
         <v-spacer />

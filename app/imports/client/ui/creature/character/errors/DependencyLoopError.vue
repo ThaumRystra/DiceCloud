@@ -7,10 +7,10 @@
     class="dependency-loop-error"
   >
     <p>
-      The character contains a dependency loop.
+      {{ $t('creature.character.errors.dependencyLoopError.theCharacterContains') }}
     </p>
     <p>
-      A set of properties may have been calculated incorrectly, because they form an infinite loop:
+      {{ $t('creature.character.errors.dependencyLoopError.aSetOfPropertiesMayHaveBeenCalculatedIncorrectly') }}
     </p>
     <div class="d-flex align-center flex-wrap">
       <template
