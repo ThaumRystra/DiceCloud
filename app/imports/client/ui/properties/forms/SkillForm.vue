@@ -6,10 +6,10 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('properties.forms.common.variableName')"
           :value="model.variableName"
           style="flex-basis: 300px;"
-          hint="Use this name in formulae to reference this skill"
+          :hint="$t('properties.forms.common.variableNameHint')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,10 +19,10 @@
         md="6"
       >
         <smart-combobox
-          label="Ability"
+          :label="$t('properties.forms.skillForm.ability')"
           :value="model.ability"
           style="flex-basis: 300px;"
-          hint="Which ability is this skill based off of"
+          :hint="$t('properties.forms.skillForm.abilityHint')"
           :items="abilityScoreList"
           :error-messages="errors.ability"
           @change="change('ability', ...arguments)"
@@ -33,7 +33,7 @@
         md="6"
       >
         <smart-select
-          label="Type"
+          :label="$t('properties.forms.skillForm.skillType')"
           clearable
           :items="skillTypes"
           :value="model.skillType"
@@ -45,7 +45,7 @@
       </v-col>
     </v-row>
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -53,14 +53,14 @@
     />
 
     <form-sections type="skill">
-      <form-section name="Base Values">
+      <form-section :name="$t('properties.forms.skillForm.baseValues')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
             <proficiency-select
-              label="Base Proficiency"
+              :label="$t('properties.forms.skillForm.baseProficiency')"
               :value="model.baseProficiency"
               :error-messages="errors.baseProficiency"
               @change="change('baseProficiency', ...arguments)"
@@ -71,8 +71,8 @@
             md="6"
           >
             <computed-field
-              label="Base Value"
-              hint="This is the value of the skill before effects are applied"
+              :label="$t('properties.forms.common.baseValue')"
+              :hint="$t('properties.forms.skillForm.baseValueHint')"
               :model="model.baseValue"
               :error-messages="errors.baseValue"
               @change="({path, value, ack}) =>
@@ -81,9 +81,9 @@
           </v-col>
         </v-row>
       </form-section>
-      <form-section name="Apply skill">
+      <form-section :name="$t('properties.forms.skillForm.applySkill')">
         <smart-switch
-          label="Apply skill to targeted tags"
+          :label="$t('properties.forms.skillForm.applySkillToTags')"
           :value="model.targetByTags"
           :error-messages="errors.targetByTags"
           @change="change('targetByTags', ...arguments)"

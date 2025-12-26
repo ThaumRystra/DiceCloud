@@ -3,7 +3,7 @@
     <div class="layout justify-space-around">
       <div>
         <smart-switch
-          label="Equipped"
+          :label="$t('properties.forms.itemForm.equipped')"
           :value="model.equipped"
           :error-messages="errors.equipped"
           @change="change('equipped', ...arguments)"
@@ -16,7 +16,7 @@
         md="6"
       >
         <text-field
-          label="Quantity"
+          :label="$t('properties.forms.itemForm.quantity')"
           type="number"
           min="0"
           prepend-inner-icon="$vuetify.icons.abacus"
@@ -30,10 +30,10 @@
         md="6"
       >
         <text-field
-          label="Plural name"
+          :label="$t('properties.forms.itemForm.pluralName')"
           :value="model.plural"
           :error-messages="errors.plural"
-          hint="The plural name of your item. If your item's name is 'sword' plural name would be 'swords'"
+          :hint="$t('properties.forms.itemForm.pluralNameHint')"
           @change="change('plural', ...arguments)"
         />
       </v-col>
@@ -43,11 +43,11 @@
         md="6"
       >
         <text-field
-          label="Value"
+          :label="$t('properties.forms.itemForm.value')"
           suffix="gp"
           type="number"
           min="0"
-          hint="The value of the item in gold pieces, using decimals for values less than 1 gp"
+          :hint="$t('properties.forms.itemForm.valueHint')"
           prepend-inner-icon="$vuetify.icons.two_coins"
           :value="model.value"
           :error-messages="errors.value"
@@ -59,12 +59,12 @@
         md="6"
       >
         <text-field
-          label="Weight"
+          :label="$t('properties.forms.itemForm.weight')"
           suffix="lb"
           type="number"
           min="0"
           prepend-inner-icon="$vuetify.icons.weight"
-          hint="The weight of a single item in lbs. Can be a decimal value"
+          :hint="$t('properties.forms.itemForm.weightHint')"
           :value="model.weight"
           :error-messages="errors.weight"
           @change="change('weight', ...arguments)"
@@ -73,7 +73,7 @@
     </v-row>
 
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -82,7 +82,7 @@
 
     <form-sections type="item">
       <form-section
-        name="Behavior"
+        :name="$t('properties.forms.common.behavior')"
       >
         <v-row dense>
           <v-col
@@ -90,7 +90,7 @@
             md="6"
           >
             <smart-switch
-              label="Show increment button"
+              :label="$t('properties.forms.itemForm.showIncrement')"
               :value="model.showIncrement"
               :error-messages="errors.showIncrement"
               @change="change('showIncrement', ...arguments)"
@@ -101,7 +101,7 @@
             md="6"
           >
             <smart-switch
-              label="Don't show in log"
+              :label="$t('properties.forms.actionForm.dontShowInLog')"
               :value="model.silent"
               :error-messages="errors.silent"
               @change="change('silent', ...arguments)"
@@ -110,7 +110,7 @@
         </v-row>
       </form-section>
       <form-section
-        name="Attunement"
+        :name="$t('properties.forms.itemForm.attunement')"
       >
         <v-row dense>
           <v-col
@@ -118,7 +118,7 @@
             md="6"
           >
             <smart-switch
-              label="Requires attunement"
+              :label="$t('properties.forms.itemForm.requiresAttunement')"
               :value="model.requiresAttunement"
               :error-messages="errors.requiresAttunement"
               @change="change('requiresAttunement', ...arguments)"
@@ -131,7 +131,7 @@
               md="6"
             >
               <smart-switch
-                label="Attuned"
+                :label="$t('properties.forms.itemForm.attuned')"
                 :value="model.attuned"
                 :error-messages="errors.attuned"
                 @change="change('attuned', ...arguments)"

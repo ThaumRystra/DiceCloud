@@ -6,10 +6,10 @@
         md="6"
       >
         <text-field
-          label="Class variable name"
+          :label="$t('properties.forms.classLevelForm.classVariableName')"
           :value="model.variableName"
           style="flex-basis: 300px;"
-          hint="This should be the same as the class's variable name"
+          :hint="$t('properties.forms.classLevelForm.classVariableNameHint')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,7 +19,7 @@
         md="6"
       >
         <text-field
-          label="Level"
+          :label="$t('properties.forms.classLevelForm.level')"
           type="number"
           class="base-value-field text-center large-format no-flex"
           :value="model.level"
@@ -30,8 +30,8 @@
     </v-row>
 
     <inline-computation-field
-      label="Description"
-      hint="A brief description of what this class level gives a character"
+      :label="$t('properties.forms.common.description')"
+      :hint="$t('properties.forms.classLevelForm.descriptionHint')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>

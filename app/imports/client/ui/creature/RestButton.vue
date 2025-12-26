@@ -10,7 +10,7 @@
     <v-icon left>
       {{ type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed' }}
     </v-icon>
-    {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
+    {{ type === 'shortRest' ? $t('creature.restButton.shortRest') : $t('creature.restButton.longRest') }}
   </v-btn>
 </template>
 

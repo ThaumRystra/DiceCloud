@@ -3,10 +3,10 @@
     <v-row dense>
       <v-col cols="12">
         <smart-select
-          label="Type"
+          :label="$t('properties.forms.slotForm.type')"
           clearable
-          hint="What property type is needed to fill this slot"
-          placeholder="Any type"
+          :hint="$t('properties.forms.slotForm.typeHint')"
+          :placeholder="$t('properties.forms.slotForm.anyType')"
           persistent-placeholder
           :items="slotTypes"
           :value="model.slotType"
@@ -32,9 +32,9 @@
         md="6"
       >
         <computed-field
-          label="Quantity"
-          hint="How many matching properties must be used to fill this slot"
-          placeholder="unlimited"
+          :label="$t('properties.forms.slotForm.quantity')"
+          :hint="$t('properties.forms.slotForm.quantityHint')"
+          :placeholder="$t('properties.forms.slotForm.unlimited')"
           persistent-placeholder
           :model="model.quantityExpected"
           :error-messages="errors.quantityExpected"
@@ -47,9 +47,9 @@
         md="6"
       >
         <computed-field
-          label="Condition"
-          hint="A caclulation to determine if this slot should be active"
-          placeholder="Always active"
+          :label="$t('properties.forms.slotForm.condition')"
+          :hint="$t('properties.forms.slotForm.conditionHint')"
+          :placeholder="$t('properties.forms.slotForm.alwaysActive')"
           persistent-placeholder
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"
@@ -63,11 +63,11 @@
       >
         <smart-select
           v-if="model.type !== 'class'"
-          label="Unique"
+          :label="$t('properties.forms.slotForm.unique')"
           style="flex-basis: 300px;"
           clearable
-          hint="Do the properties that fill this slot need to be unique?"
-          placeholder="Allow duplicate values"
+          :hint="$t('properties.forms.slotForm.uniqueHint')"
+          :placeholder="$t('properties.forms.slotForm.allowDuplicates')"
           persistent-placeholder
           :items="uniqueOptions"
           :value="model.unique"
@@ -98,7 +98,7 @@
       </v-col>
     </v-row>
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -106,7 +106,7 @@
     />
 
     <form-sections type="slot">
-      <form-section name="Behavior">
+      <form-section :name="$t('properties.forms.common.behavior')">
         <v-row dense>
           <!--
           <v-col
@@ -128,7 +128,7 @@
             md="6"
           >
             <smart-switch
-              label="Ignored"
+              :label="$t('properties.forms.slotForm.ignored')"
               style="width: 200px; flex-grow: 0;"
               class="mx-2"
               :value="model.ignored"

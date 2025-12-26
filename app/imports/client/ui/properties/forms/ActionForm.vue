@@ -9,14 +9,14 @@
           <v-switch
             v-if="!isAttack"
             class="ml-4"
-            label="Attack roll"
+            :label="$t('properties.forms.actionForm.attackRoll')"
             :value="attackSwitch"
             @change="e => attackSwitch = e"
           />
           <computed-field
             v-else
-            label="Base attack roll bonus"
-            hint="Must be set for the action to have an attack roll"
+            :label="$t('properties.forms.actionForm.baseAttackRollBonus')"
+            :hint="$t('properties.forms.actionForm.baseAttackRollHint')"
             :model="model.attackRoll"
             :error-messages="errors.attackRoll"
             @change="({path, value, ack}) =>
@@ -40,7 +40,7 @@
         md="4"
       >
         <smart-select
-          label="Action type"
+          :label="$t('properties.forms.actionForm.actionType')"
           :items="actionTypes"
           :value="model.actionType"
           :error-messages="errors.actionType"
@@ -54,29 +54,29 @@
     <v-slide-x-transition mode="out-in">
       <text-field
         v-if="model.actionType === 'event'"
-        label="Event variable name"
+        :label="$t('properties.forms.actionForm.eventVariableName')"
         :value="model.variableName"
-        hint="Variable name of the event that this action represents"
+        :hint="$t('properties.forms.actionForm.eventVariableNameHint')"
         :error-messages="errors.variableName"
         @change="change('variableName', ...arguments)"
       />
     </v-slide-x-transition>
 
     <smart-toggle
-      label="Target creature"
+      :label="$t('properties.forms.actionForm.targetCreature')"
       :value="model.target"
       :options="[
-        {name: 'Single Target', value: 'singleTarget'},
-        {name: 'Multiple Targets', value: 'multipleTargets'},
-        {name: 'Self', value: 'self'},
+        {name: $t('properties.forms.actionForm.singleTarget'), value: 'singleTarget'},
+        {name: $t('properties.forms.actionForm.multipleTargets'), value: 'multipleTargets'},
+        {name: $t('properties.forms.actionForm.self'), value: 'self'},
       ]"
       :error-messages="errors.target"
       @change="change('target', ...arguments)"
     />
 
     <inline-computation-field
-      label="Summary"
-      hint="This will appear in the action card in the character sheet, summarise what the action does. This text will be displayed in the log when the action is taken"
+      :label="$t('properties.forms.common.summary')"
+      :hint="$t('properties.forms.actionForm.summaryHint')"
       :model="model.summary"
       :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
@@ -84,7 +84,7 @@
     />
 
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -92,7 +92,7 @@
     />
 
     <form-sections type="action">
-      <form-section name="Resources Consumed">
+      <form-section :name="$t('properties.forms.common.resourcesConsumed')">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -100,15 +100,15 @@
           @pull="({path, ack}) => $emit('pull', {path: ['resources', ...path], ack})"
         />
       </form-section>
-      <form-section name="Limit Uses">
+      <form-section :name="$t('properties.forms.common.limitUses')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
-            <computed-field
-              label="Uses"
-              hint="How many times this action can be used before needing to be reset"
+          <computed-field
+              :label="$t('properties.forms.common.uses')"
+              :hint="$t('properties.forms.common.usesHint')"
               class="mr-2"
               :model="model.uses"
               :error-messages="errors.uses"
@@ -121,9 +121,9 @@
             md="6"
           >
             <text-field
-              label="Uses used"
+              :label="$t('properties.forms.common.usesUsed')"
               type="number"
-              hint="How many times this action has already been used: should be 0 in most cases"
+              :hint="$t('properties.forms.common.usesUsedHint')"
               style="flex-basis: 300px;"
               :value="model.usesUsed"
               :error-messages="errors.uses"
@@ -138,9 +138,9 @@
           @change="change('reset', ...arguments)"
         />
       </form-section>
-      <form-section name="Log">
+      <form-section :name="$t('properties.forms.common.log')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('properties.forms.actionForm.dontShowInLog')"
           class="ml-4 mt-0 mb-4"
           :value="model.silent"
           :error-messages="errors.silent"

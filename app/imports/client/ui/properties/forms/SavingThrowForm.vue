@@ -6,8 +6,8 @@
         md="6"
       >
         <computed-field
-          label="DC"
-          hint="Saving throw DC"
+          :label="$t('properties.forms.savingThrowForm.dc')"
+          :hint="$t('properties.forms.savingThrowForm.dcHint')"
           :model="model.dc"
           :error-messages="errors.dc"
           @change="({path, value, ack}) =>
@@ -19,8 +19,8 @@
         md="6"
       >
         <smart-combobox
-          label="Save"
-          hint="Which stat the saving throw targets"
+          :label="$t('properties.forms.savingThrowForm.save')"
+          :hint="$t('properties.forms.savingThrowForm.saveHint')"
           :value="model.stat"
           :items="saveList"
           :error-messages="errors.stat"
@@ -31,11 +31,11 @@
         cols="12"
       >
         <smart-toggle
-          label="Target creature"
+          :label="$t('properties.forms.savingThrowForm.targetCreature')"
           :value="model.target"
           :options="[
-            {name: 'Action Target', value: 'target'},
-            {name: 'Self', value: 'self'},
+            {name: $t('properties.forms.savingThrowForm.actionTarget'), value: 'target'},
+            {name: $t('properties.forms.savingThrowForm.self'), value: 'self'},
           ]"
           :error-messages="errors.target"
           @change="change('target', ...arguments)"
@@ -43,9 +43,9 @@
       </v-col>
     </v-row>
     <form-sections type="savingThrow">
-      <form-section name="Log">
+      <form-section :name="$t('properties.forms.common.log')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('properties.forms.actionForm.dontShowInLog')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

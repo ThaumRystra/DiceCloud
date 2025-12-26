@@ -2,7 +2,7 @@
   <dialog-base>
     <template #toolbar>
       <v-toolbar-title>
-        {{ mode === 'archive' ? 'Archive' : 'Restore' }}
+        {{ mode === 'archive' ? $t('creature.archiveDialog.archive') : $t('creature.archiveDialog.restore') }}
       </v-toolbar-title>
       <v-spacer />
       <v-btn-toggle
@@ -10,13 +10,13 @@
         mandatory
       >
         <v-btn value="archive">
-          <span>Archive</span>
+          <span>{{ $t('creature.archiveDialog.archive') }}</span>
           <v-icon right>
             mdi-archive-arrow-down
           </v-icon>
         </v-btn>
         <v-btn value="restore">
-          <span>Restore</span>
+          <span>{{ $t('creature.archiveDialog.restore') }}</span>
           <v-icon right>
             mdi-archive-arrow-up-outline
           </v-icon>
@@ -43,7 +43,7 @@
         No Character Slots Left
       </template>
       <template v-else>
-        {{ mode === 'archive' ? 'Archive' : 'Restore' }}
+        {{ mode === 'archive' ? $t('creature.archiveDialog.archive') : $t('creature.archiveDialog.restore') }}
       </template>
     </v-btn>
     <v-btn
@@ -51,7 +51,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Close
+      {{ $t('creature.archiveDialog.close') }}
     </v-btn>
   </dialog-base>
 </template>

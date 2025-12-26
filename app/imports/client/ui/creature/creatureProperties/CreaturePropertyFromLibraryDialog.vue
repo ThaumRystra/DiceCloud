@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Add from library
+      {{ $t('creature.creatureProperties.creaturePropertyFromLibraryDialog.addFromLibrary') }}
     </v-toolbar-title>
     <library-and-node
       slot="unwrapped-content"
@@ -16,7 +16,7 @@
         color="primary"
         @click="$store.dispatch('popDialogStack', node)"
       >
-        Insert
+        {{ $t('creature.creatureProperties.creaturePropertyFromLibraryDialog.insert') }}
       </v-btn>
     </template>
   </dialog-base>

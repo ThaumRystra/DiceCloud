@@ -598,6 +598,455 @@
           "continue": "Continue"
         }
       }
+    },
+    "archiveDialog": {
+      "archive": "Archive",
+      "restore": "Restore",
+      "close": "Close"
+    },
+    "creatureList": {
+      "archiveButton": "Archive Characters"
+    },
+    "creatureProperties": {
+      "creaturePropertyDialog": {
+        "close": "Close"
+      },
+      "creaturePropertyFromLibraryDialog": {
+        "addFromLibrary": "Add from library",
+        "insert": "Insert"
+      }
+    },
+    "dependencyGraph": {
+      "dependencyGraphDialog": {
+        "title": "Dependency Graph"
+      }
+    },
+    "experiences": {
+      "experienceForm": {
+        "switch": {
+          "milestone": "Milestone"
+        },
+        "fields": {
+          "levels": "Levels",
+          "name": "Name"
+        }
+      },
+      "experienceInsertDialog": {
+        "addExperience": "Add Experience",
+        "insert": "Insert"
+      },
+      "experienceListDialog": {
+        "title": "Experiences",
+        "noExperiences": "No experiences"
+      }
+    },
+    "slots": {
+      "loadMore": "Load More",
+      "requirementsNotMet": "Requirements of {count} properties were not met",
+      "showAll": "Show All",
+      "insert": "Insert",
+      "closeTest": "Close Test",
+      "withLibraryTags": "with library tags:",
+      "cantFind": "Can't find what you're looking for?",
+      "browseLibraries": "Browse community libraries",
+      "createCustomFiller": "Create custom filler",
+      "slots": "slots",
+      "cancel": "Cancel"
+    },
+    "creatureForm": {
+      "name": "Name",
+      "alignment": "Alignment",
+      "gender": "Gender",
+      "picture": "Picture",
+      "pictureHint": "A link to a high resolution image",
+      "avatar": "Avatar",
+      "avatarHint": "A link to a smaller, square image to use as an avatar",
+      "settings": "Settings",
+      "hideRedundantStats": "Hide redundant stats",
+      "hideRestButtons": "Hide rest buttons",
+      "showSpellsTab": "Show spells tab",
+      "showTreeTab": "Show tree tab",
+      "hitDiceResetMultiplier": "Hit Dice reset multiplier",
+      "hitDiceResetHint": "What fraction of your hit dice are reset every long rest",
+      "discordWebhook": "Discord Webhook URL",
+      "discordWebhookHint": "This creature's logs will be posted to the discord channel",
+      "libraries": "Libraries",
+      "allUserLibraries": "All user libraries",
+      "debug": "Debug",
+      "dependencyGraph": "Dependency Graph"
+    },
+    "creatureFormDialog": {
+      "title": "Character Details",
+      "done": "Done"
+    },
+    "restButton": {
+      "shortRest": "Short Rest",
+      "longRest": "Long Rest"
+    },
+    "buildTree": {
+      "fillSlot": "Fill Slot"
+    },
+    "creatureListItem": {
+      "folder": "Folder",
+      "newCharacter": "New Character",
+      "importCharacter": "Import Character",
+      "addFolder": "Add Folder"
+    }
+  },
+  "properties": {
+    "insertPropertyDialog": {
+      "new": "New",
+      "type": "Type",
+      "create": "Create",
+      "library": "Library",
+      "loadMore": "Load More",
+      "discard": "Discard",
+      "cancel": "Cancel",
+      "insert": "Insert",
+      "property": "Property"
+    },
+    "propertyForm": {
+      "name": "Name",
+      "tags": "Tags",
+      "tagsHint": "Tags let other properties target this property with interactions",
+      "color": "Color",
+      "icon": "Icon",
+      "library": "Library",
+      "canFillSlots": "Can fill slots",
+      "searchable": "Searchable from character sheet",
+      "slotFillType": "Slot fill type",
+      "slotFillTypeHint": "The property type that this slot filler pretends to be when being searched for by a slot",
+      "slotQuantityFilled": "Slot quantity filled",
+      "slotQuantityFilledHint": "How many properties this counts as when filling a slot",
+      "condition": "Condition",
+      "conditionHint": "A calculation to determine if this property can be added to a character",
+      "conditionErrorText": "Condition Error Text",
+      "conditionErrorTextHint": "Text to display if the condition isn't met",
+      "libraryTags": "Library Tags",
+      "libraryTagsHint": "Used to let slots find this property in a library",
+      "childProperties": "Child properties",
+      "other": "...Other",
+      "child": "Child",
+      "childrenCanBeAdded": "Children can be added after this property is created"
+    },
+    "forms": {
+      "common": {
+        "variableName": "Variable name",
+        "variableNameHint": "Use this name in calculations to reference this attribute",
+        "baseValue": "Base Value",
+        "baseValueHint": "This is the value of the attribute before effects are applied. Can be a number or a calculation",
+        "description": "Description",
+        "summary": "Summary",
+        "type": "Type",
+        "resourcesConsumed": "Resources Consumed",
+        "limitUses": "Limit Uses",
+        "uses": "Uses",
+        "usesHint": "How many times this action can be used before needing to be reset",
+        "usesUsed": "Uses used",
+        "usesUsedHint": "How many times this action has already been used: should be 0 in most cases",
+        "damage": "Damage",
+        "damageHint": "Damage reduces the attribute's final value",
+        "behavior": "Behavior",
+        "log": "Log"
+      },
+      "actionForm": {
+        "attackRoll": "Attack roll",
+        "baseAttackRollBonus": "Base attack roll bonus",
+        "baseAttackRollHint": "Must be set for the action to have an attack roll",
+        "actionType": "Action type",
+        "eventVariableName": "Event variable name",
+        "eventVariableNameHint": "Variable name of the event that this action represents",
+        "targetCreature": "Target creature",
+        "singleTarget": "Single Target",
+        "multipleTargets": "Multiple Targets",
+        "self": "Self",
+        "summaryHint": "This will appear in the action card in the character sheet, summarise what the action does. This text will be displayed in the log when the action is taken",
+        "dontShowInLog": "Don't show in log",
+        "action": "Action",
+        "bonusAction": "Bonus action",
+        "attackAction": "Attack action",
+        "attackActionHint": "Attack actions replace a single attack when you choose to use your Action to attack",
+        "reaction": "Reaction",
+        "freeAction": "Free action",
+        "freeActionHint": "You can take one free action on your turn without using an action or bonus action",
+        "longAction": "Long action",
+        "longActionHint": "Long actions take longer than one turn to complete",
+        "event": "Event",
+        "eventHint": "Events are actions that happen to the character like rests or dawn"
+      },
+      "attributeForm": {
+        "hitDiceSize": "Hit Dice Size",
+        "spellSlotLevel": "Spell slot level",
+        "healthBar": "Health Bar",
+        "damagedColors": "Damaged Colors",
+        "half": "Half",
+        "empty": "Empty",
+        "damageOrder": "Damage order",
+        "damageOrderHint": "Lower ordered health bars will take damage before higher ordered ones",
+        "ignoreDamage": "Ignore damage",
+        "preventDamageOverflow": "Prevent damage overflow",
+        "healingOrder": "Healing order",
+        "healingOrderHint": "Lower ordered health bars will take healing before higher ordered ones",
+        "ignoreHealing": "Ignore healing",
+        "preventHealingOverflow": "Prevent healing overflow",
+        "resetHint": "When damage should be reset to zero",
+        "allowDecimalValues": "Allow decimal values",
+        "canBeDamagedNegative": "Can be damaged into negative values",
+        "canBeIncrementedAboveTotal": "Can be incremented above total",
+        "hideWhenTotalZero": "Hide when total is zero",
+        "hideWhenValueZero": "Hide when value is zero",
+        "abilityScore": "Ability score",
+        "abilityScoreHint": "Ability scores are your primary attributes, like Strength and Intelligence",
+        "stat": "Stat",
+        "statHint": "Stats are attributes with a numerical value like speed or carrying capacity",
+        "modifier": "Modifier",
+        "modifierHint": "Modifiers are attributes that are added to rolls, like proficiency bonus",
+        "hitDice": "Hit dice",
+        "resource": "Resource",
+        "resourceHint": "Resources are attributes that are spent to fuel actions, like sorcery points or ki",
+        "spellSlot": "Spell slot",
+        "utility": "Utility",
+        "utilityHint": "Utility attributes aren't displayed on your character sheet, but can be referenced or used in calculations"
+      },
+      "spellForm": {
+        "alwaysPrepared": "Always prepared",
+        "prepared": "Prepared",
+        "castWithoutSpellSlots": "Cast without spell slots",
+        "level": "Level",
+        "levelHint": "The spell level",
+        "school": "School",
+        "castingTime": "Casting Time",
+        "range": "Range",
+        "duration": "Duration",
+        "verbal": "Verbal",
+        "somatic": "Somatic",
+        "concentration": "Concentration",
+        "ritual": "Ritual",
+        "material": "Material",
+        "toHit": "To Hit",
+        "toHitHint": "The bonus to attack if this action has an attack roll",
+        "cantrip": "Cantrip",
+        "abjuration": "Abjuration",
+        "conjuration": "Conjuration",
+        "divination": "Divination",
+        "enchantment": "Enchantment",
+        "evocation": "Evocation",
+        "illusion": "Illusion",
+        "necromancy": "Necromancy",
+        "transmutation": "Transmutation"
+      },
+      "itemForm": {
+        "quantity": "Quantity",
+        "pluralName": "Plural name",
+        "pluralNameHint": "The plural name of your item. If your item's name is 'sword' plural name would be 'swords'",
+        "weight": "Weight",
+        "weightHint": "The weight of a single item in lbs. Can be a decimal value",
+        "value": "Value",
+        "valueHint": "The value of the item in gold pieces, using decimals for values less than 1 gp",
+        "requiresAttunement": "Requires attunement",
+        "attuned": "Attuned",
+        "showIncrement": "Show increment button",
+        "equipped": "Equipped",
+        "attunement": "Attunement"
+      },
+      "effectForm": {
+        "operation": "Operation",
+        "value": "Value",
+        "valueHint": "Number or calculation to determine the value of this effect",
+        "text": "Text",
+        "textHint": "The text to display on the affected stats",
+        "targetProperties": "Target properties",
+        "targetByVariableName": "Target by variable name",
+        "targetByTags": "Target by tags",
+        "stats": "Stats",
+        "statsHint": "Which stats will this effect apply to",
+        "targetField": "Target field",
+        "targetFieldHint": "Target a specific calculation field on the affected properties",
+        "baseValue": "Base Value",
+        "baseValueHint": "Stats take their largest base value, and then apply all other effects",
+        "add": "Add",
+        "addHint": "Add this value to the stat",
+        "multiply": "Multiply",
+        "multiplyHint": "Multiply the stat by this value",
+        "minimum": "Minimum",
+        "minimumHint": "The stat will be at least this value",
+        "maximum": "Maximum",
+        "maximumHint": "The stat will not exceed this value",
+        "set": "Set",
+        "setHint": "The stat will be set to this value",
+        "advantage": "Advantage",
+        "advantageHint": "If this stat is the basis for a check, that check will be at advantage",
+        "disadvantage": "Disadvantage",
+        "disadvantageHint": "If this stat is the basis for a check, that check will be at disadvantage",
+        "passiveBonus": "Passive Bonus",
+        "passiveBonusHint": "This value will be added to the passive check",
+        "fail": "Fail",
+        "failHint": "Targeted skills and checks will always fail",
+        "conditionalBenefit": "Conditional Benefit",
+        "conditionalBenefitHint": "Add a text note to this stat"
+      },
+      "skillForm": {
+        "ability": "Ability",
+        "abilityHint": "Which ability is this skill based off of",
+        "skillType": "Type",
+        "baseProficiency": "Base Proficiency",
+        "baseValues": "Base Values",
+        "baseValueHint": "This is the value of the skill before effects are applied",
+        "applySkill": "Apply skill",
+        "applySkillToTags": "Apply skill to targeted tags",
+        "skill": "Skill",
+        "skillHint": "A normal character sheet skill like Athletics, Deception, or Investigation",
+        "save": "Save",
+        "saveHint": "A saving throw the character can make: Strength Save, etc.",
+        "check": "Check",
+        "checkHint": "An ability check that might include a proficiency bonus later eg. Initiative",
+        "tool": "Tool",
+        "toolHint": "A tool proficiency. Be sure to add a base proficiency in the advanced section.",
+        "weapon": "Weapon",
+        "weaponHint": "A weapon proficiency. Be sure to add a base proficiency in the advanced section.",
+        "armor": "Armor",
+        "armorHint": "An armor proficiency. Be sure to add a base proficiency in the advanced section.",
+        "language": "Language",
+        "languageHint": "A language proficiency. Be sure to add a base proficiency in the advanced section.",
+        "utility": "Utility",
+        "utilityHint": "A skill that does not show up in the sheet, but can be used by other calculations"
+      },
+      "proficiencyForm": {
+        "proficiencyType": "Proficiency Type",
+        "optionAvailable": "Option available"
+      },
+      "slotForm": {
+        "type": "Type",
+        "typeHint": "What property type is needed to fill this slot",
+        "anyType": "Any type",
+        "quantity": "Quantity",
+        "quantityHint": "How many matching properties must be used to fill this slot",
+        "unlimited": "unlimited",
+        "condition": "Condition",
+        "conditionHint": "A calculation to determine if this slot should be active",
+        "alwaysActive": "Always active",
+        "unique": "Unique",
+        "uniqueHint": "Do the properties that fill this slot need to be unique?",
+        "allowDuplicates": "Allow duplicate values",
+        "uniqueInSlot": "Each property inside this slot should be unique",
+        "uniqueInCreature": "Properties in this slot should be unique across the whole character",
+        "testSlot": "Test Slot",
+        "test": "Test",
+        "ignored": "Ignored"
+      },
+      "buffForm": {
+        "targetCreature": "Target creature",
+        "actionTarget": "Action Target",
+        "self": "Self",
+        "children": "Children",
+        "hideRemoveButton": "Hide remove button",
+        "dontFreezeVariables": "Don't freeze variables"
+      },
+      "damageForm": {
+        "damage": "Damage",
+        "damageHint": "A calculation including dice rolls of the damage to deal to the target when activated by an action",
+        "damageType": "Damage Type",
+        "damageTypeHint": "Use the Healing type to restore hit points",
+        "targetCreature": "Target creature",
+        "actionTarget": "Action Target",
+        "self": "Self",
+        "savingThrow": "Saving throw",
+        "dc": "DC",
+        "dcHint": "Saving throw DC",
+        "save": "Save",
+        "saveHint": "Which stat the saving throw targets",
+        "damageOnSuccessfulSave": "Damage on successful save",
+        "damageOnSuccessfulSaveHint": "Use \"~damage\" to reference the damage that would normally be dealt",
+        "halfDamage": "Half damage"
+      },
+      "toggleForm": {
+        "active": "Active",
+        "enabled": "Enabled",
+        "disabled": "Disabled",
+        "calculated": "Calculated",
+        "condition": "Condition",
+        "conditionHint": "When this calculation returns a value that isn't false or zero the children will be active",
+        "enableOrDisable": "Enabled or disable properties",
+        "descendants": "Descendants",
+        "byTargetTags": "By target tags",
+        "showOnCharacterSheet": "Show on character sheet"
+      },
+      "branchForm": {
+        "branchType": "Branch Type",
+        "condition": "Condition",
+        "conditionHint": "If this resolved to a true value, the child properties will be applied",
+        "index": "Index",
+        "indexHint": "Which child to apply. An index of 2 will choose the 2nd child.",
+        "ifConditionTrue": "If condition is true",
+        "attackHit": "Attack hit",
+        "attackMiss": "Attack miss",
+        "saveFailed": "Save failed",
+        "saveSucceeded": "Save succeeded",
+        "applyToEachTarget": "Apply to each target",
+        "random": "Random",
+        "calculatedIndex": "Calculated index",
+        "userChoice": "User choice"
+      },
+      "folderForm": {
+        "grouping": "Grouping",
+        "groupChildrenOnCard": "Group children on a card",
+        "hideChildrenFromDefault": "Hide children from their default locations",
+        "tab": "Tab",
+        "location": "Location",
+        "statsTab": "Stats Tab",
+        "featuresTab": "Features Tab",
+        "actionsTab": "Actions Tab",
+        "spellsTab": "Spells Tab",
+        "inventoryTab": "Inventory Tab",
+        "journalTab": "Journal Tab",
+        "buildTab": "Build Tab",
+        "start": "Start",
+        "end": "End",
+        "afterEvents": "After events",
+        "afterStats": "After stats",
+        "afterSkills": "After skills",
+        "afterProficiencies": "After proficiencies"
+      },
+      "noteForm": {
+        "summaryHint": "This will appear in the card in the character sheet",
+        "descriptionHint": "Text that does not fit in the summary"
+      },
+      "classForm": {
+        "variableNameHint": "Use this name in calculations to reference this class",
+        "classLevelsFromLibraries": "Class levels from libraries",
+        "activeCondition": "Active condition",
+        "activeConditionHint": "A calculation to determine if this class can have class levels added to it"
+      },
+      "featureForm": {
+        "summaryHint": "This will appear in the feature card in the character sheet",
+        "descriptionHint": "The rest of the description that doesn't fit in the summary goes here"
+      },
+      "rollForm": {
+        "variableNameHint": "Use this name in action formulae to refer to the result of this roll",
+        "roll": "Roll",
+        "rollHint": "The calculation that will be evaluated when the roll is triggered by an action. The result will be saved as the variable name in the context of the roll."
+      },
+      "containerForm": {
+        "value": "Value",
+        "valueHint": "The value of the item in gold pieces, using decimals for values less than 1 gp",
+        "weight": "Weight",
+        "carried": "Carried",
+        "carriedHint": "Whether this container and its contents count towards the creature's weight carried",
+        "contentsWeightless": "Contents are weightless"
+      },
+      "triggerForm": {
+        "triggerEvent": "Trigger Event",
+        "triggerCondition": "Trigger Condition",
+        "actionsTaken": "Actions Taken",
+        "timing": "Timing",
+        "timingHint": "When this trigger will fire",
+        "event": "Event",
+        "eventHint": "What causes this trigger to fire",
+        "condition": "Condition",
+        "conditionHint": "A calculation to determine if this trigger should fire",
+        "eventType": "Event Type",
+        "eventTypeHint": "Which action event causes this trigger to fire"
+      }
     }
   }
 }

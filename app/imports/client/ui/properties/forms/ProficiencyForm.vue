@@ -6,7 +6,7 @@
         md="6"
       >
         <proficiency-select
-          label="Proficiency"
+          :label="$t('properties.forms.proficiencyForm.proficiency')"
           style="flex-basis: 300px;"
           :clearable="false"
           :value="model.value"
@@ -18,11 +18,11 @@
         md="6"
       >
         <smart-toggle
-          label="Target properties"
+          :label="$t('properties.forms.proficiencyForm.targetProperties')"
           :value="model.targetByTags ? 'tags' : 'skills'"
           :options="[
-            {name: 'Target by variable name', value: 'skills'},
-            {name: 'Target by tags', value: 'tags'},
+            {name: $t('properties.forms.proficiencyForm.targetByVariableName'), value: 'skills'},
+            {name: $t('properties.forms.proficiencyForm.targetByTags'), value: 'tags'},
           ]"
           @change="(val, ack) => {
             if (val === 'skills') val = undefined;
@@ -45,12 +45,12 @@
           />
           <smart-combobox
             v-else
-            label="Skills"
+            :label="$t('properties.forms.proficiencyForm.skills')"
             class="mr-2"
             multiple
             small-chips
             deletable-chips
-            hint="Which skills does this proficiency apply to"
+            :hint="$t('properties.forms.proficiencyForm.skillsHint')"
             :value="model.stats"
             :items="skillList"
             :error-messages="errors.stats"
@@ -64,10 +64,10 @@
           cols="12"
         >
           <text-field
-            label="Target field"
+            :label="$t('properties.forms.proficiencyForm.targetField')"
             :value="model.targetField"
-            hint="Target a specific calculation field on the affected properties"
-            placeholder="Default field"
+            :hint="$t('properties.forms.proficiencyForm.targetFieldHint')"
+            :placeholder="$t('properties.forms.proficiencyForm.defaultField')"
             persistent-placeholder
             :error-messages="errors.targetField"
             @change="change('targetField', ...arguments)"

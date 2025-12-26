@@ -6,8 +6,8 @@
         md="6"
       >
         <smart-combobox
-          label="Attribute"
-          hint="The attribute that will be damaged or healed"
+          :label="$t('properties.forms.adjustmentForm.attribute')"
+          :hint="$t('properties.forms.adjustmentForm.attributeHint')"
           style="flex-basis: 300px;"
           :items="attributeList"
           :value="model.stat"
@@ -20,7 +20,7 @@
         md="6"
       >
         <computed-field
-          label="Amount"
+          :label="$t('properties.forms.adjustmentForm.amount')"
           :hint="model.operation === 'set' ? setHint : damageHint"
           :model="model.amount"
           :error-messages="errors.amount"
@@ -35,12 +35,12 @@
         md="6"
       >
         <smart-toggle
-          label="Operation"
-          hint="Should the attribute be damaged by the amount, or set to the amount"
+          :label="$t('properties.forms.adjustmentForm.operation')"
+          :hint="$t('properties.forms.adjustmentForm.operationHint')"
           :value="model.operation"
           :options="[
-            { name: 'Damage', value: 'increment' },
-            { name: 'Set', value: 'set' },
+            { name: $t('properties.forms.adjustmentForm.damageOption'), value: 'increment' },
+            { name: $t('properties.forms.adjustmentForm.setOption'), value: 'set' },
           ]"
           :error-messages="errors.operation"
           @change="change('operation', ...arguments)"
@@ -51,11 +51,11 @@
         md="6"
       >
         <smart-toggle
-          label="Target creature"
+          :label="$t('properties.forms.savingThrowForm.targetCreature')"
           :value="model.target"
           :options="[
-            {name: 'Action Target', value: 'target'},
-            {name: 'Self', value: 'self'},
+            {name: $t('properties.forms.savingThrowForm.actionTarget'), value: 'target'},
+            {name: $t('properties.forms.savingThrowForm.self'), value: 'self'},
           ]"
           :error-messages="errors.target"
           @change="change('target', ...arguments)"
@@ -63,9 +63,9 @@
       </v-col>
     </v-row>
     <form-sections type="adjustment">
-      <form-section name="Log">
+      <form-section :name="$t('properties.forms.common.log')">
         <smart-switch
-          label="Don't show in log"
+          :label="$t('properties.forms.actionForm.dontShowInLog')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"
@@ -84,8 +84,8 @@ export default {
   mixins: [propertyFormMixin, attributeListMixin],
   data() {
     return {
-      damageHint: 'The amount of damage to apply, negative values will heal',
-      setHint: 'The value to set the stat to',
+      damageHint: this.$t('properties.forms.adjustmentForm.damageHint'),
+      setHint: this.$t('properties.forms.adjustmentForm.setHint'),
     }
   },
 }

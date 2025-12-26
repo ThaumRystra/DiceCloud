@@ -26,7 +26,7 @@
       :string="model.description"
     />
     <p>
-      {{ slotPropertyTypeName }} with library tags:
+      {{ slotPropertyTypeName }} {{ $t('creature.slots.withLibraryTags') }}
       <property-tags
         v-for="(tags, index) in tagsSearched.or"
         :key="index + 'tags'"
@@ -145,7 +145,7 @@
         outlined
         @click="loadMore"
       >
-        Load More
+        {{ $t('creature.slots.loadMore') }}
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -156,7 +156,7 @@
         class="ma-3 mt-8"
       >
         <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
+          {{ $t('creature.slots.requirementsNotMet', { count: disabledNodeCount }) }}
         </div>
         <v-btn
           class="mt-2"
@@ -165,7 +165,7 @@
           outlined
           @click="showDisabled = true"
         >
-          Show All
+          {{ $t('creature.slots.showAll') }}
         </v-btn>
       </v-layout>
     </template>
@@ -174,7 +174,7 @@
       justify-center
       class="text-caption text--disabled mt-8 mb-2"
     >
-      Can't find what you're looking for?
+      {{ $t('creature.slots.cantFind') }}
     </v-layout>
     <v-layout
       align-center
@@ -190,7 +190,7 @@
         :disabled="!model"
         @click="openLibraryBrowser"
       >
-        Browse community libraries
+        {{ $t('creature.slots.browseLibraries') }}
       </v-btn>
       <v-btn
         v-if="!dummySlot"
@@ -200,7 +200,7 @@
         data-id="custom-button"
         @click="insertCustomFiller"
       >
-        Create custom filler
+        {{ $t('creature.slots.createCustomFiller') }}
       </v-btn>
     </v-layout>
     
@@ -209,7 +209,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('creature.slots.cancel') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -222,10 +222,10 @@
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         <template v-if="slotId">
-          Insert
+          {{ $t('creature.slots.insert') }}
         </template>
         <template v-else>
-          Close Test
+          {{ $t('creature.slots.closeTest') }}
         </template>
       </v-btn>
     </template>

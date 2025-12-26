@@ -6,9 +6,9 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('properties.forms.common.variableName')"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this attribute"
+          :hint="$t('properties.forms.common.variableNameHint')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,12 +19,12 @@
         md="6"
       >
         <smart-toggle
-          label="Active"
+          :label="$t('properties.forms.toggleForm.active')"
           :value="radioSelection"
           :options="[
-            {name: 'Enabled', value: 'enabled'},
-            {name: 'Disabled', value: 'disabled'},
-            {name: 'Calculated', value: 'calculated'},
+            {name: $t('properties.forms.toggleForm.enabled'), value: 'enabled'},
+            {name: $t('properties.forms.toggleForm.disabled'), value: 'disabled'},
+            {name: $t('properties.forms.toggleForm.calculated'), value: 'calculated'},
           ]"
           :error-messages="errors.enabled"
           @change="radioChange"
@@ -36,8 +36,8 @@
           cols="12"
         >
           <computed-field
-            label="Condition"
-            hint="When this calculation returns a value that isn't false or zero the children will be active"
+            :label="$t('properties.forms.toggleForm.condition')"
+            :hint="$t('properties.forms.toggleForm.conditionHint')"
             :model="model.condition"
             :error-messages="errors.condition"
             @change="({path, value, ack}) =>
@@ -47,11 +47,11 @@
       </v-expand-transition>
       <v-col cols="12">
         <smart-toggle
-          label="Enabled or disable properties"
+          :label="$t('properties.forms.toggleForm.enableOrDisable')"
           :value="model.targetByTags"
           :options="[
-            {name: 'Descendants', value: false},
-            {name: 'By target tags', value: true},
+            {name: $t('properties.forms.toggleForm.descendants'), value: false},
+            {name: $t('properties.forms.toggleForm.byTargetTags'), value: true},
           ]"
           @change="change('targetByTags', ...arguments)"
         />
@@ -71,14 +71,14 @@
     </v-row>
 
     <form-sections type="toggle">
-      <form-section name="Behavior">
+      <form-section :name="$t('properties.forms.common.behavior')">
         <v-col
           cols="12"
           md="6"
         >
           <smart-switch
             class="ml-2"
-            label="Show on character sheet"
+            :label="$t('properties.forms.toggleForm.showOnCharacterSheet')"
             :value="model.showUI"
             :error-messages="errors.showUI"
             @change="change('showUI', ...arguments)"

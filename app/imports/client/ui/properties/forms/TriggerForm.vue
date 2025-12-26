@@ -6,9 +6,9 @@
         md="6"
       >
         <smart-select
-          label="Timing"
+          :label="$t('properties.forms.triggerForm.timing')"
           style="flex-basis: 300px;"
-          hint="When this trigger will fire"
+          :hint="$t('properties.forms.triggerForm.timingHint')"
           :items="timingOptions"
           :value="model.timing"
           :error-messages="errors.timing"
@@ -20,9 +20,9 @@
         md="6"
       >
         <smart-select
-          label="Event"
+          :label="$t('properties.forms.triggerForm.event')"
           style="flex-basis: 300px;"
-          hint="What causes this trigger to fire"
+          :hint="$t('properties.forms.triggerForm.eventHint')"
           :items="eventOptions"
           :value="model.event"
           :error-messages="errors.event"
@@ -34,9 +34,9 @@
         md="6"
       >
         <computed-field
-          label="Condition"
-          hint="A calculation to determine if this trigger should fire"
-          placeholder="Always active"
+          :label="$t('properties.forms.triggerForm.condition')"
+          :hint="$t('properties.forms.triggerForm.conditionHint')"
+          :placeholder="$t('properties.forms.slotForm.alwaysActive')"
           persistent-placeholder
           :model="model.condition"
           :error-messages="errors.condition"
@@ -51,9 +51,9 @@
           md="6"
         >
           <smart-select
-            label="Event Type"
+            :label="$t('properties.forms.triggerForm.eventType')"
             style="flex-basis: 300px;"
-            hint="Which action event causes this trigger to fire"
+            :hint="$t('properties.forms.triggerForm.eventTypeHint')"
             :items="actionPropertyTypeOptions"
             :value="model.actionPropertyType"
             :error-messages="errors.actionPropertyType"
@@ -74,8 +74,8 @@
 
     <inline-computation-field
       class="mt-6"
-      label="Description"
-      hint="The rest of the description that doesn't fit in the summary goes here"
+      :label="$t('properties.forms.common.description')"
+      :hint="$t('properties.forms.featureForm.descriptionHint')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -84,10 +84,10 @@
 
     <form-sections type="trigger">
       <form-section
-        name="Log"
+        :name="$t('properties.forms.common.log')"
       >
         <smart-switch
-          label="Don't show in log"
+          :label="$t('properties.forms.actionForm.dontShowInLog')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"

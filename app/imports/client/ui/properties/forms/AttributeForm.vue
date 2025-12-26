@@ -6,9 +6,9 @@
         md="6"
       >
         <text-field
-          label="Variable name"
+          :label="$t('properties.forms.common.variableName')"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this attribute"
+          :hint="$t('properties.forms.common.variableNameHint')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -19,9 +19,9 @@
       >
         <computed-field
           ref="focusFirst"
-          label="Base Value"
+          :label="$t('properties.forms.common.baseValue')"
           class="base-value-field"
-          hint="This is the value of the attribute before effects are applied. Can be a number or a calculation"
+          :hint="$t('properties.forms.common.baseValueHint')"
           :model="model.baseValue"
           :error-messages="errors.baseValue"
           @change="({path, value, ack}) =>
@@ -30,7 +30,7 @@
       </v-col>
       <v-col cols="12">
         <smart-select
-          label="Type"
+          :label="$t('properties.forms.common.type')"
           :items="attributeTypes"
           :value="model.attributeType"
           :error-messages="errors.attributeType"
@@ -58,7 +58,7 @@
           cols="12"
         >
           <computed-field
-            label="Spell slot level"
+            :label="$t('properties.forms.attributeForm.spellSlotLevel')"
             :model="model.spellSlotLevel"
             :error-messages="errors.spellSlotLevel"
             @change="({path, value, ack}) =>
@@ -68,7 +68,7 @@
       </v-expand-transition>
     </v-row>
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -78,17 +78,17 @@
       <v-expand-transition>
         <form-section
           v-if="model.attributeType === 'healthBar'"
-          name="Health Bar"
+          :name="$t('properties.forms.attributeForm.healthBar')"
         >
           <div class="d-flex flex-column align-center mb-4">
             <div class="text-caption mb-4">
-              Damaged Colors
+              {{ $t('properties.forms.attributeForm.damagedColors') }}
             </div>
             <div
               class="d-flex flex-wrap align-center justify-start"
             >
               <outlined-input
-                name="Half"
+                :name="$t('properties.forms.attributeForm.half')"
                 class="mb-4"
               >
                 <color-picker
@@ -99,7 +99,7 @@
                 />
               </outlined-input>
               <outlined-input
-                name="Empty"
+                :name="$t('properties.forms.attributeForm.empty')"
                 class="mb-4 ml-2"
               >
                 <color-picker
@@ -117,9 +117,9 @@
               md="4"
             >
               <text-field
-                label="Damage order"
+                :label="$t('properties.forms.attributeForm.damageOrder')"
                 type="number"
-                hint="Lower ordered health bars will take damage before higher ordered ones"
+                :hint="$t('properties.forms.attributeForm.damageOrderHint')"
                 :disabled="model.healthBarNoDamage"
                 :value="model.healthBarDamageOrder"
                 :error-messages="errors.healthBarDamageOrder"
@@ -132,7 +132,7 @@
               sm="6"
             >
               <smart-switch
-                label="Ignore damage"
+                :label="$t('properties.forms.attributeForm.ignoreDamage')"
                 :value="model.healthBarNoDamage"
                 :error-messages="errors.healthBarNoDamage"
                 @change="change('healthBarNoDamage', ...arguments)"
@@ -144,7 +144,7 @@
               sm="6"
             >
               <smart-switch
-                label="Prevent damage overflow"
+                :label="$t('properties.forms.attributeForm.preventDamageOverflow')"
                 :value="model.healthBarNoDamageOverflow"
                 :error-messages="errors.healthBarNoDamageOverflow"
                 @change="change('healthBarNoDamageOverflow', ...arguments)"
@@ -155,9 +155,9 @@
               md="4"
             >
               <text-field
-                label="Healing order"
+                :label="$t('properties.forms.attributeForm.healingOrder')"
                 type="number"
-                hint="Lower ordered health bars will take healing before higher ordered ones"
+                :hint="$t('properties.forms.attributeForm.healingOrderHint')"
                 :disabled="model.healthBarNoHealing"
                 :value="model.healthBarHealingOrder"
                 :error-messages="errors.healthBarHealingOrder"
@@ -170,7 +170,7 @@
               sm="6"
             >
               <smart-switch
-                label="Ignore healing"
+                :label="$t('properties.forms.attributeForm.ignoreHealing')"
                 :value="model.healthBarNoHealing"
                 :error-messages="errors.healthBarNoHealing"
                 @change="change('healthBarNoHealing', ...arguments)"
@@ -182,7 +182,7 @@
               sm="6"
             >
               <smart-switch
-                label="Prevent healing overflow"
+                :label="$t('properties.forms.attributeForm.preventHealingOverflow')"
                 :value="model.healthBarNoHealingOverflow"
                 :error-messages="errors.healthBarNoHealingOverflow"
                 @change="change('healthBarNoHealingOverflow', ...arguments)"
@@ -198,10 +198,10 @@
             md="6"
           >
             <text-field
-              label="Damage"
+              :label="$t('properties.forms.common.damage')"
               type="number"
               class="damage-field text-center"
-              hint="Damage reduces the attribute's final value"
+              :hint="$t('properties.forms.common.damageHint')"
               :disabled="!context.isLibraryForm"
               :value="model.damage"
               :error-messages="errors.damage"
@@ -214,7 +214,7 @@
           >
             <reset-selector
               v-if="model.attributeType !== 'hitDice'"
-              hint="When damage should be reset to zero"
+              :hint="$t('properties.forms.attributeForm.resetHint')"
               :value="model.reset"
               :error-messages="errors.reset"
               @change="change('reset', ...arguments)"
@@ -231,7 +231,7 @@
           >
             <smart-switch
               v-if="model.attributeType !== 'hitDice'"
-              label="Allow decimal values"
+              :label="$t('properties.forms.attributeForm.allowDecimalValues')"
               class="mx-4"
               :value="model.decimal"
               :error-messages="errors.decimal"
@@ -244,7 +244,7 @@
             md="4"
           >
             <smart-switch
-              label="Can be damaged into negative values"
+              :label="$t('properties.forms.attributeForm.canBeDamagedNegative')"
               class="mx-4"
               :value="model.ignoreLowerLimit"
               :error-messages="errors.ignoreLowerLimit"
@@ -257,7 +257,7 @@
             md="4"
           >
             <smart-switch
-              label="Can be incremented above total"
+              :label="$t('properties.forms.attributeForm.canBeIncrementedAboveTotal')"
               class="mx-4"
               :value="model.ignoreUpperLimit"
               :error-messages="errors.ignoreUpperLimit"
@@ -270,7 +270,7 @@
             md="4"
           >
             <smart-switch
-              label="Hide when total is zero"
+              :label="$t('properties.forms.attributeForm.hideWhenTotalZero')"
               class="mx-4"
               :value="model.hideWhenTotalZero"
               :error-messages="errors.hideWhenTotalZero"
@@ -283,7 +283,7 @@
             md="4"
           >
             <smart-switch
-              label="Hide when value is zero"
+              :label="$t('properties.forms.attributeForm.hideWhenValueZero')"
               class="mx-4"
               :value="model.hideWhenValueZero"
               :error-messages="errors.hideWhenValueZero"

@@ -1,11 +1,11 @@
 <template lang="html">
   <div class="buff-remover-form">
     <smart-toggle
-      label="Target buffs"
+      :label="$t('properties.forms.buffRemoverForm.targetBuffs')"
       :value="model.targetParentBuff ? 'parent' : 'tag'"
       :options="[
-        {name: 'Remove tagged buffs', value: 'tag'},
-        {name: 'Remove parent buff', value: 'parent'},
+        {name: $t('properties.forms.buffRemoverForm.removeTaggedBuffs'), value: 'tag'},
+        {name: $t('properties.forms.buffRemoverForm.removeParentBuff'), value: 'parent'},
       ]"
       @change="(value, ack) => change('targetParentBuff', value === 'parent' ? true : undefined, ack)"
     />
@@ -25,11 +25,11 @@
             md="6"
           >
             <smart-toggle
-              label="Remove matching buffs"
+              :label="$t('properties.forms.buffRemoverForm.removeMatchingBuffs')"
               :value="model.removeAll ? 'all' : 'one'"
               :options="[
-                {name: 'Remove 1 buff', value: 'one'},
-                {name: 'Remove all buffs', value: 'all'},
+                {name: $t('properties.forms.buffRemoverForm.remove1Buff'), value: 'one'},
+                {name: $t('properties.forms.buffRemoverForm.removeAllBuffs'), value: 'all'},
               ]"
               @change="(value, ack) => change('removeAll', value === 'all' ? true : undefined, ack)"
             />
@@ -39,11 +39,11 @@
             md="6"
           >
             <smart-toggle
-              label="Target creature"
+              :label="$t('properties.forms.savingThrowForm.targetCreature')"
               :value="model.target"
               :options="[
-                {name: 'Action Target', value: 'target'},
-                {name: 'Self', value: 'self'},
+                {name: $t('properties.forms.savingThrowForm.actionTarget'), value: 'target'},
+                {name: $t('properties.forms.savingThrowForm.self'), value: 'self'},
               ]"
               :error-messages="errors.target"
               @change="change('target', ...arguments)"
@@ -55,16 +55,16 @@
     <form-sections type="buffRemover">
       <form-section
         v-if="$slots.children"
-        name="Children"
+        :name="$t('properties.forms.damageMultiplierForm.children')"
         standalone
       >
         <slot name="children" />
       </form-section>
       <form-section
-        name="Log"
+        :name="$t('properties.forms.common.log')"
       >
         <smart-switch
-          label="Don't show in log"
+          :label="$t('properties.forms.actionForm.dontShowInLog')"
           :value="model.silent"
           :error-messages="errors.silent"
           @change="change('silent', ...arguments)"
