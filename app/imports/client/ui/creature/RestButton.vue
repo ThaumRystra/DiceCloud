@@ -4,7 +4,7 @@
     :disabled="context.editPermission === false"
     outlined
     :data-id="`rest-btn-${type}`"
-    style="width: 160px;"
+    style="width: fit-content; min-width: 180px;"
     @click="rest"
   >
     <v-icon left>
