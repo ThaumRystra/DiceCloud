@@ -571,6 +571,45 @@
           "maxPrepared": "Máximo de magias preparadas"
         }
       }
+    },
+    "actions": {
+      "done": "Confirmar",
+      "input": {
+        "advantageInput": {
+          "disadvantage": "Desvantagem",
+          "advantage": "Vantagem",
+          "roll": "Rodar"
+        },
+        "castSpellInput": {
+          "clear": "Limpar",
+          "done": "Confirmar",
+          "slot": "Slot",
+          "castWithoutSpellSlot": "Sem slot de magia",
+          "castAsRitual": "Como ritual",
+          "spell": "Magia",
+          "cantrip": "Truque",
+          "level": "Nível"
+        },
+        "checkInput": {
+          "roll": "Rodar",
+          "advantage": "Vantagem",
+          "disadvantage": "Desvantagem",
+          "select": {
+            "ability": "Habilidade",
+            "skill": "Proficiência"
+          },
+          "dc": "CD"
+        },
+        "choiceInput": {
+          "done": "Confirmar"
+        },
+        "targetsInput": {
+          "singleTarget": "Alvo",
+          "multipleTargets": "Alvos",
+          "noTarget": "Sem alvo",
+          "continue": "Continuar"
+        }
+      }
     }
   }
 }

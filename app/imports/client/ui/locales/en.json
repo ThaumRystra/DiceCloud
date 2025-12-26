@@ -555,6 +555,49 @@
           "maxPrepared": "Maximum prepared spells"
         }
       }
+    },
+    "actions": {
+      "done": "Done",
+      "input": {
+        "advantageInput": {
+          "disadvantage": "Disadvantage",
+          "advantage": "Advantage",
+          "roll": "Roll"
+        },
+        "castSpellInput": {
+          "clear": "Clear",
+          "done": "Done",
+          "slot": "Slot",
+          "castWithoutSpellSlot": "Cast without spell slot",
+          "castAsRitual": "Cast as ritual",
+          "spell": "Spell",
+          "cantrip": "Cantrip",
+          "level": "Level",
+          "fields": {
+            "name": "Name"
+            
+          }
+        },
+        "checkInput": {
+          "roll": "Roll",
+          "advantage": "Advantage",
+          "disadvantage": "Disadvantage",
+          "select": {
+            "ability": "Ability",
+            "skill": "Skill"
+          },
+          "dc": "DC"
+        },
+        "choiceInput": {
+          "done": "Done"
+        },
+        "targetsInput": {
+          "singleTarget": "Target",
+          "multipleTargets": "Targets",
+          "noTarget": "No target",
+          "continue": "Continue"
+        }
+      }
     }
   }
 }

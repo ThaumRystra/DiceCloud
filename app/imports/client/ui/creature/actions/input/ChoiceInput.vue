@@ -44,7 +44,7 @@
       :disabled="!canContinue"
       @click="$emit('continue');"
     >
-      Done
+      {{ $t('creature.actions.input.choiceInput.done') }}
     </v-btn>
   </div>
 </template>
