@@ -23,11 +23,16 @@
         v-on="(value == option.value) ? {} : { click() { click(option.value) } }"
       >
         <v-icon
-          v-if="option.icon"
+          v-if="option.icon && option.icon.startsWith('mdi-')"
           left
         >
           {{ option.icon }}
         </v-icon>
+        <span
+          v-else-if="option.icon"
+          class="mr-2"
+          style="font-size: 1.2em;"
+        >{{ option.icon }}</span>
         {{ option.name }}
       </v-btn>
     </v-btn-toggle>

@@ -36,6 +36,17 @@
           />
         </v-list-item>
         <v-list-item>
+          <smart-toggle
+            :label="$t('pages.account.language')"
+            :value="language"
+            :options="[
+              {name: $t('pages.account.languages.en'), value: 'en', icon: '🇺🇸'},
+              {name: $t('pages.account.languages.pt-br'), value: 'pt-br', icon: '🇧🇷'},
+            ]"
+            @change="setLanguage"
+          />
+        </v-list-item>
+        <v-list-item>
           <smart-switch
             :label="$t('pages.account.swapAbilityScoresAndModifiers')"
             :value="
@@ -238,6 +249,7 @@
   import removeEmail from '/imports/api/users/methods/removeEmail';
   import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
   import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
+  import i18n from '/imports/client/ui/i18n';
 
   export default {
     components: {
@@ -264,6 +276,9 @@
       },
       darkMode(){
         return this.user && this.user.darkMode;
+      },
+      language(){
+        return this.user && this.user.language || 'en';
       },
       invites(){
         let usernames = {};
@@ -355,6 +370,13 @@
           darkMode = null;
         }
         Meteor.users.setDarkMode.call({darkMode}, ack);
+      },
+      setLanguage(value, ack){
+        // Map 'pt-br' to 'pt-BR' for i18n locale
+        const i18nLocale = value === 'pt-br' ? 'pt-BR' : value;
+        i18n.locale = i18nLocale;
+        localStorage.setItem('locale', i18nLocale);
+        Meteor.users.setLanguage.call({language: value}, ack);
       },
       swapAbilityScoresAndModifiers(value, ack){
         Meteor.users.setPreference.call({

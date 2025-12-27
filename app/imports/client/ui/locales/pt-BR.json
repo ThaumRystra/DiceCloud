@@ -158,7 +158,12 @@
       "linkPatreonAccount": "Link Patreon Account",
       "signOut": "Sair",
       "invites": "Convites",
-      "deleteAccount": "Deletar conta"
+      "deleteAccount": "Deletar conta",
+      "language": "Idioma",
+      "languages": {
+        "en": "Inglês",
+        "pt-br": "Português (Brasil)"
+      }
     },
     "themes": {
       "dark": "Escuro",

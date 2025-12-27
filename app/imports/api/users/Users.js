@@ -69,6 +69,11 @@ const userSchema = new SimpleSchema({
     type: Boolean,
     optional: true,
   },
+  language: {
+    type: String,
+    optional: true,
+    allowedValues: ['en', 'pt-br'],
+  },
   subscribedLibraries: {
     type: Array,
     defaultValue: defaultLibraries,
@@ -153,6 +158,22 @@ Meteor.users.setDarkMode = new ValidatedMethod({
   run({ darkMode }) {
     if (!this.userId) return;
     Meteor.users.update(this.userId, { $set: { darkMode } });
+  },
+});
+
+Meteor.users.setLanguage = new ValidatedMethod({
+  name: 'users.setLanguage',
+  validate: new SimpleSchema({
+    language: { type: String, allowedValues: ['en', 'pt-br'] },
+  }).validator(),
+  mixins: [RateLimiterMixin],
+  rateLimit: {
+    numRequests: 5,
+    timeInterval: 2000,
+  },
+  run({ language }) {
+    if (!this.userId) return;
+    Meteor.users.update(this.userId, { $set: { language } });
   },
 });
 

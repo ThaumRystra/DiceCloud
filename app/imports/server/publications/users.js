@@ -10,6 +10,7 @@ Meteor.publish('user', function () {
         username: 1,
         apiKey: 1,
         darkMode: 1,
+        language: 1,
         subscribedLibraries: 1,
         subscribedLibraryCollections: 1,
         fileStorageUsed: 1,
