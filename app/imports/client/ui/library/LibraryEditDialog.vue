@@ -38,29 +38,29 @@
             {{ ownerName }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            Library owner
+            {{ $t('pages.library.libraryOwner') }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <text-field
-        label="name"
+        :label="$t('pages.library.name')"
         :value="model.name"
         @change="updateName"
       />
       <text-area
-        label="Description"
+        :label="$t('pages.library.description')"
         :value="model.description"
         @change="updateDescription"
       />
       <smart-switch
         :value="model.showInMarket"
         :disabled="!isOwner"
-        label="Show in community library browser"
+        :label="$t('pages.library.showInCommunityBrowser')"
         @change="updateShowInMarket"
       />
     </template>
     <template v-if="removedDocs.length">
-      <h3>Recently Deleted Properties</h3>
+      <h3>{{ $t('pages.library.recentlyDeletedProperties') }}</h3>
       <v-list>
         <v-list-item
           v-for="model in removedDocs"
@@ -77,7 +77,7 @@
               text
               @click="restore(model._id)"
             >
-              Restore
+              {{ $t('pages.library.restore') }}
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -95,7 +95,7 @@
         data-id="delete-library-button"
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('pages.library.done') }}
       </v-btn>
     </template>
   </dialog-base>

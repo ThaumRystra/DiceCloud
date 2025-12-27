@@ -178,6 +178,35 @@
     "docsPage": {
       "notFound": "Documentação não encontrada"
     },
+    "docsEdit": {
+      "title": "Título",
+      "urlTitle": "Título da URL",
+      "urlTitleHint": "Apenas letras, números e hífens",
+      "published": "Publicado",
+      "icon": "Ícone",
+      "body": "Corpo",
+      "delete": "Excluir",
+      "addChild": "Adicionar filho"
+    },
+    "user": {
+      "username": "Nome de usuário",
+      "usernameAlreadyTaken": "Nome de usuário já está em uso",
+      "update": "Atualizar",
+      "deleteUserAccount": "Excluir Conta do Usuário",
+      "areYouSure": "Tem certeza que deseja excluir sua conta?",
+      "deletedAccountsCannotBeRecovered": "Contas excluídas não podem ser recuperadas",
+      "immediatelyDeleteData": "Excluiremos imediatamente sua conta e todos os seus dados",
+      "usernameWillBeAvailable": "Seu nome de usuário ficará disponível para qualquer pessoa no DiceCloud",
+      "charactersWillBeDeleted": "Estes {count} personagens serão excluídos:",
+      "characterWillBeDeleted": "Este personagem será excluído:",
+      "librariesWillBeDeleted": "Estas {count} bibliotecas serão excluídas:",
+      "libraryWillBeDeleted": "Esta biblioteca será excluída:",
+      "typeUsernameOrEmail": "Digite seu nome de usuário ou email",
+      "toVerifyType": "Para verificar digite 'delete my account'",
+      "permanentlyDeleteAccount": "Excluir conta permanentemente",
+      "cancel": "Cancelar",
+      "directLinkToImage": "Link direto para imagem"
+    },
     "documentation": {
       "notFound": "Documentação de ajuda não encontrada para"
     },
@@ -218,7 +247,28 @@
     },
     "library": {
       "browse": "Pesquise nas bibliotecas da comunidade",
-      "addCollection": "Adicionar na coleção"
+      "addCollection": "Adicionar Coleção",
+      "newLibrary": "Nova Biblioteca",
+      "newCollection": "Nova Coleção",
+      "name": "Nome",
+      "description": "Descrição",
+      "libraries": "Bibliotecas",
+      "noLibrariesFound": "Nenhuma biblioteca encontrada",
+      "insertLibrary": "Inserir Biblioteca",
+      "insertCollection": "Inserir Coleção",
+      "nameIsRequired": "Nome é obrigatório",
+      "libraryOwner": "Dono da biblioteca",
+      "collectionOwner": "Dono da coleção",
+      "showInCommunityBrowser": "Mostrar no navegador da comunidade",
+      "recentlyDeletedProperties": "Propriedades Excluídas Recentemente",
+      "restore": "Restaurar",
+      "done": "Concluído",
+      "cancel": "Cancelar",
+      "select": "Selecionar",
+      "showSecondLibraryTree": "Mostrar segunda árvore de biblioteca",
+      "organize": "Organizar",
+      "subscribers": "inscritos",
+      "copiedSuccessfully": "Copiado com sucesso"
     },
     "maintenance": {
       "title": "DiceCloud está atualmente em manutenção"
@@ -300,7 +350,31 @@
     },
     "tabletop": {
       "notFound": "Esta mesa não foi encontrada",
-      "notFoundDescription": "Pode não existir ou você pode não ter permissão para vê-la"
+      "notFoundDescription": "Pode não existir ou você pode não ter permissão para vê-la",
+      "name": "Nome",
+      "pictureUrl": "URL da Imagem",
+      "pictureUrlHint": "Um link para uma imagem de capa desta mesa",
+      "description": "Descrição",
+      "sharing": "Compartilhamento",
+      "whoCanView": "Quem pode ver",
+      "onlyPeopleIShareWith": "Apenas pessoas que eu compartilho",
+      "anyoneWithLink": "Qualquer um com link",
+      "link": "Link",
+      "addUser": "Adicionar usuário",
+      "usernameOrEmail": "Nome de usuário ou email",
+      "permission": "Permissão",
+      "gameMaster": "Mestre",
+      "player": "Jogador",
+      "spectator": "Espectador",
+      "share": "Compartilhar",
+      "owner": "Dono",
+      "gameMasters": "Mestres",
+      "players": "Jogadores",
+      "spectators": "Espectadores",
+      "userAlreadyGameMaster": "Usuário já é um mestre",
+      "userAlreadyPlayer": "Usuário já é um jogador",
+      "userAlreadySpectator": "Usuário já é um espectador",
+      "userNotFound": "Usuário não encontrado"
     },
     "tabletops": {
       "dontHaveAny": "Você não tem nenhuma mesa"

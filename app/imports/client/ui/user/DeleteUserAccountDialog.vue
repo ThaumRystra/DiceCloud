@@ -1,20 +1,20 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Delete User Account
+      {{ $t('pages.user.deleteUserAccount') }}
     </v-toolbar-title>
     <div>
-      <h2>Are you sure you want to delete your account?</h2>
+      <h2>{{ $t('pages.user.areYouSure') }}</h2>
       <v-alert
         :value="true"
         icon="mdi-alert"
         color="error"
         outlined
       >
-        Deleted accounts can not be recovered
+        {{ $t('pages.user.deletedAccountsCannotBeRecovered') }}
       </v-alert>
-      <p>We will immediately delete your account and all of your data</p>
-      <p>Your username will become available to anyone on DiceCloud</p>
+      <p>{{ $t('pages.user.immediatelyDeleteData') }}</p>
+      <p>{{ $t('pages.user.usernameWillBeAvailable') }}</p>
       <template v-if="characters.length">
         <h3 v-if="characters.length > 1">
           These {{ characters.length }} characters will be deleted:
@@ -52,14 +52,14 @@
         <v-text-field
           v-if="user.username"
           v-model="usernameInput"
-          label="Type your username or email"
+          :label="$t('pages.user.typeUsernameOrEmail')"
           style="width: 350px;"
           :error-messages="usernameInputValid ? undefined : ' '"
           :append-icon="usernameInputValid ? 'mdi-check' : undefined"
         />
         <v-text-field
           v-model="verificationInput"
-          label="To verify type 'delete my account'"
+          :label="$t('pages.user.toVerifyType')"
           style="width: 350px;"
           :error-messages="verificationInputValid ? undefined : ' '"
           :append-icon="verificationInputValid ? 'mdi-check' : undefined"
@@ -70,7 +70,7 @@
           :disabled="!valid"
           @click="deleteAccount"
         >
-          Permanently delete account
+          {{ $t('pages.user.permanentlyDeleteAccount') }}
         </v-btn>
       </v-layout>
     </div>
@@ -82,7 +82,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+          {{ $t('pages.user.cancel') }}
       </v-btn>
     </div>
   </dialog-base>

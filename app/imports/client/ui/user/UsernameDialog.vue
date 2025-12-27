@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <text-field
-      label="Username"
+      :label="$t('pages.user.username')"
       :value="newUsername || username"
       @change="change"
     />
@@ -19,7 +19,7 @@
       :loading="loading"
       @click="setUsername"
     >
-      Update
+      {{ $t('pages.user.update') }}
     </v-btn>
   </dialog-base>
 </template>
@@ -54,7 +54,7 @@ export default {
           ack(error.message || error);
         } else if (result){
           this.valid = false;
-          ack('Username is already taken');
+          ack(this.$t('pages.user.usernameAlreadyTaken'));
         } else {
           this.valid = true;
           this.newUsername = username;

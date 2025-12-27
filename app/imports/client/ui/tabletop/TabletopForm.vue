@@ -6,7 +6,7 @@
         md="6"
       >
         <text-field
-          label="Name"
+          :label="$t('pages.tabletop.name')"
           :value="model.name"
           :error-messages="errors.name"
           :disabled="!editPermission"
@@ -18,8 +18,8 @@
         md="6"
       >
         <smart-image-input
-          label="Picture URL"
-          hint="A link to a cover image for this tabletop"
+          :label="$t('pages.tabletop.pictureUrl')"
+          :hint="$t('pages.tabletop.pictureUrlHint')"
           :disabled="!editPermission"
           :value="model.imageUrl"
           :error-messages="errors.imageUrl"
@@ -30,7 +30,7 @@
         cols="12"
       >
         <text-area
-          label="Description"
+          :label="$t('pages.tabletop.description')"
           :value="model.description"
           :disabled="!editPermission"
           @change="(value, ack) => change('description', value, ack)"
@@ -39,17 +39,17 @@
     </v-row>
 
     <form-sections type="tabletop">
-      <form-section name="Sharing">
+      <form-section :name="$t('pages.tabletop.sharing')">
         <v-row>
           <v-col
             cols="12"
             md="6"
           >
             <smart-select
-              label="Who can view"
+              :label="$t('pages.tabletop.whoCanView')"
               :items="[
-                {text: 'Only people I share with', value: 'false'},
-                {text: 'Anyone with link', value: 'true'}
+                {text: $t('pages.tabletop.onlyPeopleIShareWith'), value: 'false'},
+                {text: $t('pages.tabletop.anyoneWithLink'), value: 'true'}
               ]"
               :value="!!model.public + ''"
               @change="(value, ack) => change('public', value === 'true', ack)"
@@ -62,7 +62,7 @@
           >
             <text-field
               readonly
-              label="Link"
+              :label="$t('pages.tabletop.link')"
               :value="link"
             />
           </v-col>
@@ -72,21 +72,21 @@
             class="mb-4 px-4"
           >
             <h3 class="mb-4">
-              Add user
+              {{ $t('pages.tabletop.addUser') }}
             </h3>
             <text-field
-              label="Username or email"
+              :label="$t('pages.tabletop.usernameOrEmail')"
               :value="userSearched"
               :debounce-time="300"
               :disabled="!editPermission"
               @change="(value, ack) => getUser({value, ack})"
             />
             <smart-select
-              label="Permission"
+              :label="$t('pages.tabletop.permission')"
               :items="[
-                {text: 'Game Master', value: 'gameMaster'},
-                {text: 'Player', value: 'player'},
-                {text: 'Spectator', value: 'spectator'},
+                {text: $t('pages.tabletop.gameMaster'), value: 'gameMaster'},
+                {text: $t('pages.tabletop.player'), value: 'player'},
+                {text: $t('pages.tabletop.spectator'), value: 'spectator'},
               ]"
               :value="newSharePermission"
               :disabled="!editPermission"
@@ -98,12 +98,12 @@
               :disabled="userFoundState !== 'found' || !editPermission"
               @click="ack => updateSharing(userId, newSharePermission, ack)"
             >
-              Share
+              {{ $t('pages.tabletop.share') }}
             </smart-btn>
           </v-col>
 
           <property-field
-            name="Owner"
+            :name="$t('pages.tabletop.owner')"
             :cols="{cols: 12, md: 6}"
           >
             {{ users.owner.username || users.owner._id || '' }}
@@ -115,7 +115,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Game Masters">
+            <outlined-input :name="$t('pages.tabletop.gameMasters')">
               <tabletop-user-list
                 :users="users.gameMasters"
                 :edit-permission="editPermission"
@@ -133,7 +133,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Players">
+            <outlined-input :name="$t('pages.tabletop.players')">
               <tabletop-user-list
                 :users="users.players"
                 :edit-permission="editPermission"
@@ -151,7 +151,7 @@
             md="6"
             class="mb-4"
           >
-            <outlined-input name="Spectators">
+            <outlined-input :name="$t('pages.tabletop.spectators')">
               <tabletop-user-list
                 :users="users.spectators"
                 :edit-permission="editPermission"
@@ -243,20 +243,20 @@ export default {
           if (result) {
             if (this.users.gameMasters.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a game master');
+              ack(this.$t('pages.tabletop.userAlreadyGameMaster'));
             } else if (this.users.players.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a player');
+              ack(this.$t('pages.tabletop.userAlreadyPlayer'));
             } else if (this.users.spectators.includes(result)) {
               this.userFoundState = 'failed';
-              ack('User is already a spectator');
+              ack(this.$t('pages.tabletop.userAlreadySpectator'));
             } else {
               this.userFoundState = 'found';
               ack();
             }
           } else {
             this.userFoundState = 'notFound';
-            ack('User not found');
+            ack(this.$t('pages.tabletop.userNotFound'));
           }
         }
       });

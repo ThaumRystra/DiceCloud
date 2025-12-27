@@ -38,35 +38,35 @@
             {{ ownerName || '?' }}
           </v-list-item-title>
           <v-list-item-subtitle>
-            Collection owner
+            {{ $t('pages.library.collectionOwner') }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       <text-field
-        label="name"
+        :label="$t('pages.library.name')"
         :value="model.name"
         @change="(name, ack) => updateLibraryCollection({name}, ack)"
       />
       <text-area
-        label="Description"
+        :label="$t('pages.library.description')"
         :value="model.description"
         @change="(description, ack) => updateLibraryCollection({description}, ack)"
       />
       <smart-switch
         :value="model.showInMarket"
         :disabled="!isOwner"
-        label="Show in community library browser"
+        :label="$t('pages.library.showInCommunityBrowser')"
         @change="(showInMarket, ack) => updateLibraryCollection({showInMarket}, ack)"
       />
       <smart-select
-        label="Libraries"
+        :label="$t('pages.library.libraries')"
         :items="libraryOptions"
         :value="model.libraries"
         :debounce-time="0"
         multiple
         chips
         deletable-chips
-        no-data-text="No libraries found"
+        :no-data-text="$t('pages.library.noLibrariesFound')"
         @change="(libraries, ack) => updateLibraryCollection({libraries}, ack)"
       />
     </template>
@@ -77,7 +77,7 @@
         data-id="delete-library-button"
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('pages.library.done') }}
       </v-btn>
     </template>
   </dialog-base>

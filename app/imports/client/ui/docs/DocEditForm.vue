@@ -11,7 +11,7 @@
             md="6"
           >
             <text-field
-              label="Title"
+              :label="$t('pages.docsEdit.title')"
               :value="doc.name"
               @change="(value, ack) => change({path: ['name'], value, ack})"
             />
@@ -22,9 +22,8 @@
             class="d-flex"
           >
             <text-field
-              label="URL title"
-              :value="doc.urlName"
-              hint="Only letters, numbers, and dashes"
+              :label="$t('pages.docsEdit.urlTitle')"
+              :hint="$t('pages.docsEdit.urlTitleHint')"
               @change="(value, ack) => change({path: ['urlName'], value, ack})"
             />
             <v-menu
@@ -47,7 +46,7 @@
                 >
                   <v-list-item-content>
                     <v-list-item-title>
-                      Delete
+                      {{ $t('pages.docsEdit.delete') }}
                     </v-list-item-title>
                   </v-list-item-content>
                   <v-list-item-action>
@@ -62,7 +61,7 @@
             md="6"
           >
             <smart-switch
-              label="Published"
+              :label="$t('pages.docsEdit.published')"
               :value="doc.published"
               @change="(value, ack) => change({path: ['published'], value, ack})"
             />
@@ -73,7 +72,7 @@
             class="d-flex align-center"
           >
             <icon-picker
-              label="Icon"
+              :label="$t('pages.docsEdit.icon')"
               :value="doc.icon"
               @change="(value, ack) => change({path: ['icon'], value, ack})"
             />
@@ -82,7 +81,7 @@
             cols="12"
           >
             <text-area
-              label="Body"
+              :label="$t('pages.docsEdit.body')"
               :rows="20"
               :value="doc.description"
               @change="(value, ack) => change({path: ['description'], value, ack})"
@@ -119,7 +118,7 @@
             style="width: 100%; height: 240px;"
             @click="ack => add({ ack })"
           >
-            Add child
+            {{ $t('pages.docsEdit.addChild') }}
           </smart-btn>
         </v-col>
       </v-row>

@@ -2,31 +2,31 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        New Collection
+        {{ $t('pages.library.newCollection') }}
       </v-toolbar-title>
     </template>
     <template>
       <text-field
-        label="Name"
+        :label="$t('pages.library.name')"
         :value="libraryCollection.name"
         :debounce-time="0"
         @change="nameChanged"
       />
       <text-area
-        label="Description"
+        :label="$t('pages.library.description')"
         :value="libraryCollection.description"
         :debounce-time="0"
         @change="descriptionChanged"
       />
       <smart-select
-        label="Libraries"
+        :label="$t('pages.library.libraries')"
         :items="libraryOptions"
         :value="libraryCollection.libraries"
         :debounce-time="0"
         multiple
         chips
         deletable-chips
-        no-data-text="No libraries found"
+        :no-data-text="$t('pages.library.noLibrariesFound')"
         @change="librariesChanged"
       />
     </template>
@@ -37,7 +37,7 @@
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', libraryCollection)"
       >
-        Insert Collection
+        {{ $t('pages.library.insertCollection') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -88,7 +88,7 @@ export default {
         ack();
       } else {
         this.valid = false;
-        ack('Name is required')
+        ack(this.$t('pages.library.nameIsRequired'))
       }
     },
     descriptionChanged(val, ack){

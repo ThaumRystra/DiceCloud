@@ -24,7 +24,7 @@
       :loading="loading"
       @click="subscribe(!subscribed)"
     >
-      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
+      {{ subscribed ? $t('pages.libraryBrowser.Unsubscribe') : $t('pages.libraryBrowser.Subscribe') }}
     </v-btn>
     <v-btn
       v-if="canEdit"
@@ -40,7 +40,7 @@
       slot="extension"
       class="mx-4 text--disabled"
     >
-      {{ formatNumber(library.subscriberCount) }} subscribers
+      {{ formatNumber(library.subscriberCount) }} {{ $t('pages.library.subscribers') }}
     </div>
   </v-app-bar>
 </template>

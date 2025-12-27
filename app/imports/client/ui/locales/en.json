@@ -158,6 +158,35 @@
     "docsPage": {
       "notFound": "Documentation not found"
     },
+    "docsEdit": {
+      "title": "Title",
+      "urlTitle": "URL title",
+      "urlTitleHint": "Only letters, numbers, and dashes",
+      "published": "Published",
+      "icon": "Icon",
+      "body": "Body",
+      "delete": "Delete",
+      "addChild": "Add child"
+    },
+    "user": {
+      "username": "Username",
+      "usernameAlreadyTaken": "Username is already taken",
+      "update": "Update",
+      "deleteUserAccount": "Delete User Account",
+      "areYouSure": "Are you sure you want to delete your account?",
+      "deletedAccountsCannotBeRecovered": "Deleted accounts can not be recovered",
+      "immediatelyDeleteData": "We will immediately delete your account and all of your data",
+      "usernameWillBeAvailable": "Your username will become available to anyone on DiceCloud",
+      "charactersWillBeDeleted": "These {count} characters will be deleted:",
+      "characterWillBeDeleted": "This character will be deleted:",
+      "librariesWillBeDeleted": "These {count} libraries will be deleted:",
+      "libraryWillBeDeleted": "This library will be deleted:",
+      "typeUsernameOrEmail": "Type your username or email",
+      "toVerifyType": "To verify type 'delete my account'",
+      "permanentlyDeleteAccount": "Permanently delete account",
+      "cancel": "Cancel",
+      "directLinkToImage": "Direct link to image"
+    },
     "documentation": {
       "notFound": "Help document not found for"
     },
@@ -198,7 +227,28 @@
     },
     "library": {
       "browse": "Browse community libraries",
-      "addCollection": "Add Collection"
+      "addCollection": "Add Collection",
+      "newLibrary": "New Library",
+      "newCollection": "New Collection",
+      "name": "Name",
+      "description": "Description",
+      "libraries": "Libraries",
+      "noLibrariesFound": "No libraries found",
+      "insertLibrary": "Insert Library",
+      "insertCollection": "Insert Collection",
+      "nameIsRequired": "Name is required",
+      "libraryOwner": "Library owner",
+      "collectionOwner": "Collection owner",
+      "showInCommunityBrowser": "Show in community library browser",
+      "recentlyDeletedProperties": "Recently Deleted Properties",
+      "restore": "Restore",
+      "done": "Done",
+      "cancel": "Cancel",
+      "select": "Select",
+      "showSecondLibraryTree": "Show second library tree",
+      "organize": "Organize",
+      "subscribers": "subscribers",
+      "copiedSuccessfully": "Copied successfully"
     },
     "maintenance": {
       "title": "DiceCloud is currently under maintenance"
@@ -280,7 +330,31 @@
     },
     "tabletop": {
       "notFound": "This tabletop was not found",
-      "notFoundDescription": "Either it does not exist, or you do not have permission to view it"
+      "notFoundDescription": "Either it does not exist, or you do not have permission to view it",
+      "name": "Name",
+      "pictureUrl": "Picture URL",
+      "pictureUrlHint": "A link to a cover image for this tabletop",
+      "description": "Description",
+      "sharing": "Sharing",
+      "whoCanView": "Who can view",
+      "onlyPeopleIShareWith": "Only people I share with",
+      "anyoneWithLink": "Anyone with link",
+      "link": "Link",
+      "addUser": "Add user",
+      "usernameOrEmail": "Username or email",
+      "permission": "Permission",
+      "gameMaster": "Game Master",
+      "player": "Player",
+      "spectator": "Spectator",
+      "share": "Share",
+      "owner": "Owner",
+      "gameMasters": "Game Masters",
+      "players": "Players",
+      "spectators": "Spectators",
+      "userAlreadyGameMaster": "User is already a game master",
+      "userAlreadyPlayer": "User is already a player",
+      "userAlreadySpectator": "User is already a spectator",
+      "userNotFound": "User not found"
     },
     "tabletops": {
       "dontHaveAny": "You don't have any tabletops"
