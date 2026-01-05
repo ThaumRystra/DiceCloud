@@ -3,7 +3,41 @@
     class="card-background"
     style="height: 100%"
   >
-    <v-container>
+    <!-- Empty State -->
+    <v-container
+      v-if="hasNoCharacters"
+      class="empty-state-container fill-height"
+      data-id="empty-state-create-character"
+      @click="insertCharacter"
+    >
+      <v-row
+        align="center"
+        justify="center"
+        class="fill-height"
+      >
+        <v-col
+          cols="12"
+          class="text-center"
+        >
+          <v-icon
+            class="empty-state-icon"
+            size="80"
+            color="primary"
+          >
+            mdi-plus-circle-outline
+          </v-icon>
+          <h2 class="empty-state-title">
+            No characters yet!
+          </h2>
+          <p class="empty-state-subtitle">
+            Click on the + button to create your first character
+          </p>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Normal Content -->
+    <v-container v-else>
       <v-row
         justify="center"
         class="mb-16"
@@ -16,8 +50,8 @@
             v-if="characterSpaceLeft < 0"
             type="error"
           >
-            You have exceeded your maximum number of character slots, archive or delete
-            some characters.
+            You have exceeded your maximum number of character
+            slots, archive or delete some characters.
           </v-alert>
           <v-alert
             v-else-if="characterSpaceLeft === 0"
@@ -112,6 +146,13 @@ export default {
       renamingFolder: undefined,
     }
   },
+  computed: {
+    hasNoCharacters() {
+      const noCreaturesWithNoParty = !this.CreaturesWithNoParty || this.CreaturesWithNoParty.length === 0;
+      const noFolders = !this.folders || this.folders.length === 0;
+      return noCreaturesWithNoParty && noFolders;
+    },
+  },
   meteor: {
     $subscribe: {
       'characterList': [],
@@ -204,3 +245,49 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.empty-state-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border-radius: 8px;
+}
+
+.empty-state-container:hover {
+  background-color: rgba(var(--v-theme-primary), 0.08);
+}
+
+.empty-state-content {
+  text-align: center;
+  padding: 48px;
+}
+
+.empty-state-icon {
+  margin-bottom: 24px;
+  opacity: 0.7;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.empty-state-icon:hover {
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.empty-state-title {
+  font-size: 1.75rem;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+.empty-state-subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+</style>
