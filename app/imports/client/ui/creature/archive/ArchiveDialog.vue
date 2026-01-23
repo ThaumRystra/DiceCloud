@@ -27,8 +27,8 @@
       selection
       :creatures="mode === 'archive' ? CreaturesWithNoParty : archiveCreaturesWithNoParty"
       :folders="mode === 'archive' ? folders : archivefolders"
-      :selected-creature="selectedCreature"
-      @creature-selected="id => selectedCreature = id"
+      :selected-creature-id="selectedCreatureId"
+      @creature-selected="id => selectedCreatureId = id"
     />
     <v-spacer slot="actions" />
     <v-btn
@@ -94,6 +94,7 @@ const creatureFields = {
   'readers': 1,
   'writers': 1,
   'owner': 1,
+  'archiveId': 1,
 };
 
 export default {
@@ -102,36 +103,36 @@ export default {
     CreatureFolderList,
   },
   data(){return {
-    selectedCreature: null,
+    selectedCreatureId: null,
     mode: 'archive',
     archiveActionLoading: false,
   }},
   computed: {
     numSelected(){
-      return this.selectedCreature ? 1 : 0;
+      return this.selectedCreatureId ? 1 : 0;
     },
   },
   watch: {
     mode(){
-      this.selectedCreature = null;
+      this.selectedCreatureId = null;
     },
   },
   methods: {
     archiveAction(){
-      if (!this.selectedCreature) return;
+      if (!this.selectedCreatureId) return;
       this.archiveActionLoading = true;
-      if (this.mode === 'archive'){
+      if (this.mode === 'archive') {
         archiveCreatureToFile.call({
-          creatureId: this.selectedCreature,
+          creatureId: this.selectedCreatureId,
         }, error => {
           this.archiveActionLoading = false;
           if (!error) return;
           console.error(error);
           snackbar({text: error.reason});
         });
-      } else if (this.mode === 'restore'){
+      } else if (this.mode === 'restore') {
         restoreCreatureFromFile.call({
-          fileId: this.selectedCreature,
+          fileId: this.selectedCreatureId,
         }, error => {
           this.archiveActionLoading = false;
           if (!error) return;
@@ -139,7 +140,7 @@ export default {
           snackbar({text: error.reason});
         });
       }
-      this.selectedCreature = null;
+      this.selectedCreatureId = null;
     }
   },
   meteor: {
@@ -194,6 +195,10 @@ export default {
         folder.creatures = ArchiveCreatureFiles.find(
           {
             'meta.creatureId': {$in: folder.creatures || []},
+            $or: [
+              { 'meta.auto': false },
+              { 'meta.auto': { $exists: false } },
+            ],
             userId,
           }, {
             sort: {'meta.creatureName': 1},
@@ -211,6 +216,10 @@ export default {
       return ArchiveCreatureFiles.find(
         {
           'meta.creatureId': {$nin: folderChars},
+          $or: [
+            { 'meta.auto': false },
+            { 'meta.auto': { $exists: false } },
+          ],
           userId,
         }, {
           sort: {'meta.creatureName': 1},

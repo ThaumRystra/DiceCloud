@@ -180,6 +180,12 @@ const CreatureSchema = TypedSimpleSchema.from({
     type: CreatureSettingsSchema,
     defaultValue: {},
   },
+
+  // Was auto archived
+  'archiveId': {
+    type: String,
+    optional: true,
+  },
 })
   .extend(ColorSchema)
   .extend(SharingSchema);

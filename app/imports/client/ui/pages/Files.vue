@@ -142,6 +142,7 @@ import { archiveSchema } from '/imports/api/creature/archive/ArchiveCreatureFile
 import migrateArchive from '/imports/migrations/archive/migrateArchive';
 import ImageField from '/imports/client/ui/properties/viewers/shared/ImageField.vue';
 import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
+import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 
 // TODO Mark files that don't have versions.${version}.meta.pipePath set as broken links
 // TODO show user images
@@ -180,6 +181,7 @@ export default {
       ).map(f => {
         f.size = prettyBytes(f.size);
         f.link = ArchiveCreatureFiles.link(f);
+        f.url = `/character/${f.meta.creatureId}/${getCreatureUrlName({ name: f.meta.creatureName })}`
         return f;
       });
     },

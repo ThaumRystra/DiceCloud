@@ -2,7 +2,6 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import UserImages from '/imports/api/files/userImages/UserImages';
-const fileCollections = [ArchiveCreatureFiles, UserImages];
 
 const updateFileStorageUsed = new ValidatedMethod({
   name: 'users.recalculateFileStorageUsed',
@@ -33,10 +32,11 @@ export function updateFileStorageUsedWork(userId) {
   }
 
   let sum = 0;
-  fileCollections.forEach(collection => {
-    collection.find({ userId }, { fields: { size: 1 } }).forEach(file => {
-      sum += file.size;
-    });
+  ArchiveCreatureFiles.find({ userId }, { fields: { size: 1 } }).forEach(file => {
+    sum += file.size;
+  });
+  UserImages.find({ userId }, { fields: { size: 1 } }).forEach(file => {
+    sum += file.size;
   });
 
   Meteor.users.update(userId, {
