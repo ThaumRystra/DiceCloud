@@ -12,6 +12,7 @@ ENV METEOR_ALLOW_SUPERUSER=true \
 RUN adduser --system --group --home /base mt && chown -R mt:mt /base
 WORKDIR /base
 COPY --chown=mt:mt app /base/app
+COPY --chown=mt:mt .git /base/.git
 
 # Installing Meteor and project dependencies
 RUN apt-get update && apt-get install --no-install-recommends -y \
@@ -27,7 +28,7 @@ RUN curl -fsSL https://install.meteor.com/\?release\=2.16 -o /tmp/install-meteor
 
 # Building Meteor project
 WORKDIR /base/app
-RUN export PATH=$PATH:/base/.meteor && \
+RUN export PATH=$PATH:/base/.meteor && git checkout -f -b local e76ad64a7d6fa06565e174006c287da5e1244fec && \
     meteor npm ci --omit=dev && \
     meteor build --directory /base/dc --architecture os.linux.x86_64 && \
     rm -rf /base/.meteor ~/.npm ~/.cache

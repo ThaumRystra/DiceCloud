@@ -1,4 +1,3 @@
-version: '3.7'
 services:
   dicecloud-db:
     container_name: dicecloud-db
@@ -6,21 +5,41 @@ services:
     command:
       - --storageEngine=wiredTiger
     volumes:
-      - ./dicecloud/data/db:/data/db
+      - ./data/db:/data/db
     environment:
       - MONGO_INITDB_ROOT_USERNAME=meteor
       - MONGO_INITDB_ROOT_PASSWORD=meteor
+    networks:
+      - dicecloud
+
   dicecloud:
     container_name: dicecloud
-    build:
-      context: ./
+    image: forgejo.spacetime.technology/arbel/dicecloud:latest
     environment:
-    #update ROOT_URL, PORT, and MAIL_URL for your environment
+      # Node Performance
+      - NODE_OPTIONS=--max-old-space-size=512
+      - WEBAPP_THREAD_POOL_SIZE=4
+      # Node Environment
+      - NODE_ENV=production
+      - NODE_MODULES_CACHE=true
+      - GZIP=true
+      # Meteor Settings
+      - METEOR_ALLOW_SUPERUSER=true
+      - METEOR_DISABLE_OPTIMISTIC_CACHING=true
+      - METEOR_NO_RELEASE_CHECK=true
+      - METEOR_DISABLE_OPLOG=false
+      # Application Settings
       - ROOT_URL=http://localhost:3000
       - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017
       - PORT=3000
-      - NODE_ENV=production
       - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true}}
       - MAIL_URL=smtp://EMAIL:PASSWORD@SERVER:PORT
     ports:
-      - '3000:3000' #The internal port should match the port set in the environmental variables
+      - 3000:3000
+    networks:
+      - dicecloud
+
+networks:
+  dicecloud:
+    name: dicecloud
+    driver: bridge
