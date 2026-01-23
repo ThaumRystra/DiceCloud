@@ -18,7 +18,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Weight Carried
+                  {{ $t('creature.character.characterSheetTabs.inventoryTab.weightCarried') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -33,7 +33,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Net worth
+                  {{ $t('creature.character.characterSheetTabs.inventoryTab.netWorth') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -48,7 +48,7 @@
               </v-list-item-avatar>
               <v-list-item-content>
                 <v-list-item-title>
-                  Items attuned
+                  {{ $t('creature.character.characterSheetTabs.inventoryTab.itemsAttuned') }}
                 </v-list-item-title>
               </v-list-item-content>
               <v-list-item-action>
@@ -63,7 +63,7 @@
       <div>
         <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
-            Equipped
+            {{ $t('creature.character.characterSheetTabs.inventoryTab.equipped') }}
           </v-toolbar-title>
           <v-card-text class="px-0">
             <item-list
@@ -77,7 +77,7 @@
       <div>
         <toolbar-card transparent-toolbar>
           <v-toolbar-title slot="toolbar">
-            Carried
+            {{ $t('creature.character.characterSheetTabs.inventoryTab.carried') }}
           </v-toolbar-title>
           <v-card-text class="px-0">
             <item-list

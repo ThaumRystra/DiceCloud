@@ -4,16 +4,16 @@
   >
     <div class="double-border my-2">
       <div class="label text-center">
-        Inventory
+        {{ $t('creature.character.printedCharacterSheet.inventory.title') }}
       </div>
       <div class="d-flex inventory-stat">
         <v-icon>$vuetify.icons.injustice</v-icon>
-        Weight Carried:
-        {{ weightCarried }} lb
+        {{ $t('creature.character.printedCharacterSheet.inventory.weightCarried') }}:
+        {{ weightCarried }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
       </div>
       <div class="d-flex inventory-stat">
         <v-icon>$vuetify.icons.cash</v-icon>
-        Net worth:
+        {{ $t('creature.character.printedCharacterSheet.inventory.netWorth') }}:
         <coin-value
           class="ml-2"
           :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
@@ -24,13 +24,13 @@
         class="d-flex inventory-stat"
       >
         <v-icon>$vuetify.icons.spell</v-icon>
-        Items attuned:
+        {{ $t('creature.character.printedCharacterSheet.inventory.itemsAttuned') }}:
         {{ variables.itemsAttuned && variables.itemsAttuned.value }}
       </div>
     </div>
     <div class="double-border my-2">
       <div class="label text-center">
-        Equipped
+        {{ $t('creature.character.printedCharacterSheet.inventory.equipped') }}
       </div>
       <column-layout wide-columns>
         <printed-item
@@ -42,7 +42,7 @@
     </div>
     <div class="double-border my-2">
       <div class="label text-center">
-        Carried
+        {{ $t('creature.character.printedCharacterSheet.inventory.carried') }}
       </div>
       <column-layout wide-columns>
         <printed-item

@@ -4,7 +4,7 @@
       :value="true"
       type="info"
     >
-      This page is not available in this version of DiceCloud.
+      {{ $t('pages.notImplemented.title') }}
     </v-alert>
   </div>
 </template>

@@ -2,7 +2,7 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        Experiences
+        {{ $t('creature.experiences.experienceListDialog.title') }}
       </v-toolbar-title>
       <v-spacer />
       <v-btn
@@ -36,7 +36,7 @@
         $vuetify.icons.baby_face
       </v-icon>
       <p class="text-h5">
-        No experiences
+        {{ $t('creature.experiences.experienceListDialog.noExperiences') }}
       </p>
     </div>
     <v-list v-else>

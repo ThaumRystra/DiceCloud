@@ -8,7 +8,7 @@
         text
         to="/sign-in"
       >
-        Sign in
+        {{ $t('layouts.sidebar.signIn') }}
       </v-btn>
     </v-layout>
     <v-list
@@ -32,7 +32,7 @@
                 <v-icon>mdi-cog</v-icon>
               </v-btn>
             </template>
-            <span>Account Settings</span>
+            <span>{{ $t('layouts.sidebar.accountSettings') }}</span>
           </v-tooltip>
         </v-list-item-action>
       </v-list-item>
@@ -95,17 +95,17 @@ export default {
     links() {
       let isLoggedIn = !!Meteor.userId();
       let links = [
-        { title: 'Home', icon: 'mdi-home', to: '/' },
-        { title: 'Characters', icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
-        { title: 'Library', icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
-        { title: 'Tabletops', icon: 'mdi-table-furniture', to: '/tabletops', requireLogin: true },
-        //{ title: 'Friends', icon: 'mdi-account-multiple', to: '/friends', requireLogin: true },
-        { title: 'Files', icon: 'mdi-file-multiple', to: '/my-files', requireLogin: true, },
-        { title: 'Documentation', icon: 'mdi-book-open-variant', to: '/docs' },
-        { title: 'Feedback', icon: 'mdi-bug', to: '/feedback' },
-        { title: 'About', icon: 'mdi-sign-text', to: '/about' },
-        { title: 'Patreon', icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
-        { title: 'Github', icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
+        { title: this.$t('layouts.sidebar.links.home'), icon: 'mdi-home', to: '/' },
+        { title: this.$t('layouts.sidebar.links.characters'), icon: 'mdi-account-group', to: '/character-list', requireLogin: true },
+        { title: this.$t('layouts.sidebar.links.library'), icon: 'mdi-library-shelves', to: '/library', requireLogin: true },
+        { title: this.$t('layouts.sidebar.links.tabletops'), icon: 'mdi-table-furniture', to: '/tabletops', requireLogin: true },
+        //{ title: this.$t('layouts.sidebar.links.friends'), icon: 'mdi-account-multiple', to: '/friends', requireLogin: true },
+        { title: this.$t('layouts.sidebar.links.files'), icon: 'mdi-file-multiple', to: '/my-files', requireLogin: true, },
+        { title: this.$t('layouts.sidebar.links.documentation'), icon: 'mdi-book-open-variant', to: '/docs' },
+        { title: this.$t('layouts.sidebar.links.feedback'), icon: 'mdi-bug', to: '/feedback' },
+        { title: this.$t('layouts.sidebar.links.about'), icon: 'mdi-sign-text', to: '/about' },
+        { title: this.$t('layouts.sidebar.links.patreon'), icon: 'mdi-patreon', href: 'https://www.patreon.com/dicecloud' },
+        { title: this.$t('layouts.sidebar.links.github'), icon: 'mdi-github', href: 'https://github.com/ThaumRystra/DiceCloud/' },
       ];
       return links.filter(link => !link.requireLogin || isLoggedIn);
     },

@@ -7,8 +7,8 @@
       >
         <computed-field
           ref="focusFirst"
-          label="Damage"
-          hint="A calculation including dice rolls of the damage to deal to the target when activated by an action"
+          :label="$t('properties.forms.damageForm.damage')"
+          :hint="$t('properties.forms.damageForm.damageHint')"
           :model="model.amount"
           :error-messages="errors.amount"
           @change="({path, value, ack}) =>
@@ -20,9 +20,9 @@
         md="6"
       >
         <smart-combobox
-          label="Damage Type"
+          :label="$t('properties.forms.damageForm.damageType')"
           style="flex-basis: 200px;"
-          hint="Use the Healing type to restore hit points"
+          :hint="$t('properties.forms.damageForm.damageTypeHint')"
           :rules="damageTypeRules"
           :items="DAMAGE_TYPES"
           :value="model.damageType"
@@ -33,11 +33,11 @@
       </v-col>
       <v-col cols="12">
         <smart-toggle
-          label="Target creature"
+          :label="$t('properties.forms.damageForm.targetCreature')"
           :value="model.target"
           :options="[
-            {name: 'Action Target', value: 'target'},
-            {name: 'Self', value: 'self'},
+            {name: $t('properties.forms.damageForm.actionTarget'), value: 'target'},
+            {name: $t('properties.forms.damageForm.self'), value: 'self'},
           ]"
           :error-messages="errors.target"
           @change="change('target', ...arguments)"
@@ -46,7 +46,7 @@
       <v-col cols="12">
         <smart-switch
           class="mt-0"
-          label="Saving throw"
+          :label="$t('properties.forms.damageForm.savingThrow')"
           :value="!!model.save"
           :error-messages="errors.save"
           @change="(val, ack) => $emit('change', {
@@ -67,8 +67,8 @@
           md="6"
         >
           <computed-field
-            label="DC"
-            hint="Saving throw DC"
+            :label="$t('properties.forms.damageForm.dc')"
+            :hint="$t('properties.forms.damageForm.dcHint')"
             :model="model.save.dc"
             :error-messages="errors['save.dc']"
             @change="({path, value, ack}) =>
@@ -80,8 +80,8 @@
           md="6"
         >
           <smart-combobox
-            label="Save"
-            hint="Which stat the saving throw targets"
+            :label="$t('properties.forms.damageForm.save')"
+            :hint="$t('properties.forms.damageForm.saveHint')"
             :value="model.save.stat"
             :items="saveList"
             :error-messages="errors['save.stat']"
@@ -92,9 +92,9 @@
         <v-col cols="12">
           <computed-field
             v-if="!!model.save"
-            label="Damage on successful save"
-            hint="Use &quot;~damage&quot; to reference the damage that would normally be dealt"
-            placeholder="Half damage"
+            :label="$t('properties.forms.damageForm.damageOnSuccessfulSave')"
+            :hint="$t('properties.forms.damageForm.damageOnSuccessfulSaveHint')"
+            :placeholder="$t('properties.forms.damageForm.halfDamage')"
             persistent-placeholder
             :model="model.save.damageFunction"
             :error-messages="errors['save.damageFunction']"
@@ -105,11 +105,11 @@
       </v-row>
     </v-expand-transition>
     <form-sections type="damage">
-      <form-section name="Log">
+      <form-section :name="$t('properties.forms.common.log')">
         <v-row>
           <v-col cols="12">
             <smart-switch
-              label="Don't show in log"
+              :label="$t('properties.forms.actionForm.dontShowInLog')"
               :value="model.silent"
               :error-messages="errors.silent"
               @change="change('silent', ...arguments)"

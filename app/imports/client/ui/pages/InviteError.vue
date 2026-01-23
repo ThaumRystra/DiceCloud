@@ -6,7 +6,7 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        Invite Error
+        {{ $t('pages.inviteError.title') }}
       </h2>
       <h3>
         {{ error.reason || error.message || error }}

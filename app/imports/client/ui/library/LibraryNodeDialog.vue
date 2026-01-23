@@ -78,14 +78,14 @@
           text
           @click="$store.dispatch('popDialogStack', false)"
         >
-          Cancel
+          {{ $t('pages.library.cancel') }}
         </v-btn>
         <v-spacer />
         <v-btn
           text
           @click="$store.dispatch('popDialogStack', true)"
         >
-          Select
+          {{ $t('pages.library.select') }}
         </v-btn>
       </template>
       <v-btn
@@ -93,7 +93,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Done
+        {{ $t('pages.library.done') }}
       </v-btn>
     </div>
   </dialog-base>

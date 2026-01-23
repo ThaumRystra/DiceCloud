@@ -41,7 +41,7 @@
           <template
             v-if="model.weight"
           >
-            {{ totalWeight }} lb
+            {{ totalWeight }} {{ $t('creature.character.printedCharacterSheet.inventory.lb') }}
           </template>
         </div>
       </div>
@@ -88,8 +88,8 @@ export default {
     },
     attunementText() {
       if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
+        if (this.model.attuned) return this.$t('creature.character.printedCharacterSheet.inventory.attuned');
+        return this.$t('creature.character.printedCharacterSheet.inventory.requiresAttunement');
       }
       return undefined;
     }

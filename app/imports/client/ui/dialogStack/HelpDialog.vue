@@ -7,7 +7,7 @@
       mdi-help
     </v-icon>
     <v-toolbar-title slot="toolbar">
-      Help: {{ title }}
+      {{ $t('dialogStack.helpDialog.title') }} {{ title }}
     </v-toolbar-title>
     <div>
       <v-progress-circular
@@ -17,7 +17,7 @@
         size="32"
       />
       <div v-else-if="!doc">
-        Help document not found for {{ title }}
+        {{ $t('dialogStack.helpDialog.helpDocumentNotFound') }} {{ title }}
       </div>
       <markdown-text
         v-else
@@ -31,7 +31,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Close
+      {{ $t('dialogStack.helpDialog.close') }}
     </v-btn>
   </dialog-base>
 </template>

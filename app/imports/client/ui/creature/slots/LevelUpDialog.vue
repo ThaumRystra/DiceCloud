@@ -129,7 +129,7 @@
         outlined
         @click="loadMore"
       >
-        Load More
+        {{ $t('creature.slots.loadMore') }}
       </v-btn>
     </v-layout>
     <template v-if="!showDisabled && disabledNodeCount">
@@ -140,7 +140,7 @@
         class="ma-3"
       >
         <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
+          {{ $t('creature.slots.requirementsNotMet', { count: disabledNodeCount }) }}
         </div>
         <v-btn
           class="mt-2"
@@ -148,7 +148,7 @@
           color="accent"
           @click="showDisabled = true"
         >
-          Show All
+          {{ $t('creature.slots.showAll') }}
         </v-btn>
       </v-layout>
     </template>
@@ -157,7 +157,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        Cancel
+        {{ $t('creature.slots.cancel') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -170,10 +170,10 @@
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         <template v-if="classId">
-          Insert
+          {{ $t('creature.slots.insert') }}
         </template>
         <template v-else>
-          Close Test
+          {{ $t('creature.slots.closeTest') }}
         </template>
       </v-btn>
     </template>

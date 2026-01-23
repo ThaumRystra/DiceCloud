@@ -6,10 +6,10 @@
       justify-center
     >
       <h2 style="margin: 48px 28px 16px">
-        Email Verified
+        {{ $t('pages.emailVerificationSuccess.title') }}
       </h2>
       <h3>
-        Your email address has been verified
+        {{ $t('pages.emailVerificationSuccess.subtitle') }}
       </h3>
     </v-layout>
   </div>

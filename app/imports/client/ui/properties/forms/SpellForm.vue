@@ -8,7 +8,7 @@
       >
         <smart-switch
           class="ml-2"
-          label="Always prepared"
+          :label="$t('properties.forms.spellForm.alwaysPrepared')"
           :value="model.alwaysPrepared"
           :error-messages="errors.alwaysPrepared"
           @change="change('alwaysPrepared', ...arguments)"
@@ -22,7 +22,7 @@
       >
         <smart-switch
           class="ml-2"
-          label="Prepared"
+          :label="$t('properties.forms.spellForm.prepared')"
           :value="model.prepared"
           :error-messages="errors.prepared"
           @change="change('prepared', ...arguments)"
@@ -36,7 +36,7 @@
       >
         <smart-switch
           class="ml-2"
-          label="Cast without spell slots"
+          :label="$t('properties.forms.spellForm.castWithoutSpellSlots')"
           :value="model.castWithoutSpellSlots"
           :error-messages="errors.castWithoutSpellSlots"
           @change="change('castWithoutSpellSlots', ...arguments)"
@@ -49,8 +49,8 @@
         md="6"
       >
         <smart-select
-          label="Level"
-          hint="The spell level"
+          :label="$t('properties.forms.spellForm.level')"
+          :hint="$t('properties.forms.spellForm.levelHint')"
           :items="spellLevels"
           :value="model.level"
           :error-messages="errors.level"
@@ -62,7 +62,7 @@
         md="6"
       >
         <smart-select
-          label="School"
+          :label="$t('properties.forms.spellForm.school')"
           :items="magicSchools"
           :value="model.school"
           :error-messages="errors.school"
@@ -74,7 +74,7 @@
         md="6"
       >
         <text-field
-          label="Casting Time"
+          :label="$t('properties.forms.spellForm.castingTime')"
           :value="model.castingTime"
           :error-messages="errors.castingTime"
           @change="change('castingTime', ...arguments)"
@@ -85,7 +85,7 @@
         md="6"
       >
         <text-field
-          label="Range"
+          :label="$t('properties.forms.spellForm.range')"
           :value="model.range"
           :error-messages="errors.range"
           @change="change('range', ...arguments)"
@@ -96,7 +96,7 @@
         md="6"
       >
         <text-field
-          label="Duration"
+          :label="$t('properties.forms.spellForm.duration')"
           :value="model.duration"
           :error-messages="errors.duration"
           @change="change('duration', ...arguments)"
@@ -110,7 +110,7 @@
         class="pt-1"
       >
         <smart-checkbox
-          label="Verbal"
+          :label="$t('properties.forms.spellForm.verbal')"
           :value="model.verbal"
           :error-messages="errors.verbal"
           @change="change('verbal', ...arguments)"
@@ -122,7 +122,7 @@
         class="pt-1"
       >
         <smart-checkbox
-          label="Somatic"
+          :label="$t('properties.forms.spellForm.somatic')"
           :value="model.somatic"
           :error-messages="errors.somatic"
           @change="change('somatic', ...arguments)"
@@ -134,7 +134,7 @@
         class="pt-1"
       >
         <smart-checkbox
-          label="Concentration"
+          :label="$t('properties.forms.spellForm.concentration')"
           :value="model.concentration"
           :error-messages="errors.concentration"
           @change="change('concentration', ...arguments)"
@@ -146,7 +146,7 @@
         class="pt-1"
       >
         <smart-checkbox
-          label="Ritual"
+          :label="$t('properties.forms.spellForm.ritual')"
           :value="model.ritual"
           :error-messages="errors.ritual"
           @change="change('ritual', ...arguments)"
@@ -156,7 +156,7 @@
     <v-row dense>
       <v-col cols="12">
         <text-field
-          label="Material"
+          :label="$t('properties.forms.spellForm.material')"
           :value="model.material"
           :error-messages="errors.material"
           @change="change('material', ...arguments)"
@@ -169,12 +169,12 @@
         md="6"
       >
         <smart-toggle
-          label="Target creature"
+          :label="$t('properties.forms.actionForm.targetCreature')"
           :value="model.target"
           :options="[
-            {name: 'Single Target', value: 'singleTarget'},
-            {name: 'Multiple Targets', value: 'multipleTargets'},
-            {name: 'Self', value: 'self'},
+            {name: $t('properties.forms.actionForm.singleTarget'), value: 'singleTarget'},
+            {name: $t('properties.forms.actionForm.multipleTargets'), value: 'multipleTargets'},
+            {name: $t('properties.forms.actionForm.self'), value: 'self'},
           ]"
           :error-messages="errors.target"
           @change="change('target', ...arguments)"
@@ -217,22 +217,22 @@
       </v-col>
     </v-row>
     <inline-computation-field
-      label="Summary"
-      hint="This will appear in the action card in the character sheet, summarise what the action does"
+      :label="$t('properties.forms.common.summary')"
+      :hint="$t('properties.forms.actionForm.summaryHint')"
       :model="model.summary"
       :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['summary', ...path], value, ack})"
     />
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-sections type="spell">
-      <form-section name="Resources Consumed">
+      <form-section :name="$t('properties.forms.common.resourcesConsumed')">
         <resources-form
           :model="model.resources"
           @change="({path, value, ack}) => $emit('change', {path: ['resources', ...path], value, ack})"
@@ -241,15 +241,15 @@
         />
       </form-section>
 
-      <form-section name="Limit Uses">
+      <form-section :name="$t('properties.forms.common.limitUses')">
         <v-row dense>
           <v-col
             cols="12"
             md="6"
           >
             <computed-field
-              label="Uses"
-              hint="How many times this action can be used before needing to be reset"
+              :label="$t('properties.forms.common.uses')"
+              :hint="$t('properties.forms.common.usesHint')"
               class="mr-2"
               :model="model.uses"
               :error-messages="errors.uses"
@@ -262,9 +262,9 @@
             md="6"
           >
             <text-field
-              label="Uses used"
+              :label="$t('properties.forms.common.usesUsed')"
               type="number"
-              hint="How many times this action has already been used: should be 0 in most cases"
+              :hint="$t('properties.forms.common.usesUsedHint')"
               style="flex-basis: 300px;"
               :value="model.usesUsed"
               :error-messages="errors.uses"

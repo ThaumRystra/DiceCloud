@@ -29,7 +29,7 @@
       >
         <v-card class="pb-4">
           <v-card-title style="height: 68px;">
-            Slots
+            {{ $t('creature.character.characterSheetTabs.buildTab.slots') }}
             <v-spacer />
             <v-scale-transition>
               <v-menu
@@ -59,7 +59,7 @@
                     <v-icon class="mr-2">
                       mdi-file-hidden
                     </v-icon>
-                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'properties' : 'property' }}
+                    {{ hiddenCount }} {{ $t('creature.character.characterSheetTabs.buildTab.hidden') }} {{ hiddenCount > 1 ? 'properties' : 'property' }}
                   </v-subheader>
                   <v-list-item
                     v-for="pointBuy in hiddenPointBuys"
@@ -98,7 +98,7 @@
             v-if="variables.level"
             class="text-h6"
           >
-            Level {{ variables.level.value }}
+            {{ $t('creature.character.characterSheetTabs.buildTab.level') }} {{ variables.level.value }}
           </v-card-title>
           <v-list two-line>
             <v-list-item>
@@ -109,7 +109,7 @@
                       variables.milestoneLevels.value
                   "
                 >
-                  {{ variables.milestoneLevels.value }} Milestone levels
+                  {{ variables.milestoneLevels.value }} {{ $t('creature.character.characterSheetTabs.buildTab.milestoneLevels') }}
                 </v-list-item-title>
                 <v-list-item-title
                   v-if="
@@ -171,10 +171,10 @@
                     mdi-plus
                   </v-icon>
                   <template v-if="cls.missingLevels && cls.missingLevels.length">
-                    Get Missing Levels 
+                    {{ $t('creature.character.characterSheetTabs.buildTab.gettingMissingLevels') }}
                   </template>
                   <template v-else>
-                    Level Up
+                    {{ $t('creature.character.characterSheetTabs.buildTab.levelUp') }}
                   </template> 
                 </v-btn>
               </v-list-item-action>

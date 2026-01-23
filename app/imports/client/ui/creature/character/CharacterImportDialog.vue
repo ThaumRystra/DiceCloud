@@ -1,14 +1,14 @@
 <template>
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Import character 
+      {{ $t('creature.character.characterImportDialog.title') }}
     </v-toolbar-title>
     <div>
       <h2 class="mb-4">
-        Import a character from another instance of DiceCloud
+        {{ $t('creature.character.characterImportDialog.importCharacter') }}
       </h2>
       <p>
-        The character needs to have their sharing permission set to "anyone can view"
+        {{ $t('creature.character.characterImportDialog.importCharacterDescription') }}
       </p>
       <text-field
         :value="currentUrl"
@@ -23,7 +23,7 @@
             color="primary"
             @click="importCharacterData"
           >
-            Import
+            {{ $t('creature.character.characterImportDialog.import') }}
           </v-btn>
         </v-slide-x-transition>
       </div>
@@ -33,7 +33,7 @@
         text
         @click="$emit('pop')"
       >
-        Cancel
+        {{ $t('creature.character.characterImportDialog.cancel') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -82,8 +82,8 @@ export default {
         return;
       }
       if (characterData.error) {
-        if (characterData.reason === 'No user ID. Are you logged in?') {
-          ack('This character\'s sharing settings are not set to allow anyone to view')
+        if (characterData.reason === this.$t('creature.character.characterImportDialog.errors.noUserId')) {
+          ack(this.$t('creature.character.characterImportDialog.errors.ackNoUserId'))
         } else {
           ack(characterData.reason ?? characterData.error);
         }

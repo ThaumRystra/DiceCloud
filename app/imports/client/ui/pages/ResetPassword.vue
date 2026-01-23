@@ -18,7 +18,7 @@
           <v-text-field
             v-model="password"
             type="password"
-            label="New Password"
+            :label="$t('pages.resetPassword.password')"
             :rules="passwordRules"
             class="ma-2"
             outlined
@@ -28,7 +28,7 @@
           <v-text-field
             v-model="password2"
             type="password"
-            label="Password Again"
+            :label="$t('pages.resetPassword.password2')"
             :rules="password2Rules"
             class="ma-2"
             outlined
@@ -40,7 +40,7 @@
           v-else
           v-model="email"
           type="text"
-          label="Email"
+          :label="$t('pages.resetPassword.email')"
           :rules="emailRules"
           class="ma-2"
           outlined
@@ -69,7 +69,7 @@
             color="accent"
             @click="submit"
           >
-            Reset Password
+            {{ $t('pages.resetPassword.resetPassword') }}
           </v-btn>
         </v-layout>
       </v-layout>
@@ -85,17 +85,17 @@
         submitLoading: false,
         email: '',
         emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
+          v => !!v || this.$t('pages.resetPassword.errors.emailIsRequired'),
+          v => /.+@.+/.test(v) || this.$t('pages.resetPassword.errors.emailIsInvalid'),
         ],
         password: '',
         passwordRules: [
-          v => !!v || 'Password is required',
+          v => !!v || this.$t('pages.resetPassword.errors.passwordIsRequired'),
         ],
         password2: '',
         password2Rules: [
-          v => !!v || 'Password is required',
-          v => v == this.password || 'Passwords don\'t match',
+          v => !!v || this.$t('pages.resetPassword.errors.passwordIsRequired'),
+          v => v == this.password || this.$t('pages.resetPassword.errors.passwordsDontMatch'),
         ],
         error: '',
         info: '',
@@ -126,7 +126,7 @@
               this.error = error && error.message;
               this.info = '';
               if (!error){
-                this.info = `Password reset link sent to ${this.email}`;
+                this.info = this.$t('pages.resetPassword.passwordResetLink', {email: this.email});
                 this.email = '';
                 this.valid = true;
               }

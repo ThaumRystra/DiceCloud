@@ -86,14 +86,14 @@
           text
           @click="$emit('input')"
         >
-          Clear
+          {{ $t('components.colorPicker.clear') }}
         </v-btn>
         <v-spacer />
         <v-btn
           text
           @click="opened = false"
         >
-          Done
+          {{ $t('components.colorPicker.done') }}
         </v-btn>
       </v-card-actions>
     </v-card>

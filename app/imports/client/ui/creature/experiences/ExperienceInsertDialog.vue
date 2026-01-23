@@ -1,7 +1,7 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Add Experience
+      {{ $t('creature.experiences.experienceInsertDialog.addExperience') }}
     </v-toolbar-title>
     <experience-form
       :start-as-milestone="startAsMilestone"
@@ -20,7 +20,7 @@
         :disabled="!valid"
         @click="insertExperience"
       >
-        Insert
+        {{ $t('creature.experiences.experienceInsertDialog.insert') }}
       </v-btn>
     </div>
   </dialog-base>

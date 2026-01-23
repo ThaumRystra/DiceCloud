@@ -6,7 +6,7 @@
         md="6"
       >
         <smart-select
-          label="Operation"
+          :label="$t('properties.forms.effectForm.operation')"
           append-icon="mdi-menu-down"
           :hint="operationHint"
           :error-messages="errors.operation"
@@ -39,16 +39,16 @@
       >
         <text-field
           v-if="model.operation === 'conditional'"
-          label="Text"
-          hint="The text to display on the affected stats"
+          :label="$t('properties.forms.effectForm.text')"
+          :hint="$t('properties.forms.effectForm.textHint')"
           :value="model.text"
           :error-messages="errors.text"
           @change="change('text', ...arguments)"
         />
         <computed-field
           v-else
-          label="Value"
-          hint="Number or calculation to determine the value of this effect"
+          :label="$t('properties.forms.effectForm.value')"
+          :hint="$t('properties.forms.effectForm.valueHint')"
           :disabled="!needsValue"
           :model="model.amount"
           :error-messages="errors.amount"
@@ -59,11 +59,11 @@
     </v-row>
 
     <smart-toggle
-      label="Target properties"
+      :label="$t('properties.forms.effectForm.targetProperties')"
       :value="radioGroup"
       :options="[
-        {name: 'Target by variable name', value: 'stats'},
-        {name: 'Target by tags', value: 'tags'},
+        {name: $t('properties.forms.effectForm.targetByVariableName'), value: 'stats'},
+        {name: $t('properties.forms.effectForm.targetByTags'), value: 'tags'},
       ]"
       @change="changeTargetByTags"
     />
@@ -71,12 +71,12 @@
     <v-slide-y-transition hide-on-leave>
       <smart-combobox
         v-if="!model.targetByTags"
-        label="Stats"
+        :label="$t('properties.forms.effectForm.stats')"
         class="mr-2"
         multiple
         small-chips
         deletable-chips
-        hint="Which stats will this effect apply to"
+        :hint="$t('properties.forms.effectForm.statsHint')"
         persistent-hint
         :value="model.stats"
         :items="attributeList"
@@ -98,9 +98,9 @@
         cols="12"
       >
         <text-field
-          label="Target field"
+          :label="$t('properties.forms.effectForm.targetField')"
           :value="model.targetField"
-          hint="Target a specific calculation field on the affected properties"
+          :hint="$t('properties.forms.effectForm.targetFieldHint')"
           placeholder="Default field"
           persistent-placeholder
           :error-messages="errors.targetField"

@@ -66,7 +66,7 @@
         <v-card-text class="fill-height d-flex flex-column justify-center align-center">
           <v-text-field
             v-model="inputHref"
-            label="Direct link to image"
+            :label="$t('pages.user.directLinkToImage')"
             class="flex-grow-0"
             style="width: 100%"
           />

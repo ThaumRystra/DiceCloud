@@ -2,7 +2,7 @@
   <div>
     <text-field
       ref="focusFirst"
-      label="Name"
+      :label="$t('creature.actions.input.castSpellInput.fields.name')"
       prepend-inner-icon="mdi-magnify"
       regular
       hide-details
@@ -46,7 +46,7 @@
             text
             @click="clearBooleanFilters"
           >
-            Clear
+            {{ $t('creature.actions.input.castSpellInput.clear') }}
           </v-btn>
           <v-spacer />
           <v-btn
@@ -54,7 +54,7 @@
             class="primary--text"
             @click="filterMenuOpen = false"
           >
-            Done
+            {{ $t('creature.actions.input.castSpellInput.done') }}
           </v-btn>
         </div>
       </v-list>
@@ -65,7 +65,7 @@
           key="slot-title"
           class="text-h6 my-3"
         >
-          Slot
+          {{ $t('creature.actions.input.castSpellInput.slot') }}
         </div>
         <v-list-item-group
           key="slot-list"
@@ -81,7 +81,7 @@
           >
             <v-list-item-content>
               <v-list-item-title>
-                Cast without spell slot
+                {{ $t('creature.actions.input.castSpellInput.castWithoutSpellSlot') }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -95,7 +95,7 @@
           >
             <v-list-item-content>
               <v-list-item-title>
-                Cast as ritual
+                {{ $t('creature.actions.input.castSpellInput.castAsRitual') }}
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -116,7 +116,7 @@
           key="spell-title-right"
           class="text-h6 my-3"
         >
-          Spell
+          {{ $t('creature.actions.input.castSpellInput.spell') }}
         </div>
         <v-list-item-group
           key="slot-list-right"
@@ -128,7 +128,7 @@
               :key="`${spell.level}-header`"
               class="item"
             >
-              {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+              {{ spell.level === 0 ? $t('creature.actions.input.castSpellInput.cantrip') : $t('creature.actions.input.castSpellInput.level', { level: spell.level }) }}
             </v-subheader>
             <spell-list-tile
               v-else

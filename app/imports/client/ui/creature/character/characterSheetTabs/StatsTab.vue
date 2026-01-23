@@ -76,7 +76,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Buffs and conditions</v-subheader>
+            <v-subheader>{{ $t('creature.character.characterSheetTabs.statsTab.buffsAndConditions') }}</v-subheader>
             <buff-list-item
               v-for="buff in properties.buff"
               :key="buff._id"
@@ -166,7 +166,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Hit Dice</v-subheader>
+            <v-subheader>{{ $t('creature.character.characterSheetTabs.statsTab.hitDice') }}</v-subheader>
             <template v-for="(hitDie, index) in properties.attribute.hitDice">
               <v-divider
                 v-if="index !== 0"
@@ -222,7 +222,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Saving Throws</v-subheader>
+            <v-subheader>{{ $t('creature.character.characterSheetTabs.statsTab.savingThrows') }}</v-subheader>
             <skill-list-tile
               v-for="save in properties.skill.save"
               :key="save._id"
@@ -253,7 +253,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Skills</v-subheader>
+            <v-subheader>{{ $t('creature.character.characterSheetTabs.statsTab.skills') }}</v-subheader>
             <skill-list-tile
               v-for="skill in properties.skill.skill"
               :key="skill._id"
@@ -294,7 +294,7 @@
         <v-card>
           <v-list>
             <v-subheader>
-              Weapons
+              {{ $t('creature.character.characterSheetTabs.statsTab.weapons') }}
             </v-subheader>
             <skill-list-tile
               v-for="weapon in properties.skill.weapon"
@@ -314,7 +314,7 @@
         <v-card>
           <v-list>
             <v-subheader>
-              Armor
+              {{ $t('creature.character.characterSheetTabs.statsTab.armor') }}
             </v-subheader>
             <skill-list-tile
               v-for="armor in properties.skill.armor"
@@ -334,7 +334,7 @@
         <v-card>
           <v-list>
             <v-subheader>
-              Tools
+              {{ $t('creature.character.characterSheetTabs.statsTab.tools') }}
             </v-subheader>
             <skill-list-tile
               v-for="tool in properties.skill.tool"
@@ -354,7 +354,7 @@
         <v-card>
           <v-list>
             <v-subheader>
-              Languages
+              {{ $t('creature.character.characterSheetTabs.statsTab.languages') }}
             </v-subheader>
             <skill-list-tile
               v-for="language in properties.skill.language"

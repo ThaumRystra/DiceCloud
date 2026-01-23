@@ -1,7 +1,7 @@
 <template>
   <div class="choice-input">
     <v-card-title>
-      {{ target === 'singleTarget' ? 'Target' : 'Targets' }}
+      {{ target === 'singleTarget' ? $t('creature.actions.input.targetsInput.singleTarget') : $t('creature.actions.input.targetsInput.multipleTargets') }}
     </v-card-title>
     <v-list-item
       v-for="creature in creatures"
@@ -47,7 +47,7 @@
       style="width: 100%"
       @click="$emit('continue');"
     >
-      {{ !value.length ? 'No target' : 'Continue' }}
+      {{ !value.length ? $t('creature.actions.input.targetsInput.noTarget') : $t('creature.actions.input.targetsInput.continue') }}
     </v-btn>
   </div>
 </template>

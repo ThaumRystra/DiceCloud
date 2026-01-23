@@ -22,13 +22,13 @@
 
     <v-card>
       <v-card-title>
-        Search
+        {{ $t('components.treeSearch.search') }}
       </v-card-title>
       <v-card-text>
         <v-select
           v-model="typeFilterInput"
           outlined
-          label="Type"
+          :label="$t('components.treeSearch.type')"
           :items="filterOptions"
           multiple
           clearable
@@ -44,12 +44,12 @@
             <v-text-field
               v-model="fieldFilter.field"
               class="text--mono"
-              label="Field"
+              :label="$t('components.treeSearch.field')"
               outlined
             />
             <v-text-field
               v-model="fieldFilter.value"
-              label="Text"
+              :label="$t('components.treeSearch.text')"
               class="ml-2"
               outlined
             />
@@ -86,7 +86,7 @@
             <v-icon left>
               mdi-close
             </v-icon>
-            Clear
+            {{ $t('components.treeSearch.clear') }}
           </v-btn>
           <v-spacer />
           <v-btn
@@ -94,7 +94,7 @@
             color="primary"
             @click="menu = false"
           >
-            Find
+            {{ $t('components.treeSearch.find') }}
           </v-btn>
         </v-card-actions>
       </v-card-text>

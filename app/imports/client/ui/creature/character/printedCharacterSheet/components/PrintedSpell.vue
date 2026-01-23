@@ -22,27 +22,27 @@
       </div>
     </div>
     <div v-if="model.level">
-      {{ levelText }} {{ model.school }} {{ model.ritual ? '(ritual)' : '' }}
+      {{ levelText }} {{ model.school }} {{ model.ritual ? $t('creature.character.printedCharacterSheet.spell.ritual') : '' }}
     </div>
     <div v-else>
-      {{ model.school }} cantrip {{ model.ritual ? '(ritual)' : '' }}
+      {{ model.school }} {{ $t('creature.character.printedCharacterSheet.spell.level.cantrip') }} {{ model.ritual ? $t('creature.character.printedCharacterSheet.spell.ritual') : '' }}
     </div>
     <div
       v-if="rollBonus"
     >
-      <b>To hit:</b> {{ rollBonus }}
+      <b>{{ $t('creature.character.printedCharacterSheet.spell.toHit') }}:</b> {{ rollBonus }}
     </div>
     <div>
-      <b>Casting time:</b> {{ model.castingTime }}
+      <b>{{ $t('creature.character.printedCharacterSheet.spell.castingTime') }}:</b> {{ model.castingTime }}
     </div>
     <div>
-      <b>Range:</b> {{ model.range }}
+      <b>{{ $t('creature.character.printedCharacterSheet.spell.range') }}:</b> {{ model.range }}
     </div>
     <div>
-      <b>Components:</b> {{ spellComponents }}
+      <b>{{ $t('creature.character.printedCharacterSheet.spell.components') }}:</b> {{ spellComponents }}
     </div>
     <div class="mb-4">
-      <b>Duration:</b> {{ model.duration }}
+      <b>{{ $t('creature.character.printedCharacterSheet.spell.duration') }}:</b> {{ model.duration }}
     </div>
     <property-description
       text
@@ -61,10 +61,7 @@ import PropertyDescription from '/imports/client/ui/properties/viewers/shared/Pr
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import romanize from '/imports/client/ui/utility/romanize';
 
-const levelText = [
-  'cantrip', '1st-level', '2nd-level', '3rd-level', '4th-level', '5th-level',
-  '6th-level', '7th-level', '8th-level', '9th-level'
-];
+
 
 export default {
   components: {
@@ -79,7 +76,10 @@ export default {
   },
   computed: {
     levelText() {
-      return levelText[this.model.level] || `level ${this.model.level}`;
+      // return levelText[this.model.level] || `level ${this.model.level}`;
+      const lvl = this.model.level;
+      if (lvl >= 1 && lvl <= 9) return this.$t(`creature.character.printedCharacterSheet.spell.level.${lvl}`);
+      return this.$t('creature.character.printedCharacterSheet.spell.level.generic', { level: lvl });
     },
     romanLevel() {
       return romanize(this.model.level) || this.model.level;

@@ -4,13 +4,13 @@
     :disabled="context.editPermission === false"
     outlined
     :data-id="`rest-btn-${type}`"
-    style="width: 160px;"
+    style="width: fit-content; min-width: 180px;"
     @click="rest"
   >
     <v-icon left>
       {{ type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed' }}
     </v-icon>
-    {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
+    {{ type === 'shortRest' ? $t('creature.restButton.shortRest') : $t('creature.restButton.longRest') }}
   </v-btn>
 </template>
 

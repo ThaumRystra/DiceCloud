@@ -6,11 +6,11 @@
         md="6"
       >
         <text-field
-          label="Value"
+          :label="$t('properties.forms.containerForm.value')"
           suffix="gp"
           type="number"
           min="0"
-          hint="The value of the item in gold pieces, using decimals for values less than 1 gp"
+          :hint="$t('properties.forms.containerForm.valueHint')"
           class="mx-1"
           style="flex-basis: 300px;"
           prepend-inner-icon="$vuetify.icons.two_coins"
@@ -24,7 +24,7 @@
         md="6"
       >
         <text-field
-          label="Weight"
+          :label="$t('properties.forms.containerForm.weight')"
           suffix="lb"
           type="number"
           min="0"
@@ -41,9 +41,9 @@
         sm="6"
       >
         <smart-switch
-          label="Carried"
+          :label="$t('properties.forms.containerForm.carried')"
           class="mx-3"
-          hint="Whether this container and its contents count towards the creature's weight carried"
+          :hint="$t('properties.forms.containerForm.carriedHint')"
           :value="model.carried"
           :error-messages="errors.carried"
           @change="change('carried', ...arguments)"
@@ -54,7 +54,7 @@
         sm="6"
       >
         <smart-switch
-          label="Contents are weightless"
+          :label="$t('properties.forms.containerForm.contentsWeightless')"
           :value="model.contentsWeightless"
           :error-messages="errors.contentsWeightless"
           @change="change('contentsWeightless', ...arguments)"
@@ -64,7 +64,7 @@
 
     <inline-computation-field
       class="mt-4"
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>

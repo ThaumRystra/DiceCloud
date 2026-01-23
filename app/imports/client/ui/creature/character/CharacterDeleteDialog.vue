@@ -1,11 +1,11 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Delete Character
+      {{ $t('creature.character.characterDeleteDialog.title') }}
     </v-toolbar-title>
     <div>
       <p v-if="name">
-        Type "{{ name }}" to permanently delete the character
+        {{ $t('creature.character.characterDeleteDialog.typeToDelete') }} "{{ name }}" {{ $t('creature.character.characterDeleteDialog.toPermanentlyDelete') }}
       </p>
       <v-text-field
         v-if="name"
@@ -16,7 +16,7 @@
         class="primary"
         @click="remove"
       >
-        Delete forever
+        {{ $t('creature.character.characterDeleteDialog.deleteForever') }}
       </v-btn>
     </div>
     <v-spacer slot="actions" />
@@ -25,7 +25,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Cancel
+      {{ $t('creature.character.characterDeleteDialog.cancel') }}
     </v-btn>
   </dialog-base>
 </template>

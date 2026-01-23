@@ -78,7 +78,7 @@
             cols="12"
             class="d-flex align-center justify-center"
           >
-            <h1>You don't have any tabletops yet</h1>
+            <h1>{{ $t("pages.tabletops.dontHaveAny") }}</h1>
           </v-col>
         </v-row>
       </v-fade-transition>

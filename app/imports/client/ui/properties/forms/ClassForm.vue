@@ -5,9 +5,9 @@
         cols="12"
       >
         <text-field
-          label="Variable name"
+          :label="$t('properties.forms.common.variableName')"
           :value="model.variableName"
-          hint="Use this name in calculations to reference this class"
+          :hint="$t('properties.forms.classForm.variableNameHint')"
           :error-messages="errors.variableName"
           @change="change('variableName', ...arguments)"
         />
@@ -15,7 +15,7 @@
     </v-row>
 
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
@@ -23,7 +23,7 @@
     />
 
     <form-sections type="class">
-      <form-section name="Class levels from libraries">
+      <form-section :name="$t('properties.forms.classForm.classLevelsFromLibraries')">
         <tag-targeting
           :model="model"
           :errors="errors"
@@ -37,9 +37,9 @@
         />
 
         <computed-field
-          label="Active condition"
-          hint="A calculation to determine if this class can have class levels added to it"
-          placeholder="Always active"
+          :label="$t('properties.forms.classForm.activeCondition')"
+          :hint="$t('properties.forms.classForm.activeConditionHint')"
+          :placeholder="$t('properties.forms.slotForm.alwaysActive')"
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"
           @change="({path, value, ack}) =>

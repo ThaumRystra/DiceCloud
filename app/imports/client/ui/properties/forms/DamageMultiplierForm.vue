@@ -5,17 +5,17 @@
         cols="12"
       >
         <smart-toggle
-          label="Multiplier"
+          :label="$t('properties.forms.damageMultiplierForm.multiplier')"
           :value="model.value"
           :options="[{
             value: 2,
-            name: 'Vulnerability',
+            name: $t('properties.forms.damageMultiplierForm.vulnerability'),
           },{
             value: 0.5,
-            name: 'Resistance',
+            name: $t('properties.forms.damageMultiplierForm.resistance'),
           }, {
             value: 0,
-            name: 'Immunity',
+            name: $t('properties.forms.damageMultiplierForm.immunity'),
           }]"
           :error-messages="errors.value"
           @change="change('value', ...arguments)"
@@ -25,7 +25,7 @@
     <v-row dense>
       <v-col cols="12">
         <smart-combobox
-          label="Damage Types"
+          :label="$t('properties.forms.damageMultiplierForm.damageTypes')"
           multiple
           chips
           deletable-chips
@@ -42,16 +42,16 @@
     <form-sections type="damageMultiplier">
       <form-section
         v-if="$slots.children"
-        name="Children"
+        :name="$t('properties.forms.damageMultiplierForm.children')"
       >
         <slot name="children" />
       </form-section>
-      <form-section name="Apply by tag">
+      <form-section :name="$t('properties.forms.damageMultiplierForm.applyByTag')">
         <v-row dense>
           <v-col cols="12">
             <smart-combobox
-              label="Tags required"
-              hint="Only apply to damage that has all of these tags"
+              :label="$t('properties.forms.damageMultiplierForm.tagsRequired')"
+              :hint="$t('properties.forms.damageMultiplierForm.tagsRequiredHint')"
               multiple
               small-chips
               deletable-chips
@@ -63,8 +63,8 @@
           </v-col>
           <v-col cols="12">
             <smart-combobox
-              label="Tags excluded"
-              hint="Don't apply to damage that has any of these tags"
+              :label="$t('properties.forms.damageMultiplierForm.tagsExcluded')"
+              :hint="$t('properties.forms.damageMultiplierForm.tagsExcludedHint')"
               multiple
               small-chips
               deletable-chips

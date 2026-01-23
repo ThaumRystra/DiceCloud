@@ -1,16 +1,16 @@
 <template lang="html">
   <div class="folder-form">
     <inline-computation-field
-      label="Description"
+      :label="$t('properties.forms.common.description')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>
         $emit('change', {path: ['description', ...path], value, ack})"
     />
     <form-sections type="folder">
-      <form-section name="Grouping">
+      <form-section :name="$t('properties.forms.folderForm.grouping')">
         <smart-switch
-          label="Group children on a card"
+          :label="$t('properties.forms.folderForm.groupChildrenOnCard')"
           :value="model.groupStats"
           :error-messages="errors.groupStats"
           @change="change('groupStats', ...arguments)"
@@ -18,22 +18,22 @@
         <v-expand-transition>
           <div v-if="model.groupStats">
             <smart-switch
-              label="Hide children from their default locations"
+              :label="$t('properties.forms.folderForm.hideChildrenFromDefault')"
               :value="model.hideStatsGroup"
               :error-messages="errors.hideStatsGroup"
               @change="change('hideStatsGroup', ...arguments)"
             />
             <smart-select
               clearable
-              label="Tab"
+              :label="$t('properties.forms.folderForm.tab')"
               :items="[
-                { text: 'Stats Tab', value: 'stats' },
-                { text: 'Features Tab', value: 'features' },
-                { text: 'Actions Tab', value: 'actions' },
-                { text: 'Spells Tab', value: 'spells' },
-                { text: 'Inventory Tab', value: 'inventory' },
-                { text: 'Journal Tab', value: 'journal' },
-                { text: 'Build Tab', value: 'build' },
+                { text: $t('properties.forms.folderForm.statsTab'), value: 'stats' },
+                { text: $t('properties.forms.folderForm.featuresTab'), value: 'features' },
+                { text: $t('properties.forms.folderForm.actionsTab'), value: 'actions' },
+                { text: $t('properties.forms.folderForm.spellsTab'), value: 'spells' },
+                { text: $t('properties.forms.folderForm.inventoryTab'), value: 'inventory' },
+                { text: $t('properties.forms.folderForm.journalTab'), value: 'journal' },
+                { text: $t('properties.forms.folderForm.buildTab'), value: 'build' },
               ]"
               :value="model.tab"
               :error-messages="errors.tab"
@@ -42,7 +42,7 @@
             />
             <smart-select
               clearable
-              label="Location"
+              :label="$t('properties.forms.folderForm.location')"
               :items="locationItems"
               :value="model.location"
               :error-messages="errors.location"

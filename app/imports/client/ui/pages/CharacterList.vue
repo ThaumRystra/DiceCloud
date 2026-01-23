@@ -16,20 +16,19 @@
             v-if="characterSpaceLeft < 0"
             type="error"
           >
-            You have exceeded your maximum number of character slots, archive or delete
-            some characters.
+            {{ $t('pages.characterList.alert.exceededLimit') }}
           </v-alert>
           <v-alert
             v-else-if="characterSpaceLeft === 0"
             type="info"
           >
-            You have hit your maximum number of characters.
+            {{ $t('pages.characterList.alert.limit') }}
             <archive-button
               small
               text
               class="mx-2"
             />
-            or
+            {{ $t('pages.characterList.alert.or') }}
             <v-btn
               href="https://www.patreon.com/join/dicecloud/"
               class="mx-2"
@@ -37,7 +36,7 @@
               small
               text
             >
-              Increase Patreon tier
+              {{ $t('pages.characterList.alert.increasePatreon') }}
               <v-icon right>
                 mdi-patreon
               </v-icon>
@@ -56,14 +55,14 @@
               data-id="import-character-button"
               @click="importCharacter"
             >
-              import character
+              {{ $t('pages.characterList.importCharacter') }}
             </v-btn>
             <v-btn
               text
               :loading="loadingInsertFolder"
               @click="insertFolder"
             >
-              add folder
+              {{ $t('pages.characterList.addFolder') }}
             </v-btn>
           </div>
           <v-btn

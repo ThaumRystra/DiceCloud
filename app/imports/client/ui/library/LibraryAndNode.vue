@@ -47,7 +47,7 @@
               <v-card-text>
                 <v-switch
                   v-model="showSecondTree"
-                  label="Show second library tree"
+                  :label="$t('pages.library.showSecondLibraryTree')"
                 />
               </v-card-text>
             </v-card>
@@ -57,7 +57,7 @@
           v-if="!libraryId || canEditLibrary"
           v-model="organize"
           hide-details
-          label="Organize"
+          :label="$t('pages.library.organize')"
           class="ml-1 mr-3 mt-2"
           style="flex-grow: 0; height: 32px;"
         />

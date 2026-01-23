@@ -2,17 +2,17 @@
   <dialog-base>
     <template slot="toolbar">
       <v-toolbar-title>
-        New Library
+        {{ $t('pages.library.newLibrary') }}
       </v-toolbar-title>
     </template>
     <text-field
-      label="Name"
+      :label="$t('pages.library.name')"
       :value="library.name"
       :debounce-time="0"
       @change="nameChanged"
     />
     <text-area
-      label="Description"
+      :label="$t('pages.library.description')"
       :value="library.description"
       :debounce-time="0"
       @change="descriptionChanged"
@@ -24,7 +24,7 @@
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', library)"
       >
-        Insert Library
+        {{ $t('pages.library.insertLibrary') }}
       </v-btn>
     </template>
   </dialog-base>
@@ -54,7 +54,7 @@ export default {
           ack();
       } else {
         this.valid = false;
-        ack('Name is required')
+        ack(this.$t('pages.library.nameIsRequired'))
       }
     },
     descriptionChanged(val, ack) {

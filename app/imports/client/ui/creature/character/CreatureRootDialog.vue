@@ -56,7 +56,7 @@
         color="accent"
         @click="$store.dispatch('popDialogStack')"
       >
-        Close
+        {{ $t('creature.character.creatureRootDialog.close') }}
       </v-btn>
     </div>
   </dialog-base>

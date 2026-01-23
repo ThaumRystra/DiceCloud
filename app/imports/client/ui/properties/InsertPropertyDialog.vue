@@ -3,7 +3,7 @@
     <template slot="toolbar">
       <v-toolbar-title class="mr-4">
         <template v-if="tab === 2">
-          New
+          {{ $t('properties.insertPropertyDialog.new') }}
         </template>{{ typeName }}
       </v-toolbar-title>
       <v-spacer />
@@ -40,16 +40,16 @@
       v-model="tab"
     >
       <v-tab :disabled="!!forcedType">
-        {{ typeName || 'Type' }}
+        {{ typeName || $t('properties.insertPropertyDialog.type') }}
       </v-tab>
       <v-tab :disabled="!type">
-        Create
+        {{ $t('properties.insertPropertyDialog.create') }}
       </v-tab>
       <v-tab
         v-if="!hideLibraryTab"
         :disabled="!type"
       >
-        Library
+        {{ $t('properties.insertPropertyDialog.library') }}
       </v-tab>
     </v-tabs>
     <v-tabs-items
@@ -153,7 +153,7 @@
                 class="ma-4"
                 @click="loadMore"
               >
-                Load More
+                {{ $t('properties.insertPropertyDialog.loadMore') }}
               </v-btn>
             </div>
           </v-fade-transition>
@@ -165,7 +165,7 @@
         text
         @click="$store.dispatch('popDialogStack')"
       >
-        {{ tab === 1 ? "Discard" : "Cancel" }}
+        {{ tab === 1 ? $t('properties.insertPropertyDialog.discard') : $t('properties.insertPropertyDialog.cancel') }}
       </v-btn>
       <v-spacer />
       <v-btn
@@ -175,7 +175,7 @@
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', model)"
       >
-        create
+        {{ $t('properties.insertPropertyDialog.create') }}
       </v-btn>
       <v-btn
         v-else-if="tab === 2"
@@ -187,7 +187,7 @@
         <template v-if="selectedNodeIds.length >= 15">
           {{ selectedNodeIds.length }}/20
         </template>
-        Insert
+        {{ $t('properties.insertPropertyDialog.insert') }}
       </v-btn>
     </template>
   </dialog-base>

@@ -1,17 +1,17 @@
 <template lang="html">
   <dialog-base>
     <v-toolbar-title slot="toolbar">
-      Delete {{ typeName }}
+      {{ $t('dialogStack.deleteConfirmation.delete') }} {{ typeName }}
     </v-toolbar-title>
     <div>
       <v-alert
         type="warning"
         outlined
       >
-        This can't be undone
+        {{ $t('dialogStack.deleteConfirmation.thisCantBeUndone') }}
       </v-alert>
       <p v-if="name">
-        Type "{{ name }}" to permanenetly delete.
+        {{ $t('dialogStack.deleteConfirmation.typeToDelete') }} "{{ name }}" {{ $t('dialogStack.deleteConfirmation.toPermanentlyDelete') }}.
       </p>
       <v-text-field
         v-if="name"
@@ -25,7 +25,7 @@
           class="primary"
           @click="$store.dispatch('popDialogStack', true);"
         >
-          Delete forever
+          {{ $t('dialogStack.deleteConfirmation.deleteForever') }}
         </v-btn>
       </div>
     </div>
@@ -35,7 +35,7 @@
       text
       @click="$store.dispatch('popDialogStack')"
     >
-      Cancel
+      {{ $t('dialogStack.deleteConfirmation.cancel') }}
     </v-btn>
   </dialog-base>
 </template>

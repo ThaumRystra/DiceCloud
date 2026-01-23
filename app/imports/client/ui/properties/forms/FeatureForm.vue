@@ -1,8 +1,8 @@
 <template lang="html">
   <div class="feature-form">
     <inline-computation-field
-      label="Summary"
-      hint="This will appear in the feature card in the character sheet"
+      :label="$t('properties.forms.common.summary')"
+      :hint="$t('properties.forms.featureForm.summaryHint')"
       :model="model.summary"
       :error-messages="errors['summary.text']"
       @change="({path, value, ack}) =>
@@ -10,8 +10,8 @@
     />
 
     <inline-computation-field
-      label="Description"
-      hint="The rest of the description that doesn't fit in the summary goes here"
+      :label="$t('properties.forms.common.description')"
+      :hint="$t('properties.forms.featureForm.descriptionHint')"
       :model="model.description"
       :error-messages="errors['description.text']"
       @change="({path, value, ack}) =>

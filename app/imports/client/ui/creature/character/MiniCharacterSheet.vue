@@ -3,7 +3,7 @@
     hover
     @click="$emit('click')"
   >
-    Character sheet
+    {{ $t('creature.character.miniCharacterSheet.characterSheet') }}
   </v-card>
 </template>
 

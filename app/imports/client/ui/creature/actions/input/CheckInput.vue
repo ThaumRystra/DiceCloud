@@ -7,10 +7,10 @@
         @change="changeAdvantage"
       >
         <v-btn :value="-1">
-          Disadvantage
+          {{ $t('creature.actions.input.checkInput.disadvantage') }}
         </v-btn>
         <v-btn :value="1">
-          Advantage
+          {{ $t('creature.actions.input.checkInput.advantage') }}
         </v-btn>
       </v-btn-toggle>
       <div style="position: relative;">
@@ -30,26 +30,26 @@
           @click="$emit('continue')"
         >
           <div>
-            Roll
+            {{ $t('creature.actions.input.checkInput.roll') }}
           </div>
         </vertical-hex>
       </div>
     </div>
     <div class="d-flex flex-column mt-4 mr-4">
       <smart-select
-        label="Ability"
+        :label="$t('creature.actions.input.checkInput.select.ability')"
         :items="abilityOptions"
         :value="value.abilityVariableName"
         @change="change('abilityVariableName', ...arguments)"
       />
       <smart-select
-        label="Skill"
+        :label="$t('creature.actions.input.checkInput.select.skill')"
         :items="skillOptions"
         :value="value.skillVariableName"
         @change="change('skillVariableName', ...arguments)"
       />
       <text-field
-        label="DC"
+        :label="$t('creature.actions.input.checkInput.dc')"
         :value="value.dc"
         @change="change('dc', ...arguments)"
       />

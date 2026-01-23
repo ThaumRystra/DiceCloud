@@ -30,7 +30,7 @@
           class="done-button"
           @click="finishAction"
         >
-          Done
+          {{ $t('creature.actions.done') }}
         </v-btn>
       </v-card>
     </v-slide-x-reverse-transition>
