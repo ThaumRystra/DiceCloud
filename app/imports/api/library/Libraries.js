@@ -30,6 +30,17 @@ let LibrarySchema = new SimpleSchema({
     optional: true,
     max: STORAGE_LIMITS.summary,
   },
+  /**
+   * The game system this library provides content for.
+   * When a base-ruleset slot is filled from this library, this value is
+   * copied onto the creature's gameSystem field.
+   * Examples: 'dnd5e', 'coc7e', 'pf2e', 'bitd'
+   */
+  gameSystem: {
+    type: String,
+    optional: true,
+    max: 64,
+  },
   showInMarket: {
     index: 1,
     type: Boolean,
