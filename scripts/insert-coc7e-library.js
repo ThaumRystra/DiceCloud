@@ -1,4 +1,21 @@
 /**
+ * CoC 7e Investigator Library - insert script
+ *
+ * As of Mod 8 (data-driven tabs), the character sheet tabs are now configurable.
+ * Current behavior: D&D default tabs display for CoC characters (Stats, Actions,
+ * Spells [hidden if hideSpellsTab=true], Inventory, Features, Journal, Build, Tree).
+ *
+ * Future (requires Mod 1 - gameSystem field):
+ * CoC characters with gameSystem='coc7e' could display:
+ * - Investigator (replaces Stats)
+ * - Actions (keep)
+ * - Skills (replaces Spells - CoC has 90+ skills, benefits from dedicated tab)
+ * - Possessions (replaces Inventory)
+ * - Contacts & Backstory (replaces Features/Journal)
+ * - Build (keep)
+ */
+
+/**
  * CoC 7e Investigator Base Library - Meteor Shell Insertion Script
  *
  * This script creates a Call of Cthulhu 7th Edition "Investigator Base" library

@@ -22,39 +22,21 @@
         class="card-background fill-height"
       >
         <v-tabs-items
-          :key=" '' +
-            creature.settings.hideSpellsTab +
-            creature.settings.showTreeTab
-          "
+          :key="tabsKey"
           :value="$store.getters.tabById(creatureId)"
           @change="e => $store.commit(
             'setTabForCharacterSheet',
             {id: creatureId, tab: e}
           )"
         >
-          <v-tab-item>
-            <stats-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
-            <actions-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item v-if="!creature.settings.hideSpellsTab">
-            <spells-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
-            <inventory-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
-            <features-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
-            <character-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item>
-            <build-tab :creature-id="creatureId" />
-          </v-tab-item>
-          <v-tab-item v-if="creature.settings.showTreeTab">
-            <tree-tab :creature-id="creatureId" />
+          <v-tab-item
+            v-for="tab in visibleTabs"
+            :key="tab.id"
+          >
+            <component
+              :is="tab.component"
+              :creature-id="creatureId"
+            />
           </v-tab-item>
         </v-tabs-items>
       </div>
@@ -80,37 +62,12 @@
         {id: creatureId, tab: e}
       )"
     >
-      <v-btn>
-        <span>Stats</span>
-        <v-icon>mdi-chart-box</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Actions</span>
-        <v-icon>mdi-lightning-bolt</v-icon>
-      </v-btn>
-      <v-btn v-if="!creature.settings.hideSpellsTab">
-        <span>Spells</span>
-        <v-icon>mdi-fire</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Inventory</span>
-        <v-icon>mdi-cube</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Features</span>
-        <v-icon>mdi-text</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Journal</span>
-        <v-icon>mdi-book-open-variant</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Build</span>
-        <v-icon>mdi-wrench</v-icon>
-      </v-btn>
-      <v-btn v-if="creature.settings.showTreeTab">
-        <span>Tree</span>
-        <v-icon>mdi-file-tree</v-icon>
+      <v-btn
+        v-for="tab in visibleTabs"
+        :key="tab.id"
+      >
+        <span>{{ tab.label }}</span>
+        <v-icon>{{ tab.icon }}</v-icon>
       </v-btn>
     </v-bottom-navigation>
   </div>
@@ -124,7 +81,7 @@ import StatsTab from '/imports/client/ui/creature/character/characterSheetTabs/S
 import FeaturesTab from '/imports/client/ui/creature/character/characterSheetTabs/FeaturesTab.vue';
 import InventoryTab from '/imports/client/ui/creature/character/characterSheetTabs/InventoryTab.vue';
 import SpellsTab from '/imports/client/ui/creature/character/characterSheetTabs/SpellsTab.vue';
-import CharacterTab from '/imports/client/ui/creature/character/characterSheetTabs/JournalTab.vue';
+import JournalTab from '/imports/client/ui/creature/character/characterSheetTabs/JournalTab.vue';
 import BuildTab from '/imports/client/ui/creature/character/characterSheetTabs/BuildTab.vue';
 import TreeTab from '/imports/client/ui/creature/character/characterSheetTabs/TreeTab.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
@@ -140,7 +97,7 @@ export default {
     ActionsTab,
     SpellsTab,
     InventoryTab,
-    CharacterTab,
+    JournalTab,
     BuildTab,
     TreeTab,
     CharacterSheetFab,
@@ -165,6 +122,80 @@ export default {
       set(newTab) {
         this.$emit('update:tabs', newTab);
       },
+    },
+    // Tab configuration is data-driven to allow game system libraries to inject
+    // system-specific tabs in the future. See docs/proposed-refactors.md Mod 8.
+    // To add a custom tab for a game system, extend this array conditionally
+    // based on this.creature?.gameSystem (once Mod 1 is implemented).
+    //
+    // TODO: Allow game system libraries to add new tabs (requires Mod 1 gameSystem field first)
+    // TODO: Hide D&D-specific sections within the Stats tab (separate follow-up)
+    visibleTabs() {
+      const allTabs = [
+        {
+          id: 'stats',
+          label: 'Stats',
+          icon: 'mdi-chart-box',
+          component: 'StatsTab',
+          show: true,
+        },
+        {
+          id: 'actions',
+          label: 'Actions',
+          icon: 'mdi-lightning-bolt',
+          component: 'ActionsTab',
+          show: true,
+        },
+        {
+          id: 'spells',
+          label: 'Spells',
+          icon: 'mdi-fire',
+          component: 'SpellsTab',
+          show: !this.creature?.settings?.hideSpellsTab,
+        },
+        {
+          id: 'inventory',
+          label: 'Inventory',
+          icon: 'mdi-cube',
+          component: 'InventoryTab',
+          show: true,
+        },
+        {
+          id: 'features',
+          label: 'Features',
+          icon: 'mdi-text',
+          component: 'FeaturesTab',
+          show: true,
+        },
+        {
+          id: 'journal',
+          label: 'Journal',
+          icon: 'mdi-book-open-variant',
+          component: 'JournalTab',
+          show: true,
+        },
+        {
+          id: 'build',
+          label: 'Build',
+          icon: 'mdi-wrench',
+          component: 'BuildTab',
+          show: true,
+        },
+        {
+          id: 'tree',
+          label: 'Tree',
+          icon: 'mdi-file-tree',
+          component: 'TreeTab',
+          show: !!this.creature?.settings?.showTreeTab,
+        },
+      ];
+      return allTabs.filter(tab => tab.show);
+    },
+    // Cache key for v-tabs-items: forces re-render when visibility changes
+    tabsKey() {
+      return '' +
+        this.creature?.settings?.hideSpellsTab +
+        this.creature?.settings?.showTreeTab;
     },
   },
   watch: {
