@@ -46,7 +46,7 @@ Very low. This is an additive schema change. Existing creatures would have `game
 ## Proposed Mod 2: Configurable Ability Modifier Formula
 
 - **Injection Point:** #1 (Ability Modifier Formula)
-- **Priority:** P1 Must Have
+- **Priority:** P2 High Value *(was P1; demoted after CoC vibe hack — `attributeType: 'stat'` bypasses cleanly)*
 
 ### Current code
 ```javascript
@@ -84,7 +84,7 @@ Low. The default behavior is unchanged. Only attributes that have a `modifierCal
 ## Proposed Mod 3: Configurable Hit Dice Ability Dependency
 
 - **Injection Point:** #2 (Hit Dice Constitution Dependency)
-- **Priority:** P2 High Value
+- **Priority:** P3 Nice to Have *(was P2; demoted after CoC vibe hack — graceful degradation confirmed, no hit dice in CoC)*
 
 ### Current code
 ```javascript
@@ -127,7 +127,7 @@ Very low. Default behavior preserved. Only affects properties that set `hitDiceA
 ## Proposed Mod 4: Data-Driven Damage Types
 
 - **Injection Point:** #6 (Damage Types List)
-- **Priority:** P1 Must Have
+- **Priority:** P2 High Value *(was P1; demoted after CoC vibe hack — not a blocker for CoC or most narrative systems)*
 
 ### Current code
 ```javascript
@@ -167,7 +167,7 @@ Very low. The damage type system already stores arbitrary strings; this just mak
 ## Proposed Mod 5: Extensible Compute-By-Type and Link-Dependencies Registries
 
 - **Injection Point:** #16 (Compute By Type Registry), #17 (Link Dependencies By Type)
-- **Priority:** P1 Must Have
+- **Priority:** P2 High Value *(was P1; demoted after CoC vibe hack — existing compute handlers sufficient for CoC, no custom property types needed yet)*
 
 ### Current code
 ```javascript
@@ -234,7 +234,7 @@ Low. Registration is additive. Existing types continue to work as before.
 ## Proposed Mod 6: Configurable Proficiency Variable Name
 
 - **Injection Point:** #3 (Proficiency Bonus Reference)
-- **Priority:** P2 High Value
+- **Priority:** P3 Nice to Have *(was P2; demoted after CoC vibe hack — optional chaining `?.value || 0` degrades gracefully to 0)*
 
 ### Current code
 Multiple files hardcode `'proficiencyBonus'` as the variable name:
@@ -320,7 +320,7 @@ Medium. The rest system is user-facing and well-established. Changes need carefu
 ## Proposed Mod 8: Data-Driven Character Sheet Tabs
 
 - **Injection Point:** #11 (Character Sheet Tabs), #12 (Stats Tab Layout)
-- **Priority:** P2 High Value
+- **Priority:** P1 Must Have *(was P2; promoted after CoC vibe hack — Stats Tab empty D&D sections are the #1 UX blocker)*
 
 ### Current code
 ```html
@@ -360,7 +360,7 @@ Medium. This is a UI refactor that touches the main character sheet component. N
 ## Proposed Mod 9: Property Type Registration Pattern
 
 - **Injection Point:** #7 (Property Types Registry), #23 (Property Form Components), #24 (Property Viewer Components)
-- **Priority:** P1 Must Have
+- **Priority:** P2 High Value *(was P1; demoted after CoC vibe hack — existing property types sufficient, only needed for novel types like Blades in the Dark Clocks)*
 
 ### Current code
 Property types are registered across 5+ files:
@@ -440,18 +440,57 @@ Very low. Additive field on library schema; the slot-filling mechanism already w
 
 ## Implementation Order
 
+> **Revised 2026-02-27** after CoC 7e vibe hack. See "Vibe Hack Validation" section below.
+
 ### Phase 1: Foundation (Low Risk)
 1. **Mod 1:** Add `gameSystem` field to creatures
-2. **Mod 4:** Make damage types extensible
-3. **Mod 10:** Add `gameSystem` to libraries
+2. **Mod 10:** Add `gameSystem` to libraries
 
-### Phase 2: Computation (Medium Risk)
+### Phase 2: UI (Medium Risk — now highest priority after vibe hack)
+3. **Mod 8:** Data-driven character sheet tabs *(P1 — promoted)*
+
+### Phase 3: Computation (Medium Risk)
 4. **Mod 2:** Configurable ability modifier formula
-5. **Mod 3:** Configurable hit dice ability
+5. **Mod 4:** Make damage types extensible
 6. **Mod 5:** Extensible compute registries
-7. **Mod 6:** Configurable proficiency variable
+7. **Mod 9:** Property type registration pattern
+8. **Mod 7:** Extensible rest types
 
-### Phase 3: UI and Registration (Higher Risk)
-8. **Mod 9:** Property type registration pattern
-9. **Mod 8:** Data-driven character sheet tabs
-10. **Mod 7:** Extensible rest types
+### Phase 4: Polish (Low Risk)
+9. **Mod 3:** Configurable hit dice ability
+10. **Mod 6:** Configurable proficiency variable
+
+---
+
+## Vibe Hack Validation
+
+**Test:** Call of Cthulhu 7e investigator built using Library system only, no code changes.
+**Date:** 2026-02-27
+**Artifact:** `docs/vibe-hack-coc-results.md`, `scripts/insert-coc7e-library.js`
+
+This section records priority changes driven by empirical testing rather than theory.
+
+### Promoted
+
+| Mod | Original | Revised | Rationale |
+|-----|----------|---------|-----------|
+| 8 (Data-driven tabs) | P2 | **P1** | Stats Tab shows empty D&D sections (Ability Scores, Hit Dice, Spell Slots, Saves, Proficiencies) for CoC characters. This is the single biggest visual blocker. No workaround available via library or settings. |
+
+### Demoted
+
+| Mod | Original | Revised | Rationale |
+|-----|----------|---------|-----------|
+| 2 (Ability modifier formula) | P1 | **P2** | `attributeType: 'stat'` skips the D&D `(score-10)/2` formula entirely. CoC characteristics display raw values with no modifier computed. Not a blocker unless you need the modifier display with a different formula. |
+| 4 (Damage types) | P1 | **P2** | CoC doesn't use typed damage. Damage Multipliers section is simply empty. No blocker for narrative systems. Only becomes relevant for Pathfinder 2e (more types) or GURPS. |
+| 5 (Extensible compute registries) | P1 | **P2** | All CoC properties (stat, resource, healthBar, skill, action, roll, branch, note) use existing compute handlers. No novel compute logic needed. Only required if a new system needs a fundamentally new property type like a BitD Clock. |
+| 9 (Property type registration) | P1 | **P2** | Same rationale as Mod 5. Existing types sufficient for CoC. Demote until a system needs a new type. |
+| 3 (Hit dice ability) | P2 | **P3** | CoC has no hit dice. Hit dice sections display empty but don't error. Graceful degradation confirmed. |
+| 6 (Proficiency variable name) | P2 | **P3** | `computation.scope['proficiencyBonus']?.value \|\| 0` optional chaining means absent proficiency bonus silently becomes 0 throughout. Zero proficiency is exactly correct for CoC. |
+
+### Key Findings (Summary)
+
+- **80% of injection points are non-blocking** for CoC (20/25). Library system handles far more than expected.
+- **`attributeType: 'stat'`** is the critical bypass: it skips ability modifier computation entirely, making non-D20 stats work cleanly.
+- **Optional chaining `?.value \|\| 0`** throughout computation code provides silent graceful degradation for absent variables.
+- **Parser is more capable than documented**: floor(), nested ternary, dice in ternary branches, &&/||, all work.
+- **The Stats Tab is the only real code blocker** — it renders D&D-specific sections regardless of game system.

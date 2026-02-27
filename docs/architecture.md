@@ -482,3 +482,344 @@ Users have tiers that gate features:
 | Path Finding | ngraph.path (for cycle detection) |
 | File Storage | S3 (via Slingshot) |
 | Deployment | Docker Compose |
+
+---
+
+## How the Effect System Works: Worked Example
+
+> Verified against source files 2026-02-27. Line numbers accurate as of that date.
+
+This walkthrough traces a single buff effect — a Bless spell granting +1d4 to attack rolls
+and saving throws — through the entire computation pipeline.
+
+### Setup: The Properties
+
+```
+Buff: Bless
+└── Effect: "+1d4 to attacks"
+    ├── operation: 'add'
+    ├── stats: ['strengthSave', 'dexteritySave', ...] (all saves)
+    ├── amount: { type: '_calculation', formula: '1d4' }
+    └── targetTags: ['attackRoll'] (or stats list)
+
+Skill: Strength Save
+├── variableName: 'strengthSave'
+├── ability: 'strength'
+└── skillType: 'save'
+```
+
+### Phase 1: Build — Dependency Linking
+
+**File:** `app/imports/api/engine/computation/buildComputation/linkTypeDependencies.js`
+
+`linkEffects()` (line 140) runs for the Bless effect property:
+
+1. **Amount calculation linked:** `dependencyGraph.addLink(prop._id, prop._id + '.amount', 'calculation')` — the effect node depends on evaluating its formula.
+2. **Stat targets linked:** For each name in `prop.stats`, `dependencyGraph.addLink(statName, prop._id, 'effect')` — the variable node for `'strengthSave'` depends on the Bless effect.
+
+`linkSkill()` (line 324) runs for the Strength Save property:
+
+1. `dependencyGraph.addLink(prop._id, prop.ability, 'skillAbilityScore')` — Strength Save depends on `'strength'` variable.
+2. `dependencyGraph.addLink(prop._id, 'proficiencyBonus', 'skillProficiencyBonus')` — depends on proficiency bonus.
+3. `linkVariableName()` — `'strengthSave'` variable node depends on the Strength Save property.
+
+### Phase 2: Compute — Aggregation
+
+**File:** `app/imports/api/engine/computation/computeComputation/computeByType/computeVariable/aggregate/aggregateEffect.js`
+
+The dependency graph is traversed depth-first. When the `'strengthSave'` variable node is
+visited, it iterates its incoming links. For each linked effect property, `aggregateEffect()`
+runs:
+
+```javascript
+// aggregateEffect.js:1-85 (simplified)
+switch (linkedNode.data.operation) {
+  case 'add':
+    aggregator.add += result || 0;  // adds 1d4's resolved value
+    break;
+}
+```
+
+**Aggregation accumulator initial state:**
+```javascript
+effectAggregator = {
+  base: undefined,  // max of all 'base' effects
+  add: 0,           // sum of all 'add' effects
+  mul: 1,           // product of all 'mul' effects
+  min: -Infinity,   // max of all 'min' floors
+  max: +Infinity,   // min of all 'max' ceilings
+  set: undefined,   // highest 'set' override
+  advantage: 0,     // count of advantage effects
+  disadvantage: 0,  // count of disadvantage effects
+  passiveAdd: undefined,
+  fail: 0,
+  conditional: [],
+}
+```
+
+### Phase 2: Compute — Result Resolution
+
+**File:** `app/imports/api/engine/computation/computeComputation/computeByType/computeVariable/getAggregatorResult.js`
+
+After all effects are aggregated, `getAggregatorResult()` computes the final value:
+
+```javascript
+// getAggregatorResult.js:1-39 (exact code)
+let base = Math.max(aggregator.base ?? statBase, statBase ?? aggregator.base);
+let result = (base + aggregator.add) * aggregator.mul;
+if (result < aggregator.min) result = aggregator.min;   // min clamp
+if (result > aggregator.max) result = aggregator.max;   // max clamp
+if (aggregator.set !== undefined) result = aggregator.set;  // set override
+if (!prop.decimal) result = Math.floor(result);         // floor unless decimal
+```
+
+**Aggregation order (confirmed from source):**
+```
+1. base  = max(stat definition value, highest 'base' effect)
+2. result = (base + sum(all 'add' effects)) * product(all 'mul' effects)
+3. result = max(result, highest 'min' effect)   [floor clamping]
+4. result = min(result, lowest 'max' effect)    [ceiling clamping]
+5. result = set value  (if any 'set' effect, highest wins)
+6. result = floor(result)  (unless attribute has decimal: true)
+```
+
+### Phase 2: Skill Computation with Effects
+
+**File:** `app/imports/api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsSkill.js`
+
+For skill variables (including saves), the formula is different from plain attributes:
+
+```javascript
+// computeVariableAsSkill.js:51
+let result = (base + prop.abilityMod + profBonus + aggregator.add) * aggregator.mul;
+```
+
+Note that `abilityMod` and `profBonus` are added **inside** the multiply — they are
+affected by `mul` effects. This differs from the plain attribute aggregator which only
+multiplies the (base + add) component.
+
+**Passive bonus (advantage/disadvantage ±5):**
+
+Lines 72-82: If `prop.advantage === 1` and `passiveBonus` is finite, add 5 to passive score.
+If `prop.advantage === -1`, subtract 5.
+
+> ⚠️ **Known bug (line 81):** `prop.bassiveBonus -= 5` — typo on `bassiveBonus`. The
+> disadvantage branch writes to a nonexistent field. `prop.passiveBonus` is correctly
+> set at line 70, so the passive score for disadvantage shows the `passiveAdd` value
+> without the −5 deduction.
+
+### End-to-End Summary
+
+```
+User applies Bless buff
+  → Bless Effect property written to MongoDB
+  → Creature marked dirty
+
+Phase 1 (linkTypeDependencies.js):
+  → 'strengthSave' → Bless Effect  (type: 'effect')
+  → Bless Effect → 'strengthSave.amount'  (type: 'calculation')
+  → 'strengthSave' → Strength Save prop  (type: 'definition')
+  → Strength Save prop → 'strength'  (type: 'skillAbilityScore')
+  → Strength Save prop → 'proficiencyBonus'  (type: 'skillProficiencyBonus')
+
+Phase 2 (depth-first traversal):
+  1. Compute 'proficiencyBonus' → e.g. 3
+  2. Compute 'strength' → value: 16, modifier: 3
+  3. Compute Bless Effect amount → 1d4 = [2] (rolled or left as parse node)
+  4. Compute 'strengthSave' via computeVariableAsSkill:
+     base = 0 (no base value set)
+     result = (0 + 3 [str mod] + 3 [prof] + 2 [bless add]) * 1 [no mul]
+            = 8
+     prop.value = 8
+
+Phase 3 (writeScope.ts):
+  → 'strengthSave': { value: 8, advantage: 0, ... } written to creatureVariables
+
+Reactive publication fires → UI updates automatically
+```
+
+---
+
+## Developer Guide: Adding a New Property Type
+
+> Verified against source files 2026-02-27. The process requires editing exactly **6 required
+> files** plus 2 optional engine files if the type needs custom computation.
+
+This guide walks through adding a hypothetical `clock` property type (as used in Blades in
+the Dark for progress clocks).
+
+### Required Files (6)
+
+**Step 1: Create the schema file**
+
+Create `app/imports/api/properties/Clocks.ts`:
+
+```typescript
+import SimpleSchema from 'simpl-schema';
+import { fieldToCompute } from '/imports/api/engine/computation/utility/fieldToCompute';
+
+// Base schema: fields users can set
+export const ClockSchema = new SimpleSchema({
+  segments: {
+    type: SimpleSchema.Integer,
+    defaultValue: 4,
+    allowedValues: [4, 6, 8, 10, 12],
+  },
+  filled: {
+    type: SimpleSchema.Integer,
+    defaultValue: 0,
+    min: 0,
+  },
+});
+
+// Computed schema: fields the engine writes
+export const ComputedClockSchema = new SimpleSchema({
+  // progress as percentage, computed from filled/segments
+  progress: { type: Number, optional: true },
+});
+
+// Computed-only schema: fields only the engine writes (never user-editable)
+export const ComputedOnlyClockSchema = new SimpleSchema({
+  complete: { type: Boolean, optional: true },
+});
+```
+
+**Step 2: Register in `propertySchemasIndex.js`**
+
+`app/imports/api/properties/propertySchemasIndex.js`:
+
+```javascript
+import { ClockSchema } from '/imports/api/properties/Clocks';
+// ... existing imports ...
+
+const propertySchemasIndex = {
+  // ... existing entries ...
+  clock: ClockSchema,
+};
+```
+
+**Step 3: Register in `computedPropertySchemasIndex.js`**
+
+`app/imports/api/properties/computedPropertySchemasIndex.js`:
+
+```javascript
+import { ComputedClockSchema } from '/imports/api/properties/Clocks';
+
+const propertySchemasIndex = {
+  // ... existing entries ...
+  clock: ComputedClockSchema,
+};
+```
+
+**Step 4: Register in `computedOnlyPropertySchemasIndex.js`**
+
+`app/imports/api/properties/computedOnlyPropertySchemasIndex.js`:
+
+```javascript
+import { ComputedOnlyClockSchema } from '/imports/api/properties/Clocks';
+
+const propertySchemasIndex = {
+  // ... existing entries ...
+  clock: ComputedOnlyClockSchema,
+};
+```
+
+**Step 5: Register metadata in `PROPERTIES.js`**
+
+`app/imports/constants/PROPERTIES.js`:
+
+```javascript
+const PROPERTIES = Object.freeze({
+  // ... existing entries ...
+  clock: {
+    icon: 'mdi-clock-outline',
+    name: 'Clock',
+    docsPath: 'property/clock',
+    helpText: 'A progress clock for tracking advancement toward a goal.',
+    suggestedParents: ['folder', 'feature'],
+  },
+});
+```
+
+**Step 6: Create UI form and viewer components, register them**
+
+Create `app/imports/client/ui/properties/forms/ClockForm.vue` (a Vue component).
+
+Register in `app/imports/client/ui/properties/forms/shared/propertyFormIndex.js`:
+
+```javascript
+import ClockForm from '/imports/client/ui/properties/forms/ClockForm.vue';
+
+export default {
+  // ... existing entries ...
+  clock: ClockForm,
+};
+```
+
+Create `app/imports/client/ui/properties/viewers/ClockViewer.vue`.
+
+Register in `app/imports/client/ui/properties/viewers/shared/propertyViewerIndex.js`:
+
+```javascript
+import ClockViewer from '/imports/client/ui/properties/viewers/ClockViewer.vue';
+
+export default {
+  // ... existing entries ...
+  clock: ClockViewer,
+};
+```
+
+### Optional Engine Files (if custom compute logic needed)
+
+**Step 7 (optional): Add compute handler**
+
+If the type needs custom computation (e.g., computing `progress = filled / segments`),
+add a handler to `computeByType.js`:
+
+```javascript
+// computeComputation/computeByType.js
+import computeClock from './computeByType/computeClock';
+
+// Note: Object.freeze() is currently used — this requires modifying the source file.
+// This is Mod 5 (P2): Extensible Compute Registries.
+export default Object.freeze({
+  // ... existing entries ...
+  clock: computeClock,
+});
+```
+
+**Step 8 (optional): Add dependency links**
+
+If the type references other variables, add linking to `linkTypeDependencies.js`:
+
+```javascript
+// Add to linkDependenciesByType map
+const linkDependenciesByType = {
+  // ... existing entries ...
+  clock: linkClock,
+};
+
+function linkClock(dependencyGraph, prop) {
+  // Example: clock depends on its 'filled' baseValue calculation
+  dependOnCalc({ dependencyGraph, prop, key: 'filled' });
+}
+```
+
+### Verification Checklist
+
+After adding a new property type, verify:
+
+- [ ] Schema validates correctly (run the app and try inserting a `clock` property)
+- [ ] Schema shows in the property creation dropdown (PROPERTIES.js entry)
+- [ ] Form renders with correct fields (ClockForm.vue registered)
+- [ ] Viewer renders in read-only mode (ClockViewer.vue registered)
+- [ ] Computation runs without errors (computeByType handler, if added)
+- [ ] Dependencies resolve correctly (linkTypeDependencies, if added)
+- [ ] The type appears in the LibraryNode tree editor (uses same index files)
+
+### Discrepancy Note
+
+The original Proposed Mod 9 description (in `proposed-refactors.md`) listed 4 files to edit
+for a new property type. Actual source analysis reveals **6 required files** (3 schema index
+files, not 1; plus PROPERTIES.js, a form component file, and a viewer component file).
+The `computedOnlyPropertySchemasIndex.js` file was not mentioned in earlier estimates.
