@@ -51,6 +51,20 @@
     </v-row>
     <form-sections>
       <form-section name="Settings">
+        <!-- Game system override: normally set automatically when filling a base-ruleset slot.
+             This dropdown lets users or testers manually switch systems. -->
+        <v-select
+          label="Game system"
+          hint="Normally set automatically when you fill the Ruleset slot"
+          persistent-hint
+          clearable
+          :disabled="!editPermission"
+          :value="model.gameSystem || null"
+          :items="gameSystems"
+          item-text="label"
+          item-value="value"
+          @change="value => $emit('change', {path: ['gameSystem'], value: value || undefined})"
+        />
         <v-switch
           label="Hide redundant stats"
           :disabled="!editPermission"
@@ -200,6 +214,13 @@ export default {
       libraryWriteLoading: false,
       libraryWriteError: undefined,
       dirty: false, // If there are pending changes
+      gameSystems: [
+        { label: 'D&D 5e (default)', value: 'dnd5e' },
+        { label: 'Call of Cthulhu 7e', value: 'coc7e' },
+        { label: 'Pathfinder 2e', value: 'pf2e' },
+        { label: 'Blades in the Dark', value: 'bitd' },
+        { label: 'Ironsworn', value: 'ironsworn' },
+      ],
     }
   },
   computed: {
