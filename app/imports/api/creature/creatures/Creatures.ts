@@ -175,6 +175,18 @@ const CreatureSchema = TypedSimpleSchema.from({
     optional: true,
   },
 
+  /**
+   * The game system this creature belongs to.
+   * Set automatically when a base-ruleset library slot is filled.
+   * Examples: 'dnd5e', 'coc7e', 'pf2e', 'bitd'
+   * Undefined is treated as 'dnd5e' by the UI for backwards compatibility.
+   */
+  gameSystem: {
+    type: String,
+    optional: true,
+    max: 64,
+  },
+
   // Settings
   settings: {
     type: CreatureSettingsSchema,
