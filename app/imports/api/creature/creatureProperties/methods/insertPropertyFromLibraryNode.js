@@ -3,6 +3,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
+import Libraries from '/imports/api/library/Libraries';
+import Creatures from '/imports/api/creature/creatures/Creatures';
 import { RefSchema } from '/imports/api/parenting/ChildSchema';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
@@ -53,12 +55,39 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     const parentId = parentRef.id;
 
     let node;
+    let originalNodes = [];
     nodeIds.forEach(nodeId => {
+      // Fetch the original library node before insertion (for gameSystem lookup)
+      const originalNode = LibraryNodes.findOne({ _id: nodeId, removed: { $ne: true } });
+      if (originalNode) originalNodes.push(originalNode);
       node = insertPropertyFromNode(nodeId, root, parentId);
     });
 
     // Tree structure changed by inserts, reorder the tree
     rebuildNestedSets(CreatureProperties, rootCreature._id);
+
+    // If any inserted root node is a base-ruleset filler, copy the library's
+    // gameSystem onto the creature so UI can switch to the correct system layout.
+    if (Meteor.isServer) {
+      for (const originalNode of originalNodes) {
+        if (
+          originalNode.fillSlots &&
+          Array.isArray(originalNode.libraryTags) &&
+          originalNode.libraryTags.includes('base') &&
+          originalNode.root?.collection === 'libraries'
+        ) {
+          const library = Libraries.findOne(originalNode.root.id, {
+            fields: { gameSystem: 1 },
+          });
+          if (library?.gameSystem) {
+            Creatures.update(rootCreature._id, {
+              $set: { gameSystem: library.gameSystem },
+            });
+            break; // Only the first matching base ruleset wins
+          }
+        }
+      }
+    }
 
     // get one of the root inserted docs
     const lastInsertedId = node?._id;

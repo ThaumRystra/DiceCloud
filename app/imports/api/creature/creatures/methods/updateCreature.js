@@ -16,6 +16,7 @@ const updateCreature = new ValidatedMethod({
       'avatarPicture',
       'color',
       'settings',
+      'gameSystem',
     ];
     if (!allowedFields.includes(path[0])) {
       throw new Meteor.Error('Creatures.methods.update.denied',
