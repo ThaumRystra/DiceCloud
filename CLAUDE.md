@@ -422,3 +422,48 @@ non-D&D game system using only the Library system. Results drive priority decisi
 - **Blocker identified:** Injection Point #12 (Stats Tab Layout) → drove Mod 8 promotion to P1
 - **Artifacts:** `scripts/insert-coc7e-library.js`, `docs/vibe-hack-coc-results.md`
 - **Priority changes:** See `docs/proposed-refactors.md` "Vibe Hack Validation" section for full rationale
+
+### VH-002: gameSystem → visibleTabs → SYSTEM_ATTRIBUTE_SECTIONS Wire-Up
+
+- **Date:** 2026-02-28
+- **Goal:** Complete the Mod 1 + Mod 8 wire-up: make `creature.gameSystem` drive tab selection and suppress D&D-specific Stats Tab sections
+- **Result:** Fully working. Three code changes, zero engine changes.
+- **Key findings:**
+  - `CharacterSheet.vue`: `visibleTabs` computed now reads `creature.gameSystem` and selects from `SYSTEM_TABS` lookup (coc7e, expanse, expanse-ship) or falls back to `DEFAULT_TABS` (D&D)
+  - D&D default behavior is unchanged — undefined gameSystem gets exactly the same tabs as before
+  - `StatsTab.vue`: `SYSTEM_ATTRIBUTE_SECTIONS` allowlist suppresses D&D sections (ability, hitDice, spellSlot, modifier, savingThrow) for non-D&D systems. Method `sectionAllowed(type)` is used in template v-if guards.
+  - `StatsTab.vue` meteor query expanded from `fields: { settings: 1 }` to `{ settings: 1, gameSystem: 1 }` to expose the field to the template
+  - `tabsKey` updated to include `gameSystem` so v-tabs-items re-renders when system changes
+  - Watcher on `creature.gameSystem` resets active tab to 0 via Vuex store
+- **Pattern established:** SYSTEM_TABS + SYSTEM_ATTRIBUTE_SECTIONS is the standard pattern for adding new game systems. Only two maps need updating per new system.
+- **Artifacts:** `CharacterSheet.vue`, `StatsTab.vue`, `CreatureForm.vue` (Expanse options added)
+
+### VH-003: The Expanse RPG (AGE System — Character)
+
+- **Date:** 2026-02-28
+- **Goal:** Test a 3d6+ability AGE-based system with no proficiency bonus and a dual-purpose health/resource pool
+- **Result:** 100% working with library system. `attributeType: 'stat'` pattern confirmed to hold for any score-is-modifier system.
+- **Key findings:**
+  - `attributeType: 'stat'` works perfectly — Accuracy 2, Communication 3, etc. display as raw scores, no modifier formula applied
+  - Fortune as a `healthBar` that is ALSO a spendable resource works natively — players can damage it and track spending in the same bar
+  - 9 ability roll actions (3d6 + ability) work correctly — roll sub-properties capture variable references
+  - Focus modeled as `skillType: 'skill'` with `baseValue: 2` and linked ability — displays cleanly as a +2 bonus
+  - Condition toggles (Hindered, Restrained, Injured, Wounded) correctly cascade `mul` and `add` effects into derived stats (Speed, all 9 abilities)
+  - Derived stats (Toughness = 10+CON, Defense = 10+DEX, Speed = 10+DEX+PER) auto-compute correctly
+  - Fortune formula `10 + level * 2 + constitution` evaluates correctly on compute
+- **Artifacts:** `scripts/insert-expanse-library.js`, `scripts/create-expanse-sample-character.js`, `docs/expanse-playtest-guide.md`
+
+### VH-003b: The Expanse RPG (AGE System — Ship Combat)
+
+- **Date:** 2026-02-28
+- **Goal:** Test ships as separate DiceCloud creatures with their own game system ('expanse-ship'), and Loss conditions as toggles cascading into derived TN stats
+- **Result:** Fully working. Ships-as-creatures is the correct multi-character pattern for crew-based combat systems.
+- **Key findings:**
+  - Ships as `type: 'npc'` creatures with `gameSystem: 'expanse-ship'` get the correct tab set (Ship Systems, Combat, Crew Roles, Ship Log, Build)
+  - Crew station stats (`crewAccuracy`, `crewDexterity`, etc.) provide the bridge between crew sheets and ship rolls — set once before combat, all actions auto-update
+  - Loss conditions as toggles correctly propagate: Sensors Damaged (−2 Sensors) → `attackTN` and `evasionTN` auto-decrement because they're computed from `sensors`; Engines Damaged → `crewDexterity` penalty; Comms Offline → `crewCommunication` penalty
+  - `SYSTEM_ATTRIBUTE_SECTIONS` for 'expanse-ship' suppresses all D&D and character-specific sections, leaving only `stat`, `resource`, `healthBar`, `utility`
+  - Ship library uses `libraryTags: ['ship']` (not `['base']`) to differentiate from character rulesets
+  - Multi-tab browser workflow confirmed viable: one ship sheet + one tab per crew member
+- **Pattern established:** Any crew/vehicle-based system can use the same ships-as-creatures pattern with pre-set crew stat bridges
+- **Artifacts:** `scripts/insert-expanse-ship-library.js`, `scripts/create-expanse-sample-ship.js`
