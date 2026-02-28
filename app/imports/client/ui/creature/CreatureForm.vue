@@ -217,6 +217,8 @@ export default {
       gameSystems: [
         { label: 'D&D 5e (default)', value: 'dnd5e' },
         { label: 'Call of Cthulhu 7e', value: 'coc7e' },
+        { label: 'The Expanse RPG', value: 'expanse' },
+        { label: 'The Expanse — Ship', value: 'expanse-ship' },
         { label: 'Pathfinder 2e', value: 'pf2e' },
         { label: 'Blades in the Dark', value: 'bitd' },
         { label: 'Ironsworn', value: 'ironsworn' },

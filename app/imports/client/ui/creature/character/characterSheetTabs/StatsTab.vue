@@ -90,7 +90,7 @@
       </div>
 
       <div
-        v-if="properties.attribute.ability && properties.attribute.ability.length"
+        v-if="sectionAllowed('ability') && properties.attribute.ability && properties.attribute.ability.length"
         class="ability-scores"
       >
         <v-card>
@@ -135,17 +135,19 @@
         />
       </div>
 
-      <div
-        v-for="modifier in properties.attribute.modifier"
-        :key="modifier._id"
-        class="modifier"
-      >
-        <attribute-card
-          :model="modifier"
-          :data-id="modifier._id"
-          @click="clickProperty({_id: modifier._id})"
-        />
-      </div>
+      <template v-if="sectionAllowed('modifier')">
+        <div
+          v-for="modifier in properties.attribute.modifier"
+          :key="modifier._id"
+          class="modifier"
+        >
+          <attribute-card
+            :model="modifier"
+            :data-id="modifier._id"
+            @click="clickProperty({_id: modifier._id})"
+          />
+        </div>
+      </template>
 
       <div
         v-for="check in properties.skill.check"
@@ -161,7 +163,7 @@
       </div>
 
       <div
-        v-if="properties.attribute.hitDice && properties.attribute.hitDice.length"
+        v-if="sectionAllowed('hitDice') && properties.attribute.hitDice && properties.attribute.hitDice.length"
         class="hit-dice"
       >
         <v-card>
@@ -198,7 +200,7 @@
       </div>
 
       <div
-        v-if="properties.attribute.spellSlot && properties.attribute.spellSlot.length"
+        v-if="sectionAllowed('spellSlot') && properties.attribute.spellSlot && properties.attribute.spellSlot.length"
         class="spell-slots"
       >
         <spell-slot-card
@@ -217,7 +219,7 @@
       />
 
       <div
-        v-if="properties.skill.save && properties.skill.save.length"
+        v-if="sectionAllowed('savingThrow') && properties.skill.save && properties.skill.save.length"
         class="saving-throws"
       >
         <v-card>
@@ -414,6 +416,16 @@ import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
+// Allowlist of attribute/skill section types shown for each non-D&D game system.
+// null (default) means show all sections (D&D 5e behavior).
+// D&D-specific sections not in a system's list are hidden automatically.
+const SYSTEM_ATTRIBUTE_SECTIONS = {
+  coc7e:          ['healthBar', 'stat', 'skill', 'resource', 'utility'],
+  expanse:        ['healthBar', 'stat', 'skill', 'resource', 'utility'],
+  'expanse-ship': ['stat', 'resource', 'healthBar', 'utility'],
+  // null = allow all (D&D default — do not add a key for dnd5e)
+};
+
 function walkDown(forest, callback){
   let stack = [...forest].reverse();
   while(stack.length){
@@ -578,7 +590,7 @@ export default {
       return properties;
     },
     creature() {
-      return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
+      return Creatures.findOne(this.creatureId, { fields: { settings: 1, gameSystem: 1 } });
     },
     
     toggles() {
@@ -595,6 +607,12 @@ export default {
     },
   },
   methods: {
+    sectionAllowed(sectionType) {
+      const system = this.creature?.gameSystem;
+      const allowlist = SYSTEM_ATTRIBUTE_SECTIONS[system] ?? null;
+      if (allowlist === null) return true; // D&D default: show everything
+      return allowlist.includes(sectionType);
+    },
     clickProperty({ _id }) {
       this.$store.commit('pushDialogStack', {
         component: 'creature-property-dialog',
