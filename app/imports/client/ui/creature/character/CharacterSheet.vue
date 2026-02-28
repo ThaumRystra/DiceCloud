@@ -123,77 +123,58 @@ export default {
         this.$emit('update:tabs', newTab);
       },
     },
-    // Tab configuration is data-driven to allow game system libraries to inject
-    // system-specific tabs in the future. See docs/proposed-refactors.md Mod 8.
-    // To add a custom tab for a game system, extend this array conditionally
-    // based on this.creature?.gameSystem (once Mod 1 is implemented).
-    //
-    // TODO: Allow game system libraries to add new tabs (requires Mod 1 gameSystem field first)
-    // TODO: Hide D&D-specific sections within the Stats tab (separate follow-up)
+    // Tab configuration is data-driven: each game system can define its own tab
+    // set. Non-D&D systems override labels and omit D&D-specific tabs (e.g. Spells).
+    // Default behavior (D&D 5e / undefined gameSystem) is preserved exactly.
+    // See docs/proposed-refactors.md Mod 8 for architecture.
     visibleTabs() {
-      const allTabs = [
-        {
-          id: 'stats',
-          label: 'Stats',
-          icon: 'mdi-chart-box',
-          component: 'StatsTab',
-          show: true,
-        },
-        {
-          id: 'actions',
-          label: 'Actions',
-          icon: 'mdi-lightning-bolt',
-          component: 'ActionsTab',
-          show: true,
-        },
-        {
-          id: 'spells',
-          label: 'Spells',
-          icon: 'mdi-fire',
-          component: 'SpellsTab',
-          show: !this.creature?.settings?.hideSpellsTab,
-        },
-        {
-          id: 'inventory',
-          label: 'Inventory',
-          icon: 'mdi-cube',
-          component: 'InventoryTab',
-          show: true,
-        },
-        {
-          id: 'features',
-          label: 'Features',
-          icon: 'mdi-text',
-          component: 'FeaturesTab',
-          show: true,
-        },
-        {
-          id: 'journal',
-          label: 'Journal',
-          icon: 'mdi-book-open-variant',
-          component: 'JournalTab',
-          show: true,
-        },
-        {
-          id: 'build',
-          label: 'Build',
-          icon: 'mdi-wrench',
-          component: 'BuildTab',
-          show: true,
-        },
-        {
-          id: 'tree',
-          label: 'Tree',
-          icon: 'mdi-file-tree',
-          component: 'TreeTab',
-          show: !!this.creature?.settings?.showTreeTab,
-        },
+      const system = this.creature?.gameSystem;
+
+      const SYSTEM_TABS = {
+        coc7e: [
+          { id: 'stats',     label: 'Investigator', icon: 'mdi-account',          component: 'StatsTab',     show: true },
+          { id: 'actions',   label: 'Actions',      icon: 'mdi-lightning-bolt',    component: 'ActionsTab',   show: true },
+          { id: 'inventory', label: 'Possessions',  icon: 'mdi-bag-personal',      component: 'InventoryTab', show: true },
+          { id: 'features',  label: 'Backstory',    icon: 'mdi-text',              component: 'FeaturesTab',  show: true },
+          { id: 'journal',   label: 'Journal',      icon: 'mdi-book-open-variant', component: 'JournalTab',   show: true },
+          { id: 'build',     label: 'Build',        icon: 'mdi-wrench',            component: 'BuildTab',     show: true },
+        ],
+        expanse: [
+          { id: 'stats',     label: 'Character',    icon: 'mdi-account',           component: 'StatsTab',     show: true },
+          { id: 'actions',   label: 'Actions',      icon: 'mdi-lightning-bolt',    component: 'ActionsTab',   show: true },
+          { id: 'inventory', label: 'Gear',         icon: 'mdi-bag-personal',      component: 'InventoryTab', show: true },
+          { id: 'features',  label: 'Talents',      icon: 'mdi-star',              component: 'FeaturesTab',  show: true },
+          { id: 'journal',   label: 'Backstory',    icon: 'mdi-book-open-variant', component: 'JournalTab',   show: true },
+          { id: 'build',     label: 'Build',        icon: 'mdi-wrench',            component: 'BuildTab',     show: true },
+        ],
+        'expanse-ship': [
+          { id: 'stats',    label: 'Ship Systems', icon: 'mdi-rocket',            component: 'StatsTab',     show: true },
+          { id: 'actions',  label: 'Combat',       icon: 'mdi-crosshairs-gps',    component: 'ActionsTab',   show: true },
+          { id: 'features', label: 'Crew Roles',   icon: 'mdi-account-group',     component: 'FeaturesTab',  show: true },
+          { id: 'journal',  label: 'Ship Log',     icon: 'mdi-notebook',          component: 'JournalTab',   show: true },
+          { id: 'build',    label: 'Build',        icon: 'mdi-wrench',            component: 'BuildTab',     show: true },
+        ],
+      };
+
+      // Default D&D 5e tabs — preserve existing behavior exactly
+      const DEFAULT_TABS = [
+        { id: 'stats',     label: 'Stats',     icon: 'mdi-chart-box',         component: 'StatsTab',     show: true },
+        { id: 'actions',   label: 'Actions',   icon: 'mdi-lightning-bolt',    component: 'ActionsTab',   show: true },
+        { id: 'spells',    label: 'Spells',    icon: 'mdi-fire',              component: 'SpellsTab',    show: !this.creature?.settings?.hideSpellsTab },
+        { id: 'inventory', label: 'Inventory', icon: 'mdi-cube',              component: 'InventoryTab', show: true },
+        { id: 'features',  label: 'Features',  icon: 'mdi-text',              component: 'FeaturesTab',  show: true },
+        { id: 'journal',   label: 'Journal',   icon: 'mdi-book-open-variant', component: 'JournalTab',   show: true },
+        { id: 'build',     label: 'Build',     icon: 'mdi-wrench',            component: 'BuildTab',     show: true },
+        { id: 'tree',      label: 'Tree',      icon: 'mdi-file-tree',         component: 'TreeTab',      show: !!this.creature?.settings?.showTreeTab },
       ];
-      return allTabs.filter(tab => tab.show);
+
+      const tabs = SYSTEM_TABS[system] ?? DEFAULT_TABS;
+      return tabs.filter(t => t.show !== false);
     },
     // Cache key for v-tabs-items: forces re-render when visibility changes
     tabsKey() {
       return '' +
+        this.creature?.gameSystem +
         this.creature?.settings?.hideSpellsTab +
         this.creature?.settings?.showTreeTab;
     },
@@ -201,6 +182,9 @@ export default {
   watch: {
     'creature.name'(value) {
       this.$store.commit('setPageTitle', value || 'Character Sheet');
+    },
+    'creature.gameSystem'() {
+      this.$store.commit('setTabForCharacterSheet', { id: this.creatureId, tab: 0 });
     },
   },
   mounted() {
