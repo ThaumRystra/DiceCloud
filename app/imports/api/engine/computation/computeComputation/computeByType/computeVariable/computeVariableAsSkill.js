@@ -78,7 +78,7 @@ export default function computeVariableAsSkill(computation, node, prop) {
     prop.advantage === -1
     && Number.isFinite(prop.passiveBonus)
   ) {
-    prop.bassiveBonus -= 5;
+    prop.passiveBonus -= 5;
   }
   // conditional benefits
   prop.conditionalBenefits = aggregator.conditional;
