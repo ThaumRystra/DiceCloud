@@ -264,6 +264,33 @@ const parserFunctions: { [name: string]: ParserFunction } = {
       return rollArray;
     },
   },
+  'minValue': {
+      comment: 'Applies a minimum value to all dice in a roll, replacing any result below the minimum with the minimum value. The original low roll is shown with a strikethrough.',
+      examples: [
+          { input: 'minValue(4d6, 3)', result: '[3,5,3,2] with values below 3 shown crossed out and replaced' },
+          { input: 'minValue(1d20, 10)', result: '14' },
+      ],
+      arguments: ['rollArray', 'number'],
+      maxResolveLevels: ['roll', 'reduce'],
+      minArguments: 1,
+      maxArguments: 2,
+      resultType: 'rollArray',
+      fn: function minValueFn(rollArray, minValue = 1) {
+          if (minValue < 1) minValue = 1;
+          if (minValue > rollArray.diceSize) minValue = rollArray.diceSize;
+          const rollValues = rollArray.values;
+          for (let i = rollValues.length - 1; i >= 0; i -= 1) {
+              const roll = rollValues[i];
+              if (roll.disabled) continue;
+              if (roll.value < minValue) {
+                  roll.disabled = true;
+                  roll.disabledBy = 'minValue';
+                  rollValues.splice(i + 1, 0, { value: minValue});
+              }
+          }
+          return rollArray;
+    },
+  },
 }
 
 function anyNumberOf(type) {
