@@ -69,11 +69,11 @@
     "vuex": "^3.1.3"
   },
   "devDependencies": {
-    "@types/chai": "^4.3.11",
+    "@types/chai": "^4.3.20",
     "@types/lodash": "^4.14.202",
     "@types/meteor": "^2.9.8",
     "@types/meteor-mdg-validated-method": "^1.2.10",
-    "@types/mocha": "^10.0.6",
+    "@types/mocha": "^10.0.10",
     "@types/simpl-schema": "^1.12.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",

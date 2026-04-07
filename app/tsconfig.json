@@ -33,6 +33,11 @@
     },
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "types": [
+      "meteor",
+      "mocha",
+      "chai"
+    ]
   },
   "vueCompilerOptions": {
     "target": 2

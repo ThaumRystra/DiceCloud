@@ -4,7 +4,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertUserInTabletop } from './shared/tabletopPermissions';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
+import LibraryNodes, { LibraryNodeTypes } from '/imports/api/library/LibraryNodes';
 import { getFilter, renewDocIds } from '/imports/api/parenting/parentingFunctions';
 import { reifyNodeReferences, storeLibraryNodeReferences } from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -51,7 +51,7 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         _id: nodeId,
         type: 'creature',
         removed: { $ne: true },
-      });
+      }) as LibraryNodeTypes['creature'];
 
       if (!creatureNode) {
         if (Meteor.isClient) return {};
@@ -74,6 +74,11 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         writers: [this.userId],
         public: false,
         dirty: true,
+        propCount: 0,
+        denormalizedStats: {
+          xp: 0,
+          milestoneLevels: 0,
+        },
         settings: {},
       });
 
