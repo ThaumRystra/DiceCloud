@@ -195,7 +195,7 @@ import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
@@ -247,7 +247,7 @@ const { result: creature } = autorun(() =>
 );
 
 const { result: variables } = autorun(() =>
-  CreatureVariables.findOne({ _creatureId: props.creatureId }) || {}
+  (CreatureVariables.findOne({ _creatureId: props.creatureId }) || {}) as Record<string, any>
 );
 
 const { result: hiddenPointBuys } = autorun(() =>
@@ -320,7 +320,7 @@ const { result: slotBuildTree } = autorun(() => {
     ],
     removed: { $ne: true },
     inactive: { $ne: true },
-  });
+  } as Mongo.Selector<CreatureProperty>);
   const slotIds = slots.map((s: any) => s._id);
   const slotChildren = CreatureProperties.find({
     'parentId': { $in: slotIds },

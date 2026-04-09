@@ -26,7 +26,13 @@ import { tail } from 'lodash';
 import HexagonProgress from '/imports/client/ui/components/HexagonProgress.vue';
 
 const props = defineProps<{
-  bars: object[];
+  bars: {
+    value: number;
+    total: number;
+    color?: string;
+    healthBarColorMid?: string;
+    healthBarColorLow?: string;
+  }[];
 }>();
 
 const tailBars = computed(() => tail(props.bars));

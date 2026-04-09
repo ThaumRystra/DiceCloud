@@ -19,7 +19,7 @@ const removeArchiveCreature = new ValidatedMethod({
   },
   async run({ fileId }) {
     // fetch the file
-    const file = ArchiveCreatureFiles.findOne({ _id: fileId }).get();
+    const file = await ArchiveCreatureFiles.findOneAsync({ _id: fileId }).get();
     if (!file) {
       throw new Meteor.Error('File not found',
         'The requested creature archive does not exist');

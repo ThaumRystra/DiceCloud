@@ -29,7 +29,7 @@
             >
             <template v-else>
               <span>
-                {{ creature.initial }}
+                {{ creature.name?.[0] ?? '?' }}
               </span>
             </template>
           </v-fade-transition>

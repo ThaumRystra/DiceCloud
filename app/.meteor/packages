@@ -29,7 +29,6 @@ aldeed:schema-index
 accounts-patreon
 bozhao:link-accounts
 mikowals:batch-insert
-rspack@1.1.0-beta341.1
 percolate:migrations
 quave:synced-cron
 meteortesting:mocha
@@ -43,3 +42,4 @@ ecmascript@0.18.0-beta341.1
 standard-minifier-css@1.10.1-beta341.1
 standard-minifier-js@3.2.0
 hot-module-replacement@0.5.4
+rspack

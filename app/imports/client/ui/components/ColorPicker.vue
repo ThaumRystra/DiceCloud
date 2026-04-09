@@ -81,7 +81,7 @@
       <v-card-actions>
         <v-btn
           variant="text"
-          @click="$emit('input')"
+          @click="emit('input', undefined)"
         >
           Clear
         </v-btn>
@@ -154,7 +154,7 @@ const opened = ref(false);
 
 const combination = computed(() => {
   if (!props.value) return undefined;
-  return hexToColor(props.value) || {};
+  return hexToColor(props.value);
 });
 
 const color = computed({
@@ -178,7 +178,7 @@ const shade = computed({
 const kebabColor = computed(() => camelToKebabCase(color.value) as string);
 const kebabShade = computed(() => camelToKebabCase(shade.value) as string);
 
-function isDark(kebabColorVal: string, kebabShadeVal: string): boolean {
+function isDark(kebabColorVal: string | undefined, kebabShadeVal: string | undefined): boolean | null{
   const hex = colorToHex(kebabColorVal, kebabShadeVal);
   return isDarkColor(hex);
 }

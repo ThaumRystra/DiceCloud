@@ -56,15 +56,11 @@ import { runAction } from '/imports/api/engine/action/methods/runAction';
 import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
 import mutationToLogUpdates from '/imports/api/engine/action/functions/mutationToLogUpdates';
 
-const props = withDefaults(defineProps<{
-  actionId?: string;
+const props = defineProps<{
+  actionId: string;
   task?: Record<string, any>;
   actionFinishedCallback?: Function;
-}>(), {
-  actionId: undefined,
-  task: undefined,
-  actionFinishedCallback: undefined,
-});
+}>();
 
 const store = useStore();
 const router = useRouter();
@@ -108,7 +104,7 @@ const inputProvider = {
     userInput.value = [];
     activeInputParams.value = {
       target,
-      tabletopId: action.value.tabletopId,
+      tabletopId: action.value?.tabletopId,
     };
     activeInput.value = 'targets-input';
     return promiseInput();
@@ -138,7 +134,7 @@ const inputProvider = {
   },
   async castSpell(suggestedParams: any) {
     userInput.value = suggestedParams;
-    activeInputParams.value = { creatureId: action.value.creatureId };
+    activeInputParams.value = { creatureId: action.value?.creatureId };
     activeInput.value = 'cast-spell-input';
     return promiseInput();
   },
@@ -182,7 +178,7 @@ async function finishAction() {
   store.dispatch('popDialogStack', actionResult.value);
 }
 
-function promiseInput() {
+function promiseInput(): Promise<any> {
   return new Promise(resolve => {
     resumeActionFn.value = () => {
       resumeActionFn.value = undefined;

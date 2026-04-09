@@ -26,7 +26,7 @@
       </v-scale-transition>
       <vertical-hex
         id="roll-hex"
-        @click="$emit('continue')"
+        @click="emit('continue')"
       >
         <div>
           Roll
@@ -43,7 +43,10 @@ const props = defineProps<{
   value: number;
 }>();
 
-const emit = defineEmits(['input']);
+const emit = defineEmits<{
+  continue: [];
+  input: [value: number];
+}>();
 
 function emitInput(e: number) {
   emit('input', e || 0);

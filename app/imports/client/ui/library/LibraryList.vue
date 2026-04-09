@@ -24,7 +24,7 @@
     >
       <template #activator>
         <library-collection-header
-          :open="openCollections[libraryCollection._id]"
+          :open="!!openCollections[libraryCollection._id]"
           :model="libraryCollection"
           :selection="selection"
           :single-select="singleSelect"
@@ -71,6 +71,7 @@ import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
 import LibraryListTile from '/imports/client/ui/library/LibraryListTile.vue';
 import LibraryCollectionHeader from '/imports/client/ui/library/LibraryCollectionHeader.vue';
+import { autorunAsync } from '/imports/client/ui/autorunAsync';
 
 defineProps<{
   selection?: boolean;
@@ -88,8 +89,8 @@ const openCollections = ref<string[]>([]);
 
 const { ready: librariesReady } = subscribe('libraries');
 
-const { result: paidBenefits } = autorun(() => {
-  const tier = getUserTier(Meteor.userId());
+const { result: paidBenefits } = autorunAsync(async () => {
+  const tier = await getUserTier(Meteor.userId());
   return tier && tier.paidBenefits;
 });
 

@@ -1,5 +1,6 @@
-import { WebhookClient } from 'discord.js'
+// import { WebhookClient } from 'discord.js'
 export default function sendWebhook({ webhookURL, data = {} }) {
+  return;
   //webhookURL = https://discordapp.com/api/webhooks/<id>/<token>
   let urlArray = webhookURL.split('/');
   let token = urlArray.pop();
@@ -19,6 +20,7 @@ export default function sendWebhook({ webhookURL, data = {} }) {
 }
 
 export function sendWebhookAsCreature({ creature, data = {} }) {
+  return;
   if (!creature || !creature.settings || !creature.settings.discordWebhook) return;
   data.username = creature.name;
   data.avatarURL = creature.avatarPicture;

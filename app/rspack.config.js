@@ -6,14 +6,6 @@ module.exports = defineConfig(Meteor => {
     devtool: 'source-map',
   };
 
-  if (Meteor.isServer) {
-    config.externals = [
-      /^zlib-sync/,
-      /^bufferutil$/,
-      /^utf-8-validate$/,
-    ];
-  }
-
   if (Meteor.isClient) {
     config.plugins = [new VueLoaderPlugin()];
     config.module = {

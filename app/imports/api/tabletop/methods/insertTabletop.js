@@ -21,7 +21,7 @@ const insertTabletop = new ValidatedMethod({
       throw new Meteor.Error('tabletops.insert.denied',
         'You need to be logged in to insert a tabletop');
     }
-    assertUserHasPaidBenefits(this.userId);
+    await assertUserHasPaidBenefits(this.userId);
     let tier = getUserTier(this.userId);
     const currentTabletopCount = await Tabletops.find({ owner: this.userId }).countAsync();
 

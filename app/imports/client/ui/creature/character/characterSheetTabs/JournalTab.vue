@@ -9,7 +9,7 @@
         @sub-click="_id => clickTreeProperty({_id})"
         @remove="softRemove"
       />
-      <div>
+      <div v-if="creature">
         <creature-summary :creature="creature" />
       </div>
       <div
@@ -40,7 +40,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
@@ -91,8 +91,8 @@ const { result: notes } = autorun(() => {
     type: 'note',
     removed: { $ne: true },
     inactive: { $ne: true },
-  };
-  const allNotes = CreatureProperties.find(noteFilter, { sort: { left: 1 } }).fetch();
+  } as Mongo.Selector<CreaturePropertyTypes['note']>;
+  const allNotes = CreatureProperties.find(noteFilter, { sort: { left: 1 } }).fetch() as CreaturePropertyTypes['note'][];
 
   return CreatureProperties.find({
     ...noteFilter,

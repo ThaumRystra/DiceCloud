@@ -94,10 +94,10 @@ export function getTierByEntitledCents(entitledCents = 0) {
   return findLast(TIERS, tier => entitledCents >= tier.minimumEntitledCents) || TIERS[0];
 }
 
-export function getUserTier(user) {
+export async function getUserTier(user) {
   if (!user) throw 'user must be provided';
   if (typeof user === 'string') {
-    user = Meteor.users.findOne(user, {
+    user = await Meteor.users.findOneAsync(user, {
       fields: {
         'services.patreon': 1,
       }
@@ -108,7 +108,7 @@ export function getUserTier(user) {
   const entitledCents = getEntitledCents(user);
   const tier = getTierByEntitledCents(entitledCents);
   if (tier.paidBenefits) return tier;
-  let invite = Invites.findOne({ invitee: user._id, isFunded: true });
+  let invite = await Invites.findOneAsync({ invitee: user._id, isFunded: true });
   if (invite) {
     return GUEST_TIER;
   } else {
@@ -116,8 +116,8 @@ export function getUserTier(user) {
   }
 }
 
-export function assertUserHasPaidBenefits(user) {
-  let tier = getUserTier(user);
+export async function assertUserHasPaidBenefits(user) {
+  let tier = await getUserTier(user);
   if (!tier.paidBenefits) {
     throw new Meteor.Error('no paid benefits',
       `The ${tier.name} tier does not have the required benefits`);

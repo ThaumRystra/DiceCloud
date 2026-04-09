@@ -2,7 +2,7 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default function getParentByTag(creatureId, tag) {
-  return CreatureProperties.findOne({
+  return CreatureProperties.findOneAsync({
     ...getFilter.descendantsOfRoot(creatureId),
     removed: { $ne: true },
     inactive: { $ne: true },

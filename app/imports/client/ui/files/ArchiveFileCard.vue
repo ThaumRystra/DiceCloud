@@ -38,7 +38,7 @@ import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
+import { characterSlotsRemainingAsync } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import removeArchiveCreature from '/imports/api/creature/archive/methods/removeArchiveCreature';
 
 const props = defineProps<{
@@ -49,7 +49,7 @@ const store = useStore();
 const restoreLoading = ref(false);
 const removeLoading = ref(false);
 
-const { result: characterSlots } = autorun(() => characterSlotsRemaining(Meteor.userId()));
+const { result: characterSlots } = autorun(() => characterSlotsRemainingAsync(Meteor.userId()));
 
 async function restore() {
   restoreLoading.value = true;

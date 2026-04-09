@@ -1,7 +1,13 @@
-// Modified from https://gitlab.com/tozd/vue/snackbar-que
 import { reactive } from 'vue';
 
-const globalState = reactive({ queue: [] });
+type QueueItem = {
+  data: unknown,
+  id: number,
+  enqueuedAt: Date,
+  shown: boolean,
+}
+
+const globalState = reactive({ queue: [] as QueueItem[] });
 let lastSnackbarId = 0;
 
 function snackbar(data) {

@@ -10,7 +10,7 @@
       v-bind="$attrs"
       style="min-height: 64px;"
       :loading="uploadingInProgress"
-      @click="$refs.hiddenFileInput.click()"
+      @click="hiddenFileInput?.click()"
       prepend-icon="mdi-file-upload-outline"
     >
       <div>

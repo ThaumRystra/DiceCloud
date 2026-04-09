@@ -33,18 +33,20 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import { VueDraggable } from 'vue-draggable-plus';
+import { type DraggableEvent, VueDraggable } from 'vue-draggable-plus';
 import TreeNode from '/imports/client/ui/components/tree/TreeNode.vue';
+import type { TreeNode as TreeNodeType } from '/imports/api/parenting/parentingFunctions';
+import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
 
 const props = defineProps<{
-  node?: Record<string, any>;
+  node?: TreeDoc;
   root: Record<string, any>;
   group?: string;
   organize?: boolean;
   lazy?: boolean;
-  children?: any[];
-  selectedNode?: Record<string, any>;
-  ancestorsOfSelectedNode?: any[];
+  children?: TreeNodeType<TreeDoc>[];
+  selectedNode?: TreeDoc;
+  ancestorsOfSelectedNode?: TreeNodeType<TreeDoc>[];
   startExpanded?: boolean;
 }>();
 
@@ -64,15 +66,16 @@ onMounted(() => {
   displayedChildren.value = props.children ?? [];
 });
 
-function onSorted(event: any) {
+function onSorted(event: DraggableEvent<any>) {
   handleDrag(event.data, event.newIndex, event.oldIndex);
 }
 
-function onAdded(event: any) {
+function onAdded(event: DraggableEvent<any>) {
   handleDrag(event.data, event.newIndex, undefined);
 }
 
-function handleDrag(element: any, newIndex: number, oldIndex: number | undefined) {
+function handleDrag(element: any, newIndex: number | undefined, oldIndex: number | undefined) {
+  if (newIndex === undefined) return;
   const doc = element.doc;
   let newPosition: number;
   const children = props.children ?? [];

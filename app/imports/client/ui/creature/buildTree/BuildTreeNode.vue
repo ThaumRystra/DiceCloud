@@ -125,7 +125,6 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
-import { isAncestor } from '/imports/api/parenting/parentingFunctions';
 
 // Lazy import to break circular dependency
 const BuildTreeNodeList = defineAsyncComponent(() =>

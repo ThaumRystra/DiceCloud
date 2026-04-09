@@ -52,7 +52,7 @@ import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';

@@ -63,7 +63,7 @@
           />
           <div v-else>
             <div
-              v-for="i in children.length"
+              v-for="i in children?.length"
               :key="i"
               class="dummy-node"
             />
@@ -84,16 +84,21 @@
 import { ref, computed, watch, defineAsyncComponent } from 'vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { isAncestor } from '/imports/api/parenting/parentingFunctions';
+import type { TreeNode as TreeNodeType } from '/imports/api/parenting/parentingFunctions';
+import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
 
 const TreeNodeList = defineAsyncComponent(() => import('./TreeNodeList.vue'));
 
 const props = defineProps<{
-  node: Record<string, any>;
+  node: TreeDoc & {
+    _ancestorOfMatchedDocument?: boolean;
+    _matchedDocumentFilter?: boolean;
+  };
   group?: string;
   organize?: boolean;
-  children?: any[];
-  getChildren?: () => any[];
-  selectedNode?: Record<string, any>;
+  children?: TreeNodeType<TreeDoc>[];
+  getChildren?: () => TreeNodeType<TreeDoc>[];
+  selectedNode?: TreeDoc;
   selected?: boolean;
   startExpanded?: boolean;
 }>();

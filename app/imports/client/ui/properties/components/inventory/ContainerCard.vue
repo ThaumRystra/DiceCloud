@@ -48,7 +48,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { useStore } from 'vuex';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
@@ -78,7 +78,7 @@ const { result: itemIds } = autorun(() =>
     equipped: { $ne: true },
     deactivatedByAncestor: { $ne: true },
     deactivatedByToggle: { $ne: true },
-  }, {
+  } as Mongo.Selector<CreatureProperty>, {
     sort: { left: 1 },
     fields: { _id: 1 },
   }).map((prop: any) => prop._id)

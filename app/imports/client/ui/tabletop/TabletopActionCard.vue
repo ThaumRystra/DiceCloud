@@ -106,7 +106,7 @@ import AttributeConsumedView from '/imports/client/ui/properties/components/acti
 import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';

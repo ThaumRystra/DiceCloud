@@ -26,10 +26,10 @@
         </v-btn>
       </template>
     </div>
-    <template #action="{ attrs }">
+    <template #actions="{ isActive }">
       <v-btn
         icon
-        v-bind="attrs"
+        v-bind="isActive"
         @click="closeSnackbar"
       >
         <v-icon>mdi-close</v-icon>

@@ -6,7 +6,7 @@
     <v-btn-toggle
       :model-value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
       class="mx-2"
-      @click="$refs.editInput?.focus()"
+      @click="editInput?.focus()"
     >
       <v-btn
         :disabled="context.editPermission === false"

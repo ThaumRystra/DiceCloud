@@ -13,7 +13,7 @@
         :data-id="prop._id"
       >
         <v-expansion-panel-title>
-          <template #default="{ open }">
+          <template #default="{ expanded }">
             <v-checkbox
               v-model="selectedItems"
               class="my-0 py-0 mr-2 flex-grow-0"
@@ -23,7 +23,7 @@
               @click.stop
             />
             <tree-node-view :model="prop" />
-            <template v-if="open">
+            <template v-if="expanded">
               <v-spacer />
               <v-btn
                 icon
@@ -42,7 +42,7 @@
     </v-expansion-panels>
     <v-btn
       :disabled="!canContinue"
-      @click="$emit('continue');"
+      @click="emit('continue');"
     >
       Done
     </v-btn>
@@ -53,6 +53,9 @@
 import { ref, computed, watch } from 'vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const props = withDefaults(defineProps<{
   choices: any[];
@@ -61,7 +64,10 @@ const props = withDefaults(defineProps<{
   quantity: () => ({ min: 0, max: 1 }),
 });
 
-const emit = defineEmits(['input']);
+const emit = defineEmits <{
+  input: any;
+  continue: [];
+}>();
 
 const selectedItems = ref<any[]>([]);
 
@@ -70,4 +76,12 @@ const canContinue = computed(() => selectedItems.value.length >= props.quantity.
 watch(selectedItems, (val) => {
   emit('input', val);
 });
+
+function openPropertyDetails(id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: id,
+    data: { _id: id },
+  });
+}
 </script>

@@ -7,7 +7,7 @@ import {
 
 function getCreature(creature, fields) {
   if (typeof creature === 'string') {
-    return Creatures.findOne(creature, { fields });
+    return Creatures.findOneAsync(creature, { fields });
   } else {
     return creature;
   }

@@ -21,7 +21,7 @@
       selection
       :creatures="mode === 'archive' ? CreaturesWithNoParty : archiveCreaturesWithNoParty"
       :folders="mode === 'archive' ? folders : archivefolders"
-      :selected-creature="selectedCreature"
+      :selected-creature="selectedCreature ?? undefined"
       @creature-selected="id => selectedCreature = id"
     />
     <template #actions>
@@ -42,7 +42,7 @@
       </v-btn>
       <v-btn
         variant="text"
-        @click="$store.dispatch('popDialogStack')"
+        @click="store.dispatch('popDialogStack')"
       >
         Close
       </v-btn>
@@ -63,6 +63,9 @@ import archiveCreatureToFile from '/imports/api/creature/archive/methods/archive
 import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
+import { useStore } from 'vuex';
+
+const store = useStore();
 
 const characterTransform = (char: any) => {
   char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -112,6 +115,7 @@ const { result: characterSlots } = autorun(() =>
 
 const { result: folders } = autorun(() => {
   const userId = Meteor.userId();
+  if (!userId) return [];
   let result = CreatureFolders.find(
     { owner: userId, archived: { $ne: true } },
     { sort: { left: 1 } },
@@ -132,6 +136,7 @@ const { result: folders } = autorun(() => {
 
 const { result: CreaturesWithNoParty } = autorun(() => {
   const userId = Meteor.userId();
+  if (!userId) return [];
   const charArrays = CreatureFolders.find({ owner: userId }).map((p: any) => p.creatures);
   const folderChars = uniq(flatten(charArrays));
   return Creatures.find(

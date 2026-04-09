@@ -4,7 +4,7 @@ import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 
 //set up the collection for creature variables
-const CreatureVariables = new Mongo.Collection('creatureVariables');
+const CreatureVariables = new Mongo.Collection<Record<string, any>>('creatureVariables');
 
 /** No schema because the structure isn't known until compute time
  * Expect documents to look like:

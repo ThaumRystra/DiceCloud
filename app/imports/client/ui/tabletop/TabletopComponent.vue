@@ -123,7 +123,7 @@ import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCa
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
 import TabletopLogStream from '/imports/client/ui/tabletop/TabletopLogStream.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';

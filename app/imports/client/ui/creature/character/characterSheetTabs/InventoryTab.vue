@@ -178,7 +178,7 @@ const { result: creature } = autorun(() =>
 );
 
 const { result: variables } = autorun(() =>
-  CreatureVariables.findOne({ _creatureId: props.creatureId }) || {}
+  CreatureVariables.findOne({ _creatureId: props.creatureId }) || {} as Record<string, any>
 );
 
 const { result: containersWithoutAncestorContainers } = autorun(() =>

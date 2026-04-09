@@ -27,7 +27,7 @@
         </v-scale-transition>
         <vertical-hex
           id="roll-hex"
-          @click="$emit('continue')"
+          @click="emit('continue')"
         >
           <div>
             Roll
@@ -40,18 +40,18 @@
         label="Ability"
         :items="abilityOptions"
         :value="value.abilityVariableName"
-        @change="change('abilityVariableName', ...arguments)"
+        @change="(value, ack) => change('abilityVariableName', value, ack)"
       />
       <smart-select
         label="Skill"
         :items="skillOptions"
         :value="value.skillVariableName"
-        @change="change('skillVariableName', ...arguments)"
+        @change="(value, ack) => change('skillVariableName', value, ack)"
       />
       <text-field
         label="DC"
         :value="value.dc"
-        @change="change('dc', ...arguments)"
+        @change="(value, ack) => change('dc', value, ack)"
       />
     </div>
   </div>
@@ -66,7 +66,10 @@ const props = defineProps<{
   value: Record<string, any>;
 }>();
 
-const emit = defineEmits(['input']);
+const emit = defineEmits <{
+  input: any;
+  continue: [];
+}>();
 
 const abilityOptions = ref(createListOfProperties({
   attributeType: 'ability',

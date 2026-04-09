@@ -140,7 +140,7 @@ import { useStore } from 'vuex';
 import { useGoTo } from 'vuetify';
 import { autorun } from 'vue-meteor-tracker';
 import SplitListLayout from '/imports/client/ui/properties/components/attributes/SplitListLayout.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
@@ -154,7 +154,7 @@ const slotFilter = {
   inactive: { $ne: true },
   overridden: { $ne: true },
   'spellSlotLevel.value': { $gte: 1 },
-};
+} as const;
 
 const props = defineProps<{
   creatureId: string;
@@ -216,7 +216,7 @@ const { result: spellSlots } = autorun(() =>
     ...slotFilter,
   }, {
     sort: { 'spellSlotLevel.value': 1, order: 1 },
-  }).fetch()
+  }).fetch() as CreaturePropertyTypes['attribute'][]
 );
 
 const computedSpells = computed(() => spellsWithSubheaders(spells.value));
@@ -303,7 +303,7 @@ function searchChanged(val: string, ack: Function) {
   setTimeout(ack, 200);
 }
 
-function canCastSpellWithSlot(spell: any, slotId: string, slot: any): boolean {
+function canCastSpellWithSlot(spell: CreaturePropertyTypes['spell'], slotId: string | undefined, slot?: CreaturePropertyTypes['attribute']): boolean {
   if (slot && !slot.value) return false;
   if (!spell) return true;
   if (!slotId) return true;
@@ -312,7 +312,7 @@ function canCastSpellWithSlot(spell: any, slotId: string, slot: any): boolean {
   if (!spell.level || spell.castWithoutSpellSlots) {
     return slotId === 'no-slot';
   } else {
-    return slotId !== 'no-slot' && slot && spell && spell.level <= slot.spellSlotLevel.value;
+    return slotId !== 'no-slot' && slot && spell && spell.level <= +(slot.spellSlotLevel?.value || 0) || false;
   }
 }
 </script>
