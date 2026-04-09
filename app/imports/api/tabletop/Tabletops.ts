@@ -67,8 +67,6 @@ const TabletopSchema = new SimpleSchema({
   },
   'gameMasters.$': {
     type: String,
-    //@ts-expect-error Index not defined in simpl-schema package
-    index: 1,
   },
   players: {
     type: Array,
@@ -76,8 +74,6 @@ const TabletopSchema = new SimpleSchema({
   },
   'players.$': {
     type: String,
-    //@ts-expect-error Index not defined in simpl-schema package
-    index: 1,
   },
   spectators: {
     type: Array,
@@ -85,15 +81,11 @@ const TabletopSchema = new SimpleSchema({
   },
   'spectators.$': {
     type: String,
-    //@ts-expect-error Index not defined in simpl-schema package
-    index: 1,
   },
   // Does everyone else have the spectator permission?
   public: {
     type: Boolean,
     optional: true,
-    //@ts-expect-error Index not defined in simpl-schema package
-    index: 1,
   },
 
   // Initiative

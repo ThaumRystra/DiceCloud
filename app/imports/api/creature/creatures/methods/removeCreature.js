@@ -9,11 +9,11 @@ import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-function removeRelatedDocuments(creatureId) {
-  CreatureVariables.remove({ _creatureId: creatureId });
-  CreatureProperties.remove(getFilter.descendantsOfRoot(creatureId));
-  CreatureLogs.remove({ creatureId });
-  Experiences.remove({ creatureId });
+async function removeRelatedDocuments(creatureId) {
+  await CreatureVariables.removeAsync({ _creatureId: creatureId });
+  await CreatureProperties.removeAsync(getFilter.descendantsOfRoot(creatureId));
+  await CreatureLogs.removeAsync({ creatureId });
+  await Experiences.removeAsync({ creatureId });
 }
 
 const removeCreature = new ValidatedMethod({
@@ -29,16 +29,16 @@ const removeCreature = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ charId }) {
+  async run({ charId }) {
     assertOwnership(charId, this.userId)
     this.unblock();
-    removeCreatureWork(charId)
+    await removeCreatureWork(charId)
   },
 });
 
-export function removeCreatureWork(creatureId) {
-  Creatures.remove(creatureId);
-  removeRelatedDocuments(creatureId);
+export async function removeCreatureWork(creatureId) {
+  await Creatures.removeAsync(creatureId);
+  await removeRelatedDocuments(creatureId);
 }
 
 export default removeCreature;

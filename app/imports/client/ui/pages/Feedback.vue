@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    class="layout column align-center pa-2"
+    class="d-flex flex-column align-center pa-2"
   >
     <v-card>
       <iframe
@@ -10,7 +10,7 @@
         allowtransparency="true"
         frameborder="0"
       />
-      <v-card-title primary-title>
+      <v-card-title>
         <div>
           <h3 class="text-h5 mb-0">
             DiceCloud Discord server
@@ -24,7 +24,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn
-          text
+          variant="text"
           color="primary"
           href="https://discord.gg/qEvdfeB"
         >
@@ -35,9 +35,7 @@
   </div>
 </template>
 
-<script lang="js">
-export default {
-}
+<script setup lang="ts">
 </script>
 
 <style lang="css" scoped>

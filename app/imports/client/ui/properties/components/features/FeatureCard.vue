@@ -4,7 +4,7 @@
     :color="model.color"
     @toolbarclick="$emit('click')"
   >
-    <template slot="toolbar">
+    <template #toolbar>
       <v-toolbar-title>
         {{ model.name }}
       </v-toolbar-title>
@@ -23,34 +23,24 @@
   </toolbar-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
-import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue'
+import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
-export default {
-  components: {
-    ToolbarCard,
-    PropertyDescription,
-    PropertyIcon,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    summaryText() {
-      if (!this.model || !this.model.summary) return;
-      if (typeof this.model.summary.value === 'string') {
-        return this.model.summary.value;
-      } else {
-        return this.model.summary.text
-      }
-    },
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const summaryText = computed(() => {
+  if (!props.model || !props.model.summary) return undefined;
+  if (typeof props.model.summary.value === 'string') {
+    return props.model.summary.value;
+  } else {
+    return props.model.summary.text;
   }
-};
+});
 </script>
 
 <style lang="css" scoped>

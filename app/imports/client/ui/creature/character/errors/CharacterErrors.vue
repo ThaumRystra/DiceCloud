@@ -1,8 +1,7 @@
 <template>
   <div v-if="creature && errors && errors.length">
     <v-btn
-      fab
-      small
+      size="small"
       absolute
       right
       color="warning"
@@ -60,62 +59,49 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch, inject, onMounted } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import DependencyLoopError from '/imports/client/ui/creature/character/errors/DependencyLoopError.vue';
 import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
 
-export default {
-  components: {
-    DependencyLoopError,
-  },
-  inject: {
-    context: { default: {} },
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    creatureId: {
-      type: String,
-      default: undefined,
-    }
-  },
-  data() { return {
-    expanded: false,
-  }},
-  meteor: {
-    creature() {
-      if (!this.creatureId) return;
-      return Creatures.findOne(this.creatureId, {fields: {computeErrors: 1, settings: 1}});
-    }
-  },
-  computed: {
-    errors() {
-      if (!this.creature || !this.creature.computeErrors) return [];
-      return this.creature.computeErrors;
-    },
-  },
-  watch: {
-    expanded(value) {
-      if (this.context.editPermission === false) return;
-      updateCreature.call({
-        _id: this.creatureId,
-        path: ['settings', 'hideCalculationErrors'],
-        value: !value || null,
-      }, (error) => {
-        if (error){
-          console.error(error);
-        }
-      });
-    },
-  },
-  mounted() {
-    this.expanded = !this.creature.settings.hideCalculationErrors;
-  },
-}
+const props = withDefaults(defineProps<{
+  creatureId?: string;
+}>(), {
+  creatureId: undefined,
+});
+
+const context = inject('context', {} as any);
+
+const expanded = ref(false);
+
+const { result: creature } = autorun(() => {
+  if (!props.creatureId) return undefined;
+  return Creatures.findOne(props.creatureId, { fields: { computeErrors: 1, settings: 1 } });
+});
+
+const errors = computed(() => {
+  if (!creature.value || !creature.value.computeErrors) return [];
+  return creature.value.computeErrors;
+});
+
+watch(expanded, async (value) => {
+  if (context.editPermission === false) return;
+  try {
+    await updateCreature.callAsync({
+      _id: props.creatureId,
+      path: ['settings', 'hideCalculationErrors'],
+      value: !value || null,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+onMounted(() => {
+  expanded.value = !creature.value?.settings?.hideCalculationErrors;
+});
 </script>
 
 <style>

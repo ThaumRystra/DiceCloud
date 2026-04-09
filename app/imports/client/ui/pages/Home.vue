@@ -23,15 +23,14 @@
           </h4>
         </v-col>
       </v-row>
-      <v-layout
+      <div
         v-if="!signedIn"
-        align-center
-        justify-center
+        class="d-flex align-center justify-center"
       >
         <v-btn
           color="accent"
           rounded
-          large
+          size="large"
           to="/register"
           class="mr-4"
         >
@@ -40,28 +39,27 @@
         <v-btn
           color="accent"
           rounded
-          outlined
-          large
+          variant="outlined"
+          size="large"
           to="/sign-in"
         >
           Sign In
         </v-btn>
-      </v-layout>
-      <v-layout
+      </div>
+      <div
         v-else
-        align-center
-        justify-center
+        class="d-flex align-center justify-center"
       >
         <v-btn
           color="accent"
           rounded
-          large
+          size="large"
           to="/character-list"
           class="mr-4"
         >
           My Characters
         </v-btn>
-      </v-layout>
+      </div>
     </section>
     <section>
       <v-parallax
@@ -70,17 +68,14 @@
       />
     </section>
     <section class="text-center py-8 px-4">
-      <v-layout
-        wrap
-        justify-space-around
-        class="selling-points"
+      <div
+        class="d-flex flex-wrap justify-space-around selling-points"
       >
-        <v-layout
-          column
-          align-center
+        <div
+          class="d-flex flex-column align-center"
         >
           <v-icon
-            x-large
+            size="x-large"
             class="ma-2"
           >
             mdi-currency-usd-off
@@ -92,13 +87,12 @@
             DiceCloud is free to use, funded via Patreon,
             and the source code is available on Github under a GPL license.
           </p>
-        </v-layout>
-        <v-layout
-          column
-          align-center
+        </div>
+        <div
+          class="d-flex flex-column align-center"
         >
           <v-icon
-            x-large
+            size="x-large"
             class="ma-2"
           >
             mdi-ballot-outline
@@ -110,13 +104,12 @@
             Add new ability scores, skills, health-bars, and stats to your character.
             The entire sheet is under your control.
           </p>
-        </v-layout>
-        <v-layout
-          column
-          align-center
+        </div>
+        <div
+          class="d-flex flex-column align-center"
         >
           <v-icon
-            x-large
+            size="x-large"
             class="ma-2"
           >
             mdi-file-tree-outline
@@ -128,8 +121,8 @@
             Characters are computed in real-time based on their equipment,
             features, and buffs.
           </p>
-        </v-layout>
-      </v-layout>
+        </div>
+      </div>
     </section>
     <section class="pa-8">
       <v-row>
@@ -139,11 +132,11 @@
           v-bind="cols"
         >
           <v-card
-            tile
+            rounded="0"
             :elevation="0"
           >
             <v-img
-              class="white--text align-end"
+              class="text-white align-end"
               :src="'/images/screenshots/' + card.img"
               gradient="to bottom, rgba(0,0,0,0), rgba(0,0,0,.5)"
               height="360px"
@@ -154,15 +147,12 @@
         </v-col>
       </v-row>
     </section>
-    <section class="text-center grey darken-3 white--text pa-5">
+    <section class="text-center grey-darken-3 text-white pa-5">
       <h1>
         Get involved in the DiceCloud community
       </h1>
-      <v-layout
-        wrap
-        align-center
-        justify-space-around
-        class="pa-4"
+      <div
+        class="d-flex flex-wrap align-center justify-space-around pa-4"
       >
         <v-btn
           v-for="btn in [
@@ -172,8 +162,8 @@
           ]"
           :key="btn.name"
           :href="btn.link"
-          outlined
-          large
+          variant="outlined"
+          size="large"
           dark
         >
           {{ btn.name }}
@@ -183,38 +173,34 @@
             mdi-open-in-new
           </v-icon>
         </v-btn>
-      </v-layout>
+      </div>
     </section>
   </div>
 </template>
 
-<script lang="js">
-export default {
-  data() {return {
-    cols: {
-      cols: 12,
-      sm: 6,
-      md: 4,
-      lg: 3,
-      xl: 2,
-    },
-    highlightCards: [
-      { text: 'Automated actions', img: 'actions.webp' },
-      { text: 'Auditable stats', img: 'auditable.webp' },
-      { text: 'Dice rolling', img: 'automated-dice-rolls.webp' },
-      { text: 'Hackable character builder', img: 'build-system.webp' },
-      { text: 'Drag and drop inventory manager', img: 'inventory.webp' },
-      { text: 'Custom libraries of content', img: 'libraries-of-content.webp' },
-      { text: 'Discord webhooks', img: 'send-to-discord.webp' },
-      { text: 'Printed character sheets', img: 'printing.webp' },
-    ],
-  }},
-  meteor: {
-    signedIn() {
-      return Meteor.userId();
-    },
-  }
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+
+const { result: signedIn } = autorun(() => !!Meteor.userId());
+
+const cols = {
+  cols: 12,
+  sm: 6,
+  md: 4,
+  lg: 3,
+  xl: 2,
 };
+
+const highlightCards = [
+  { text: 'Automated actions', img: 'actions.webp' },
+  { text: 'Auditable stats', img: 'auditable.webp' },
+  { text: 'Dice rolling', img: 'automated-dice-rolls.webp' },
+  { text: 'Hackable character builder', img: 'build-system.webp' },
+  { text: 'Drag and drop inventory manager', img: 'inventory.webp' },
+  { text: 'Custom libraries of content', img: 'libraries-of-content.webp' },
+  { text: 'Discord webhooks', img: 'send-to-discord.webp' },
+  { text: 'Printed character sheets', img: 'printing.webp' },
+];
 </script>
 
 <style scoped>

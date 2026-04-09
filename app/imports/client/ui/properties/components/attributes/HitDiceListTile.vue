@@ -3,19 +3,12 @@
     class="hit-dice-list-tile"
     :class="{hover}"
   >
-    <v-list-item-action class="mr-4">
-      <v-layout
-        align-center
-        class="float-left"
-      >
-        <v-layout
-          column
-          class="buttons"
-          justify-center
-        >
+    <template #prepend>
+      <div class="d-flex align-center float-left">
+        <div class="d-flex flex-column buttons justify-center">
           <v-btn
             icon
-            small
+            size="small"
             :disabled="model.value >= model.total || context.editPermission === false"
             @click="increment(1)"
           >
@@ -23,69 +16,58 @@
           </v-btn>
           <v-btn
             icon
-            small
+            size="small"
             :disabled="model.value <= 0 || context.editPermission === false"
             @click="increment(-1)"
           >
             <v-icon>mdi-chevron-down</v-icon>
           </v-btn>
-        </v-layout>
+        </div>
 
-        <v-layout align-end>
+        <div class="d-flex align-end">
           <div class="text-h4">
             {{ model.value }}
           </div>
           <div class="text-h6 max-value ml-2">
             /{{ model.total }}
           </div>
-        </v-layout>
-      </v-layout>
-    </v-list-item-action>
+        </div>
+      </div>
+    </template>
 
-    <v-list-item-content
+    <v-list-item-title
       class="content"
       @click="click"
       @mouseover="hover = true"
       @mouseleave="hover = false"
     >
-      <v-list-item-title>
-        {{ model.hitDiceSize }} {{ signedConMod }}
-      </v-list-item-title>
-    </v-list-item-content>
+      {{ model.hitDiceSize }} {{ signedConMod }}
+    </v-list-item-title>
   </v-list-item>
 </template>
 
-<script lang="js">
-import numberToSignedString from '../../../../../api/utility/numberToSignedString';
-export default {
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    }
-  },
-  data() {
-    return {
-      hover: false,
-    }
-  },
-  computed: {
-    signedConMod() {
-      return numberToSignedString(this.model.constitutionMod);
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e);
-    },
-    increment(value) {
-      this.$emit('change', { type: 'increment', value })
-    },
-  },
-};
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const emit = defineEmits(['click', 'change']);
+const context = inject('context', {});
+
+const hover = ref(false);
+
+const signedConMod = computed(() => numberToSignedString(props.model.constitutionMod));
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+function increment(value: number) {
+  emit('change', { type: 'increment', value });
+}
 </script>
 
 <style lang="css" scoped>
@@ -93,7 +75,7 @@ export default {
   background: inherit;
 }
 
-.hit-dice-list-tile>>>.v-list__tile {
+.hit-dice-list-tile :deep(.v-list-item) {
   height: 88px;
 }
 
@@ -113,7 +95,7 @@ export default {
   background: #f5f5f5 !important;
 }
 
-.theme--dark .hit-dice-list-tile.hover {
+.v-theme--dark .hit-dice-list-tile.hover {
   background: #515151 !important;
 }
 
@@ -125,7 +107,7 @@ export default {
   color: rgba(0, 0, 0, .54);
 }
 
-.theme--dark .max-value {
+.v-theme--dark .max-value {
   color: rgba(255, 255, 255, 0.54);
 }
 </style>

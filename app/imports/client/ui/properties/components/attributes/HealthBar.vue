@@ -1,11 +1,8 @@
 <template>
-  <v-layout
-    wrap
-    align-center
-    justify-center
+  <div
+    class="d-flex flex-wrap align-center justify-center my-1 health-bar"
     style="min-height: 42px;"
     :class="{ hover }"
-    class="my-1 health-bar"
     :data-id="model._id"
   >
     <div
@@ -16,7 +13,7 @@
     >
       {{ model.name }}
     </div>
-    <v-flex
+    <div
       style="height: 24px; flex-basis: 300px; flex-grow: 100;"
     >
       <health-bar-progress
@@ -27,8 +24,8 @@
         <div
           class="value"
           :class="{
-            'white--text': isTextLight,
-            'black--text': !isTextLight,
+            'text-white': isTextLight,
+            'text-black': !isTextLight,
           }"
           style="font-size: 15px;
               line-height: 24px;
@@ -45,15 +42,19 @@
       </health-bar-progress>
       <v-menu
         v-model="editing"
-        absolute
         transition="scale-transition"
         origin="center center"
         content-class="no-menu-shadow"
-        :position-x="x"
-        :position-y="y"
         :min-width="305"
         :close-on-content-click="false"
       >
+        <template #activator>
+          <div
+            ref="menuActivator"
+            style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
+            :style="{ left: x + 'px', top: y + 'px' }"
+          />
+        </template>
         <increment-menu
           :value="model.value"
           :open="editing"
@@ -61,103 +62,81 @@
           @close="cancelEdit"
         />
       </v-menu>
-    </v-flex>
-  </v-layout>
+    </div>
+  </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, inject, nextTick } from 'vue';
+import { useTheme } from 'vuetify';
 import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
 import chroma from 'chroma-js';
 
-export default {
-  components: {
-    IncrementMenu,
-    HealthBarProgress,
-  },
-  inject: {
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    _id: String,
-  },
-  data() {
-    return {
-      editing: false,
-      hover: false,
-      x: 0,
-      y: 0,
-    };
-  },
-  computed: {
-    fillFraction() {
-      let fraction = this.model.value / this.model.total;
-      if (fraction < 0) fraction = 0;
-      if (fraction > 1) fraction = 1;
-      return fraction;
-    },
-    color() {
-      return this.model.color || this.$vuetify.theme.currentTheme.primary
-    },
-    barColor() {
-      const fraction = this.model.value / this.model.total;
-      if (!Number.isFinite(fraction)) return this.color;
-      if (fraction > 0.5) {
-        return this.color;
-      } else if (this.model.healthBarColorMid && this.model.healthBarColorLow) {
-        return chroma.mix(this.model.healthBarColorLow, this.model.healthBarColorMid, fraction * 2).hex();
-      } else if (this.model.healthBarColorMid) {
-        return this.model.healthBarColorMid;
-      }
-      return this.color;
-    },
-    barBackgroundColor() {
-      return chroma(this.barColor)
-        .darken(1.5)
-        .desaturate(1.5)
-        .hex();
-    },
-    isTextLight() {
-      return isDarkColor(this.barBackgroundColor);
-      /* Change color at the halfway mark
-      const fraction = this.model.value / this.model.total;
-      if (fraction >= 0.5){
-        return isDarkColor(this.barColor);
-      } else {
-        return isDarkColor(this.barBackgroundColor);
-      }
-      */
-    }
-  },
-  methods: {
-    edit(e) {
-      e.preventDefault()
-      this.editing = false;
-      this.x = e.clientX - 165;
-      this.y = e.clientY - 24;
-      this.$nextTick(() => {
-        this.editing = true
-      });
-    },
-    cancelEdit() {
-      this.editing = false;
-    },
-    changeIncrementMenu({ type, value }) {
-      if (type === 'increment') value = -value;
-      this.$emit('change', { type, value });
-      this.editing = false;
-    }
-  },
-};
+const props = defineProps<{
+  model: Record<string, any>;
+  _id?: string;
+}>();
+
+const emit = defineEmits(['change']);
+const theme = inject('theme', { isDark: false } as any);
+const vuetify = useTheme();
+
+const editing = ref(false);
+const hover = ref(false);
+const x = ref(0);
+const y = ref(0);
+
+const fillFraction = computed(() => {
+  let fraction = props.model.value / props.model.total;
+  if (fraction < 0) fraction = 0;
+  if (fraction > 1) fraction = 1;
+  return fraction;
+});
+
+const color = computed(() =>
+  props.model.color || vuetify.current.value.colors.primary
+);
+
+const barColor = computed(() => {
+  const fraction = props.model.value / props.model.total;
+  if (!Number.isFinite(fraction)) return color.value;
+  if (fraction > 0.5) {
+    return color.value;
+  } else if (props.model.healthBarColorMid && props.model.healthBarColorLow) {
+    return chroma.mix(props.model.healthBarColorLow, props.model.healthBarColorMid, fraction * 2).hex();
+  } else if (props.model.healthBarColorMid) {
+    return props.model.healthBarColorMid;
+  }
+  return color.value;
+});
+
+const barBackgroundColor = computed(() =>
+  chroma(barColor.value).darken(1.5).desaturate(1.5).hex()
+);
+
+const isTextLight = computed(() => isDarkColor(barBackgroundColor.value));
+
+function edit(e: MouseEvent) {
+  e.preventDefault();
+  editing.value = false;
+  x.value = e.clientX - 165;
+  y.value = e.clientY - 24;
+  nextTick(() => {
+    editing.value = true;
+  });
+}
+
+function cancelEdit() {
+  editing.value = false;
+}
+
+function changeIncrementMenu({ type, value }: { type: string; value: any }) {
+  if (type === 'increment') value = -value;
+  emit('change', { type, value });
+  editing.value = false;
+}
 </script>
 
 <style>
@@ -206,15 +185,15 @@ export default {
   background: #f5f5f5 !important;
 }
 
-.theme--dark .hover {
+.v-theme--dark .hover {
   background: #515151 !important;
 }
 
-.filled.theme--light {
+.filled.v-theme--light {
   background: #fff !important;
 }
 
-.filled.theme--dark {
+.filled.v-theme--dark {
   background: #424242 !important;
 }
 

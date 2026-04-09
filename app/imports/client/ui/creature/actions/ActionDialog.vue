@@ -23,8 +23,8 @@
         </div>
         <v-btn
           v-if="!activeInput" 
-          large
-          text
+          size="large"
+          variant="text"
           color="accent"
           style="width: 100%"
           class="done-button"
@@ -37,203 +37,172 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
-
 import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
 import CheckInput from '/imports/client/ui/creature/actions/input/CheckInput.vue';
 import ChoiceInput from '/imports/client/ui/creature/actions/input/ChoiceInput.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import LogContent from '/imports/client/ui/log/LogContent.vue';
-//import RollInput from '/imports/client/ui/creature/actions/input/RollInput.vue';
 import TargetsInput from '/imports/client/ui/creature/actions/input/TargetsInput.vue';
 import CastSpellInput from '/imports/client/ui/creature/actions/input/CastSpellInput.vue';
 import { runAction } from '/imports/api/engine/action/methods/runAction';
 import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
 import mutationToLogUpdates from '/imports/api/engine/action/functions/mutationToLogUpdates';
 
-export default {
-  components: {
-    AdvantageInput,
-    CheckInput,
-    ChoiceInput,
-    DialogBase,
-    LogContent,
-    //RollInput,
-    TargetsInput,
-    CastSpellInput,
-    TabletopLogStreamEntry,
-  },
-  props: {
-    actionId: {
-      type: String,
-      default: undefined,
-    },
-    task: {
-      type: Object,
-      default: undefined,
-    },
-    actionFinishedCallback: {
-      type: Function,
-      default: undefined,
-    }
-  },
-  data() {
-    return {
-      loading: false,
-      actionBusy: false,
-      actionDone: false,
-      actionResult: undefined,
-      resumeActionFn: undefined,
-      activeInput: undefined,
-      activeInputParams: {},
-      userInput: undefined,
-      userInputReady: true,
-      actionPromise: undefined,
+const props = withDefaults(defineProps<{
+  actionId?: string;
+  task?: Record<string, any>;
+  actionFinishedCallback?: Function;
+}>(), {
+  actionId: undefined,
+  task: undefined,
+  actionFinishedCallback: undefined,
+});
+
+const store = useStore();
+const router = useRouter();
+
+const loading = ref(false);
+const actionBusy = ref(false);
+const actionDone = ref(false);
+const actionResult = ref<any>(undefined);
+const resumeActionFn = ref<Function | undefined>(undefined);
+const activeInput = ref<string | undefined>(undefined);
+const activeInputParams = ref<Record<string, any>>({});
+const userInput = ref<any>(undefined);
+const userInputReady = ref(true);
+const actionPromise = ref<any>(undefined);
+
+let deterministicDiceRoller: Function;
+
+const { result: action } = autorun(() => EngineActions.findOne(props.actionId));
+
+const actionJson = computed(() => JSON.stringify(action.value, null, 2));
+const resultJson = computed(() => JSON.stringify(actionResult.value, null, 2));
+
+const simulatedLog = computed(() => {
+  const a = actionResult.value;
+  const content: any[] = [];
+  a?.results.forEach((result: any) => {
+    result.mutations.forEach((mutation: any) => {
+      content.push(...mutationToLogUpdates(mutation));
+    });
+  });
+  return {
+    content,
+    creatureId: a?.creatureId,
+    tabletopId: a?.tabletopId,
+  };
+});
+
+const inputProvider = {
+  async targetIds(target: string) {
+    if (router.currentRoute.value.name !== 'tabletop') return [];
+    userInput.value = [];
+    activeInputParams.value = {
+      target,
+      tabletopId: action.value.tabletopId,
     };
+    activeInput.value = 'targets-input';
+    return promiseInput();
   },
-  computed: {
-    actionJson() {
-      return JSON.stringify(this.action, null, 2);
-    },
-    resultJson() {
-      return JSON.stringify(this.actionResult, null, 2);
-    },
-    simulatedLog() {
-      const action = this.actionResult;
-      const content = [];
-      action?.results.forEach(result => {
-        result.mutations.forEach(mutation => {
-          content.push(...mutationToLogUpdates(mutation));
-        });
-      });
-      return {
-        content,
-        creatureId: action?.creatureId,
-        tabletopId: action?.tabletopId,
-      }
-    },
+  async rollDice(dice: any[]) {
+    return Promise.resolve(deterministicDiceRoller(dice));
   },
-  meteor: {
-    action() {
-      return EngineActions.findOne(this.actionId);
-    },
+  async nextStep(task: any) {
+    return promiseInput();
   },
-  mounted() {
-    this.deterministicDiceRoller = getDeterministicDiceRoller(this.actionId);
-    this.startAction({ stepThrough: false });
+  async choose(choices: any[], quantity: any) {
+    userInput.value = [];
+    activeInputParams.value = { choices, quantity };
+    activeInput.value = 'choice-input';
+    return promiseInput();
   },
-  methods: {
-    async startAction({ stepThrough }) {
-      this.actionBusy = true;
-      this.actionResult = {
-        ...this.action,
-        _stepThrough: undefined,
-        _isSimulation: undefined, 
-        taskCount: undefined,
-      };
-      await applyAction(this.actionResult, this, { simulate: true, stepThrough });
-      const actionResult = await runAction.callAsync({
-        actionId: this.actionResult._id,
-        decisions: this.actionResult._decisions
-      });
-      this.actionDone = true;
-      this.actionBusy = false;
-      this.activeInput = undefined;
-      if (this.actionFinishedCallback) this.actionFinishedCallback(actionResult);
-    },
-    stepAction() {
-      if (this.actionResult) {
-        this.actionResult._stepThrough = true;
-      }
-      this.resumeActionFn?.();
-    },
-    continueAction() {
-      if (this.actionResult) {
-        this.actionResult._stepThrough = false;
-      }
-      this.resumeActionFn?.();
-    },
-    async finishAction() {
-      this.$store.dispatch('popDialogStack', this.actionResult);
-    },
-    promiseInput() {
-      return new Promise(resolve => {
-        this.resumeActionFn = () => {
-          this.resumeActionFn = undefined;
-          const savedInput = this.userInput;
-          this.userInput = undefined;
-          this.activeInput = undefined;
-          this.activeInputParams = {};
-          this.userInputReady = false;
-          resolve(savedInput);
-        }
-      });
-    },
-    setInputReady(val) {
-      this.userInputReady = val;
-    },
-    cancel() {
-      this.$store.dispatch('popDialogStack');
-    },
-    // inputProvider methods
-    async targetIds(target) {
-      // Only get targets if we are on a tabletop
-      if (this.$router.currentRoute.name !== 'tabletop') return [];
-      this.userInput = [];
-      this.activeInputParams = {
-        target,
-        tabletopId: this.action.tabletopId,
-      };
-      this.activeInput = 'targets-input'
-      return this.promiseInput();
-    },
-    async rollDice(dice) {
-      return Promise.resolve(this.deterministicDiceRoller(dice));
-      /* Dice Animation and user control goes here:
-      this.activeInputParams = {
-        deterministicDiceRoller: this.deterministicDiceRoller,
-        dice
-      };
-      this.activeInput = 'roll-input';
-      return this.promiseInput();
-      */
-    },
-    async nextStep(task) {
-      return this.promiseInput();
-    },
-    async choose(choices, quantity) {
-      this.userInput = [];
-      this.activeInputParams = {
-        choices,
-        quantity
-      };
-      this.activeInput = 'choice-input'
-      return this.promiseInput();
-    },
-    async advantage(suggestedAdvantage) {
-      this.userInput = suggestedAdvantage;
-      this.activeInput = 'advantage-input';
-      this.userInputReady = true;
-      return this.promiseInput();
-    },
-    async check(suggestedParams) {
-      this.userInput = suggestedParams;
-      this.activeInput = 'check-input';
-      return this.promiseInput();
-    },
-    async castSpell(suggestedParams) {
-      this.userInput = suggestedParams;
-      this.activeInputParams = {
-        creatureId: this.action.creatureId,
-      };
-      this.activeInput = 'cast-spell-input';
-      return this.promiseInput();
-    },
-  }
+  async advantage(suggestedAdvantage: any) {
+    userInput.value = suggestedAdvantage;
+    activeInput.value = 'advantage-input';
+    userInputReady.value = true;
+    return promiseInput();
+  },
+  async check(suggestedParams: any) {
+    userInput.value = suggestedParams;
+    activeInput.value = 'check-input';
+    return promiseInput();
+  },
+  async castSpell(suggestedParams: any) {
+    userInput.value = suggestedParams;
+    activeInputParams.value = { creatureId: action.value.creatureId };
+    activeInput.value = 'cast-spell-input';
+    return promiseInput();
+  },
 };
+
+onMounted(() => {
+  deterministicDiceRoller = getDeterministicDiceRoller(props.actionId);
+  startAction({ stepThrough: false });
+});
+
+async function startAction({ stepThrough }: { stepThrough: boolean }) {
+  actionBusy.value = true;
+  actionResult.value = {
+    ...action.value,
+    _stepThrough: undefined,
+    _isSimulation: undefined,
+    taskCount: undefined,
+  };
+  await applyAction(actionResult.value, inputProvider, { simulate: true, stepThrough });
+  const result = await runAction.callAsync({
+    actionId: actionResult.value._id,
+    decisions: actionResult.value._decisions,
+  });
+  actionDone.value = true;
+  actionBusy.value = false;
+  activeInput.value = undefined;
+  if (props.actionFinishedCallback) props.actionFinishedCallback(result);
+}
+
+function stepAction() {
+  if (actionResult.value) actionResult.value._stepThrough = true;
+  resumeActionFn.value?.();
+}
+
+function continueAction() {
+  if (actionResult.value) actionResult.value._stepThrough = false;
+  resumeActionFn.value?.();
+}
+
+async function finishAction() {
+  store.dispatch('popDialogStack', actionResult.value);
+}
+
+function promiseInput() {
+  return new Promise(resolve => {
+    resumeActionFn.value = () => {
+      resumeActionFn.value = undefined;
+      const savedInput = userInput.value;
+      userInput.value = undefined;
+      activeInput.value = undefined;
+      activeInputParams.value = {};
+      userInputReady.value = false;
+      resolve(savedInput);
+    };
+  });
+}
+
+function setInputReady(val: boolean) {
+  userInputReady.value = val;
+}
+
+function cancel() {
+  store.dispatch('popDialogStack');
+}
 </script>
 
 <style lang="css" scoped>

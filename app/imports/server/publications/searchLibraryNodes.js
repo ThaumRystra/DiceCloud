@@ -48,116 +48,93 @@ Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
   })];
 });
 
-Meteor.publish('searchLibraryNodes', function (creatureId) {
-  let self = this;
-  this.autorun(function () {
-    let type = self.data('type');
-    if (!type) return [];
+Meteor.publish('searchLibraryNodes', function (creatureId, type, searchTerm, limit) {
+  if (!type) return [];
 
-    let userId = this.userId;
-    if (!userId) {
-      return [];
-    }
+  let userId = this.userId;
+  if (!userId) {
+    return [];
+  }
 
-    // Get all the ids of libraries the user can access
-    let libraryIds;
-    if (creatureId) {
-      libraryIds = getCreatureLibraryIds(creatureId, userId)
-    } else {
-      libraryIds = getUserLibraryIds(userId)
-    }
+  limit = limit || 32;
+  if (searchTerm) check(searchTerm, String);
+  check(limit, Number);
 
-    // Build a filter for nodes in those libraries that match the type
-    let filter = {
-      ...getFilter.descendantsOfAllRoots(libraryIds),
-      removed: { $ne: true },
-      searchable: true //library nodes must opt-in
-    };
-    if (type) {
-      filter.$or = [{
-        type,
-      }, {
-        slotFillerType: type,
-      }];
-    }
+  // Get all the ids of libraries the user can access
+  let libraryIds;
+  if (creatureId) {
+    libraryIds = getCreatureLibraryIds(creatureId, userId)
+  } else {
+    libraryIds = getUserLibraryIds(userId)
+  }
 
-    this.autorun(function () {
-      // Get the limit of the documents the user can fetch
-      var limit = self.data('limit') || 32;
-      check(limit, Number);
+  // Build a filter for nodes in those libraries that match the type
+  let filter = {
+    ...getFilter.descendantsOfAllRoots(libraryIds),
+    removed: { $ne: true },
+    searchable: true //library nodes must opt-in
+  };
+  if (type) {
+    filter.$or = [{
+      type,
+    }, {
+      slotFillerType: type,
+    }];
+  }
 
-      // Get the search term
-      let searchTerm = self.data('searchTerm') || '';
-      check(searchTerm, String);
-
-      let options = undefined;
-      if (searchTerm) {
-        // Regex search instead of text index
-        filter.$and = [{
-          $or: [
-            { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
-            { libraryTags: searchTerm },
-          ],
-        }];
-        // filter.$text = {$search: searchTerm};
-        options = {
-          /*
-          // relevant documents have a higher score.
-          fields: {
-            score: { $meta: 'textScore' }
-          },
-          */
-          sort: {
-            // `score` property specified in the projection fields above.
-            // score: { $meta: 'textScore' },
-            'root.id': 1,
-            name: 1,
-            left: 1,
-          }
-        }
-      } else {
-        //delete filter.$text
-        delete filter.$and;
-        options = {
-          sort: {
-            'root.id': 1,
-            name: 1,
-            left: 1,
-          }
-        };
+  let options = undefined;
+  if (searchTerm) {
+    // Regex search instead of text index
+    filter.$and = [{
+      $or: [
+        { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
+        { libraryTags: searchTerm },
+      ],
+    }];
+    options = {
+      sort: {
+        'root.id': 1,
+        name: 1,
+        left: 1,
       }
-      options.limit = limit;
+    }
+  } else {
+    delete filter.$and;
+    options = {
+      sort: {
+        'root.id': 1,
+        name: 1,
+        left: 1,
+      }
+    };
+  }
+  options.limit = limit;
 
-      this.autorun(function () {
-        self.setData('countAll', LibraryNodes.find(filter).count());
-      });
+  let self = this;
+  let cursor = LibraryNodes.find(filter, options);
+  const libraries = Libraries.find({ _id: { $in: libraryIds } });
 
-      let cursor = LibraryNodes.find(filter, options);
-      const libraries = Libraries.find({ _id: { $in: libraryIds } });
+  Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
-      Mongo.Collection._publishCursor(libraries, self, 'libraries');
+  let observeHandle = cursor.observeChanges({
+    added: function (id, fields) {
+      fields._searchResult = true;
+      self.added('libraryNodes', id, fields);
+    },
+    changed: function (id, fields) {
+      self.changed('libraryNodes', id, fields);
+    },
+    removed: function (id) {
+      self.removed('libraryNodes', id);
+    }
+  },
+    // Publications don't mutate the documents
+    { nonMutatingCallbacks: true }
+  );
 
-      let observeHandle = cursor.observeChanges({
-        added: function (id, fields) {
-          fields._searchResult = true;
-          self.added('libraryNodes', id, fields);
-        },
-        changed: function (id, fields) {
-          self.changed('libraryNodes', id, fields);
-        },
-        removed: function (id) {
-          self.removed('libraryNodes', id);
-        }
-      },
-        // Publications don't mutate the documents
-        { nonMutatingCallbacks: true }
-      );
-
-      // register stop callback (expects lambda w/ no args).
-      this.onStop(function () {
-        observeHandle.stop();
-      });
-      // this.ready();
-    });
+  // register stop callback (expects lambda w/ no args).
+  self.onStop(function () {
+    observeHandle.stop();
   });
+  self.ready();
 });

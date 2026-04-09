@@ -22,7 +22,7 @@
       </v-col>
     </v-row>
     <component
-      :is="model.type"
+      :is="formComponent"
       class="creature-property-form mb-4"
       :model="model"
       :errors="errors"
@@ -36,7 +36,7 @@
       >
         <v-row
           v-if="context.isLibraryForm"
-          dense
+          density="compact"
         >
           <v-col
             cols="12"
@@ -155,7 +155,7 @@
     </v-row>
     <v-row
       class="mt-1"
-      dense
+      density="compact"
     >
       <v-col
         cols="12"
@@ -179,19 +179,17 @@
             v-for="suggestion in suggestedChildren"
             :key="suggestion.type"
             :disabled="noChildInsert"
-            tile
+            rounded="0"
             plain
             :data-id="`insert-${suggestion.type}-property-btn`"
             @click="$event => $emit('add-child', {suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn`})"
+            prepend-icon="mdi-plus"
           >
-            <v-icon left>
-              mdi-plus
-            </v-icon>
             {{ suggestion.details.name }}
           </v-btn>
           <v-btn
             :disabled="noChildInsert || context.editPermission === false"
-            tile
+            rounded="0"
             plain
             data-id="insert-any-property-btn"
             @click="$event => $emit('add-child', {elementId: 'insert-any-property-btn'})"
@@ -206,7 +204,7 @@
           </v-btn>
           <div
             v-if="noChildInsert"
-            class="ma-2 text--disabled"
+            class="ma-2 text-disabled"
           >
             Children can be added after this property is created
           </div>
@@ -216,14 +214,9 @@
   </div>
 </template>
 
-<script lang="js">
-/*
-  All of the shared fields common to all properties go in this form,
-  property-specific forms are included as dynamic components
-*/
-import ComputedField from '/imports/client/ui/properties/forms/shared/ComputedField.vue';
-import InlineComputationField from '/imports/client/ui/properties/forms/shared/InlineComputationField.vue';
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
 import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
 import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
 import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
@@ -232,80 +225,55 @@ import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
 
-const slotTypes = [];
-for (let key in PROPERTIES) {
-  slotTypes.push({ text: PROPERTIES[key].name, value: key });
-}
-    
-export default {
-  components: {
-    ComputedField,
-    InlineComputationField,
-    FormSection,
-    FormSections,
-    IconColorMenu,
-    DescendantPropertiesTree,
-    OutlinedInput,
-    ...propertyFormIndex,
-  },
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    model: {
-      type: [Object, Array],
-      default: () => ({}),
-    },
-    collection: {
-      type: String,
-      default: 'creatureProperties'
-    },
-    errors: {
-      type: Object,
-      default: () => ({}),
-    },
-    embedded: Boolean, // This dialog is embedded in a page
-    noChildInsert: Boolean, // Don't allow inserting of children in this form
-  },
-  data() {
-    return {
-      slotTypes,
-    };
-  },
-  computed: {
-    suggestedChildren() {
-      if (!this.model?.type) return [];
-      return getSuggestedChildren(this.model.type);
-    },
-    schemaHasName() {
-      if (!this.model?.type) return true;
-      const schema = propertySchemasIndex[this.model.type];
-      return schema.allowsKey('name');
-    }
-  },
-  mounted() {
-    /** Disable auto-focus, it gets in the way more than it helps
-    // Don't autofocus on mobile, it brings up the on-screen keyboard
-    if (this.$vuetify.breakpoint.smAndDown) return;
+const props = withDefaults(defineProps<{
+  model?: Record<string, any> | any[];
+  collection?: string;
+  errors?: Record<string, string>;
+  embedded?: boolean;
+  noChildInsert?: boolean;
+}>(), {
+  model: () => ({}),
+  collection: 'creatureProperties',
+  errors: () => ({}),
+  embedded: false,
+  noChildInsert: false,
+});
 
-    setTimeout(() => {
-      if (this.$refs.focusFirst && this.$refs.focusFirst.focus) {
-        this.$refs.focusFirst.focus()
-      }
-    }, 300);
-    */
-  },
-  methods: {
-    selectSubProperty(_id){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `tree-node-${_id}`,
-        data: {
-          _id,
-          startInEditTab: this.editing,
-        },
-      });
+defineEmits(['change', 'push', 'pull']);
+
+const store = useStore();
+const context = inject<any>('context', {});
+
+const slotTypes: Array<{ text: string; value: string }> = [];
+for (const key in PROPERTIES) {
+  slotTypes.push({ text: (PROPERTIES as any)[key].name, value: key });
+}
+
+const formComponent = computed(() =>
+  props.model && !Array.isArray(props.model)
+    ? (propertyFormIndex as any)[(props.model as any).type]
+    : undefined
+);
+
+const suggestedChildren = computed(() => {
+  if (Array.isArray(props.model) || !props.model?.type) return [];
+  return getSuggestedChildren((props.model as any).type);
+});
+
+const schemaHasName = computed(() => {
+  if (Array.isArray(props.model) || !props.model?.type) return true;
+  const schema = (propertySchemasIndex as any)[(props.model as any).type];
+  return schema.allowsKey('name');
+});
+
+function selectSubProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: {
+      _id,
+      startInEditTab: false,
     },
-  },
+  });
 }
 </script>

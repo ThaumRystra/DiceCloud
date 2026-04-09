@@ -2,32 +2,28 @@
   <v-app>
     <v-navigation-drawer
       v-model="drawer"
-      app
     >
       <Sidebar />
     </v-navigation-drawer>
     <router-view name="toolbar" />
     <v-app-bar
-      v-if="!$route.matched[0] || !$route.matched[0].components.toolbar"
-      app
+      v-if="!route.matched[0] || !route.matched[0].components?.toolbar"
       color="secondary"
-      dark
-      :extended="$vuetify.breakpoint.smAndUp"
-      :tabs="$vuetify.breakpoint.smAndUp"
-      dense
+      theme="dark"
+      density="compact"
     >
       <v-app-bar-nav-icon @click="toggleDrawer" />
       <v-toolbar-title>
         <v-fade-transition mode="out-in">
-          <div :key="$store.state.pageTitle">
-            {{ $store.state.pageTitle }}
+          <div :key="store.state.pageTitle">
+            {{ store.state.pageTitle }}
           </div>
         </v-fade-transition>
       </v-toolbar-title>
       <v-spacer />
       <v-fade-transition mode="out-in">
         <div
-          :key="$route.meta.title"
+          :key="route.meta.title"
           style="
         text-overflow: ellipsis;
         overflow: hidden;"
@@ -35,24 +31,27 @@
           <router-view name="toolbarItems" />
         </div>
       </v-fade-transition>
+      <template #extension>
       <v-fade-transition
-        v-if="$vuetify.breakpoint.smAndUp"
-        slot="extension"
+        v-if="display.smAndUp"
         mode="out-in"
       >
         <div
-          :key="$route.meta.title"
+          :key="route.meta.title"
           style="width: 100%"
         >
           <router-view name="toolbarExtension" />
         </div>
       </v-fade-transition>
+    </template>
     </v-app-bar>
     <v-main>
       <connection-banner />
-      <v-fade-transition hide-on-leave>
-        <router-view />
-      </v-fade-transition>
+      <router-view v-slot="{ Component }">
+        <v-fade-transition hide-on-leave>
+          <component :is="Component" />
+        </v-fade-transition>
+      </router-view>
     </v-main>
     <router-view name="rightDrawer" />
     <dialog-stack />
@@ -60,72 +59,59 @@
   </v-app>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed, watch, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import { useTheme, useDisplay } from 'vuetify';
+import { autorun } from 'vue-meteor-tracker';
 import '/imports/api/users/Users';
 import Sidebar from '/imports/client/ui/layouts/Sidebar.vue';
 import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';
-import { mapMutations } from 'vuex';
 import SnackbarQueue from '/imports/client/ui/components/snackbars/SnackbarQueue.vue';
 import ConnectionBanner from '/imports/client/ui/layouts/ConnectionBanner.vue';
 
-export default {
-  components: {
-    Sidebar,
-    DialogStack,
-    SnackbarQueue,
-    ConnectionBanner,
-  },
-  data() {
-    return {
-      name: 'Home',
-      tabs: 0,
-    }
-  },
-  computed: {
-    drawer: {
-      get() {
-        return this.$store.state.drawer;
-      },
-      set(value) {
-        this.$store.commit('setDrawer', value);
-      },
-    },
-  },
-  meteor: {
-    darkMode() {
-      let user = Meteor.user();
-      if (!user) return null;
-      return user.darkMode;
-    },
-  },
-  watch: {
-    darkMode: {
-      immediate: true,
-      handler(newDarkModeValue) {
-        if (typeof newDarkModeValue === 'boolean') {
-          this.$vuetify.theme.dark = newDarkModeValue;
-        } else {
-          const deviceDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-          this.$vuetify.theme.dark = !!deviceDarkMode;
-        }
-      },
-    },
-    '$route'(to) {
-      this.$store.commit('setPageTitle', to.meta && to.meta.title || 'DiceCloud');
-    }
-  },
-  mounted() {
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-      if (typeof this.darkMode === 'boolean') return;
-      this.$vuetify.theme.dark = !!e.matches;
-    });
-  },
-  methods: {
-    ...mapMutations([
-      'toggleDrawer',
-    ]),
-  },
-};
+const store = useStore();
+const route = useRoute();
+const theme = useTheme();
+const display = useDisplay();
+
+const drawer = computed({
+  get: () => store.state.drawer,
+  set: (value) => store.commit('setDrawer', value),
+});
+
+const { result: darkMode } = autorun(() => {
+  const user = Meteor.user() as any;
+  if (!user) return null;
+  return user.darkMode as boolean | null;
+});
+
+function applyDarkMode(newDarkModeValue: boolean | null | undefined) {
+  if (typeof newDarkModeValue === 'boolean') {
+    theme.global.name.value = newDarkModeValue ? 'dark' : 'light';
+  } else {
+    const deviceDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    theme.global.name.value = deviceDarkMode ? 'dark' : 'light';
+  }
+}
+
+watch(darkMode, applyDarkMode, { immediate: true });
+
+watch(route, (to) => {
+  store.commit('setPageTitle', (to.meta && to.meta.title) || 'DiceCloud');
+});
+
+onMounted(() => {
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (typeof darkMode.value === 'boolean') return;
+    theme.global.name.value = e.matches ? 'dark' : 'light';
+  });
+});
+
+function toggleDrawer() {
+  store.commit('toggleDrawer');
+}
 </script>
 
 <style>

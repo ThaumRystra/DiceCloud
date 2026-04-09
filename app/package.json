@@ -19,14 +19,14 @@
     "build": "meteor build ../build --architecture os.linux.x86_64"
   },
   "engines": {
-    "node": "14.0.x",
-    "npm": "6.13.x"
+    "node": "22.x",
+    "npm": "10.x"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.523.0",
     "@babel/runtime": "^7.23.9",
-    "@chenfengyuan/vue-countdown": "^1.1.5",
-    "@tozd/vue-observer-utils": "^0.5.0",
+    "@chenfengyuan/vue-countdown": "^2.1.3",
+    "@swc/helpers": "^0.5.17",
     "alea": "^1.0.1",
     "bcrypt": "^5.1.1",
     "chroma-js": "^2.4.2",
@@ -35,9 +35,9 @@
     "cytoscape-dagre": "^2.5.0",
     "cytoscape-klay": "^3.1.4",
     "dagre": "^0.8.5",
-    "date-fns": "^1.30.1",
+    "date-fns": "^4.1.0",
     "ddp-rate-limiter-mixin": "^1.1.10",
-    "discord.js": "^12.5.3",
+    "discord.js": "^14.26.2",
     "dompurify": "^2.4.7",
     "ignore": "^5.3.1",
     "ignore-styles": "^5.0.1",
@@ -50,8 +50,7 @@
     "ngraph.graph": "^19.1.0",
     "ngraph.path": "^1.5.0",
     "pretty-bytes": "^6.1.1",
-    "qrcode.vue": "^1.7.0",
-    "request": "^2.88.2",
+    "qrcode.vue": "^3.8.0",
     "sharp": "^0.33.2",
     "simpl-schema": "^1.13.1",
     "source-map-support": "^0.5.21",
@@ -59,31 +58,35 @@
     "thumbhash": "^0.1.1",
     "type-fest": "^4.32.0",
     "vivagraphjs": "^0.12.0",
-    "vue": "2.6.14",
-    "vue-meteor-tracker": "^2.0.0",
-    "vue-reactive-provide": "^0.3.0",
-    "vue-router": "^3.6.5",
-    "vuedraggable": "^2.23.2",
-    "vuetify": "2.6.15",
-    "vuetify-upload-button": "^2.0.2",
-    "vuex": "^3.1.3"
+    "vue": "^3.5.0",
+    "vue-draggable-plus": "^0.6.1",
+    "vue-meteor-tracker": "^3.0.0-beta.7",
+    "vue-router": "^4.5.0",
+    "vuetify": "^3.12.5",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
+    "@meteorjs/rspack": "^1.1.0-beta.34",
+    "@rsdoctor/rspack-plugin": "^1.5.7",
+    "@rspack/cli": "^1.7.1",
+    "@rspack/core": "^1.7.1",
     "@types/chai": "^4.3.11",
     "@types/lodash": "^4.14.202",
-    "@types/meteor": "^2.9.8",
     "@types/meteor-mdg-validated-method": "^1.2.10",
     "@types/mocha": "^10.0.6",
     "@types/simpl-schema": "^1.12.7",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
-    "@vue/compiler-dom": "^3.4.19",
-    "@vue/runtime-dom": "^3.4.19",
+    "@vue/compiler-dom": "^3.5.0",
+    "@vue/runtime-dom": "^3.5.0",
     "chai": "^4.4.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^7.20.0",
-    "eslint-plugin-vuetify": "^1.1.0",
-    "typescript": "^5.3.3"
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.28.0",
+    "eslint-plugin-vuetify": "^2.4.0",
+    "sass": "^1.77.0",
+    "sass-loader": "^16.0.0",
+    "typescript": "^5.3.3",
+    "vue-loader": "^17.4.2"
   },
   "eslintConfig": {
     "extends": [
@@ -136,6 +139,12 @@
       ],
       "@typescript-eslint/no-this-alias": "off",
       "@typescript-eslint/no-explicit-any": "off"
+    }
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
     }
   }
 }

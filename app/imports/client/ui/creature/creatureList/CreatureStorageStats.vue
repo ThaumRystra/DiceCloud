@@ -15,20 +15,19 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
 
-export default {
-  meteor: {
-    creatureCount(){
-      return Creatures.find({owner: Meteor.userId()}).count();
-    },
-    characterSlots(){
-      return getUserTier(Meteor.userId()).characterSlots;
-    }
-  },
-}
+const { result: creatureCount } = autorun(() =>
+  Creatures.find({ owner: Meteor.userId() }).count()
+);
+
+const { result: characterSlots } = autorun(() =>
+  getUserTier(Meteor.userId()).characterSlots
+);
 </script>
 
 <style>

@@ -1,5 +1,5 @@
 <template>
-  <v-layout>
+  <div class="d-flex">
     <div class="buttons layout column justify-center pl-3">
       <smart-btn
         icon
@@ -20,7 +20,7 @@
         <v-icon>mdi-chevron-down</v-icon>
       </smart-btn>
     </div>
-    <div class="layout align-center value pl-2 pr-3">
+    <div class="d-flex align-center value pl-2 pr-3">
       <div class="text-h4">
         {{ optimisticValue }}
       </div>
@@ -41,48 +41,35 @@
         {{ model.name }}
       </div>
     </div>
-  </v-layout>
+  </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch, inject } from 'vue';
 
-export default {
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    hover: {
-      type: Boolean,
-    }
-  },
-  data(){
-    return {
-      optimisticIncrement: 0,
-    };
-  },
-  computed: {
-    optimisticValue() {
-      return this.model?.value + this.optimisticIncrement;
-    },
-  },
-  watch: {
-    'model.value'() {
-      this.optimisticIncrement = 0;
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e);
-    },
-    increment(value, ack) {
-      this.$emit('change', { type: 'increment', value, ack })
-    },
-  },
-};
+const props = defineProps<{
+  model: Record<string, any>;
+  hover?: boolean;
+}>();
+
+const emit = defineEmits(['click', 'change']);
+const context = inject('context', {});
+
+const optimisticIncrement = ref(0);
+
+const optimisticValue = computed(() => props.model?.value + optimisticIncrement.value);
+
+watch(() => props.model.value, () => {
+  optimisticIncrement.value = 0;
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+function increment(value: number, ack?: Function) {
+  emit('change', { type: 'increment', value, ack });
+}
 </script>
 
 <style lang="css" scoped>
@@ -100,7 +87,7 @@ export default {
 .max-value {
   color: rgba(0, 0, 0, .54);
 }
-.theme--dark .max-value {
+.v-theme--dark .max-value {
   color: rgba(255, 255, 255, 0.54);
 }
 </style>

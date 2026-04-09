@@ -16,20 +16,20 @@ const insertTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run() {
+  async run() {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.insert.denied',
         'You need to be logged in to insert a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
     let tier = getUserTier(this.userId);
-    const currentTabletopCount = Tabletops.find({ owner: this.userId }).count();
+    const currentTabletopCount = await Tabletops.find({ owner: this.userId }).countAsync();
 
     if (tier.tabletopSlots !== -1 && tier.tabletopSlots <= currentTabletopCount) {
       throw new Meteor.Error('limit-reached', 'You have reached your maximum number of tabletops');
     }
 
-    return Tabletops.insert({
+    return Tabletops.insertAsync({
       owner: this.userId,
       gameMasters: [this.userId],
       players: [],

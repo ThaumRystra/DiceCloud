@@ -6,7 +6,7 @@ import {
   assertDocEditPermission,
   assertViewPermission,
 } from '/imports/api/sharing/sharingPermissions';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRefAsync } from '/imports/api/parenting/parentingFunctions';
 
 const updateReferenceNode = new ValidatedMethod({
   name: 'libraryNodes.updateReferenceNode',
@@ -21,37 +21,37 @@ const updateReferenceNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
+  async run({ _id }) {
     let userId = this.userId;
-    let node = LibraryNodes.findOne(_id);
-    assertDocEditPermission(node, userId);
-    updateReferenceNodeWork(node, userId);
+    let node = await LibraryNodes.findOneAsync(_id);
+    await assertDocEditPermission(node, userId);
+    await updateReferenceNodeWork(node, userId);
   },
 });
 
-function writeCache(_id, cache) {
-  LibraryNodes.update(_id, { $set: { cache } }, {
+async function writeCache(_id, cache) {
+  await LibraryNodes.updateAsync(_id, { $set: { cache } }, {
     selector: { type: 'reference' },
   });
 }
 
-function updateReferenceNodeWork(node, userId) {
+async function updateReferenceNodeWork(node, userId) {
   let cache = {}
   if (!node.ref?.collection || !node.ref?.id) {
-    writeCache(node._id, cache);
+    await writeCache(node._id, cache);
     return;
   }
   let doc, library;
   try {
-    doc = fetchDocByRef(node.ref);
+    doc = await fetchDocByRefAsync(node.ref);
     if (doc.removed) throw 'Property has been deleted';
     if (doc.root.id !== node.root.id) {
-      library = fetchDocByRef(doc.root);
-      assertViewPermission(library, userId)
+      library = await fetchDocByRefAsync(doc.root);
+      await assertViewPermission(library, userId)
     }
   } catch (e) {
     cache = { error: e.reason || e.message || e.toString() }
-    writeCache(node._id, cache);
+    await writeCache(node._id, cache);
     return;
   }
   cache = {
@@ -63,7 +63,7 @@ function updateReferenceNodeWork(node, userId) {
       name: library.name,
     };
   }
-  writeCache(node._id, cache);
+  await writeCache(node._id, cache);
 }
 
 export default updateReferenceNode;

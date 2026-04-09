@@ -13,11 +13,7 @@
         />
       </div>
       <div v-else-if="!creature">
-        <v-layout
-          column
-          align-center
-          justify-center
-        >
+        <div class="d-flex flex-column align-center justify-center">
           <h2 style="margin: 48px 28px 16px">
             Character not found
           </h2>
@@ -25,7 +21,7 @@
             Either this character does not exist, or you don't have permission
             to view it.
           </h3>
-        </v-layout>
+        </div>
       </div>
       <v-theme-provider
         v-else
@@ -82,7 +78,11 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed, watch, provide, reactive, onMounted, onBeforeUnmount } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute, useRouter } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedStats from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedStats.vue';
@@ -90,152 +90,135 @@ import PrintedInventory from '/imports/client/ui/creature/character/printedChara
 import PrintedSpells from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedSpells.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import QrcodeVue from 'qrcode.vue'
+import QrcodeVue from 'qrcode.vue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default {
-  components: {
-    PrintedStats,
-    PrintedInventory,
-    PrintedSpells,
-    QrcodeVue,
-  },
-  computed: {
-    creatureId() {
-      return this.$route.params.id
-    },
-    creatureUrl() {
-      let props = this.$router.resolve({ 
-        name: 'characterSheet',
-        params: { id: this.creatureId},
-      });
-      return new URL(props?.href, 'https://dicecloud.com').href
-    },
-    level() {
-      return this.variables?.level?.value;
-    },
-    highestLevels(){
-      let highestLevels = {};
-      let highestLevelsList = [];
-      this.classLevels.forEach(classLevel => {
-        let name = classLevel.variableName;
-        if (
-          !highestLevels[name] ||
-          highestLevels[name].level < classLevel.level
-        ){
-          highestLevels[name] = classLevel;
-        }
-      });
-      for (let name in highestLevels){
-        highestLevelsList.push(highestLevels[name]);
-      }
-      highestLevelsList.sort((a, b) => a.level - b.level);
-      return highestLevelsList;
-    },
-    classes() {
-      return [
-        ...this.highestLevels,
-        ...this.classProperties
-      ].sort((a, b) => a.order - b.order);
-    },
-  },
-  reactiveProvide: {
-    name: 'context',
-    include: ['creatureId', 'editPermission'],
-  },
-  watch: {
-    'creature.name'(value) {
-      this.$store.commit('setPageTitle', value ? ('Print ' + value) : 'Print Character Sheet');
-    },
-  },
-  mounted() {
-    this.$store.commit('setPageTitle',
-      (this.creature && this.creature.name) ?
-        ('Print ' + this.creature.name) :
-        'Print Character Sheet'
-    );
-    this.nameObserver = Creatures.find({
-      creatureId: this.creatureId,
-    }, {
-      fields: { name: 1 },
-    }).observe({
-      added: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
-      changed: ({ name }) =>
-        this.$store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
-    });
-  },
-  beforeDestroy() {
-    this.nameObserver.stop();
-  },
-  meteor: {
-    $subscribe: {
-      'singleCharacter'() {
-        return [this.creatureId];
-      },
-    },
-    creature() {
-      return Creatures.findOne(this.creatureId);
-    },
-    variables() {
-      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
-    },
-    race() {
-      if (this.variables?.race?.value?.valueType === 'string') return this.variables.race.value.value;
-      const prop = CreatureProperties.findOne({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        tags: 'race',
-        removed: { $ne: true },
-        inactive: { $ne: true },
-        overridden: { $ne: true },
-      });
-      if (prop?.name) return prop.name;
-      return '';
-    },
-    background() {
-      if (this.variables?.background?.value?.valueType === 'string') return this.variables.background.value.value;
-      const prop = CreatureProperties.findOne({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        tags: 'background',
-        removed: { $ne: true },
-        inactive: { $ne: true },
-        overridden: { $ne: true },
-      });
-      if (prop?.name) return prop.name;
-      return '';
-    },
-    classProperties(){
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'class',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {left: 1}
-      }).fetch();
-    },
-    classLevels() {
-      const classVariableNames = this.classProperties.map(c => c.variableName)
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'classLevel',
-        variableName: {$nin: classVariableNames},
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {left: 1}
-      });
-    },
-    editPermission() {
-      try {
-        assertEditPermission(this.creature, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-  },
-}
+const store = useStore();
+const route = useRoute();
+const router = useRouter();
+
+const creatureId = computed(() => route.params.id as string);
+
+const creatureUrl = computed(() => {
+  const resolved = router.resolve({
+    name: 'characterSheet',
+    params: { id: creatureId.value },
+  });
+  return new URL(resolved?.href, 'https://dicecloud.com').href;
+});
+
+autorun(() => { subscribe('singleCharacter', creatureId.value); });
+
+const { result: creature } = autorun(() =>
+  Creatures.findOne(creatureId.value)
+);
+
+const { result: variables } = autorun(() =>
+  CreatureVariables.findOne({ _creatureId: creatureId.value }) || {}
+);
+
+const { result: classProperties } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(creatureId.value),
+    type: 'class',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: classLevels } = autorun(() => {
+  const classVariableNames = (classProperties.value || []).map((c: any) => c.variableName);
+  return CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(creatureId.value),
+    type: 'classLevel',
+    variableName: { $nin: classVariableNames },
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { sort: { left: 1 } }).fetch();
+});
+
+const { result: race } = autorun(() => {
+  if ((variables.value as any)?.race?.value?.valueType === 'string') {
+    return (variables.value as any).race.value.value;
+  }
+  const prop = CreatureProperties.findOne({
+    ...getFilter.descendantsOfRoot(creatureId.value),
+    tags: 'race',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+    overridden: { $ne: true },
+  });
+  return prop?.name || '';
+});
+
+const { result: background } = autorun(() => {
+  if ((variables.value as any)?.background?.value?.valueType === 'string') {
+    return (variables.value as any).background.value.value;
+  }
+  const prop = CreatureProperties.findOne({
+    ...getFilter.descendantsOfRoot(creatureId.value),
+    tags: 'background',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+    overridden: { $ne: true },
+  });
+  return prop?.name || '';
+});
+
+const { result: editPermission } = autorun(() => {
+  try {
+    assertEditPermission(creature.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+provide('context', reactive({ creatureId, editPermission }));
+
+const level = computed(() => (variables.value as any)?.level?.value);
+
+const highestLevels = computed(() => {
+  const map: Record<string, any> = {};
+  (classLevels.value || []).forEach((classLevel: any) => {
+    const name = classLevel.variableName;
+    if (!map[name] || map[name].level < classLevel.level) {
+      map[name] = classLevel;
+    }
+  });
+  return Object.values(map).sort((a, b) => a.level - b.level);
+});
+
+const classes = computed(() =>
+  [...highestLevels.value, ...(classProperties.value || [])].sort((a: any, b: any) => a.order - b.order)
+);
+
+watch(() => creature.value?.name, (value) => {
+  store.commit('setPageTitle', value ? ('Print ' + value) : 'Print Character Sheet');
+});
+
+let nameObserver: any;
+
+onMounted(() => {
+  const name = creature.value?.name;
+  store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet');
+  nameObserver = Creatures.find({
+    _id: creatureId.value,
+  }, {
+    fields: { name: 1 },
+  }).observe({
+    added: ({ name }: any) =>
+      store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+    changed: ({ name }: any) =>
+      store.commit('setPageTitle', name ? ('Print ' + name) : 'Print Character Sheet'),
+  });
+});
+
+onBeforeUnmount(() => {
+  nameObserver?.stop();
+});
+</script>
+
 </script>
 
 <style>

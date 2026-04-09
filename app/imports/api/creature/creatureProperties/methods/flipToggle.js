@@ -14,9 +14,9 @@ const flipToggle = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
+  async run({ _id }) {
     // Permission
-    let property = CreatureProperties.findOne(_id, {
+    let property = await CreatureProperties.findOneAsync(_id, {
       fields: { type: 1, root: 1, enabled: 1, disabled: 1 }
     });
     if (property.type !== 'toggle') {
@@ -28,11 +28,11 @@ const flipToggle = new ValidatedMethod({
         'Can\'t flip a toggle that is computed')
     }
     let rootCreature = getRootCreatureAncestor(property);
-    assertEditPermission(rootCreature, this.userId);
+    await assertEditPermission(rootCreature, this.userId);
 
     // Invert the current value, disabled is the canonical store of value
     const currentValue = !property.disabled;
-    CreatureProperties.update(_id, {
+    await CreatureProperties.updateAsync(_id, {
       $set: {
         enabled: !currentValue,
         disabled: currentValue,

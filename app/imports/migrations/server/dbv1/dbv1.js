@@ -10,29 +10,29 @@ import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 Migrations.add({
   version: 1,
   name: 'Unifies calculated field schema',
-  up() {
-    migrate();
+  async up() {
+    await migrate();
   },
-  down() {
-    migrate({ reversed: true });
+  async down() {
+    await migrate({ reversed: true });
   },
 });
 
-function migrate({ reversed } = {}) {
+async function migrate({ reversed } = {}) {
   console.log('migrating creature properties');
-  migrateCollection({ collection: CreatureProperties, reversed });
+  await migrateCollection({ collection: CreatureProperties, reversed });
 
   console.log('migrating library nodes')
-  migrateCollection({ collection: LibraryNodes, reversed });
+  await migrateCollection({ collection: LibraryNodes, reversed });
 }
 
-function migrateCollection({ collection, reversed }) {
+async function migrateCollection({ collection, reversed }) {
   const bulk = collection.rawCollection().initializeUnorderedBulkOp();
-  collection.find({}).forEach(prop => {
+  for await (const prop of collection.find({})) {
     const newProp = migrateProperty({ collection, reversed, prop });
     bulk.find({ _id: prop._id }).replaceOne(newProp);
-  });
-  bulk.execute();
+  }
+  await bulk.execute();
 }
 
 export function migrateProperty({ collection, reversed, prop }) {

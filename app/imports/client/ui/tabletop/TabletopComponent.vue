@@ -7,7 +7,7 @@
       fluid
     >
       <v-row
-        dense
+        density="compact"
         class="initiative-row flex-grow-0 overflow-x-auto"
         style="flex-wrap: nowrap; padding-bottom: 64px; min-width: 200px;"
         @wheel="transformScroll($event)"
@@ -44,25 +44,21 @@
           @untarget="untarget(creature._id)"
         />
         <div
-          class="layout column ma-1 flex-grow-0 flex-shrink-0"
+          class="d-flex flex-column ma-1 flex-grow-0 flex-shrink-0"
         >
           <v-btn
             data-id="select-creatures"
             class="mb-2"
             @click="addCreature"
+            prepend-icon="mdi-plus"
           >
-            <v-icon left>
-              mdi-plus
-            </v-icon>
             Add Character
           </v-btn>
           <v-btn
             data-id="creatures-from-library"
             @click="addCreatureFromLibrary"
+            prepend-icon="mdi-plus"
           >
-            <v-icon left>
-              mdi-plus
-            </v-icon>
             Add Creature
           </v-btn>
         </div>
@@ -90,7 +86,7 @@
         right: 0;
         overflow-x: auto;
       "
-      @wheel.native="transformScroll($event)"
+      @wheel="transformScroll($event)"
     >
       <v-slide-y-reverse-transition mode="out-in">
         <selected-creature-bar
@@ -117,8 +113,12 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, reactive, provide, watch } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import addCreaturesToTabletop from '/imports/api/tabletop/methods/addCreaturesToTabletop';
+import { eventBus } from '/imports/client/ui/eventBus';
 import TabletopCreatureCard from '/imports/client/ui/tabletop/TabletopCreatureCard.vue';
 import TabletopMap from '/imports/client/ui/tabletop/TabletopMap.vue';
 import TabletopLogStream from '/imports/client/ui/tabletop/TabletopLogStream.vue';
@@ -130,10 +130,9 @@ import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar
 import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
-import { mapMutations } from 'vuex';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 
-const getProperties = function (creatureId, selector = {}) {
+function getProperties(creatureId: string, selector: any = {}) {
   return CreatureProperties.find({
     ...getFilter.descendantsOfRoot(creatureId),
     inactive: { $ne: true },
@@ -144,174 +143,145 @@ const getProperties = function (creatureId, selector = {}) {
       { hideWhenValueZero: true, value: 0 },
     ],
     ...selector,
-  }, {
-    sort: { left: 1 }
+  }, { sort: { left: 1 } });
+}
+
+const props = defineProps<{ model: any; }>();
+
+const store = useStore();
+const selectedCreatureBarRef = ref<InstanceType<typeof SelectedCreatureBar>>();
+
+const activeCreatureId = ref<string | undefined>(undefined);
+const activeActionId = ref<string | undefined>(undefined);
+const targets = ref<string[]>([]);
+
+const { result: editPermission } = autorun(() => {
+  if (!activeCreatureId.value) return false;
+  try {
+    assertEditPermission(activeCreatureId.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+provide('context', reactive({ editPermission }));
+
+watch(activeCreatureId, (id) => {
+  eventBus.emit('active-tabletop-character-change', id);
+});
+
+watch(activeActionId, () => {
+  targets.value = [];
+});
+
+watch(targets, async (val) => {
+  if (val.length === 1 && activeAction.value?.target === 'singleTarget') {
+    try {
+      await doAction({
+        propId: activeActionId.value,
+        creatureId: activeCreatureId.value,
+        targetIds: targets.value,
+        $store: store,
+        elementId: 'tabletop-action-card',
+        callback: (action: any) => action?._id || activeActionId.value,
+      });
+    } catch (e: any) {
+      console.error(e);
+      snackbar({ text: e.message || e.reason || e.toString() });
+    }
+    if (selectedCreatureBarRef.value) {
+      selectedCreatureBarRef.value.selectedIcon = undefined;
+    }
+  }
+});
+
+const { result: creatures } = autorun(() => Creatures.find({ tabletopId: props.model._id }));
+
+const { result: actions } = autorun(() =>
+  getProperties(activeCreatureId.value, { type: 'action', actionType: { $ne: 'event' } })
+);
+
+const { result: activeAction } = autorun(() => CreatureProperties.findOne(activeActionId.value));
+
+const { result: moreTargets } = autorun(() => {
+  const action = activeAction.value;
+  if (!action) return;
+  if (action.target === 'singleTarget') return targets.value.length === 0;
+  if (action.target === 'multipleTargets') return true;
+});
+
+function toggleDrawer() { store.commit('toggleDrawer'); }
+
+function addCreature() {
+  store.commit('pushDialogStack', {
+    component: 'select-creatures-dialog',
+    elementId: 'select-creatures',
+    data: { startingSelection: creatures.value?.map((c: any) => c._id) ?? [] },
+    callback: async (charIds: string[]) => {
+      if (!charIds) return;
+      try {
+        await addCreaturesToTabletop.callAsync({ tabletopId: props.model._id, creatureIds: charIds });
+      } catch (error: any) {
+        console.error(error);
+        snackbar({ text: error.message || error.toString() });
+      }
+    },
   });
 }
 
-export default {
-  components: {
-    TabletopCreatureCard,
-    TabletopMap,
-    SelectedCreatureBar,
-    TabletopLogStream,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  reactiveProvide: {
-    name: 'context',
-    include: ['editPermission'],
-  },
-  data() {
-    return {
-      activeCreatureId: undefined,
-      activeActionId: undefined,
-      targets: [],
-    }
-  },
-  watch: {
-    activeCreatureId(id) {
-      this.$root.$emit('active-tabletop-character-change', id);
-    },
-    activeActionId() {
-      this.targets = [];
-    },
-    targets(val) {
-      if (val.length === 1 && this.activeAction?.target === 'singleTarget') {
-        doAction({
-          propId: this.activeActionId,
-          creatureId: this.activeCreatureId,
-          targetIds: this.targets,
-          $store: this.$store,
-          elementId: 'tabletop-action-card',
-          callback: action => action?._id || this.activeActionId,
-        }).catch((e) => {
-          console.error(e);
-          snackbar({ text: e.message || e.reason || e.toString() });
-        }).finally(() => {
-          this.doActionLoading = false;
-        });
-        this.$refs.selectedCreatureBar.selectedIcon = undefined;
-      }
-    },
-  },
-  meteor: {
-    creatures(){
-      return Creatures.find({ tabletopId: this.model._id });
-    },
-    actions(){
-      return getProperties(this.activeCreatureId, { type: 'action', actionType: { $ne: 'event'} });
-    },
-    activeAction() {
-      return CreatureProperties.findOne(this.activeActionId);
-    },
-    moreTargets() {
-      const activeAction = this.activeAction;
-      if (!activeAction) return;
-      if (activeAction.target === 'singleTarget') {
-        return this.targets.length === 0;
-      } else if (activeAction.target === 'multipleTargets') {
-        return true;
-      }
-    },
-    editPermission(){
+function addCreatureFromLibrary() {
+  store.commit('pushDialogStack', {
+    component: 'creature-from-library-dialog',
+    elementId: 'creatures-from-library',
+    data: {},
+    callback: async (libraryNodeIds: string[]) => {
+      if (!libraryNodeIds) return;
       try {
-        assertEditPermission(this.activeCreatureId, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-  },
-  methods: {
-    ...mapMutations([
-      'toggleDrawer',
-    ]),
-    addCreature() {
-      this.$store.commit('pushDialogStack', {
-        component: 'select-creatures-dialog',
-        elementId: 'select-creatures',
-        data: {
-          startingSelection: this.creatures.map(c => c._id),
-        },
-        callback: (charIds) => {
-          if (!charIds) return;
-          addCreaturesToTabletop.call({
-            tabletopId: this.model._id,
-            creatureIds: charIds,
-          }, error => {
-            if (error) {
-              console.error(error)
-              snackbar({ text: error.message || error.toString() });
-            }
-          });
-        },
-      });
-    },
-    addCreatureFromLibrary(){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-from-library-dialog',
-        elementId: 'creatures-from-library',
-        data: {},
-        callback: (libraryNodeIds) => {
-          if (!libraryNodeIds) return;
-          addCreaturesFromLibraryToTabletop.call({
-            tabletopId: this.model._id,
-            libraryNodeIds,
-          }, error => {
-            if (error) {
-              console.error(error)
-              snackbar({ text: error.reason || error.message || error.toString() });
-            }
-          });
-        },
-      });
-    },
-    openCharacterSheetDialog(){
-      this.$store.commit('pushDialogStack', {
-				component: 'character-sheet-dialog',
-				elementId: 'mini-character-sheet',
-        data: {
-          creatureId: this.activeCreatureId,
-        },
-			});
-    },
-    clickProperty({_id}){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${_id}`,
-        data: {_id},
-      });
-    },
-    transformScroll(event) {
-      if (!event.deltaY) {
-        return;
-      }
-      event.currentTarget.scrollLeft += event.deltaY;
-      event.preventDefault();
-    },
-    untarget(id){
-      const index = this.targets.indexOf(id);
-      if (index > -1) {
-        this.targets.splice(index, 1);
-      }
-    },
-    removeCreature(creatureId) {
-      if (this.activeCreatureId === creatureId) this.activeCreatureId = undefined;
-      removeCreatureFromTabletop.call({
-        tabletopId: this.model._id,
-        creatureIds: [creatureId]
-      }, error => {
-        if (!error) return;
+        await addCreaturesFromLibraryToTabletop.callAsync({ tabletopId: props.model._id, libraryNodeIds });
+      } catch (error: any) {
         console.error(error);
-        snackbar({ text: error.message || error.toString() });
-      });
-    }
-  },
+        snackbar({ text: error.reason || error.message || error.toString() });
+      }
+    },
+  });
+}
+
+function openCharacterSheetDialog() {
+  store.commit('pushDialogStack', {
+    component: 'character-sheet-dialog',
+    elementId: 'mini-character-sheet',
+    data: { creatureId: activeCreatureId.value },
+  });
+}
+
+function clickProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
+
+function transformScroll(event: WheelEvent) {
+  if (!event.deltaY) return;
+  (event.currentTarget as HTMLElement).scrollLeft += event.deltaY;
+  event.preventDefault();
+}
+
+function untarget(id: string) {
+  const index = targets.value.indexOf(id);
+  if (index > -1) targets.value.splice(index, 1);
+}
+
+async function removeCreature(creatureId: string) {
+  if (activeCreatureId.value === creatureId) activeCreatureId.value = undefined;
+  try {
+    await removeCreatureFromTabletop.callAsync({ tabletopId: props.model._id, creatureIds: [creatureId] });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.message || error.toString() });
+  }
 }
 </script>
 

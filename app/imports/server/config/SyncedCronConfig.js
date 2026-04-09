@@ -1,4 +1,4 @@
-import { SyncedCron } from 'meteor/littledata:synced-cron';
+import { SyncedCron } from 'meteor/quave:synced-cron';
 
 SyncedCron.config({
   // Log job run details to console

@@ -1,4 +1,4 @@
-import { RouterFactory, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
+import { createRouter, createWebHistory } from 'vue-router';
 import { acceptInviteToken } from '/imports/api/users/Invites';
 import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
 // Components
@@ -46,12 +46,6 @@ const NotFound = () => import('/imports/client/ui/pages/NotFound.vue');
 
 let userSubscription = Meteor.subscribe('user');
 
-// Create router instance
-const routerFactory = new RouterFactory({
-  mode: 'history',
-  scrollBehavior: nativeScrollBehavior,
-});
-
 function ensureLoggedIn(to, from, next) {
   Tracker.autorun((computation) => {
     if (userSubscription.ready()) {
@@ -84,21 +78,19 @@ function ensureAdmin(to, from, next) {
   });
 }
 
-function claimInvite(to, from, next) {
+async function claimInvite(to, from, next) {
   Tracker.autorun((computation) => {
     if (userSubscription.ready()) {
       computation.stop();
       const user = Meteor.user();
       if (user) {
         let inviteToken = to.params.inviteToken;
-        acceptInviteToken.call({
+        acceptInviteToken.callAsync({
           inviteToken
-        }, (error) => {
-          if (error) {
-            next({ name: 'inviteError', params: { error } });
-          } else {
-            next('/invite-success')
-          }
+        }).then(() => {
+          next('/invite-success');
+        }).catch((error) => {
+          next({ name: 'inviteError', params: { error } });
         });
       } else {
         next({ name: 'signIn', query: { redirect: to.path } });
@@ -118,8 +110,38 @@ function verifyEmail(to, from, next) {
   });
 }
 
-RouterFactory.configure(router => {
-  router.addRoutes([{
+function redirectIfMaintenance(to, from, next) {
+  if (!MAINTENANCE_MODE) return next();
+  if (
+    to?.path === '/admin' ||
+    to?.path === '/maintenance' ||
+    to?.path === '/sign-in'
+  ) return next();
+  Tracker.autorun((computation) => {
+    if (userSubscription.ready()) {
+      computation.stop();
+      const user = Meteor.user();
+      if (user && user.roles && user.roles.includes('admin')) {
+        next({ name: 'admin' })
+      } else {
+        next({ name: 'maintenance' });
+      }
+    }
+  });
+}
+
+const router = createRouter({
+  history: createWebHistory(),
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition;
+    }
+    if (to.hash) {
+      return { el: to.hash };
+    }
+    return { top: 0 };
+  },
+  routes: [{
     path: '/',
     name: 'home',
     components: {
@@ -372,39 +394,11 @@ RouterFactory.configure(router => {
     path: '/maintenance',
     name: 'maintenance',
     component: Maintenance,
-  },
-  ]);
+  }, {
+    path: '/:pathMatch(.*)*',
+    component: NotFound,
+  }],
 });
 
-// Not found route has lowest priority
-RouterFactory.configure(router => {
-  router.addRoute({
-    path: '*',
-    component: NotFound,
-  });
-}, -1);
-
-function redirectIfMaintenance(to, from, next) {
-  if (!MAINTENANCE_MODE) return next();
-  if (
-    to?.path === '/admin' ||
-    to?.path === '/maintenance' ||
-    to?.path === '/sign-in'
-  ) return next();
-  Tracker.autorun((computation) => {
-    if (userSubscription.ready()) {
-      computation.stop();
-      const user = Meteor.user();
-      if (user && user.roles && user.roles.includes('admin')) {
-        next({ name: 'admin' })
-      } else {
-        next({ name: 'maintenance' });
-      }
-    }
-  });
-}
-
-// Create the router instance
-const router = routerFactory.create();
 router.beforeEach(redirectIfMaintenance);
 export default router;

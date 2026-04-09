@@ -13,77 +13,55 @@
   />
 </template>
 
-<script lang="js">
-import { filterToForest } from '/imports/api/parenting/parentingFunctions';
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { filterToForest, getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { moveBetweenRoots, moveWithinRoot } from '/imports/api/parenting/organizeMethods';
-import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
+import { moveBetweenRoots as moveBetweenRootsMethod, moveWithinRoot as moveWithinRootMethod } from '/imports/api/parenting/organizeMethods';
 
-export default {
-  components: {
-    TreeNodeList,
-  },
-  props: {
-    root: {
-      type: Object,
-      default: undefined,
-    },
-    organize: Boolean,
-    selectedNode: {
-      type: Object,
-      default: undefined,
-    },
-    filter: {
-      type: Object,
-      default: undefined,
-    },
-    group: {
-      type: String,
-      default: 'creatureProperties'
-    },
-    collection: {
-      type: String,
-      default: 'creatureProperties'
-    },
-    expanded: Boolean,
-  },
-  meteor: {
-    children() {
-      const children = filterToForest?.(
-        getCollectionByName(this.collection),
-        this.root.id,
-        this.filter,
-        {
-          includeFilteredDocAncestors: true,
-          includeFilteredDocDescendants: true,
-        }
-      ) || [];
-      this.$emit('length', children.length);
-      return children;
-    },
-  },
-  methods: {
-    moveWithinRoot({ doc, newPosition }) {
-      moveWithinRoot.callAsync({
-        docRef: {
-          id: doc._id,
-          collection: this.collection,
-        },
-        newPosition,
-      });
-    },
-    moveBetweenRoots({ doc, newPosition, newRootRef }) {
-      moveBetweenRoots.callAsync({
-        docRef: {
-          id: doc._id,
-          collection: this.collection,
-        },
-        newPosition,
-        newRootRef,
-      });
-    },
-  },
-};
+const props = defineProps<{
+  root?: Record<string, any>;
+  organize?: boolean;
+  selectedNode?: Record<string, any>;
+  filter?: Record<string, any>;
+  group?: string;
+  collection?: string;
+  expanded?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'selected', v: any): void;
+  (e: 'length', n: number): void;
+}>();
+
+const { result: children } = autorun(() => {
+  const result = filterToForest?.(
+    getCollectionByName(props.collection ?? 'creatureProperties'),
+    props.root?.id,
+    props.filter,
+    {
+      includeFilteredDocAncestors: true,
+      includeFilteredDocDescendants: true,
+    }
+  ) || [];
+  emit('length', result.length);
+  return result;
+});
+
+function moveWithinRoot({ doc, newPosition }: any) {
+  moveWithinRootMethod.callAsync({
+    docRef: { id: doc._id, collection: props.collection ?? 'creatureProperties' },
+    newPosition,
+  });
+}
+
+function moveBetweenRoots({ doc, newPosition, newRootRef }: any) {
+  moveBetweenRootsMethod.callAsync({
+    docRef: { id: doc._id, collection: props.collection ?? 'creatureProperties' },
+    newPosition,
+    newRootRef,
+  });
+}
 </script>
 
 <style lang="css" scoped>

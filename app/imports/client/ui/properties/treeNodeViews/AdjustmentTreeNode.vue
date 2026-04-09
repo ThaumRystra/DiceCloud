@@ -1,10 +1,10 @@
 <template lang="html">
-  <div class="layout align-center justify-start">
+  <div class="d-flex align-center justify-start">
     <property-icon
       v-if="!hideIcon"
       class="mr-2"
       :model="model"
-      :class="selected && 'primary--text'"
+      :class="selected && 'text-primary'"
       :color="model.color"
     />
     <div
@@ -27,22 +27,38 @@
   </div>
 </template>
 
-<script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
-export default {
-  mixins: [treeNodeViewMixin],
-  computed: {
-    amount(){
-      return this.model.amount && this.model.amount.value;
-    },
-    absoluteAmount(){
-      if (typeof this.amount === 'number'){
-        return Math.abs(this.amount);
-      } else {
-        return this.amount;
-      }
-    },
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+}>(), {
+  model: () => ({}),
+  selected: false,
+  hideIcon: false,
+});
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return;
+  if (model.name) return model.name;
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
+
+const amount = computed(() =>
+  props.model.amount && props.model.amount.value
+);
+
+const absoluteAmount = computed(() => {
+  if (typeof amount.value === 'number') {
+    return Math.abs(amount.value);
+  } else {
+    return amount.value;
   }
-}
+});
 </script>

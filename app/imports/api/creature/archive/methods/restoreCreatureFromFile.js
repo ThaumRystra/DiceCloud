@@ -17,7 +17,7 @@ if (Meteor.isServer) {
   migrateArchive = require('/imports/migrations/archive/migrateArchive').default;
 }
 
-function restoreCreature(archive, userId) {
+async function restoreCreature(archive, userId) {
   if (SCHEMA_VERSION < archive.meta.schemaVersion) {
     throw new Meteor.Error('Incompatible',
       'The archive file is from a newer version. Update required to read.')
@@ -30,7 +30,7 @@ function restoreCreature(archive, userId) {
   verifyArchiveSafety(archive);
 
   // Don't upload creatures twice
-  const existingCreature = Creatures.findOne(archive.creature._id, {
+  const existingCreature = await Creatures.findOneAsync(archive.creature._id, {
     fields: { _id: 1 }
   });
   if (existingCreature) throw new Meteor.Error('Already exists',
@@ -41,21 +41,27 @@ function restoreCreature(archive, userId) {
 
   // Insert the creature sub documents
   // They still have their original _id's
-  Creatures.insert(archive.creature);
+  await Creatures.insertAsync(archive.creature);
   try {
     // Add all the properties
     if (archive.properties && archive.properties.length) {
-      CreatureProperties.batchInsert(archive.properties);
+      for (const prop of archive.properties) {
+        await CreatureProperties.insertAsync(prop);
+      }
     }
     if (archive.experiences && archive.experiences.length) {
-      Experiences.batchInsert(archive.experiences);
+      for (const exp of archive.experiences) {
+        await Experiences.insertAsync(exp);
+      }
     }
     if (archive.logs && archive.logs.length) {
-      CreatureLogs.batchInsert(archive.logs);
+      for (const log of archive.logs) {
+        await CreatureLogs.insertAsync(log);
+      }
     }
   } catch (e) {
     // If the above fails, delete the inserted creature
-    removeCreatureWork(archive.creature._id);
+    await removeCreatureWork(archive.creature._id);
     throw e;
   }
 }
@@ -87,17 +93,17 @@ const restoreCreaturefromFile = new ValidatedMethod({
         'You can only restore creatures you own');
     }
 
-    assertHasCharactersSlots(this.userId);
+    await assertHasCharactersSlots(this.userId);
 
     if (Meteor.isServer) {
       // Read the file data
       const archive = await ArchiveCreatureFiles.readJSONFile(file);
-      restoreCreature(archive, this.userId);
+      await restoreCreature(archive, this.userId);
     }
     //Remove the archive once the restore succeeded
     ArchiveCreatureFiles.remove({ _id: fileId });
     // Update the user's file storage limits
-    incrementFileStorageUsed(userId, -file.size);
+    await incrementFileStorageUsed(userId, -file.size);
   },
 });
 

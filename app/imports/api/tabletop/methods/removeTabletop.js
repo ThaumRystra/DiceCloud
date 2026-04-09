@@ -24,7 +24,7 @@ const removeTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({ tabletopId }) {
+  async run({ tabletopId }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.remove.denied',
         'You need to be logged in to remove a tabletop');
@@ -32,10 +32,10 @@ const removeTabletop = new ValidatedMethod({
     assertUserHasPaidBenefits(this.userId);
     assertUserIsTabletopOwner(tabletopId, this.userId);
 
-    let removed = Tabletops.remove({
+    let removed = await Tabletops.removeAsync({
       _id: tabletopId,
     });
-    Creatures.update({
+    await Creatures.updateAsync({
       tabletop: tabletopId,
     }, {
       $unset: { tabletop: 1 },

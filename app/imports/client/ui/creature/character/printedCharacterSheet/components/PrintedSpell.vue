@@ -55,49 +55,41 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import romanize from '/imports/client/ui/utility/romanize';
 
-const levelText = [
+const LEVEL_TEXT = [
   'cantrip', '1st-level', '2nd-level', '3rd-level', '4th-level', '5th-level',
-  '6th-level', '7th-level', '8th-level', '9th-level'
+  '6th-level', '7th-level', '8th-level', '9th-level',
 ];
 
-export default {
-  components: {
-    PropertyIcon,
-    PropertyDescription,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    levelText() {
-      return levelText[this.model.level] || `level ${this.model.level}`;
-    },
-    romanLevel() {
-      return romanize(this.model.level) || this.model.level;
-    },
-    rollBonus() {
-      if (!this.model.attackRoll) return;
-      return numberToSignedString(this.model.attackRoll.value);
-    },
-    spellComponents() {
-      let components = [];
-      if (this.model.concentration) components.push('C');
-      if (this.model.verbal) components.push('V');
-      if (this.model.somatic) components.push('S');
-      if (this.model.material) components.push(`M (${this.model.material})`);
-      return components.join(', ');
-    },
-  }
-}
+const props = defineProps<{ model: Record<string, any> }>();
+
+const levelText = computed(() =>
+  LEVEL_TEXT[props.model.level] || `level ${props.model.level}`
+);
+
+const romanLevel = computed(() =>
+  romanize(props.model.level) || props.model.level
+);
+
+const rollBonus = computed(() => {
+  if (!props.model.attackRoll) return undefined;
+  return numberToSignedString(props.model.attackRoll.value);
+});
+
+const spellComponents = computed(() => {
+  const components: string[] = [];
+  if (props.model.concentration) components.push('C');
+  if (props.model.verbal) components.push('V');
+  if (props.model.somatic) components.push('S');
+  if (props.model.material) components.push(`M (${props.model.material})`);
+  return components.join(', ');
+});
 </script>
 
 <style lang="css" scoped>

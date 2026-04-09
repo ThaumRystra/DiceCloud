@@ -1,177 +1,148 @@
 <template lang="html">
-  <v-speed-dial
-    v-model="fab"
+  <div
     v-bind="$attrs"
+    class="v-speed-dial"
     :style="!speedDials ? 'visibility: hidden;' : ''"
+    style="position: relative;"
   >
-    <template #activator>
-      <v-btn
-        v-model="fab"
-        color="primary"
-        fab
-        small
-        data-id="insert-creature-property-fab"
-        class="insert-creature-property-fab"
-      >
-        <transition
-          name="fab-rotate"
-        >
-          <v-icon
-            style="transition: transform 0.2s ease-in-out"
-            :style="fab && 'transform: rotate(45deg)'"
-          >
-            mdi-plus
-          </v-icon>
-        </transition>
-      </v-btn>
-    </template>
-    <labeled-fab
-      v-for="type in speedDials"
-      :key="type"
+    <v-btn
       color="primary"
-      :data-id="`insert-creature-property-type-${type}`"
-      :label="getPropertyLabel(type)"
-      :icon="type ? properties[type].icon : 'mdi-plus'"
-      :disabled="!editPermission"
-      @click="addProperty(type)"
-    />
-  </v-speed-dial>
+      icon
+      size="small"
+      data-id="insert-creature-property-fab"
+      class="insert-creature-property-fab"
+      @click="fab = !fab"
+    >
+      <v-icon
+        style="transition: transform 0.2s ease-in-out"
+        :style="fab && 'transform: rotate(45deg)'"
+      >
+        mdi-plus
+      </v-icon>
+    </v-btn>
+    <div
+      v-show="fab"
+      class="v-speed-dial__list"
+    >
+      <labeled-fab
+        v-for="type in speedDials"
+        :key="type"
+        color="primary"
+        :data-id="`insert-creature-property-type-${type}`"
+        :label="getPropertyLabel(type)"
+        :icon="type ? properties[type].icon : 'mdi-plus'"
+        :disabled="!editPermission"
+        @click="addProperty(type)"
+      />
+    </div>
+  </div>
 </template>
 
-<script lang="js">
-  import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
-  import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
-  import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-  import Creatures from '/imports/api/creature/creatures/Creatures';
-  import PROPERTIES from '/imports/constants/PROPERTIES';
-  import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
-  import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
+import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
+import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 
-  function getParentFromSelectedTreeNode(creatureId, $store){
-    // find the parent based on the currently selected property
-    let el = document.querySelector('.tree-tab .tree-node-title.primary--text');
-    let selectedComponent = el && el.parentElement.__vue__.$parent;
-    let parentRef;
-    const onTreeTab = $store.getters.tabNameById(creatureId) === 'tree';
-    if (onTreeTab && selectedComponent){
-      if (selectedComponent.showExpanded){
-        parentRef = {
-          id: selectedComponent.node._id,
-          collection: 'creatureProperties',
-        };
-      } else {
-        parentRef = selectedComponent.node.parent;
-      }
+const props = defineProps<{ editPermission?: boolean }>();
+const store = useStore();
+const route = useRoute();
+
+const fab = ref(false);
+
+const creatureId = computed(() => route.params.id as string);
+const tabName = computed(() => store.getters.tabNameById(creatureId.value));
+const speedDialsByTab = {
+  'stats': ['attribute', 'skill', 'buff'],
+  'features': ['feature'],
+  'spells': ['spellList', 'spell'],
+  'actions': ['action'],
+  'inventory': ['item', 'container'],
+  'journal': ['note'],
+  'tree': [null],
+} as Record<string, (string | null)[]>;
+const speedDials = computed(() => speedDialsByTab[tabName.value]);
+const properties = PROPERTIES;
+
+function getPropertyLabel(type: string | null) {
+  if (type === 'buff') return 'Buff or Condition';
+  return type ? PROPERTIES[type].name : 'Property';
+}
+
+function getParentFromSelectedTreeNode(cId: string) {
+  const el = document.querySelector('.tree-tab .tree-node-title.text-primary');
+  const selectedComponent = el && (el.parentElement as any).__vue__?.$parent;
+  const onTreeTab = store.getters.tabNameById(cId) === 'tree';
+  if (onTreeTab && selectedComponent) {
+    if (selectedComponent.showExpanded) {
+      return { id: selectedComponent.node._id, collection: 'creatureProperties' };
     } else {
-      parentRef = {collection: 'creatures', id: creatureId};
-    }
-    return parentRef;
-  }
-
-  function hideFab(){
-    let fab = document.querySelector('.insert-creature-property-fab');
-    if (fab) fab.style.opacity = '0';
-    return fab;
-  }
-
-  function revealFab(fab){
-    if (!fab) return;
-    // Bring back the fab with scale up animation
-    fab.style.transition = 'none';
-    fab.style.opacity = '';
-    fab.style.transform = 'scale(0)';
-    setTimeout(()=> {
-      fab.style.transform = '';
-      fab.style.transition = '';
-    }, 400);
-  }
-
-  export default {
-    components: {
-      LabeledFab,
-    },
-    props: {
-      editPermission: Boolean,
-    },
-    data(){return {
-      fab: false,
-    };},
-    computed: {
-      creatureId(){
-        return this.$route.params.id;
-      },
-      tabName(){
-        return this.$store.getters.tabNameById(this.creatureId);
-      },
-      speedDials(){
-        return this.speedDialsByTab[this.tabName];
-      },
-      speedDialsByTab() { return {
-        'stats': ['attribute', 'skill', 'buff'],
-        'features': ['feature'],
-        'spells': ['spellList', 'spell'],
-        'actions': ['action'],
-        'inventory': ['item', 'container'],
-        'journal': ['note'],
-        'tree': [null],
-      };},
-      properties(){
-        return PROPERTIES;
-      },
-    },
-    meteor: {
-      hideSpellsTab(){
-        let creature = Creatures.findOne(this.creatureId);
-        return creature?.settings?.hideSpellsTab;
-      },
-    },
-    methods: {
-      getPropertyLabel(type){
-        if (type === 'buff') return 'Buff or Condition';
-        return type ? PROPERTIES[type].name : 'Property'
-      },
-      addProperty(forcedType){
-        let creatureId = this.creatureId;
-        let fab = hideFab();
-
-        let parentRef  = getParentFromSelectedTreeNode(creatureId, this.$store);
-        let parent;
-        try {
-          parent = fetchDocByRef(parentRef);
-        } catch (e) {
-          console.warn(e);
-        }
-
-        this.$store.commit('pushDialogStack', {
-          component: 'insert-property-dialog',
-          elementId: 'insert-creature-property-type-' + forcedType,
-          data: {
-            parentDoc: forcedType ? undefined : parent,
-            forcedType,
-            creatureId: this.creatureId,
-            noBackdropClose: true,
-          },
-          async callback(result){
-            if (!result){
-              return 'insert-creature-property-fab';
-            }
-            if (Array.isArray(result)){
-              revealFab(fab);
-              let nodeIds = result;
-              let id = insertPropertyFromLibraryNode.call({nodeIds, parentRef});
-              return forcedType ? id : `tree-node-${id}`;
-            } else {
-              revealFab(fab);
-              let creatureProperty = result;
-              // Insert the property
-              let id = await insertProperty.callAsync({creatureProperty, parentRef});
-              return forcedType ? id : `tree-node-${id}`;
-            }
-          }
-        });
-      },
+      return selectedComponent.node.parent;
     }
   }
+  return { collection: 'creatures', id: cId };
+}
+
+function hideFab() {
+  const el = document.querySelector('.insert-creature-property-fab') as HTMLElement | null;
+  if (el) el.style.opacity = '0';
+  return el;
+}
+
+function revealFab(el: HTMLElement | null) {
+  if (!el) return;
+  el.style.transition = 'none';
+  el.style.opacity = '';
+  el.style.transform = 'scale(0)';
+  setTimeout(() => {
+    el.style.transform = '';
+    el.style.transition = '';
+  }, 400);
+}
+
+function addProperty(forcedType: string | null) {
+  const cId = creatureId.value;
+  const el = hideFab();
+  const parentRef = getParentFromSelectedTreeNode(cId);
+  let parent: any;
+  try {
+    parent = fetchDocByRef(parentRef);
+  } catch (e) {
+    console.warn(e);
+  }
+  store.commit('pushDialogStack', {
+    component: 'insert-property-dialog',
+    elementId: 'insert-creature-property-type-' + forcedType,
+    data: {
+      parentDoc: forcedType ? undefined : parent,
+      forcedType,
+      creatureId: cId,
+      noBackdropClose: true,
+    },
+    async callback(result: any) {
+      if (!result) {
+        return 'insert-creature-property-fab';
+      }
+      if (Array.isArray(result)) {
+        revealFab(el);
+        const nodeIds = result;
+        const id = await insertPropertyFromLibraryNode.callAsync({ nodeIds, parentRef });
+        return forcedType ? id : `tree-node-${id}`;
+      } else {
+        revealFab(el);
+        const creatureProperty = result;
+        const id = await insertProperty.callAsync({ creatureProperty, parentRef });
+        return forcedType ? id : `tree-node-${id}`;
+      }
+    },
+  });
+}
 </script>
 
 <style lang="css" scoped>

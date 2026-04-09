@@ -1,6 +1,6 @@
 <template lang="html">
   <div class="item-form">
-    <div class="layout justify-space-around">
+    <div class="d-flex justify-space-around">
       <div>
         <smart-switch
           label="Equipped"
@@ -145,14 +145,16 @@
   </div>
 </template>
 
-<script lang="js">
-import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
 
-export default {
-  components: {
-    FormSection,
-  },
-  mixins: [propertyFormMixin],
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
 </script>

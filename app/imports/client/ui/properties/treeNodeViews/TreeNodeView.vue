@@ -10,28 +10,19 @@
   />
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import treeNodeViewIndex from '/imports/client/ui/properties/treeNodeViews/treeNodeViewIndex';
 
-export default {
-  name: 'TreeNodeView',
-  components: {
-    ...treeNodeViewIndex
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    selected: Boolean,
-  },
-  computed: {
-    treeNodeView(){
-      let type = this.model.type;
-      return treeNodeViewIndex[type] || treeNodeViewIndex.default;
-    },
-  }
-}
+const props = defineProps<{
+  model: Record<string, any>;
+  selected?: boolean;
+}>();
+
+const treeNodeView = computed(() => {
+  const type = props.model.type;
+  return (treeNodeViewIndex as any)[type] || (treeNodeViewIndex as any).default;
+});
 </script>
 
 <style lang="css" scoped>

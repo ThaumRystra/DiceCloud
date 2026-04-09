@@ -4,13 +4,13 @@
     v-on="!hideBreadcrumbs ? {click} : {}"
   >
     <div class="effect-icon">
-      <v-tooltip bottom>
-        <template #activator="{ on }">
+      <v-tooltip location="bottom">
+        <template #activator="{ props }">
           <v-icon
             class="mx-2"
             style="cursor: default;"
-            large
-            v-on="on"
+            size="large"
+            v-bind="props"
           >
             {{ icon }}
           </v-icon>
@@ -23,7 +23,7 @@
     >
       {{ proficiencyValue }}
     </div>
-    <div class="layout column my-2">
+    <div class="d-flex flex-column my-2">
       <div class="text-body-1 mb-1">
         {{ model.name || proficiencyText }}
       </div>
@@ -40,59 +40,55 @@
   </v-list-item>
 </template>
 
-<script lang="js">
-  import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
-  import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
-  import numberToSignedString from '/imports/api/utility/numberToSignedString';
-  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
+<script setup lang="ts">
+import { computed } from 'vue';
+import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
-  export default {
-    components: {
-      Breadcrumbs,
-    },
-    mixins: [propertyViewerMixin],
-    props: {
-      hideBreadcrumbs: Boolean,
-      proficiencyBonus: {
-        type: Number,
-        default: 0,
-      },
-    },
-    computed: {
-      icon(){
-        return getProficiencyIcon(this.proficiency);
-      },
-      proficiency() {
-        switch (this.model.type) {
-          case 'proficiency': return this.model.value;
-          case 'skill': return this.model.proficiency;
-          default: return 0;
-        }
-      },
-      proficiencyText(){
-        switch (this.proficiency){
-          case 0.49: return 'Half proficiency bonus rounded down';
-          case 0.5: return 'Half proficiency bonus rounded up';
-          case 1: return 'Proficient';
-          case 2: return 'Double proficiency bonus';
-          default: return '';
-        }
-      },
-      proficiencyValue(){
-        if (!this.proficiencyBonus) return numberToSignedString(0);
-        if (this.proficiency === 0.49){
-          return numberToSignedString(Math.floor(0.5 * this.proficiencyBonus));
-        } else {
-          return numberToSignedString(Math.ceil(this.proficiency * this.proficiencyBonus));
-        }
-      },
-    },
-    methods: {
-      click(e){
-        this.$emit('click', e);
-      },
-    },
-  };
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  hideBreadcrumbs?: boolean;
+  proficiencyBonus?: number;
+}>(), {
+  hideBreadcrumbs: false,
+  proficiencyBonus: 0,
+});
+
+const emit = defineEmits(['click']);
+
+const proficiency = computed(() => {
+  switch (props.model.type) {
+    case 'proficiency': return props.model.value;
+    case 'skill': return props.model.proficiency;
+    default: return 0;
+  }
+});
+
+const icon = computed(() => getProficiencyIcon(proficiency.value));
+
+const proficiencyText = computed(() => {
+  switch (proficiency.value) {
+    case 0.49: return 'Half proficiency bonus rounded down';
+    case 0.5: return 'Half proficiency bonus rounded up';
+    case 1: return 'Proficient';
+    case 2: return 'Double proficiency bonus';
+    default: return '';
+  }
+});
+
+const proficiencyValue = computed(() => {
+  if (!props.proficiencyBonus) return numberToSignedString(0);
+  if (proficiency.value === 0.49) {
+    return numberToSignedString(Math.floor(0.5 * props.proficiencyBonus));
+  } else {
+    return numberToSignedString(Math.ceil(proficiency.value * props.proficiencyBonus));
+  }
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
 </script>
 
 <style lang="css" scoped>

@@ -3,10 +3,10 @@
     v-if="accessRights === 'reader' || accessRights === 'writer' || accessRights === 'public'"
     bottom
   >
-    <template #activator="{ on }">
+    <template #activator="{ props }">
       <v-icon
         style="opacity: 0.4"
-        v-on="on"
+        v-bind="props"
       >
         {{ accessIcon }}
       </v-icon>
@@ -15,43 +15,45 @@
   </v-tooltip>
 </template>
 
-<script lang="js">
-export default {
-  props:{
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  meteor:{
-    accessRights(){
-      let userId = Meteor.userId();
-      if (this.model.owner === userId) return 'owner'
-      else if (this.model.writers.includes(userId)) return 'writer';
-      else if (this.model.readers.includes(userId)) return 'reader';
-      else if (this.model.public) return 'public';
-      else return 'denied'
-    },
-  },
-  computed: {
-    accessIcon() {
-      switch (this.accessRights){
-        case 'writer': return 'mdi-file-edit';
-        case 'reader': return 'mdi-file-eye';
-        case 'public': return 'mdi-cloud';
-        default: return '';
-      }
-    },
-    accessText(){
-      switch (this.accessRights){
-        case 'writer': return 'Shared with edit permission';
-        case 'reader': return 'Shared as view-only';
-        case 'public': return 'Shared publically';
-        default: return '';
-      }
-    },
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+
+const props = defineProps<{
+  model: {
+    owner: string;
+    writers: string[];
+    readers: string[];
+    public?: boolean;
+  };
+}>();
+
+const { result: accessRights } = autorun(() => {
+  const userId = Meteor.userId();
+  if (props.model.owner === userId) return 'owner';
+  else if (props.model.writers.includes(userId as string)) return 'writer';
+  else if (props.model.readers.includes(userId as string)) return 'reader';
+  else if (props.model.public) return 'public';
+  else return 'denied';
+});
+
+const accessIcon = computed(() => {
+  switch (accessRights.value) {
+    case 'writer': return 'mdi-file-edit';
+    case 'reader': return 'mdi-file-eye';
+    case 'public': return 'mdi-cloud';
+    default: return '';
   }
-}
+});
+
+const accessText = computed(() => {
+  switch (accessRights.value) {
+    case 'writer': return 'Shared with edit permission';
+    case 'reader': return 'Shared as view-only';
+    case 'public': return 'Shared publically';
+    default: return '';
+  }
+});
 </script>
 
 <style lang="css" scoped>

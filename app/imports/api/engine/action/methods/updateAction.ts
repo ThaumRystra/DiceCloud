@@ -22,7 +22,7 @@ export const updateAction = new ValidatedMethod({
     if (!action) {
       throw new Meteor.Error('not found', 'The given action was not found');
     }
-    assertEditPermission(getCreature(action.creatureId), this.userId);
+    await assertEditPermission(getCreature(action.creatureId), this.userId);
     return EngineActions.updateAsync(_id, { $set: { [path]: value } });
   },
 });

@@ -6,11 +6,6 @@ import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 //set up the collection for creature variables
 const CreatureVariables = new Mongo.Collection('creatureVariables');
 
-// Unique index on _creatureId
-if (Meteor.isServer) {
-  CreatureVariables._ensureIndex({ _creatureId: 1 }, { unique: true })
-}
-
 /** No schema because the structure isn't known until compute time
  * Expect documents to look like:
  * {

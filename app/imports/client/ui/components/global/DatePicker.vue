@@ -7,17 +7,16 @@
     full-width
     min-width="290px"
   >
-    <template #activator="{ on }">
+    <template #activator="{ props }">
       <v-text-field
         :value="formattedSafeValue"
-        v-bind="$attrs"
+        v-bind="{...$attrs, ...props}"
         prepend-icon="mdi-calendar"
         readonly
         :loading="loading"
         :error-messages="errors"
         :disabled="isDisabled"
-        outlined
-        v-on="on"
+        variant="outlined"
         @focus="focused = true"
         @blur="focused = false"
       />
@@ -29,28 +28,39 @@
   </v-menu>
 </template>
 
-<script lang="js">
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+<script setup lang="ts">
+import { ref, computed, useAttrs } from 'vue';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 import { format } from 'date-fns';
 
-export default {
-  mixins: [SmartInput],
-  data() {
-    return {
-      menu: false,
-    };
-  },
-  computed: {
-    formattedSafeValue() {
-      return format(this.safeValue, 'YYYY-MM-DD')
-    },
-  },
-  methods: {
-    dateInput(e) {
-      this.menu = false;
-      this.input(e);
-    },
-  },
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { loading, errors, safeValue, isDisabled, focused, input } = useSmartInput(props, emit, attrs);
+
+const menu = ref(false);
+
+const formattedSafeValue = computed(() => {
+  if (!safeValue.value) return '';
+  return format(safeValue.value as Date, 'yyyy-MM-dd');
+});
+
+function dateInput(e: unknown) {
+  menu.value = false;
+  input(e);
 }
 </script>
 

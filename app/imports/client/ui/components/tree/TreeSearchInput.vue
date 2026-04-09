@@ -27,7 +27,7 @@
       <v-card-text>
         <v-select
           v-model="typeFilterInput"
-          outlined
+          variant="outlined"
           label="Type"
           :items="filterOptions"
           multiple
@@ -45,13 +45,13 @@
               v-model="fieldFilter.field"
               class="text--mono"
               label="Field"
-              outlined
+              variant="outlined"
             />
             <v-text-field
               v-model="fieldFilter.value"
               label="Text"
               class="ml-2"
-              outlined
+              variant="outlined"
             />
             <v-btn
               v-if="fieldFilters.length > 1"
@@ -76,21 +76,19 @@
         </div>
         <v-card-actions>
           <v-btn
-            text
+            variant="text"
             @click="
               fieldFilters = [{field: 'name', value: undefined}];
               typeFilterInput = [];
               menu = false;
             "
+            prepend-icon="mdi-close"
           >
-            <v-icon left>
-              mdi-close
-            </v-icon>
             Clear
           </v-btn>
           <v-spacer />
           <v-btn
-            text
+            variant="text"
             color="primary"
             @click="menu = false"
           >
@@ -102,91 +100,84 @@
   </v-menu>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import escapeRegex from '/imports/api/utility/escapeRegex';
 
-const filterOptions = [];
-for (let key in PROPERTIES) {
-  filterOptions.push({
-    text: PROPERTIES[key].name,
-    value: key,
-  });
-}
+const allFilterOptions = Object.keys(PROPERTIES as Record<string, { name: string }>).map(key => ({
+  text: (PROPERTIES as Record<string, { name: string }>)[key].name,
+  value: key,
+}));
 
-export default {
-  props: {
-    value: {
-      type: Object,
-      default: undefined,
-    },
-    isLibrary: {
-      type: Boolean,
-      default: false
-    }
-  },
-  data(){return {
-    typeFilterInput: [],
-    fieldFilters: [{field: 'name', value: undefined}],
-    menu: false,
-  }},
-  computed: {
-    filter() {
-      let filter = undefined;
-      if (this.typeFilterInput?.length) {
-        filter = filter || {};
-        filter.type = {$in: this.typeFilterInput};
-      }
-      this.fieldFilters?.forEach(fieldFilter => {
-        if (!fieldFilter.field || !fieldFilter.value) return;
-        const search = { $regex: escapeRegex(fieldFilter.value), '$options': 'i' };
-        filter = filter || {};
-        if (fieldFilter.field.includes('.')) {
-          // The user used dot notation, search exactly where they are looking
-          filter[fieldFilter.field] = search;
-        } else {
-          // No dot notation, search fields and their likely sub-fields
-          filter.$and = filter.$and || [];
-          filter.$and.push({
-            $or: [
-              { [fieldFilter.field]: search },
-              { [fieldFilter.field + '.calculation']: search },
-              { [fieldFilter.field + '.text']: search },
-            ],
-          });
-        }
+const props = defineProps<{
+  value?: object;
+  isLibrary?: boolean;
+}>();
+
+const emit = defineEmits<{
+  input: [filter: object | undefined];
+  'extra-fields-changed': [fields: string[]];
+}>();
+
+const typeFilterInput = ref<string[]>([]);
+const fieldFilters = ref<{ field: string; value: string | undefined }[]>([{ field: 'name', value: undefined }]);
+const menu = ref(false);
+
+const filter = computed(() => {
+  let f: Record<string, any> | undefined = undefined;
+  if (typeFilterInput.value?.length) {
+    f = f || {};
+    f.type = { $in: typeFilterInput.value };
+  }
+  fieldFilters.value?.forEach(fieldFilter => {
+    if (!fieldFilter.field || !fieldFilter.value) return;
+    const search = { $regex: escapeRegex(fieldFilter.value), '$options': 'i' };
+    f = f || {};
+    if (fieldFilter.field.includes('.')) {
+      f[fieldFilter.field] = search;
+    } else {
+      f.$and = f.$and || [];
+      f.$and.push({
+        $or: [
+          { [fieldFilter.field]: search },
+          { [fieldFilter.field + '.calculation']: search },
+          { [fieldFilter.field + '.text']: search },
+        ],
       });
-      return filter;
-    },
-    filterOptions() {
-      return !this.isLibrary 
-        ? filterOptions.filter(p => p.value !== 'reference')
-        : filterOptions;
-    },
-    extraFields() {
-      let extraFields = [];
-      this.fieldFilters?.forEach(fieldFilter => {
-        if (!fieldFilter.field || !fieldFilter.value) return;
-        extraFields.push(fieldFilter.field);
-      });
-      return extraFields;
-    },
-    numFilters() {
-      let numFilters = 0;
-      if (this.typeFilterInput?.length) numFilters += 1;
-      numFilters += this.extraFields.length;
-      return numFilters;
     }
-  },
-  watch: {
-    menu(val) {
-      if (!val) {
-        this.$emit('input', this.filter);
-        this.$emit('extra-fields-changed', this.extraFields);
-      }
-    }
-  },
-}
+  });
+  return f;
+});
+
+const filterOptions = computed(() => {
+  return !props.isLibrary
+    ? allFilterOptions.filter(p => p.value !== 'reference')
+    : allFilterOptions;
+});
+
+const extraFields = computed(() => {
+  const fields: string[] = [];
+  fieldFilters.value?.forEach(fieldFilter => {
+    if (!fieldFilter.field || !fieldFilter.value) return;
+    fields.push(fieldFilter.field);
+  });
+  return fields;
+});
+
+const numFilters = computed(() => {
+  let count = 0;
+  if (typeFilterInput.value?.length) count += 1;
+  count += extraFields.value.length;
+  return count;
+});
+
+watch(menu, (val) => {
+  if (!val) {
+    emit('input', filter.value);
+    emit('extra-fields-changed', extraFields.value);
+  }
+});
 </script>
 
 <style lang="css" scoped>

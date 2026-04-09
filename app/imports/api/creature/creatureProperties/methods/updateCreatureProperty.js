@@ -23,12 +23,12 @@ const updateCreatureProperty = new ValidatedMethod({
     numRequests: 12,
     timeInterval: 5000,
   },
-  run({ _id, path, value }) {
+  async run({ _id, path, value }) {
     // Permission
-    const property = CreatureProperties.findOne(_id, {
+    const property = await CreatureProperties.findOneAsync(_id, {
       fields: { type: 1, root: 1 }
     });
-    assertDocEditPermission(property, this.userId);
+    await assertDocEditPermission(property, this.userId);
 
     const pathString = path.join('.');
     let modifier;
@@ -38,7 +38,7 @@ const updateCreatureProperty = new ValidatedMethod({
     } else {
       modifier = { $set: { [pathString]: value, dirty: true } };
     }
-    CreatureProperties.update(_id, modifier, {
+    await CreatureProperties.updateAsync(_id, modifier, {
       selector: { type: property.type },
     });
   },

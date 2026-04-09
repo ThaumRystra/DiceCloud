@@ -12,47 +12,47 @@ const updateFileStorageUsed = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run() {
+  async run() {
     const userId = Meteor.userId();
     if (!userId) throw new Meteor.Error('No user',
       'You must be logged in to recalculate your file use');
-    const user = Meteor.users.findOne(userId);
+    const user = await Meteor.users.findOneAsync(userId);
     if (!user) {
       throw new Meteor.Error('noUser', 'User not found');
     }
-    updateFileStorageUsedWork(userId);
+    await updateFileStorageUsedWork(userId);
   }
 });
 
 export default updateFileStorageUsed;
 
-export function updateFileStorageUsedWork(userId) {
+export async function updateFileStorageUsedWork(userId) {
   if (!userId) {
     throw new Meteor.Error('idRequired',
       'No user ID was provided to update file storage used')
   }
 
   let sum = 0;
-  fileCollections.forEach(collection => {
-    collection.find({ userId }, { fields: { size: 1 } }).forEach(file => {
+  for (const collection of fileCollections) {
+    await collection.find({ userId }, { fields: { size: 1 } }).forEachAsync(file => {
       sum += file.size;
     });
-  });
+  }
 
-  Meteor.users.update(userId, {
+  await Meteor.users.updateAsync(userId, {
     $set: {
       fileStorageUsed: sum,
     }
   });
 }
 
-export function incrementFileStorageUsed(userId, amount) {
+export async function incrementFileStorageUsed(userId, amount) {
   if (!userId) {
     throw new Meteor.Error('idRequired',
       'No user ID was provided to update file storage used')
   }
 
-  const user = Meteor.users.findOne(userId);
+  const user = await Meteor.users.findOneAsync(userId);
   if (!user) {
     throw new Meteor.Error('noUser', 'User not found');
   }
@@ -60,9 +60,9 @@ export function incrementFileStorageUsed(userId, amount) {
   if (user.fileStorageUsed === undefined) {
     // The user doesn't have a current value for storage used, calculate it
     // from scratch
-    updateFileStorageUsedWork(userId);
+    await updateFileStorageUsedWork(userId);
   } else {
-    Meteor.users.update(userId, {
+    await Meteor.users.updateAsync(userId, {
       $inc: {
         fileStorageUsed: amount,
       }

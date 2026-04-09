@@ -19,10 +19,10 @@
         <div
           v-if="model.value !== undefined"
         >
-          <v-layout align-center>
+          <div class="d-flex align-center">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.two_coins
             </v-icon>
@@ -30,15 +30,12 @@
               class="mr-2"
               :value="model.value"
             />
-          </v-layout>
+          </div>
 
-          <v-layout
-            align-center
-            class="mb-2"
-          >
+          <div class="d-flex align-center mb-2">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.cash
             </v-icon>
@@ -50,7 +47,7 @@
             >
               contents
             </span>
-          </v-layout>
+          </div>
         </div>
       </div>
   
@@ -58,23 +55,20 @@
         <div
           v-if="model.weight !== undefined"
         >
-          <v-layout align-center>
+          <div class="d-flex align-center">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.weight
             </v-icon>
             {{ model.weight }} lb
-          </v-layout>
+          </div>
 
-          <v-layout
-            align-center
-            class="mb-2"
-          >
+          <div class="d-flex align-center mb-2">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.injustice
             </v-icon>
@@ -84,43 +78,31 @@
             >
               contents
             </span>
-          </v-layout>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed, useAttrs, inject } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
-export default {
-  components: {
-    CoinValue,
-    PropertyDescription,
-  },
-  mixins: [treeNodeViewMixin],
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    preparingSpells: Boolean,
-  },
-  data() {
-    return {
-      incrementLoading: false,
-    }
-  },
-  computed: {
-    hasClickListener() {
-      return this.$listeners && !!this.$listeners.click;
-    },
-  },
-}
+const props = defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+  preparingSpells?: boolean;
+}>();
+
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const hasClickListener = computed(() => !!(attrs as any).onClick);
 </script>
 
 <style lang="css" scoped>

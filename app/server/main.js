@@ -1,5 +1,5 @@
+import 'meteor/aldeed:collection2/static';
 import '/imports/api/simpleSchemaConfig';
-import '/imports/server/config/SimpleRestConfig';
 import '/imports/server/config/limitLoginTokens';
 import '/imports/server/rest/index';
 import '/imports/server/config/accountsEmailConfig';

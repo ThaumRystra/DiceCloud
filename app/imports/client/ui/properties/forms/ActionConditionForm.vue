@@ -27,10 +27,11 @@
   </v-row>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
 
-export default {
-  mixins: [propertyFormMixin],
-}
+defineEmits(['change']);
 </script>

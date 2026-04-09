@@ -5,25 +5,25 @@
       key="left"
       class="step-1"
     >
-      <template slot="toolbar">
+      <template #toolbar>
         <v-toolbar-title>
           Property Type
         </v-toolbar-title>
         <v-spacer />
         <v-switch
-          :input-value="showPropertyHelp"
+          :model-value="showPropertyHelp"
           append-icon="mdi-help"
           hide-details
-          flat
           @change="propertyHelpChanged"
         />
       </template>
-      <property-selector
-        slot="unwrapped-content"
-        :no-library-only-props="noLibraryOnlyProps"
-        :parent-type="parentType"
-        @select="type => $emit('input', type)"
-      />
+      <template #unwrapped-content>
+        <property-selector
+          :no-library-only-props="noLibraryOnlyProps"
+          :parent-type="parentType"
+          @select="type => $emit('input', type)"
+        />
+      </template>
     </dialog-base>
     <div
       v-show="value"
@@ -36,48 +36,40 @@
   </transition-group>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
-export default {
-  components: {
-    DialogBase,
-    PropertySelector,
-  },
-  props: {
-    noLibraryOnlyProps: Boolean,
-    value: {
-      type: String,
-      default: undefined,
-    },
-    parentType: {
-      type: String,
-      default: undefined,
-    },
-  },
-  meteor: {
-    showPropertyHelp() {
-      let user = Meteor.user();
-      return !(user?.preferences?.hidePropertySelectDialogHelp)
-    },
-  },
-  methods: {
-    propertyHelpChanged(value) {
-      Meteor.users.setPreference.call({
-        preference: 'hidePropertySelectDialogHelp',
-        value: !value
-      }, error => {
-        if (!error) return;
-        console.error(error);
-        snackbar({
-          text: error.reason,
-        });
-      });
-    }
+withDefaults(defineProps<{
+  noLibraryOnlyProps?: boolean;
+  value?: string;
+  parentType?: string;
+}>(), {
+  noLibraryOnlyProps: false,
+  value: undefined,
+  parentType: undefined,
+});
+
+const { result: showPropertyHelp } = autorun(() => {
+  const user = Meteor.user();
+  return !(user?.preferences?.hidePropertySelectDialogHelp);
+});
+
+async function propertyHelpChanged(value: boolean) {
+  try {
+    await Meteor.users.setPreference.callAsync({
+      preference: 'hidePropertySelectDialogHelp',
+      value: !value,
+    });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({
+      text: error.reason,
+    });
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

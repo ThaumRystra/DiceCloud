@@ -2,11 +2,11 @@
   <v-btn
     :disabled="context.editPermission === false"
     :data-id="`event-btn-${model._id}`"
-    outlined
+    variant="outlined"
     class="event-button"
     style="min-width: 160px; max-width: 100%;"
     :color="model.color"
-    @click="doAction"
+    @click="doActionClick"
   >
     <property-icon
       style="margin-left: -4px; margin-right: 8px;"
@@ -20,44 +20,38 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, inject } from 'vue';
+import { useStore } from 'vuex';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
-export default {
-  components: {
-    PropertyIcon,
-  },
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  data(){return {
-    hovering: false,
-    loading: false,
-  }},
-  methods: {
-    async doAction() {
-      this.loading = true;
-      doAction({
-        propId: this.model._id,
-        creatureId: this.model.root.id,
-        $store: this.$store,
-        elementId: `event-btn-${this.model._id}`,
-        targetIds: [],
-      }).catch(error => {
-        snackbar({ text: error.reason || error.message || error.toString() });
-        console.error(error);
-      }).finally(() => {
-        this.loading = false;
-      });
-    },
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const store = useStore();
+const context = inject('context', {});
+
+const hovering = ref(false);
+const loading = ref(false);
+
+async function doActionClick() {
+  loading.value = true;
+  try {
+    await doAction({
+      propId: props.model._id,
+      creatureId: props.model.root.id,
+      $store: store,
+      elementId: `event-btn-${props.model._id}`,
+      targetIds: [],
+    });
+  } catch (error: any) {
+    snackbar({ text: error.reason || error.message || error.toString() });
+    console.error(error);
+  } finally {
+    loading.value = false;
   }
 }
 </script>

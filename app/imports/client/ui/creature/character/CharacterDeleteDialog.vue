@@ -1,8 +1,10 @@
 <template lang="html">
   <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      Delete Character
-    </v-toolbar-title>
+    <template #toolbar>
+      <v-toolbar-title>
+        Delete Character
+      </v-toolbar-title>
+    </template>
     <div>
       <p v-if="name">
         Type "{{ name }}" to permanently delete the character
@@ -19,62 +21,60 @@
         Delete forever
       </v-btn>
     </div>
-    <v-spacer slot="actions" />
-    <v-btn
-      slot="actions"
-      text
-      @click="$store.dispatch('popDialogStack')"
-    >
-      Cancel
-    </v-btn>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Cancel
+      </v-btn>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import removeCreature from '/imports/api/creature/creatures/methods/removeCreature';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
-export default {
-  components: {
-    DialogBase,
-  },
-  props: {
-    id: String,
-  },
-  data() {
-    return {
-      inputName: undefined,
-    }
-  },
-  computed: {
-    nameMatch() {
-      if (!this.name) return true;
-      let uppername = this.name.toUpperCase();
-      let upperInputName = this.inputName && this.inputName.toUpperCase();
-      return uppername === upperInputName;
-    },
-  },
-  meteor: {
-    name() {
-      let creature = Creatures.findOne(this.id, { fields: { name: 1 } });
-      return creature && creature.name;
-    },
-  },
-  methods: {
-    remove() {
-      this.$router.push('/characterList');
-      this.$store.dispatch('popDialogStack');
-      removeCreature.call({ charId: this.id }, (error) => {
-        if (error) {
-          console.error(error);
-          snackbar({ text: error.message || error.toString() });
-        }
-      });
-    }
+const props = withDefaults(defineProps<{
+  id?: string;
+}>(), {
+  id: undefined,
+});
+
+const store = useStore();
+const router = useRouter();
+const inputName = ref<string | undefined>(undefined);
+
+const { result: name } = autorun(() => {
+  const creature = Creatures.findOne(props.id, { fields: { name: 1 } });
+  return creature && creature.name;
+});
+
+const nameMatch = computed(() => {
+  if (!name.value) return true;
+  const uppername = name.value.toUpperCase();
+  const upperInputName = inputName.value && inputName.value.toUpperCase();
+  return uppername === upperInputName;
+});
+
+async function remove() {
+  router.push('/characterList');
+  store.dispatch('popDialogStack');
+  try {
+    await removeCreature.callAsync({ charId: props.id });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.message || error.toString() });
   }
-};
+}
 </script>
 
 <style lang="css" scoped>

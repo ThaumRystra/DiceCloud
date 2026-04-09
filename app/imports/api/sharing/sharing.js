@@ -17,10 +17,10 @@ const setPublic = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ docRef, isPublic }) {
+  async run({ docRef, isPublic }) {
     let doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
-    return getCollectionByName(docRef.collection).update(docRef.id, {
+    return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { public: isPublic },
     });
   },
@@ -37,10 +37,10 @@ const setReadersCanCopy = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ docRef, readersCanCopy }) {
+  async run({ docRef, readersCanCopy }) {
     let doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
-    return getCollectionByName(docRef.collection).update(docRef.id, {
+    return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { readersCanCopy },
     });
   },
@@ -64,14 +64,14 @@ const updateUserSharePermissions = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ docRef, userId, role }) {
+  async run({ docRef, userId, role }) {
     let doc = fetchDocByRef(docRef);
     if (role === 'none') {
       // only assert ownership if you aren't removing yourself
       if (this.userId !== userId) {
         assertOwnership(doc, this.userId);
       }
-      return getCollectionByName(docRef.collection).update(docRef.id, {
+      return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
         $pullAll: { readers: userId, writers: userId },
       });
     }
@@ -81,12 +81,12 @@ const updateUserSharePermissions = new ValidatedMethod({
     }
     assertOwnership(doc, this.userId);
     if (role === 'reader') {
-      return getCollectionByName(docRef.collection).update(docRef.id, {
+      return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
         $addToSet: { readers: userId },
         $pullAll: { writers: userId },
       });
     } else if (role === 'writer') {
-      return getCollectionByName(docRef.collection).update(docRef.id, {
+      return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
         $addToSet: { writers: userId },
         $pullAll: { readers: userId },
       });
@@ -108,7 +108,7 @@ const transferOwnership = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ docRef, userId }) {
+  async run({ docRef, userId }) {
     let doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
 
@@ -116,11 +116,11 @@ const transferOwnership = new ValidatedMethod({
 
     let tier = getUserTier(userId);
     if (docRef.collection === 'creatures') {
-      let currentCharacterCount = collection.find({
+      let currentCharacterCount = await collection.find({
         owner: userId,
       }, {
         fields: { _id: 1 },
-      }).count();
+      }).countAsync();
 
       if (
         tier.characterSlots !== -1 &&
@@ -137,11 +137,11 @@ const transferOwnership = new ValidatedMethod({
     }
 
     // First remove current permissions for the user
-    collection.update(docRef.id, {
+    await collection.updateAsync(docRef.id, {
       $pullAll: { writers: userId, readers: userId },
     });
     // Then make the user the owner and the current owner a writer
-    return collection.update(docRef.id, {
+    return await collection.updateAsync(docRef.id, {
       $set: { owner: userId },
       $addToSet: { writers: this.userId },
     });

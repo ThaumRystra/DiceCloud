@@ -1,6 +1,6 @@
 <template lang="html">
   <dialog-base>
-    <template slot="toolbar">
+    <template #toolbar>
       <v-toolbar-title class="mr-4">
         <template v-if="tab === 2">
           New
@@ -10,10 +10,9 @@
       <v-slide-x-reverse-transition hide-on-leave>
         <v-switch
           v-if="tab === 0"
-          :input-value="showPropertyHelp"
+          :model-value="showPropertyHelp"
           append-icon="mdi-help"
           hide-details
-          flat
           @change="propertyHelpChanged"
         />
         <v-btn
@@ -35,37 +34,38 @@
         />
       </v-slide-x-reverse-transition>
     </template>
-    <v-tabs
-      slot="toolbar-extension"
-      v-model="tab"
-    >
-      <v-tab :disabled="!!forcedType">
-        {{ typeName || 'Type' }}
-      </v-tab>
-      <v-tab :disabled="!type">
-        Create
-      </v-tab>
-      <v-tab
-        v-if="!hideLibraryTab"
-        :disabled="!type"
+    <template #toolbar-extension>
+      <v-tabs
+        v-model="tab"
       >
-        Library
-      </v-tab>
-    </v-tabs>
-    <v-tabs-items
-      slot="unwrapped-content"
-      v-model="tab"
-      class="fill-height overflow-y-auto"
-    >
-      <v-tab-item :disabled="!!forcedType">
+        <v-tab :disabled="!!forcedType">
+          {{ typeName || 'Type' }}
+        </v-tab>
+        <v-tab :disabled="!type">
+          Create
+        </v-tab>
+        <v-tab
+          v-if="!hideLibraryTab"
+          :disabled="!type"
+        >
+          Library
+        </v-tab>
+      </v-tabs>
+    </template>
+    <template #unwrapped-content>
+      <v-window
+        v-model="tab"
+        class="fill-height overflow-y-auto"
+      >
+      <v-window-item :disabled="!!forcedType">
         <property-selector
           :no-library-only-props="!showLibraryOnlyProps"
           :parent-type="parentDoc && parentDoc.type"
           :current-type="type"
           @select="e => type = e"
         />
-      </v-tab-item>
-      <v-tab-item
+      </v-window-item>
+      <v-window-item
         :disabled="!type"
         class="dialog-background"
         style="min-height: 100%;"
@@ -86,14 +86,14 @@
             @pull="pull"
           />
         </v-card-text>
-      </v-tab-item>
-      <v-tab-item
+      </v-window-item>
+      <v-window-item
         v-if="!hideLibraryTab"
         :disabled="!type"
       >
         <v-expansion-panels
           accordion
-          tile
+          rounded="0"
           multiple
           hover
         >
@@ -103,7 +103,7 @@
             :model="libraryNode"
             :data-id="libraryNode._id"
           >
-            <v-expansion-panel-header>
+            <v-expansion-panel-title>
               <template #default="{ open }">
                 <v-checkbox
                   v-model="selectedNodeIds"
@@ -114,12 +114,12 @@
                     selectedNodeIds.length >= 20"
                   @click.stop
                 />
-                <v-layout column>
+                <div class="d-flex flex-column">
                   <tree-node-view :model="libraryNode" />
                   <div class="text-caption">
                     {{ libraryNames[libraryNode.ancestors[0].id ] }}
                   </div>
-                </v-layout>
+                </div>
                 <template v-if="open">
                   <v-spacer />
                   <v-btn
@@ -131,22 +131,20 @@
                   </v-btn>
                 </template>
               </template>
-            </v-expansion-panel-header>
-            <v-expansion-panel-content>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
               <library-node-expansion-content :model="libraryNode" />
-            </v-expansion-panel-content>
+            </v-expansion-panel-text>
           </v-expansion-panel>
         </v-expansion-panels>
-        <v-layout
-          justify-center
-        >
+        <div class="d-flex justify-center">
           <v-fade-transition mode="out-in">
             <div
-              v-if="currentLimit < countAll"
-              class="layout justify-center align-stretch"
+              v-if="hasMore"
+              class="d-flex justify-center align-stretch"
             >
               <v-btn
-                v-if="currentLimit < countAll"
+                v-if="hasMore"
                 key="load-more-btn"
                 :loading="!$subReady.searchLibraryNodes"
                 color="accent"
@@ -157,12 +155,13 @@
               </v-btn>
             </div>
           </v-fade-transition>
-        </v-layout>
-      </v-tab-item>
-    </v-tabs-items>
-    <template slot="actions">
+        </div>
+      </v-window-item>
+    </v-window>
+    </template>
+    <template #actions>
       <v-btn
-        text
+        variant="text"
         @click="$store.dispatch('popDialogStack')"
       >
         {{ tab === 1 ? "Discard" : "Cancel" }}
@@ -170,7 +169,7 @@
       <v-spacer />
       <v-btn
         v-if="tab === 1"
-        text
+        variant="text"
         color="primary"
         :disabled="!valid"
         @click="$store.dispatch('popDialogStack', model)"
@@ -179,7 +178,7 @@
       </v-btn>
       <v-btn
         v-else-if="tab === 2"
-        text
+        variant="text"
         color="primary"
         :disabled="!selectedNodeIds.length"
         @click="$store.dispatch('popDialogStack', selectedNodeIds)"
@@ -193,197 +192,208 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, reactive, computed, watch, onMounted, provide } from 'vue';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import { useStore } from 'vuex';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PROPERTIES, { getPropertyName } from '/imports/constants/PROPERTIES';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
-import schemaFormMixin from '/imports/client/ui/properties/forms/shared/schemaFormMixin';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex';
 import Libraries from '/imports/api/library/Libraries';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
-import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 
-export default {
-  components: {
-    PropertySelector,
-    DialogBase,
-    TreeNodeView,
-    LibraryNodeExpansionContent,
-    PropertyForm,
-  },
-  mixins: [schemaFormMixin],
-  props: {
-    creatureId: {
-      type: String,
-      default: undefined,
-    },
-    forcedType: {
-      type: String,
-      default: undefined,
-    },
-    suggestedTypes: {
-      type: Array,
-      default: undefined,
-    },
-    collection: {
-      type: String,
-      default: undefined,
-    },
-    suggestedType: {
-      type: String,
-      default: undefined,
-    },
-    parentDoc: {
-      type: Object,
-      default: undefined,
-    },
-    prop: {
-      type: Object,
-      default: undefined,
-    },
-    children: {
-      type: Array,
-      default: () => [],
-    },
-    hideLibraryTab: Boolean,
-    showLibraryOnlyProps: Boolean,
-  },
-  reactiveProvide: {
-    name: 'context',
-    include: ['debounceTime', 'isLibraryForm'],
-  },
-  data(){return {
-    selectedNodeIds: [],
-    type: this.forcedType || this.suggestedType || this.prop?.type || undefined,
-    model: this.prop || {
-      type: this.type,
-      children: [],
-    },
-    searchValue: undefined,
-    debounceTime: 0,
-    tab: 0,
-  };},
-  computed: {
-    typeName(){
-      return getPropertyName(this.type) || 'Property';
-    },
-    toolbarColor(){
-      return getThemeColor('secondary');
-    },
-    docsPath() {
-      const propDef = PROPERTIES[this.type];
-      return propDef && propDef.docsPath;
-    },
-    isLibraryForm() {
-      return this.collection === 'libraryNodes' || undefined;
-    },
-  },
-  watch: {
-    type(newType){
-      this.changeType(newType);
-    },
-    prop(newProp) {
-      this.model = newProp
-    },
-  },
-  mounted(){
-    this.changeType(this.type);
-  },
-  methods: {
-    propertyHelpChanged(value){
-      Meteor.users.setPreference.call({
-        preference: 'hidePropertySelectDialogHelp',
-        value: !value
-      }, error => {
-        if (!error) return;
-        console.error(error);
-        snackbar({
-          text: error.reason,
-        });
-      });
-    },
-    helpDialog() {
-      this.$store.commit('pushDialogStack', {
-        component: 'help-dialog',
-        elementId: 'help-button',
-        data: {
-          path: this.docsPath,
-        },
-      });
-    },
-    searchChanged(val, ack){
-      this._subs.searchLibraryNodes.setData('searchTerm', val);
-      this._subs.searchLibraryNodes.setData('limit', undefined);
-      this.selectedNode = undefined;
-      this.searchValue = val;
-      setTimeout(ack, 200);
-    },
-    loadMore(){
-      if (this.currentLimit >= this.countAll) return;
-      this._subs.searchLibraryNodes.setData('limit', this.currentLimit + 32);
-    },
-    changeType(type){
-      this._subs.searchLibraryNodes.setData('type', type);
-      if (!type) return;
-      this.tab = 1;
-      this.schema = propertySchemasIndex[type];
-      this.validationContext = this.schema.newContext();
-      let model = this.model || {};
-      model = this.schema.clean(model);
-      model.type = type;
-      this.model = model;
-    },
-    openPropertyDetails(id){
-      this.$store.commit('pushDialogStack', {
-        component: 'library-node-dialog',
-        elementId: id,
-        data: {
-          _id: id,
-        },
-      });
-    },
-  },
-  meteor: {
-    '$subscribe':{
-      'searchLibraryNodes'() {
-        return [this.creatureId]
-      },
-      'selectedLibraryNodes'(){
-        return [this.selectedNodeIds];
-      },
-    },
-    showPropertyHelp(){
-      let user = Meteor.user();
-      return !(user?.preferences?.hidePropertySelectDialogHelp)
-    },
-    currentLimit(){
-      return this._subs.searchLibraryNodes.data('limit') || 32;
-    },
-    countAll(){
-      return this._subs.searchLibraryNodes.data('countAll');
-    },
-    libraryNodes(){
-      return LibraryNodes.find({
-        _searchResult: true
-      },{
-        sort: {
-          name: 1,
-          type: 1,
-          left: 1,
-        },
-      });
-    },
-    libraryNames(){
-      let names = {};
-      Libraries.find().forEach(lib => names[lib._id] = lib.name)
-      return names;
-    }
+const props = withDefaults(defineProps<{
+  creatureId?: string;
+  forcedType?: string;
+  suggestedTypes?: string[];
+  collection?: string;
+  suggestedType?: string;
+  parentDoc?: Record<string, any>;
+  prop?: Record<string, any>;
+  children?: any[];
+  hideLibraryTab?: boolean;
+  showLibraryOnlyProps?: boolean;
+}>(), {
+  creatureId: undefined,
+  forcedType: undefined,
+  suggestedTypes: undefined,
+  collection: undefined,
+  suggestedType: undefined,
+  parentDoc: undefined,
+  prop: undefined,
+  children: () => [],
+  hideLibraryTab: false,
+  showLibraryOnlyProps: false,
+});
+
+const store = useStore();
+
+const selectedNodeIds = ref<string[]>([]);
+const type = ref<string | undefined>(props.forcedType || props.suggestedType || props.prop?.type || undefined);
+const model = ref<Record<string, any>>(props.prop || { type: type.value, children: [] });
+const searchValue = ref<string | undefined>(undefined);
+const debounceTime = ref(0);
+const tab = ref(0);
+const currentLimit = ref(32);
+const schema = ref<any>(null);
+const validationContext = ref<any>(null);
+const valid = ref(true);
+
+// Reactive provide for context
+const isLibraryForm = computed(() => props.collection === 'libraryNodes' || undefined);
+const contextToProvide = reactive({ debounceTime, isLibraryForm });
+provide('context', contextToProvide);
+
+// Reactive subscriptions
+autorun(() => {
+  subscribe('searchLibraryNodes', props.creatureId, type.value, searchValue.value, currentLimit.value);
+  subscribe('selectedLibraryNodes', selectedNodeIds.value);
+});
+
+const { result: showPropertyHelp } = autorun(() => {
+  const user = Meteor.user();
+  return !(user?.preferences?.hidePropertySelectDialogHelp);
+});
+
+const { result: libraryNodes } = autorun(() =>
+  LibraryNodes.find({ _searchResult: true }, {
+    sort: { name: 1, type: 1, left: 1 },
+  }).fetch()
+);
+
+const { result: libraryNames } = autorun(() => {
+  const names: Record<string, string> = {};
+  Libraries.find().forEach((lib: any) => { names[lib._id] = lib.name; });
+  return names;
+});
+
+// Computed
+const typeName = computed(() => getPropertyName(type.value) || 'Property');
+const toolbarColor = computed(() => getThemeColor('secondary'));
+const docsPath = computed(() => {
+  const propDef = (PROPERTIES as any)[type.value as string];
+  return propDef && propDef.docsPath;
+});
+const hasMore = computed(() =>
+  libraryNodes.value && libraryNodes.value.length >= currentLimit.value
+);
+
+const errors = computed(() => {
+  valid.value = true;
+  if (!model.value) return {};
+  if (!validationContext.value) return {};
+  const cleanModel = validationContext.value.clean(model.value, { getAutoValues: false });
+  validationContext.value.validate(cleanModel);
+  const errs: Record<string, string> = {};
+  validationContext.value.validationErrors().forEach((error: any) => {
+    if (valid.value) valid.value = false;
+    errs[error.name] = schema.value.messageForError(error);
+  });
+  return errs;
+});
+
+// Watchers
+watch(type, (newType) => { changeType(newType); });
+watch(() => props.prop, (newProp) => { if (newProp) model.value = newProp; });
+
+onMounted(() => { changeType(type.value); });
+
+// Methods
+function changeType(newType: string | undefined) {
+  if (!newType) return;
+  tab.value = 1;
+  schema.value = (propertySchemasIndex as any)[newType];
+  validationContext.value = schema.value.newContext();
+  let currentModel = model.value || {};
+  currentModel = schema.value.clean(currentModel);
+  currentModel.type = newType;
+  model.value = currentModel;
+}
+
+function change({ path, value, ack }: { path: string | string[]; value: any; ack?: Function }) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  let obj = model.value as any;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    const key = pathArray[i];
+    if (!obj[key]) obj[key] = {};
+    obj = obj[key];
   }
-};
+  obj[pathArray[pathArray.length - 1]] = value;
+  if (ack) ack();
+}
+
+function push({ path, value, ack }: { path: string | string[]; value: any; ack?: Function }) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  let obj = model.value as any;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    obj = obj[pathArray[i]];
+  }
+  const lastKey = pathArray[pathArray.length - 1];
+  if (!obj[lastKey]) {
+    obj[lastKey] = [value];
+  } else {
+    obj[lastKey].push(value);
+  }
+  if (ack) ack();
+}
+
+function pull({ path, ack }: { path: string | string[]; ack?: Function }) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  let arr = model.value as any;
+  for (let i = 0; i < pathArray.length - 1; i++) {
+    arr = arr[pathArray[i]];
+  }
+  const index = Number(pathArray[pathArray.length - 1]);
+  if (Array.isArray(arr)) {
+    arr.splice(index, 1);
+  }
+  if (ack) ack();
+}
+
+async function propertyHelpChanged(value: boolean) {
+  try {
+    await Meteor.users.setPreference.callAsync({
+      preference: 'hidePropertySelectDialogHelp',
+      value: !value,
+    });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason });
+  }
+}
+
+function helpDialog() {
+  store.commit('pushDialogStack', {
+    component: 'help-dialog',
+    elementId: 'help-button',
+    data: { path: docsPath.value },
+  });
+}
+
+function searchChanged(val: string, ack: Function) {
+  searchValue.value = val;
+  currentLimit.value = 32;
+  setTimeout(ack, 200);
+}
+
+function loadMore() {
+  if (!hasMore.value) return;
+  currentLimit.value += 32;
+}
+
+function openPropertyDetails(id: string) {
+  store.commit('pushDialogStack', {
+    component: 'library-node-dialog',
+    elementId: id,
+    data: { _id: id },
+  });
+}
 </script>
 
 <style lang="css" scoped>
@@ -391,7 +401,7 @@ export default {
   background-color: #fafafa;
 }
 
-.theme--dark .dialog-background {
+.v-theme--dark .dialog-background {
   background-color: #303030;
 }
 </style>

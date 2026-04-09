@@ -8,8 +8,7 @@
           :data-id="multiplier._id"
           @click="$emit('click-multiplier', {_id: multiplier._id})"
         >
-          <v-list-item-content>
-            <v-list-item-title>
+          <v-list-item-title>
               {{ title(multiplier) }}
             </v-list-item-title>
             <v-list-item-subtitle v-if="multiplier.name">
@@ -21,9 +20,9 @@
                 :key="index"
                 class="my-1 mr-1"
                 style="cursor: pointer"
-                :input-value="true"
-                outlined
-                small
+                :model-value="true"
+                variant="outlined"
+                size="small"
                 label
               >
                 {{ damageType }}
@@ -41,9 +40,9 @@
                 :key="index"
                 class="ma-1"
                 style="cursor: pointer"
-                :input-value="true"
-                small
-                outlined
+                :model-value="true"
+                size="small"
+                variant="outlined"
               >
                 {{ damageType }}
               </v-chip>
@@ -60,36 +59,29 @@
                 :key="index"
                 class="ma-1"
                 style="cursor: pointer"
-                :input-value="true"
-                small
-                outlined
+                :model-value="true"
+                size="small"
+                variant="outlined"
               >
                 {{ damageType }}
               </v-chip>
             </v-list-item-subtitle>
-          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-card>
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    multipliers:{
-      type: Array,
-      required: true,
-    }
-  },
-  methods: {
-    title(prop){
-      switch (prop.value){
-        case 0: return 'Immunity';
-        case 0.5: return 'Resistance';
-        case 2: return 'Vulnerability';
-      }
-    }
+<script setup lang="ts">
+defineProps<{
+  multipliers: any[];
+}>();
+
+function title(prop: any): string | undefined {
+  switch (prop.value) {
+    case 0: return 'Immunity';
+    case 0.5: return 'Resistance';
+    case 2: return 'Vulnerability';
   }
 }
 </script>

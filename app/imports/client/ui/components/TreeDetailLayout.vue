@@ -5,7 +5,7 @@
   >
     <div
       v-if="$slots['left-tree']"
-      class="layout column justify-start"
+      class="d-flex flex-column justify-start"
       :style="computedTreeStyle"
     >
       <slot
@@ -17,12 +17,12 @@
       vertical
     />
     <div
-      class="layout column justify-start"
+      class="d-flex flex-column justify-start"
       :style="computedTreeStyle"
     >
       <slot name="tree" />
     </div>
-    <template v-if="$vuetify.breakpoint.mdAndUp">
+    <template v-if="$vuetify.display.mdAndUp">
       <v-divider vertical />
       <div
         class="flex layout column"
@@ -35,21 +35,22 @@
   </div>
 </template>
 
-<script lang="js">
-export default {
-  computed:{
-    computedTreeStyle(){
-      if (this.$vuetify.breakpoint.smAndDown) return;
-      let style = 'flex-shrink: 0; flex-grow: 0; ';
-      if (this.$vuetify.breakpoint.xlOnly){
-        style += 'width: 400px;'
-      } else {
-        style += 'width: 320px;'
-      }
-      return style;
-    },
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useDisplay } from 'vuetify';
+
+const { smAndDown, xl } = useDisplay();
+
+const computedTreeStyle = computed(() => {
+  if (smAndDown.value) return undefined;
+  let style = 'flex-shrink: 0; flex-grow: 0; ';
+  if (xl.value) {
+    style += 'width: 400px;';
+  } else {
+    style += 'width: 320px;';
   }
-}
+  return style;
+});
 </script>
 
 <style lang="css" scoped>

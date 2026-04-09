@@ -1,14 +1,16 @@
 <template>
   <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      New Character
-    </v-toolbar-title>
-    <v-stepper
-      slot="unwrapped-content"
-      v-model="step"
-      flat
-      non-linear
-    >
+    <template #toolbar>
+      <v-toolbar-title>
+        New Character
+      </v-toolbar-title>
+    </template>
+    <template #unwrapped-content>
+      <v-stepper
+        v-model="step"
+        flat
+        non-linear
+      >
       <v-stepper-header>
         <v-stepper-step
           editable
@@ -33,24 +35,24 @@
         <v-stepper-content step="1">
           <v-text-field
             v-model="name"
-            outlined
+            variant="outlined"
             label="Name"
             class="mt-1"
             :error="!name"
           />
           <v-text-field
             v-model="alignment"
-            outlined
+            variant="outlined"
             label="Alignment"
           />
           <v-text-field
             v-model="gender"
-            outlined
+            variant="outlined"
             label="Gender"
           />
           <v-text-field
             v-model.number="startingLevel"
-            outlined
+            variant="outlined"
             label="Level"
             type="number"
             height="20"
@@ -75,16 +77,17 @@
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-    <template slot="actions">
+    </template>
+    <template #actions>
       <v-btn
-        text
+        variant="text"
         @click="$emit('pop')"
       >
         Cancel
       </v-btn>
       <v-btn
         v-if="step > 1"
-        text
+        variant="text"
         @click="step--"
       >
         Back
@@ -109,7 +112,11 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { defer, union, without } from 'lodash';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
@@ -117,96 +124,73 @@ import insertCreature from '/imports/api/creature/creatures/methods/insertCreatu
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
 import LibraryCollections from '/imports/api/library/LibraryCollections';
 
-export default {
-  components: {
-    DialogBase,
-    LibraryList,
-  },
-  data(){return {
-    step: 1,
-    name: 'New Character',
-    gender: '',
-    alignment: '',
-    startingLevel: 1,
-    librariesSelected: [],
-    libraryCollectionsSelected: [],
-    librariesSelectedByCollections: [],
-    allSubscribedLibraries: true,
-  }},
-  computed: {
-    biographyAlert() {
-      if (!this.name) return 'Name required';
-      return undefined;
-    }
-  },
-  meteor: {
-    $subscribe: {
-      'libraries': [],
-    },
-  },
-  methods: {
-    selectLibrary(libraryId, val) {
-      if (val) {
-        this.librariesSelected = union(this.librariesSelected, [libraryId]);
-      } else {
-        this.librariesSelected = without(this.librariesSelected, libraryId);
-      }
-    },
-    selectLibraryCollection(libraryCollectionId, val) {
-      const collection = LibraryCollections.findOne(libraryCollectionId);
-      if (!collection) return;
-      if (val) {
-        this.libraryCollectionsSelected = union(
-          this.libraryCollectionsSelected,
-          [libraryCollectionId]
-        );
-        this.librariesSelectedByCollections = union(
-          this.librariesSelectedByCollections,
-          collection.libraries
-        );
-      } else {
-        this.libraryCollectionsSelected = without(
-          this.libraryCollectionsSelected,
-          libraryCollectionId,
-        );
-        this.librariesSelectedByCollections = without(
-          this.librariesSelectedByCollections,
-          ...collection.libraries
-        );
-      }
-    },
-    submit(){
-      let char = {
-        name: this.name,
-        gender: this.gender,
-        alignment: this.alignment,
-        startingLevel: this.startingLevel,
-      };
-      if (!this.allSubscribedLibraries) {
-        char.allowedLibraries = this.librariesSelected;
-        char.allowedLibraryCollections = this.libraryCollectionsSelected;
-      }
-      insertCreature.call(char, (error, creatureId) => {
-        if (error){
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        } else {
-          this.$store.commit(
-              'setTabForCharacterSheet',
-              {id: creatureId, tab: 'build'}
-            );
-          this.$emit('pop', creatureId);
-          defer(() => {
-            this.$router.push({ name: 'characterSheet', params: {id: creatureId} });
-          });
-          return creatureId;
-        }
-      });
-    },
+const emit = defineEmits(['pop']);
+const store = useStore();
+const router = useRouter();
+
+autorun(() => {
+  subscribe('libraries');
+});
+
+const step = ref(1);
+const name = ref('New Character');
+const gender = ref('');
+const alignment = ref('');
+const startingLevel = ref(1);
+const librariesSelected = ref<string[]>([]);
+const libraryCollectionsSelected = ref<string[]>([]);
+const librariesSelectedByCollections = ref<string[]>([]);
+const allSubscribedLibraries = ref(true);
+
+const biographyAlert = computed(() => {
+  if (!name.value) return 'Name required';
+  return undefined;
+});
+
+function selectLibrary(libraryId: string, val: boolean) {
+  if (val) {
+    librariesSelected.value = union(librariesSelected.value, [libraryId]);
+  } else {
+    librariesSelected.value = without(librariesSelected.value, libraryId);
   }
-};
+}
+
+function selectLibraryCollection(libraryCollectionId: string, val: boolean) {
+  const collection = LibraryCollections.findOne(libraryCollectionId);
+  if (!collection) return;
+  if (val) {
+    libraryCollectionsSelected.value = union(libraryCollectionsSelected.value, [libraryCollectionId]);
+    librariesSelectedByCollections.value = union(librariesSelectedByCollections.value, collection.libraries);
+  } else {
+    libraryCollectionsSelected.value = without(libraryCollectionsSelected.value, libraryCollectionId);
+    librariesSelectedByCollections.value = without(librariesSelectedByCollections.value, ...collection.libraries);
+  }
+}
+
+async function submit() {
+  const char: any = {
+    name: name.value,
+    gender: gender.value,
+    alignment: alignment.value,
+    startingLevel: startingLevel.value,
+  };
+  if (!allSubscribedLibraries.value) {
+    char.allowedLibraries = librariesSelected.value;
+    char.allowedLibraryCollections = libraryCollectionsSelected.value;
+  }
+  try {
+    const creatureId = await insertCreature.callAsync(char);
+    store.commit('setTabForCharacterSheet', { id: creatureId, tab: 'build' });
+    emit('pop', creatureId);
+    defer(() => {
+      router.push({ name: 'characterSheet', params: { id: creatureId } });
+    });
+    return creatureId;
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason });
+  }
+}
 </script>
 
 <style scoped>

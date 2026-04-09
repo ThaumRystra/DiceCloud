@@ -7,9 +7,7 @@
   </v-card>
 </template>
 
-<script lang="js">
-export default {
-}
+<script setup lang="ts">
 </script>
 
 <style lang="css" scoped>

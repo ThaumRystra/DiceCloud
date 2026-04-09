@@ -2,8 +2,8 @@
   <v-btn
     icon
     :plain="!selected"
-    large
-    tile
+    size="large"
+    rounded="0"
     :outlined="selected"
     :color="prop && prop.color"
     @click.prevent="$emit('click', $event)"
@@ -24,30 +24,19 @@
   </v-btn>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 
-export default {
-  components: {
-    PropertyIcon,
-  },
-  props: {
-    propId: {
-      type: String,
-      default: undefined,
-    },
-    icon: {
-      type: String,
-      default: undefined,
-    },
-    selected: Boolean,
-  },
-  meteor: {
-    prop() {
-      if (!this.propId) return;
-      return CreatureProperties.findOne(this.propId);
-    },
-  },
-}
+const props = defineProps<{
+  propId?: string;
+  icon?: string;
+  selected?: boolean;
+}>();
+
+const { result: prop } = autorun(() => {
+  if (!props.propId) return;
+  return CreatureProperties.findOne(props.propId);
+});
 </script>

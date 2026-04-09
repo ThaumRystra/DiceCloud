@@ -27,7 +27,7 @@
             </v-btn>
             <v-alert
               type="warning"
-              outlined
+              variant="outlined"
             >
               Back up the database before attempting any migration. A failed
               migration can result in profound data loss.
@@ -52,45 +52,46 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import getVersion from '/imports/migrations/methods/getVersion';
 import migrateTo from '/imports/migrations/methods/migrateTo';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 
-export default {
-  data(){return {
-    loadingVersion: false,
-    versions: {},
-    migrationInput: undefined,
-    versionError: undefined,
-    migrateError: undefined,
-    loadingMigration: false,
-    schemaVersion: SCHEMA_VERSION,
-  }},
-  mounted(){
-    this.refreshVersions();
-  },
-  methods: {
-    refreshVersions(){
-      this.loadingVersion = true;
-      getVersion.call((error, result) => {
-        this.loadingVersion = false;
-        this.versionError = error;
-        this.versions = result;
-      });
-    },
-    migrate(){
-      this.loadingMigration = true;
-      migrateTo.call({
-        version: SCHEMA_VERSION,
-      }, error => {
-        this.loadingMigration = false;
-        this.migrateError = error;
-        this.refreshVersions();
-      });
-    }
+const loadingVersion = ref(false);
+const versions = ref<any>({});
+const versionError = ref<any>(undefined);
+const migrateError = ref<any>(undefined);
+const loadingMigration = ref(false);
+const schemaVersion = SCHEMA_VERSION;
+
+async function refreshVersions() {
+  loadingVersion.value = true;
+  try {
+    const result = await getVersion.callAsync();
+    versionError.value = undefined;
+    versions.value = result;
+  } catch (error: any) {
+    versionError.value = error;
   }
+  loadingVersion.value = false;
 }
+
+async function migrate() {
+  loadingMigration.value = true;
+  try {
+    await migrateTo.callAsync({ version: SCHEMA_VERSION });
+    migrateError.value = undefined;
+  } catch (error: any) {
+    migrateError.value = error;
+  }
+  loadingMigration.value = false;
+  refreshVersions();
+}
+
+onMounted(() => {
+  refreshVersions();
+});
 </script>
 
 <style lang="css" scoped>

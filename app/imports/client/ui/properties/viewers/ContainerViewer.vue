@@ -6,14 +6,13 @@
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden;">
-          <v-layout
+          <div
             v-if="model.value !== undefined"
-            align-center
-            class="mb-2"
+            class="d-flex align-center mb-2"
           >
             <v-icon
               class="mr-2"
-              large
+              size="large"
             >
               $vuetify.icons.two_coins
             </v-icon>
@@ -21,11 +20,11 @@
               class="text-subtitle-1 mr-2"
               :value="model.value"
             />
-          </v-layout>
-          <v-layout align-center>
+          </div>
+          <div class="d-flex align-center">
             <v-icon
               class="mr-2"
-              large
+              size="large"
             >
               $vuetify.icons.cash
             </v-icon>
@@ -36,7 +35,7 @@
             <span class="text-subtitle-1">
               contents
             </span>
-          </v-layout>
+          </div>
         </div>
       </property-field>
       <property-field
@@ -44,28 +43,27 @@
         :cols="{cols: 12, md: 6}"
       >
         <div style="overflow: hidden;">
-          <v-layout
+          <div
             v-if="model.weight !== undefined"
-            align-center
-            class="mb-2"
+            class="d-flex align-center mb-2"
           >
             <v-icon
               class="mr-2"
-              large
+              size="large"
             >
               $vuetify.icons.weight
             </v-icon>
             <span class="text-subtitle-1 mr-2">
               {{ model.weight }} lb
             </span>
-          </v-layout>
-          <v-layout
-            align-center
+          </div>
+          <div
+            class="d-flex align-center"
             :class="{'mb-2': model.contentsWeightless}"
           >
             <v-icon
               class="mr-2"
-              large
+              size="large"
             >
               $vuetify.icons.injustice
             </v-icon>
@@ -75,7 +73,7 @@
             <span class="text-subtitle-1">
               contents
             </span>
-          </v-layout>
+          </div>
         </div>
       </property-field>
       <property-field
@@ -99,15 +97,10 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
-export default {
-  components: {
-    CoinValue,
-  },
-  mixins: [propertyViewerMixin],
-}
+
+defineProps<{ model: Record<string, any> }>();
 </script>
 
 <style lang="css" scoped>

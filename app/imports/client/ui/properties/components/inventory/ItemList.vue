@@ -1,9 +1,9 @@
 <template lang="html">
   <v-list
-    dense
+    density="compact"
     class="item-list"
   >
-    <draggable
+    <VueDraggable
       v-model="dataItems"
       style="min-height: 24px;"
       :disabled="context.editPermission === false"
@@ -12,7 +12,8 @@
       draggable=".item"
       handle=".handle"
       :revert-on-spill="true"
-      @change="change"
+      @update="change"
+      @add="change"
     >
       <item-list-tile
         v-for="itemId in dataItems"
@@ -22,107 +23,96 @@
         :item-id="itemId"
         @click="clickProperty(itemId)"
       />
-    </draggable>
+    </VueDraggable>
   </v-list>
 </template>
 
-<script lang="js">
-import draggable from 'vuedraggable';
+<script setup lang="ts">
+import { ref, watch, onMounted, inject } from 'vue';
+import { useStore } from 'vuex';
+import { VueDraggable } from 'vue-draggable-plus';
 import ItemListTile from '/imports/client/ui/properties/components/inventory/ItemListTile.vue';
 import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
-export default {
-  components: {
-    draggable,
-    ItemListTile,
-  },
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    itemIds: {
-      type: Array,
-      default: () => [],
-    },
-    parent: {
-      type: Object,
-      default: () => undefined,
-    },
-    preparingSpells: Boolean,
-    equipment: Boolean,
-  },
-  data() {
-    return {
-      dataItems: [],
-    }
-  },
-  watch: {
-    itemIds(value) {
-      this.dataItems = value;
-    },
-  },
-  mounted() {
-    this.dataItems = this.itemIds;
-  },
-  methods: {
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: _id,
-        data: { _id },
-      });
-    },
-    change({ added, moved }) {
-      let event = added || moved;
-      if (! event) return;
-      // If this item is now adjacent to another, set the order accordingly
-      let order;
-      const beforeId = this.dataItems[event.newIndex - 1]
-      const afterId = this.dataItems[event.newIndex + 1]
-      const before = beforeId && CreatureProperties.findOne(beforeId);
-      const after = afterId && CreatureProperties.findOne(afterId);
-      if (before) {
-        order = before.right + 0.5;
-      } else if (after) {
-        order = after.left - 0.5;
-      } else if (this.parent) {
-        order = this.parent.left + 0.5;
-      } else {
-        order = 0.5;
-      }
-      let docId = event.element;
-      const doc = CreatureProperties.findOne(docId);
-      if (!doc) return;
-      moveWithinRoot.callAsync({
-        docRef: {
-          id: docId,
-          collection: 'creatureProperties',
-        },
-        newPosition: order,
-      }, (e) => {
-        if (e) {
-          console.error(e);
-          snackbar({ text: e.reason || e.message || e.toString() });
-        }
-      });
-      if (doc.type === 'item' && doc.equipped !== this.equipment) {
-        updateCreatureProperty.call({
-          _id: docId,
-          path: ['equipped'],
-          value: !!this.equipment,
-        }, (e) => {
-          if (e) {
-            this.dataItems = this.itemIds
-            console.error(e);
-            snackbar({ text: e.reason || e.message || e.toString() });
-          }
-        });
+const props = withDefaults(defineProps<{
+  itemIds?: string[];
+  parent?: Record<string, any>;
+  preparingSpells?: boolean;
+  equipment?: boolean;
+}>(), {
+  itemIds: () => [],
+  parent: undefined,
+  preparingSpells: false,
+  equipment: false,
+});
 
-      }
-    },
+const context = inject('context', {} as any);
+const store = useStore();
+const dataItems = ref<string[]>([]);
+
+onMounted(() => {
+  dataItems.value = props.itemIds;
+});
+
+watch(() => props.itemIds, (value) => {
+  dataItems.value = value;
+});
+
+function clickProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: _id,
+    data: { _id },
+  });
+}
+
+async function change(event: any) {
+  if (!event.data) return;
+  let order: number;
+  const newIndex = event.newIndex;
+  const beforeId = dataItems.value[newIndex - 1];
+  const afterId = dataItems.value[newIndex + 1];
+  const before = beforeId && CreatureProperties.findOne(beforeId);
+  const after = afterId && CreatureProperties.findOne(afterId);
+  if (before) {
+    order = before.right + 0.5;
+  } else if (after) {
+    order = after.left - 0.5;
+  } else if (props.parent) {
+    order = props.parent.left + 0.5;
+  } else {
+    order = 0.5;
+  }
+  const docId = event.data;
+  const doc = CreatureProperties.findOne(docId);
+  if (!doc) return;
+  try {
+    await moveWithinRoot.callAsync({
+      docRef: {
+        id: docId,
+        collection: 'creatureProperties',
+      },
+      newPosition: order,
+    });
+  } catch (e: any) {
+    console.error(e);
+    snackbar({ text: e.reason || e.message || e.toString() });
+  }
+  if (doc.type === 'item' && doc.equipped !== props.equipment) {
+    try {
+      await updateCreatureProperty.callAsync({
+        _id: docId,
+        path: ['equipped'],
+        value: !!props.equipment,
+      });
+    } catch (e: any) {
+      dataItems.value = props.itemIds;
+      console.error(e);
+      snackbar({ text: e.reason || e.message || e.toString() });
+    }
   }
 }
 </script>

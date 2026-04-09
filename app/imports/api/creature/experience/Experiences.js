@@ -24,7 +24,6 @@ let ExperienceSchema = new SimpleSchema({
     type: SimpleSchema.Integer,
     optional: true,
     min: 0,
-    index: 1,
   },
   // The real-world date that it occurred, usually sorted by date
   date: {
@@ -35,32 +34,30 @@ let ExperienceSchema = new SimpleSchema({
         return new Date();
       }
     },
-    index: 1,
   },
   creatureId: {
     type: String,
     max: 32,
-    index: 1,
   },
 });
 
 Experiences.attachSchema(ExperienceSchema);
 
-const insertExperienceForCreature = function ({ experience, creatureId }) {
+const insertExperienceForCreature = async function ({ experience, creatureId }) {
   if (experience.xp) {
-    Creatures.update(creatureId, {
+    await Creatures.updateAsync(creatureId, {
       $inc: { 'denormalizedStats.xp': experience.xp },
       $set: { dirty: true },
     });
   }
   if (experience.levels) {
-    Creatures.update(creatureId, {
+    await Creatures.updateAsync(creatureId, {
       $inc: { 'denormalizedStats.milestoneLevels': experience.levels },
       $set: { dirty: true },
     });
   }
   experience.creatureId = creatureId;
-  let id = Experiences.insert(experience);
+  let id = await Experiences.insertAsync(experience);
   return id;
 };
 
@@ -84,18 +81,18 @@ const insertExperience = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ experience, creatureIds }) {
+  async run({ experience, creatureIds }) {
     let userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.insert.denied',
         'You need to be logged in to insert an experience');
     }
     let insertedIds = [];
-    creatureIds.forEach(creatureId => {
-      assertEditPermission(creatureId, userId);
-      let id = insertExperienceForCreature({ experience, creatureId });
+    for (const creatureId of creatureIds) {
+      await assertEditPermission(creatureId, userId);
+      let id = await insertExperienceForCreature({ experience, creatureId });
       insertedIds.push(id);
-    });
+    }
     return insertedIds;
   },
 });
@@ -113,30 +110,30 @@ const removeExperience = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ experienceId }) {
+  async run({ experienceId }) {
     let userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.remove.denied',
         'You need to be logged in to remove an experience');
     }
-    let experience = Experiences.findOne(experienceId);
+    let experience = await Experiences.findOneAsync(experienceId);
     if (!experience) return;
     let creatureId = experience.creatureId
-    assertEditPermission(creatureId, userId);
+    await assertEditPermission(creatureId, userId);
     if (experience.xp) {
-      Creatures.update(creatureId, {
+      await Creatures.updateAsync(creatureId, {
         $inc: { 'denormalizedStats.xp': -experience.xp },
         $set: { dirty: true },
       });
     }
     if (experience.levels) {
-      Creatures.update(creatureId, {
+      await Creatures.updateAsync(creatureId, {
         $inc: { 'denormalizedStats.milestoneLevels': -experience.levels },
         $set: { dirty: true },
       });
     }
     experience.creatureId = creatureId;
-    let numRemoved = Experiences.remove(experienceId);
+    let numRemoved = await Experiences.removeAsync(experienceId);
     return numRemoved;
   },
 });
@@ -154,25 +151,25 @@ const recomputeExperiences = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ creatureId }) {
+  async run({ creatureId }) {
     let userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.recompute.denied',
         'You need to be logged in to recompute a creature\'s experiences');
     }
-    assertEditPermission(creatureId, userId);
+    await assertEditPermission(creatureId, userId);
 
     let xp = 0;
     let milestoneLevels = 0;
-    Experiences.find({
+    await Experiences.find({
       creatureId
     }, {
       fields: { xp: 1, levels: 1 }
-    }).forEach(experience => {
+    }).forEachAsync(experience => {
       xp += experience.xp || 0;
       milestoneLevels += experience.levels || 0;
     });
-    Creatures.update(creatureId, {
+    await Creatures.updateAsync(creatureId, {
       $set: {
         'denormalizedStats.xp': xp,
         'denormalizedStats.milestoneLevels': milestoneLevels,

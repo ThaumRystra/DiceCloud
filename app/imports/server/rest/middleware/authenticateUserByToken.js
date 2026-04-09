@@ -1,5 +1,4 @@
-var Fiber = Npm.require('fibers');
-import { RestMiddleware  } from 'meteor/simple:json-routes';
+import { RestMiddleware } from 'meteor/simple:json-routes';
 
 /**
  * SimpleRest middleware for validating a Meteor.user's login token
@@ -12,21 +11,19 @@ import { RestMiddleware  } from 'meteor/simple:json-routes';
  * @middleware
  */
 const authenticateMeteorUserByToken =
-  function (req, res, next) {
-    Fiber(function () {
-      let userId;
-      try {
-        userId = getUserIdFromAuthToken(req.authToken);
-      } catch (e){
-        RestMiddleware.handleErrorAsJson(e, req, res, next);
-        return;
-      }
-      if (userId) {
-        req.userId = userId;
-      }
+  async function (req, res, next) {
+    let userId;
+    try {
+      userId = await getUserIdFromAuthToken(req.authToken);
+    } catch (e) {
+      RestMiddleware.handleErrorAsJson(e, req, res, next);
+      return;
+    }
+    if (userId) {
+      req.userId = userId;
+    }
 
-      next();
-    }).run();
+    next();
   };
 
 /**
@@ -36,19 +33,19 @@ const authenticateMeteorUserByToken =
  * @returns {String} The ID of the authenticated Meteor.user, or null if token
  *     is invalid
  */
-function getUserIdFromAuthToken(token) {
+async function getUserIdFromAuthToken(token) {
   if (!token) {
     return null;
   }
 
-  var user = Meteor.users.findOne({
+  var user = await Meteor.users.findOneAsync({
     'services.resume.loginTokens.hashedToken': Accounts._hashLoginToken(token),
   });
   if (user) {
     return user._id;
   } else {
     const error = new Meteor.Error('Permission denied',
-    'Invalid authentication token');
+      'Invalid authentication token');
     error.statusCode = 403;
     throw error;
   }

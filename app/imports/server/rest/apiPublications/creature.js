@@ -6,7 +6,7 @@ import VERSION from '/imports/constants/VERSION';
 import { getCreature, getProperties, getVariables } from '/imports/api/engine/loadCreatures';
 import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
 
-JsonRoutes.add('get', 'api/creature/:id', function (req, res) {
+JsonRoutes.add('get', 'api/creature/:id', async function (req, res) {
   const creatureId = req.params.id;
 
   // Validate the creature ID
@@ -27,7 +27,7 @@ JsonRoutes.add('get', 'api/creature/:id', function (req, res) {
   const creature = getCreature(creatureId);
   const userId = req.userId;
   try {
-    assertViewPermission(creature, userId)
+    await assertViewPermission(creature, userId)
   } catch (e) {
     e.statusCode = 403;
     throw e;

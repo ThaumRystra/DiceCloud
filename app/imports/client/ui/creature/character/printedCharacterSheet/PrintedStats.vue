@@ -350,7 +350,9 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
@@ -362,10 +364,10 @@ import PropertyDescription from '/imports/client/ui/properties/viewers/shared/Pr
 import { uniqBy } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-const getProperties = function (creature, filter, options = {
-  sort: { left: 1 }
-}) {
-  if (!creature) return;
+const props = defineProps<{ creatureId: string }>();
+
+function getProperties(creature: any, filter: any, options: any = { sort: { left: 1 } }) {
+  if (!creature) return [];
   if (creature.settings.hideUnusedStats) {
     filter.hide = { $ne: true };
   }
@@ -377,164 +379,107 @@ const getProperties = function (creature, filter, options = {
     { hideWhenTotalZero: true, total: 0 },
     { hideWhenValueZero: true, value: 0 },
   ];
-
-  return CreatureProperties.find(filter, options);
-};
-
-const getAttributeOfType = function (creature, type) {
-  return getProperties(creature, {
-    type: 'attribute',
-    attributeType: type,
-  });
-};
-
-const getSkillOfType = function (creature, type) {
-  return getProperties(creature, {
-    type: 'skill',
-    skillType: type,
-  });
+  return CreatureProperties.find(filter, options).fetch();
 }
 
-export default {
-  components: {
-    ColumnLayout,
-    PrintedDamageMultipliers,
-    PrintedAction,
-    PrintedSkill,
-    PropertyDescription,
-  },
-  props: {
-    creatureId: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      doCheckLoading: false,
-    }
-  },
-  //@ts-ignore-error Meteor not defined
-  meteor: {
-    creature() {
-      return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
-    },
-    abilities() {
-      return getAttributeOfType(this.creature, 'ability');
-    },
-    stats() {
-      return getAttributeOfType(this.creature, 'stat');
-    },
-    toggles() {
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'toggle',
-        removed: { $ne: true },
-        deactivatedByAncestor: { $ne: true },
-        deactivatedByToggle: { $ne: true },
-        showUI: true,
-      }, {
-        sort: { left: 1 }
-      });
-    },
-    healthBars() {
-      return getAttributeOfType(this.creature, 'healthBar');
-    },
-    modifiers() {
-      return getAttributeOfType(this.creature, 'modifier');
-    },
-    resources() {
-      return getAttributeOfType(this.creature, 'resource');
-    },
-    spellSlots() {
-      return getAttributeOfType(this.creature, 'spellSlot');
-    },
-    hasSpells() {
-      const cursor = getProperties(this.creature, {
-        type: 'spell',
-      })
-      return cursor && cursor.count();
-    },
-    hitDice() {
-      return getAttributeOfType(this.creature, 'hitDice');
-    },
-    checks() {
-      return getSkillOfType(this.creature, 'check');
-    },
-    savingThrows() {
-      return getSkillOfType(this.creature, 'save');
-    },
-    saveConditionals(){
-      const conditionals = [];
-      this.savingThrows?.forEach(prop => {
-        prop?.effects?.forEach(effect => {
-          if (effect.operation === 'conditional') {
-            conditionals.push(effect);
-          }
-        });
-      });
-      return uniqBy(conditionals, '_id');
-    },
-    skills() {
-      return getSkillOfType(this.creature, 'skill');
-    },
-    skillConditionals(){
-      const conditionals = [];
-      this.skills?.forEach(prop => {
-        prop?.effects?.forEach(effect => {
-          if (effect.operation === 'conditional') {
-            conditionals.push(effect);
-          }
-        });
-      });
-      return uniqBy(conditionals, '_id');
-    },
-    tools() {
-      return getSkillOfType(this.creature, 'tool');
-    },
-    weapons() {
-      return getSkillOfType(this.creature, 'weapon');
-    },
-    armors() {
-      return getSkillOfType(this.creature, 'armor');
-    },
-    languages() {
-      return getSkillOfType(this.creature, 'language');
-    },
-    actions() {
-      return getProperties(this.creature, { type: 'action' }, {
-        sort: { actionType: 1, order: 1 }
-      });
-    },
-    appliedBuffs() {
-      return getProperties(this.creature, { type: 'buff' });
-    },
-    multipliers() {
-      return getProperties(this.creature, {
-        type: 'damageMultiplier'
-      }, {
-        sort: { value: 1, order: 1 }
-      });
-    },
-    features() {
-      return getProperties(this.creature, { type: 'feature' });
-    },
-    notes(){
-      const allNoteIds = getProperties(this.creature, { 
-        type: 'note',
-      }).map(note => note._id);
-      const topLevelNotes = getProperties(this.creature, {
-        type: 'note',
-        summary: { $exists: true },
-        'ancestor.id': {$nin: allNoteIds}
-      });
-      return topLevelNotes;
-    },
-  },
-  methods: {
-    numberToSignedString,
-  },
-};
+function getAttributeOfType(creature: any, type: string) {
+  return getProperties(creature, { type: 'attribute', attributeType: type });
+}
+
+function getSkillOfType(creature: any, type: string) {
+  return getProperties(creature, { type: 'skill', skillType: type });
+}
+
+const { result: creature } = autorun(() =>
+  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
+);
+
+const { result: abilities } = autorun(() => getAttributeOfType(creature.value, 'ability'));
+const { result: stats } = autorun(() => getAttributeOfType(creature.value, 'stat'));
+
+const { result: toggles } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'toggle',
+    removed: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+    showUI: true,
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: healthBars } = autorun(() => getAttributeOfType(creature.value, 'healthBar'));
+const { result: modifiers } = autorun(() => getAttributeOfType(creature.value, 'modifier'));
+const { result: resources } = autorun(() => getAttributeOfType(creature.value, 'resource'));
+const { result: spellSlots } = autorun(() => getAttributeOfType(creature.value, 'spellSlot'));
+
+const { result: hasSpells } = autorun(() => {
+  if (!creature.value) return 0;
+  const filter: any = { type: 'spell' };
+  if (creature.value.settings.hideUnusedStats) filter.hide = { $ne: true };
+  filter['root.id'] = creature.value._id;
+  filter.removed = { $ne: true };
+  filter.inactive = { $ne: true };
+  filter.overridden = { $ne: true };
+  filter.$nor = [
+    { hideWhenTotalZero: true, total: 0 },
+    { hideWhenValueZero: true, value: 0 },
+  ];
+  return CreatureProperties.find(filter).count();
+});
+
+const { result: hitDice } = autorun(() => getAttributeOfType(creature.value, 'hitDice'));
+const { result: checks } = autorun(() => getSkillOfType(creature.value, 'check'));
+const { result: savingThrows } = autorun(() => getSkillOfType(creature.value, 'save'));
+
+const saveConditionals = computed(() => {
+  const conditionals: any[] = [];
+  savingThrows.value?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const { result: skills } = autorun(() => getSkillOfType(creature.value, 'skill'));
+
+const skillConditionals = computed(() => {
+  const conditionals: any[] = [];
+  skills.value?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const { result: tools } = autorun(() => getSkillOfType(creature.value, 'tool'));
+const { result: weapons } = autorun(() => getSkillOfType(creature.value, 'weapon'));
+const { result: armors } = autorun(() => getSkillOfType(creature.value, 'armor'));
+const { result: languages } = autorun(() => getSkillOfType(creature.value, 'language'));
+
+const { result: actions } = autorun(() =>
+  getProperties(creature.value, { type: 'action' }, { sort: { actionType: 1, order: 1 } })
+);
+const { result: appliedBuffs } = autorun(() =>
+  getProperties(creature.value, { type: 'buff' })
+);
+const { result: multipliers } = autorun(() =>
+  getProperties(creature.value, { type: 'damageMultiplier' }, { sort: { value: 1, order: 1 } })
+);
+const { result: features } = autorun(() =>
+  getProperties(creature.value, { type: 'feature' })
+);
+
+const { result: notes } = autorun(() => {
+  const allNoteIds = getProperties(creature.value, { type: 'note' }).map((note: any) => note._id);
+  return getProperties(creature.value, {
+    type: 'note',
+    summary: { $exists: true },
+    'ancestor.id': { $nin: allNoteIds },
+  });
+});
 </script>
 
 <style lang="css" scoped>

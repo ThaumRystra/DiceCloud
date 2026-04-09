@@ -30,7 +30,7 @@ const updateTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({ _id, path, value }) {
+  async run({ _id, path, value }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.update.denied',
         'You need to be logged in to update a tabletop');
@@ -39,11 +39,11 @@ const updateTabletop = new ValidatedMethod({
     assertCanEditTabletop(_id, this.userId);
 
     if (value === undefined || value === null) {
-      Tabletops.update(_id, {
+      await Tabletops.updateAsync(_id, {
         $unset: { [path.join('.')]: 1 },
       });
     } else {
-      Tabletops.update(_id, {
+      await Tabletops.updateAsync(_id, {
         $set: { [path.join('.')]: value },
       });
     }

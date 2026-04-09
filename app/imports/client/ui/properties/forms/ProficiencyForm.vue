@@ -84,19 +84,27 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
-import skillListMixin from '/imports/client/ui/properties/forms/shared/lists/skillListMixin';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
-export default {
-  components: {
-    ProficiencySelect,
-    TagTargeting,
-  },
-  mixins: [propertyFormMixin, skillListMixin],
-};
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const { result: skillList } = autorun(() =>
+  createListOfProperties({ type: 'skill' })
+);
 </script>
 
 <style lang="css" scoped>

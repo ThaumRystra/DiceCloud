@@ -30,11 +30,23 @@
   </v-row>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
-export default {
-  mixins: [propertyFormMixin, attributeListMixin],
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
+
+const { result: attributeList } = autorun(() =>
+  createListOfProperties({ type: { $in: ['attribute', 'skill'] } })
+);
 </script>

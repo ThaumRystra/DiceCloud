@@ -44,14 +44,13 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
 import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
 
-export default {
-  components: {
-    SmartImageInput,
-  },
-  mixins: [propertyFormMixin],
-}
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
 </script>

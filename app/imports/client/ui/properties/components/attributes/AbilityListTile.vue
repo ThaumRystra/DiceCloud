@@ -3,13 +3,10 @@
     class="ability-list-tile pl-0"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-item-action
-      class="ma-0"
-      style="min-width: 40px;"
-    >
+    <template #prepend>
       <v-btn
         class="mr-4 py-2"
-        text
+        variant="text"
         height="82"
         :data-id="`check-btn-${model._id}`"
         :loading="checkLoading"
@@ -19,7 +16,7 @@
         <div>
           <div class="text-h4 mod">
             <template v-if="swapScoresAndMods">
-              <span :class="{'primary--text': model.total !== model.value}">
+              <span :class="{'text-primary': model.total !== model.value}">
                 {{ model.value }}
               </span>
             </template>
@@ -32,17 +29,16 @@
               {{ numberToSignedString(model.modifier) }}
             </template>
             <template v-else>
-              <span :class="{'primary--text': model.total !== model.value}">
+              <span :class="{'text-primary': model.total !== model.value}">
                 {{ model.value }}
               </span>
             </template>
           </div>
         </div>
       </v-btn>
-    </v-list-item-action>
+    </template>
 
-    <v-list-item-content>
-      <v-list-item-title>
+    <v-list-item-title>
         {{ model.name }}
         <v-icon
           v-if="model.advantage > 0"
@@ -57,68 +53,60 @@
           mdi-chevron-double-down
         </v-icon>
       </v-list-item-title>
-    </v-list-item-content>
   </v-list-item>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, useAttrs, inject } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { useStore } from 'vuex';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 
-export default {
-  inject: {
-    context: {
-      default: {},
-    },
-  },
-  props: {
-    model: { type: Object, required: true },
-  },
-  data() {
-    return {
-      checkLoading: false,
-    }
-  },
-  computed: {
-    hasClickListener() {
-      return this.$listeners && this.$listeners.click
-    },
-  },
-  methods: {
-    numberToSignedString,
-    click(e) {
-      this.$emit('click', e);
-    },
-    check() {
-      this.checkLoading = true;
-      doAction({
-        creatureId: this.model.root.id,
-        $store: this.$store,
-        elementId: `check-btn-${this.model._id}`,
-        task: {
-          subtaskFn: 'check',
-          targetIds: [this.model.root.id],
-          advantage: this.model.advantage,
-          skillVariableName: undefined,
-          abilityVariableName: this.model.variableName,
-          dc: null,
-        },
-      }).catch(error => {
-        snackbar({ text: error.reason || error.message || error.toString() });
-        console.error(error);
-      }).finally(() => {
-        this.checkLoading = false;
-      });
-    },
-  },
-  meteor: {
-    swapScoresAndMods() {
-      let user = Meteor.user();
-      return user &&
-        user.preferences &&
-        user.preferences.swapAbilityScoresAndModifiers;
-    }
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const emit = defineEmits(['click']);
+const store = useStore();
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const checkLoading = ref(false);
+
+const hasClickListener = computed(() => !!attrs.onClick);
+
+const { result: swapScoresAndMods } = autorun(() => {
+  const user = Meteor.user();
+  return user?.preferences?.swapAbilityScoresAndModifiers;
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+async function check() {
+  checkLoading.value = true;
+  try {
+    await doAction({
+      creatureId: props.model.root.id,
+      $store: store,
+      elementId: `check-btn-${props.model._id}`,
+      task: {
+        subtaskFn: 'check',
+        targetIds: [props.model.root.id],
+        advantage: props.model.advantage,
+        skillVariableName: undefined,
+        abilityVariableName: props.model.variableName,
+        dc: null,
+      },
+    });
+  } catch (error: any) {
+    snackbar({ text: error.reason || error.message || error.toString() });
+    console.error(error);
+  } finally {
+    checkLoading.value = false;
   }
 }
 </script>
@@ -128,11 +116,11 @@ export default {
   background: inherit;
 }
 
-.ability-list-tile>>>.v-list__tile {
+.ability-list-tile :deep(.v-list-item) {
   height: 88px;
 }
 
-.ability-list-tile>>>.v-list__tile__action--stack {
+.ability-list-tile :deep(.v-list-item__append) {
   justify-content: center;
 }
 
@@ -142,7 +130,7 @@ export default {
   color: rgba(0, 0, 0, 0.54);
 }
 
-.theme--dark .value {
+.v-theme--dark .value {
   color: rgba(255, 255, 255, 0.54);
 }
 

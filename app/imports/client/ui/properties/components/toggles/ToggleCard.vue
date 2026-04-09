@@ -5,7 +5,7 @@
     @mouseover="hover = true"
     @mouseleave="hover = false"
   >
-    <div class="layout align-center">
+    <div class="d-flex align-center">
       <div
         class="value layout justify-center flex-grow-0"
       >
@@ -13,7 +13,7 @@
           :value="toggleValue"
           :disabled="toggleDisabled"
           @change="(val, ack) => toggleToggle(val, ack)"
-          @click.native.stop=""
+          @click.stop=""
         />
       </div>
       <v-card-title class="name text-subtitle-1 text-truncate d-block pl-0">
@@ -24,53 +24,43 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, useAttrs } from 'vue';
 import flipToggle from '/imports/api/creature/creatureProperties/methods/flipToggle';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
-  export default {
-    components: {
-      CardHighlight,
-    },
-    props: {
-      model: {
-        type: Object,
-        required: true,
-      },
-    },
-    data() {
-      return {
-        hover: false,
-      }
-    },
-    computed: {
-      hasClickListener(){
-        return this.$listeners && !!this.$listeners.click
-      },
-      toggleValue(){
-        if (this.model.enabled) return true;
-        if (this.model.disabled) return false;
-        if (!this.model.condition) return undefined;
-        return !!this.model.condition.value
-      },
-      toggleDisabled(){
-        return !this.model.enabled && !this.model.disabled;
-      },
-    },
-    methods: {
-      click(e){
-        this.$emit('click', e);
-      },
-      toggleToggle(value, ack){
-        flipToggle.call({
-          _id: this.model._id
-        }, (error) =>{
-          if (error) console.warn(error);
-          ack && ack(error && error.reason || error);
-        });
-      },
-    },
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const emit = defineEmits(['click']);
+const attrs = useAttrs();
+const hover = ref(false);
+
+const hasClickListener = computed(() => !!attrs.onClick);
+
+const toggleValue = computed(() => {
+  if (props.model.enabled) return true;
+  if (props.model.disabled) return false;
+  if (!props.model.condition) return undefined;
+  return !!props.model.condition.value;
+});
+
+const toggleDisabled = computed(() => !props.model.enabled && !props.model.disabled);
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+async function toggleToggle(value: boolean, ack?: Function) {
+  try {
+    await flipToggle.callAsync({ _id: props.model._id });
+    if (ack) ack();
+  } catch (error: any) {
+    console.warn(error);
+    if (ack) ack(error.reason || error);
   }
+}
 </script>
 
 <style lang="css" scoped>

@@ -9,71 +9,60 @@
   </v-btn>
 </template>
 
-<script lang="js">
-import { debounce } from 'lodash';
+<script setup lang="ts">
+import { ref, computed, inject, onBeforeUnmount } from 'vue';
+import { debounce as lodashDebounce } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
-export default {
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    disabled: Boolean,
-    debounce: {
-      type: Number,
-      default: undefined,
-    },
-    singleClick: Boolean,
-  },
-  data() {
-    return {
-      loading: false,
-      timesClicked: 0,
-    };
-  },
-  computed: {
-    isDisabled(){
-      return this.context.editPermission === false || this.disabled;
-    },
-    debounceTime() {
-      if (Number.isFinite(this.debounce)){
-        return this.debounce;
-      } else if (Number.isFinite(this.context.debounceTime)){
-        return this.context.debounceTime;
-      } else {
-        return 400;
-      }
-    },
-  },
-  created(){
-    this.debounceClicks = debounce(this.clicks, this.debounceTime);
-  },
-  beforeDestroy(){
-    this.debounceClicks.flush();
-  },
-  methods: {
-    click() {
-      if (this.singleClick) {
-        this.loading = true;
-      } else {
-        this.timesClicked += 1;
-        this.debounceClicks();
-      }
-      this.$emit('click', this.acknowledgeChange);
-    },
-    clicks() {
-      if (!this.$listeners?.clicks) return;
-      this.loading = true;
-      this.$emit('clicks', this.timesClicked, this.acknowledgeChange);
-      this.timesClicked = 0;
-    },
-    acknowledgeChange(error) {      
-      this.loading = false;
-      if (error) {
-        console.error(error)
-        snackbar({ text: error.reason || error.message || error.toString() });
-      }
-    },
-  },
-};
+const props = defineProps<{
+  disabled?: boolean;
+  debounce?: number;
+  singleClick?: boolean;
+}>();
+
+const emit = defineEmits(['click', 'clicks']);
+
+const context = inject<any>('context', {});
+
+const loading = ref(false);
+const timesClicked = ref(0);
+
+const isDisabled = computed(() => context.editPermission === false || props.disabled);
+
+const debounceTime = computed(() => {
+  if (Number.isFinite(props.debounce)) return props.debounce!;
+  if (Number.isFinite(context.debounceTime)) return context.debounceTime;
+  return 400;
+});
+
+function acknowledgeChange(error?: any) {
+  loading.value = false;
+  if (error) {
+    console.error(error);
+    snackbar({ text: error.reason || error.message || error.toString() });
+  }
+}
+
+function clicks() {
+  if (!debounceClicks.value) return;
+  loading.value = true;
+  emit('clicks', timesClicked.value, acknowledgeChange);
+  timesClicked.value = 0;
+}
+
+const debounceClicks = computed(() => lodashDebounce(clicks, debounceTime.value));
+
+function click() {
+  if (props.singleClick) {
+    loading.value = true;
+  } else {
+    timesClicked.value += 1;
+    debounceClicks.value();
+  }
+  emit('click', acknowledgeChange);
+}
+
+onBeforeUnmount(() => {
+  debounceClicks.value.flush();
+});
 </script>

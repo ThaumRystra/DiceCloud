@@ -1,6 +1,6 @@
 <template lang="html">
   <div
-    v-if="model && $options.components[model.type]"
+    v-if="model && viewerComponent"
     class="property-viewer"
   >
     <v-row dense>
@@ -11,7 +11,7 @@
       >
         <div
           style="width: 100%"
-          class="text--disabled"
+          class="text-disabled"
         >
           <div>
             Inactive
@@ -48,7 +48,7 @@
       </property-field>
     </v-row>
     <component
-      :is="model.type"
+      :is="viewerComponent"
       :key="model._id"
       class="property-viewer"
       :model="model"
@@ -104,7 +104,7 @@
               v-for="(tag, index) in model.libraryTags"
               :key="tag + index"
               class="mr-1"
-              small
+              size="small"
               disabled
             >
               {{ tag }}
@@ -125,7 +125,7 @@
             :key="tag + index"
             class="mr-1"
             disabled
-            small
+            size="small"
           >
             {{ tag }}
           </v-chip>
@@ -151,52 +151,42 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
 
-export default {
-  components: {
-    ...propertyViewerIndex,
-    CreaturePropertiesTree,
-    PropertyField,
-    DescendantPropertiesTree,
-  },
-  props: {
-    model: {
-      type: Object,
-      default: undefined
-    },
-    collection: {
-      type: String,
-      default: 'creatureProperties'
-    },
-  },
-  data() {
-    return {
-      childrenLength: 0,
-    }
-  },
-  meteor: {
-    deactivatingToggle() {
-      if (!this.model.deactivatingToggleId) return;
-      return CreatureProperties.findOne(this.model.deactivatingToggleId);
-    }
-  },
-  computed: {
-    slotFillTypeName() {
-      return getPropertyName(this.model.slotFillerType);      
-    },
-  },
-  methods: {
-    selectSubProperty(_id) {
-      this.$emit('select-sub-property', _id);
-    },
-  },
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  collection?: string;
+}>(), {
+  model: undefined,
+  collection: 'creatureProperties',
+});
+
+const emit = defineEmits(['change', 'remove', 'select-sub-property']);
+
+const childrenLength = ref(0);
+
+const viewerComponent = computed(() =>
+  props.model ? (propertyViewerIndex as any)[props.model.type] : undefined
+);
+
+const { result: deactivatingToggle } = autorun(() => {
+  if (!props.model?.deactivatingToggleId) return undefined;
+  return CreatureProperties.findOne(props.model.deactivatingToggleId);
+});
+
+const slotFillTypeName = computed(() =>
+  getPropertyName(props.model?.slotFillerType)
+);
+
+function selectSubProperty(_id: string) {
+  emit('select-sub-property', _id);
 }
 </script>
 

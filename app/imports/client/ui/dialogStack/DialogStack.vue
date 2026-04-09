@@ -22,7 +22,7 @@
           :is="dialog.component"
           v-if="isUnsizedDialog(dialog.component)"
           :key="dialog._id"
-          :ref="index"
+          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
           v-bind="dialog.data"
           class="unsized-dialog dialog-component"
           :data-element-id="dialog.elementId"
@@ -35,7 +35,7 @@
         <v-card
           v-else
           :key="dialog._id"
-          :ref="index"
+          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
           class="dialog"
           :data-element-id="dialog.elementId"
           :data-id="dialog._id"
@@ -57,218 +57,191 @@
   </div>
 </template>
 
-<script lang="js">
-  import '/imports/client/ui/dialogStack/dialogStackWindowEvents';
-  import mockElement from '/imports/client/ui/dialogStack/mockElement';
-  import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex';
-  import timeout from '/imports/api/utility/timeout';
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import '/imports/client/ui/dialogStack/dialogStackWindowEvents';
+import mockElement from '/imports/client/ui/dialogStack/mockElement';
+import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex';
+import timeout from '/imports/api/utility/timeout';
 
-  const OFFSET = 16;
-  // Use in combination with browser's animation speed override to do slow-mod debugging
-  const animationSpeed = 1;
+const OFFSET = 16;
+const animationSpeed = 1;
 
-  const unsizedDialogs = new Set(['image-preview-dialog', 'action-dialog']);
+const unsizedDialogs = new Set(['image-preview-dialog', 'action-dialog']);
 
-  export default {
-    components: {
-      ...DialogComponentIndex,
-    },
-    data(){return {
-      hiddenElements: [],
-      shake: false,
-      leavingPromise: undefined,
-    }},
-    computed: {
-      dialogs(){
-        return this.$store.state.dialogStack.dialogs;
-      },
-    },
-    watch: {
-      async dialogs(newDialogs) {
-        const el = document.documentElement;
-        if (newDialogs.length) {
-          this.top = el.scrollTop;
-          if (el.scrollHeight > el.clientHeight){
-            el.scrollTop = this.top;
-            el.classList.add('lock-scroll');
-          }
-        } else {
-          await timeout(400 / animationSpeed);
-          el.classList.remove('lock-scroll');
-          el.scrollTop = this.top;
-        }
-      }
-    },
-    methods: {
-      popDialogStack(result){
-        this.$store.dispatch('popDialogStack', result);
-      },
-      isUnsizedDialog(component) {
-        return unsizedDialogs.has(component);
-      },
-      backdropClicked(event) {
-        // If the target was not the backdrop, ignore
-        if (event.target !== event.currentTarget) return;
+defineOptions({ components: { ...DialogComponentIndex } });
 
-        // If the top dialog can't be closed with the backdrop, shake shake
-        const topDialog = this.dialogs[this.dialogs.length - 1];
-        if (topDialog?.data?.noBackdropClose) {
-          this.shakeTopDialog();
-          return;
-        }
+const store = useStore();
 
-        // Otherwise close the top dialog
-        this.popDialogStack();
-      },
-      shakeTopDialog() {
-        this.shake = false;
-        requestAnimationFrame(() => {
-          this.shake = true;
-        });
-      },
-      getDialogStyle(index){
-        const length = this.$store.state.dialogStack.dialogs.length;
-        if (index >= length) return;
-        const num = length - 1;
-        const left = (num - index) * -OFFSET;
-        const top = (num - index) * -OFFSET;
-        return `left: calc(${left}px + 50%); top: calc(${top}px + 50%);${index < num ? ' filter: brightness(0.7);': ''}`;
-      },
-      getTopElementByDataId(elementId, offset = 0){
-        let stackLength = this.$store.state.dialogStack.dialogs.length - offset;
-        if (stackLength){
-          let topDialog = this.$refs[stackLength - 1][0];
-          return topDialog.$el.querySelector(`.v-window-item--active [data-id='${elementId}']`)
-            ?? topDialog.$el.querySelector(`[data-id='${elementId}']`)
-            ?? document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
-            ?? document.querySelector(`[data-id='${elementId}']`);
-        } else {
-          return document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
-            ?? document.querySelector(`[data-id='${elementId}']`);
-        }
-      },
-      async enter(target, done) {
-        if (!target || !target.attributes['data-element-id']){
-          done();
-          return;
-        }
-        let elementId = target.attributes['data-element-id'].value;
-        let source = this.getTopElementByDataId(elementId, 1);
-        if (!source){
-          done();
-          return;
-        }
-        // Get the original styles so we can repair them later
-        let originalStyle = {
-          transform: target.style.transform,
-          backgroundColor: target.style.backgroundColor,
-          borderRadius: target.style.borderRadius,
-          transition: target.style.transition,
-          boxShadow: target.style.boxShadow,
-          sourceTransition: source.style.transition,
-        }
+const hiddenElements = ref<HTMLElement[]>([]);
+const shake = ref(false);
+const dialogRefs: Record<number, any> = {};
+let top = 0;
 
-        // Instantly mock the source
-        target.style.transition = 'none';
-        // If we are using unsized dialogs, first let it layout with no opacity, then mock and
-        // carry on, otherwise it has no size
-        if (target.classList.contains('unsized-dialog')) {
-          target.style.opacity = '0';
-          await new Promise(requestAnimationFrame);
-          mockElement({ source, target });
-          target.style.opacity = '1';
-        } else {
-          mockElement({ source, target });
-        }
+const dialogs = computed(() => store.state.dialogStack.dialogs);
 
-        // Wait one frame before hiding the source so we know our mock is in place
-        await new Promise(requestAnimationFrame);
-        
-        // hide the source
-        source.style.transition = 'none';
-        source.style.opacity = '0';
-        this.hiddenElements.push(source);
-
-        // repair the styles so that our mock is undone revealing the dialog
-        target.style.transform = originalStyle.transform;
-        target.style.backgroundColor = originalStyle.backgroundColor;
-        target.style.borderRadius = originalStyle.borderRadius;
-        target.style.transition = originalStyle.transition;
-        target.style.boxShadow = originalStyle.boxShadow;
-        source.style.transition = originalStyle.sourceTransition;
-        setTimeout(done, 300 / animationSpeed);
-      },
-      async leave(target, done) {
-        // Give minimongo time to update documents we might need to animate to
-        await new Promise(requestAnimationFrame);
-        let elementId;
-        let hiddenElement = this.hiddenElements.pop();
-        let returnElementId = await this.$store.state.dialogStack.currentReturnElement;
-        if (returnElementId) {
-          elementId = returnElementId;
-        } else {
-          if (!target || !target.attributes['data-element-id']){
-            done();
-            return;
-          }
-          elementId = target.attributes['data-element-id'].value;
-        }
-        const replacing = this.$store.state.dialogStack.replacingDialog === target.attributes['data-id'].value;
-        let source = this.getTopElementByDataId(elementId);
-        if (!source || replacing){
-          if (hiddenElement) hiddenElement.style.opacity = '';
-          // Just fade out gracefully
-          target.style.transition = 'all 0.3s ease';
-          target.style.opacity = '0';
-          await timeout(300 / animationSpeed);
-          done();
-          return;
-        }
-        let index = target.attributes['data-index'].value;
-
-        // Disable clicking the dialog while it's animating
-        target.style.pointerEvents = 'none';
-
-        // Make the dialog mock the source
-        if (index != 0){
-          // If we aren't the only dialog, we'll need compensate for offset
-          mockElement({source, target, offset: {x: OFFSET, y: OFFSET}})
-        } else {
-          mockElement({source, target});
-        }
-
-        // If the source and the hidden Element are different
-        // hide the source and reveal the hidden element
-        let originalSourceTransition = source.style.transition;
-        if (hiddenElement !== source){
-          source.style.transition = 'none';
-          source.style.opacity = '0';
-          if (hiddenElement) hiddenElement.style.opacity = '';
-          // wait a frame for these to apply without transitions
-          await new Promise(requestAnimationFrame);
-        }
-
-        // Wait for the mock to finish
-        await timeout(300 / animationSpeed);
-
-        // reveal the source immediately
-        source.style.opacity = '';
-        source.style.transition = 'none';
-
-        // Wait for the opacity swap to finish
-        await timeout(100 / animationSpeed);
-
-        // Fix the transition of the source
-        source.style.transition = originalSourceTransition;
-
-        // Done
-        done();
-      },
-      noScroll(e){
-        e.preventDefault();
-      }
+watch(dialogs, async (newDialogs: any[]) => {
+  const el = document.documentElement;
+  if (newDialogs.length) {
+    top = el.scrollTop;
+    if (el.scrollHeight > el.clientHeight) {
+      el.scrollTop = top;
+      el.classList.add('lock-scroll');
     }
+  } else {
+    await timeout(400 / animationSpeed);
+    el.classList.remove('lock-scroll');
+    el.scrollTop = top;
+  }
+});
+
+function popDialogStack(result?: any) {
+  store.dispatch('popDialogStack', result);
+}
+
+function isUnsizedDialog(component: string) {
+  return unsizedDialogs.has(component);
+}
+
+function backdropClicked(event: MouseEvent) {
+  if (event.target !== event.currentTarget) return;
+  const topDialog = dialogs.value[dialogs.value.length - 1];
+  if (topDialog?.data?.noBackdropClose) {
+    shakeTopDialog();
+    return;
+  }
+  popDialogStack();
+}
+
+function shakeTopDialog() {
+  shake.value = false;
+  requestAnimationFrame(() => {
+    shake.value = true;
+  });
+}
+
+function getDialogStyle(index: number) {
+  const length = store.state.dialogStack.dialogs.length;
+  if (index >= length) return;
+  const num = length - 1;
+  const left = (num - index) * -OFFSET;
+  const topOffset = (num - index) * -OFFSET;
+  return `left: calc(${left}px + 50%); top: calc(${topOffset}px + 50%);${index < num ? ' filter: brightness(0.7);' : ''}`;
+}
+
+function getTopElementByDataId(elementId: string, offset = 0) {
+  const stackLength = store.state.dialogStack.dialogs.length - offset;
+  if (stackLength) {
+    const topDialog = dialogRefs[stackLength - 1];
+    return topDialog?.$el?.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+      ?? topDialog?.$el?.querySelector(`[data-id='${elementId}']`)
+      ?? document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+      ?? document.querySelector(`[data-id='${elementId}']`);
+  } else {
+    return document.querySelector(`.v-window-item--active [data-id='${elementId}']`)
+      ?? document.querySelector(`[data-id='${elementId}']`);
+  }
+}
+
+async function enter(target: HTMLElement, done: () => void) {
+  if (!target || !target.attributes.getNamedItem('data-element-id')) {
+    done();
+    return;
+  }
+  const elementId = target.attributes.getNamedItem('data-element-id')!.value;
+  const source = getTopElementByDataId(elementId, 1) as HTMLElement | null;
+  if (!source) {
+    done();
+    return;
+  }
+  const originalStyle = {
+    transform: target.style.transform,
+    backgroundColor: target.style.backgroundColor,
+    borderRadius: target.style.borderRadius,
+    transition: target.style.transition,
+    boxShadow: target.style.boxShadow,
+    sourceTransition: source.style.transition,
   };
+
+  target.style.transition = 'none';
+  if (target.classList.contains('unsized-dialog')) {
+    target.style.opacity = '0';
+    await new Promise(requestAnimationFrame);
+    mockElement({ source, target });
+    target.style.opacity = '1';
+  } else {
+    mockElement({ source, target });
+  }
+
+  await new Promise(requestAnimationFrame);
+
+  source.style.transition = 'none';
+  source.style.opacity = '0';
+  hiddenElements.value.push(source);
+
+  target.style.transform = originalStyle.transform;
+  target.style.backgroundColor = originalStyle.backgroundColor;
+  target.style.borderRadius = originalStyle.borderRadius;
+  target.style.transition = originalStyle.transition;
+  target.style.boxShadow = originalStyle.boxShadow;
+  source.style.transition = originalStyle.sourceTransition;
+  setTimeout(done, 300 / animationSpeed);
+}
+
+async function leave(target: HTMLElement, done: () => void) {
+  await new Promise(requestAnimationFrame);
+  let elementId: string | undefined;
+  const hiddenElement = hiddenElements.value.pop();
+  const returnElementId = await store.state.dialogStack.currentReturnElement;
+  if (returnElementId) {
+    elementId = returnElementId;
+  } else {
+    if (!target || !target.attributes.getNamedItem('data-element-id')) {
+      done();
+      return;
+    }
+    elementId = target.attributes.getNamedItem('data-element-id')!.value;
+  }
+  const replacing = store.state.dialogStack.replacingDialog === target.attributes.getNamedItem('data-id')?.value;
+  const source = getTopElementByDataId(elementId) as HTMLElement | null;
+  if (!source || replacing) {
+    if (hiddenElement) hiddenElement.style.opacity = '';
+    target.style.transition = 'all 0.3s ease';
+    target.style.opacity = '0';
+    await timeout(300 / animationSpeed);
+    done();
+    return;
+  }
+  const index = target.attributes.getNamedItem('data-index')?.value;
+
+  target.style.pointerEvents = 'none';
+
+  if (index !== '0') {
+    mockElement({ source, target, offset: { x: OFFSET, y: OFFSET } });
+  } else {
+    mockElement({ source, target });
+  }
+
+  const originalSourceTransition = source.style.transition;
+  if (hiddenElement !== source) {
+    source.style.transition = 'none';
+    source.style.opacity = '0';
+    if (hiddenElement) hiddenElement.style.opacity = '';
+    await new Promise(requestAnimationFrame);
+  }
+
+  await timeout(300 / animationSpeed);
+
+  source.style.opacity = '';
+  source.style.transition = 'none';
+
+  await timeout(100 / animationSpeed);
+
+  source.style.transition = originalSourceTransition;
+
+  done();
+}
 </script>
 
 <style scoped>

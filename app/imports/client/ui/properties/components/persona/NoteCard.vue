@@ -3,8 +3,7 @@
     :color="model.color"
     :data-id="model._id"
     hover
-    :dark="model.color && isDark"
-    :light="model.color && !isDark"
+    :theme="model.color ? (isDark ? 'dark' : 'light') : undefined"
     @click="clickProperty(model._id)"
     @mouseover="hover = true"
     @mouseleave="hover = false"
@@ -25,49 +24,30 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { useStore } from 'vuex';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
-export default {
-  components: {
-    PropertyDescription,
-    CardHighlight,
-  },
-  inject: {
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      hover: false,
-    }
-  },
-  computed: {
-    isDark() {
-      return isDarkColor(this.model.color);
-    },
-  },
-  methods: {
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${_id}`,
-        data: { _id },
-      });
-    },
-  },
-};
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const store = useStore();
+const theme = inject('theme', { isDark: false } as any);
+const hover = ref(false);
+
+const isDark = computed(() => isDarkColor(props.model.color));
+
+function clickProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
 </script>
 
 <style lang="css" scoped>

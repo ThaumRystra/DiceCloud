@@ -284,91 +284,52 @@
   </div>
 </template>
 
-<script lang="js">
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+import { ref, computed } from 'vue';
 import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
 import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
 
-export default {
-  components: {
-    FormSections,
-    FormSection,
-    ResourcesForm,
-    ResetSelector,
-  },
-  mixins: [propertyFormMixin],
-  data() {
-    return {
-      magicSchools: [
-        {
-          text: 'Abjuration',
-          value: 'abjuration',
-        }, {
-          text: 'Conjuration',
-          value: 'conjuration',
-        }, {
-          text: 'Divination',
-          value: 'divination',
-        }, {
-          text: 'Enchantment',
-          value: 'enchantment',
-        }, {
-          text: 'Evocation',
-          value: 'evocation',
-        }, {
-          text: 'Illusion',
-          value: 'illusion',
-        }, {
-          text: 'Necromancy',
-          value: 'necromancy',
-        }, {
-          text: 'Transmutation',
-          value: 'transmutation',
-        },
-      ],
-      spellLevels: [
-        {
-          text: 'Cantrip',
-          value: 0,
-        }, {
-          text: 'Level 1',
-          value: 1,
-        }, {
-          text: 'Level 2',
-          value: 2,
-        }, {
-          text: 'Level 3',
-          value: 3,
-        }, {
-          text: 'Level 4',
-          value: 4,
-        }, {
-          text: 'Level 5',
-          value: 5,
-        }, {
-          text: 'Level 6',
-          value: 6,
-        }, {
-          text: 'Level 7',
-          value: 7,
-        }, {
-          text: 'Level 8',
-          value: 8,
-        }, {
-          text: 'Level 9',
-          value: 9,
-        },
-      ],
-      attackSwitch: false,
-    };
-  },
-  computed: {
-    isAttack() {
-      return this.attackSwitch || !!this.model.attackRoll?.calculation
-    }
-  }
-};
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const magicSchools = [
+  { text: 'Abjuration', value: 'abjuration' },
+  { text: 'Conjuration', value: 'conjuration' },
+  { text: 'Divination', value: 'divination' },
+  { text: 'Enchantment', value: 'enchantment' },
+  { text: 'Evocation', value: 'evocation' },
+  { text: 'Illusion', value: 'illusion' },
+  { text: 'Necromancy', value: 'necromancy' },
+  { text: 'Transmutation', value: 'transmutation' },
+];
+
+const spellLevels = [
+  { text: 'Cantrip', value: 0 },
+  { text: 'Level 1', value: 1 },
+  { text: 'Level 2', value: 2 },
+  { text: 'Level 3', value: 3 },
+  { text: 'Level 4', value: 4 },
+  { text: 'Level 5', value: 5 },
+  { text: 'Level 6', value: 6 },
+  { text: 'Level 7', value: 7 },
+  { text: 'Level 8', value: 8 },
+  { text: 'Level 9', value: 9 },
+];
+
+const attackSwitch = ref(false);
+
+const isAttack = computed(() =>
+  attackSwitch.value || !!props.model.attackRoll?.calculation
+);
 </script>
 
 <style lang="css" scoped>

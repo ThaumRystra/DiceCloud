@@ -1,6 +1,6 @@
 <template lang="html">
   <!--use value for immutable, list for auto-updating children -->
-  <draggable
+  <VueDraggable
     v-model="displayedChildren"
     class="drag-area"
     :group="group"
@@ -8,7 +8,8 @@
     ghost-class="ghost"
     draggable=".item"
     handle=".handle"
-    @change="change"
+    @update="onSorted"
+    @add="onAdded"
   >
     <tree-node
       v-for="child in displayedChildren"
@@ -27,101 +28,77 @@
       @move-within-root="e => $emit('move-within-root', e)"
       @move-between-roots="e => $emit('move-between-roots', e)"
     />
-  </draggable>
+  </VueDraggable>
 </template>
 
-<script lang="js">
-import draggable from 'vuedraggable';
+<script setup lang="ts">
+import { ref, watch, onMounted } from 'vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import TreeNode from '/imports/client/ui/components/tree/TreeNode.vue';
 
-export default {
-  components: {
-    draggable,
-    TreeNode,
-  },
-  props: {
-    node: {
-      type: Object,
-      default: undefined,
-    },
-    root: {
-      type: Object,
-      required: true,
-    },
-    group: {
-      type: String,
-      default: undefined,
-    },
-    organize: Boolean,
-    lazy: Boolean,
-    children: {
-      type: Array,
-      default: () => [],
-    },
-    selectedNode: {
-      type: Object,
-      default: undefined,
-    },
-    ancestorsOfSelectedNode: {
-      type: Array,
-      default: () => [],
-    },
-    startExpanded: Boolean,
-  },
-  data() {
-    return {
-      expanded: this.startExpanded || false,
-      displayedChildren: [],
+const props = defineProps<{
+  node?: Record<string, any>;
+  root: Record<string, any>;
+  group?: string;
+  organize?: boolean;
+  lazy?: boolean;
+  children?: any[];
+  selectedNode?: Record<string, any>;
+  ancestorsOfSelectedNode?: any[];
+  startExpanded?: boolean;
+}>();
+
+const emit = defineEmits<{
+  selected: [id: string];
+  'move-within-root': [e: unknown];
+  'move-between-roots': [e: unknown];
+}>();
+
+const displayedChildren = ref<any[]>([]);
+
+watch(() => props.children, (value) => {
+  displayedChildren.value = value ?? [];
+});
+
+onMounted(() => {
+  displayedChildren.value = props.children ?? [];
+});
+
+function onSorted(event: any) {
+  handleDrag(event.data, event.newIndex, event.oldIndex);
+}
+
+function onAdded(event: any) {
+  handleDrag(event.data, event.newIndex, undefined);
+}
+
+function handleDrag(element: any, newIndex: number, oldIndex: number | undefined) {
+  const doc = element.doc;
+  let newPosition: number;
+  const children = props.children ?? [];
+  if (!children.length) {
+    if (props.node) {
+      newPosition = props.node.left + 0.5;
+    } else {
+      newPosition = 0.5;
     }
-  },
-  computed: {
-    hasChildren() {
-      return this.children && this.children.length;
-    },
-    showExpanded() {
-      return this.expanded && (this.organize || this.hasChildren)
-    },
-  },
-  watch: {
-    children(value) {
-      this.displayedChildren = value;
+  } else if (newIndex < children.length) {
+    const childAtNewIndex = children[newIndex];
+    if (oldIndex !== undefined && newIndex > oldIndex) {
+      newPosition = childAtNewIndex.doc.right + 0.5;
+    } else {
+      newPosition = childAtNewIndex.doc.left - 0.5;
     }
-  },
-  mounted() {
-    this.displayedChildren = this.children;
-  },
-  methods: {
-    change({ added, moved }) {
-      let event = moved || added;
-      if (event) {
-        let doc = event.element.doc;
-        let newPosition;
-        if (!this.children.length) {
-          if (this.node) {
-            newPosition = this.node.left + 0.5;
-          } else {
-            newPosition = 0.5;
-          }
-        } else if (event.newIndex < this.children.length) {
-          let childAtNewIndex = this.children[event.newIndex];
-          if (event.newIndex > event.oldIndex) {
-            newPosition = childAtNewIndex.doc.right + 0.5;
-          } else {
-            newPosition = childAtNewIndex.doc.left - 0.5;
-          }
-        } else {
-          let childBeforeNewIndex = this.children[event.newIndex - 1];
-          newPosition = childBeforeNewIndex.doc.right + 0.5;
-        }
-        if (doc.root.id === this.root.id) {
-          this.$emit('move-within-root', { doc, newPosition });
-        } else {
-          this.$emit('move-between-roots', { doc, newPosition, newRootRef: this.root });
-        }
-      }
-    },
-  },
-};
+  } else {
+    const childBeforeNewIndex = children[newIndex - 1];
+    newPosition = childBeforeNewIndex.doc.right + 0.5;
+  }
+  if (doc.root.id === props.root.id) {
+    emit('move-within-root', { doc, newPosition });
+  } else {
+    emit('move-between-roots', { doc, newPosition, newRootRef: props.root });
+  }
+}
 </script>
 
 <style lang="css" scoped>

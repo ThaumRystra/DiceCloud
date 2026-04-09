@@ -22,25 +22,24 @@
         <div
           v-if="model.value !== undefined"
         >
-          <v-layout
+          <div
             v-if="model.quantity > 1"
-            align-center
-            class="mb-2"
+            class="d-flex align-center mb-2"
           >
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.cash
             </v-icon>
             <coin-value
               :value="model.value * model.quantity"
             />
-          </v-layout>
-          <v-layout align-center>
+          </div>
+          <div class="d-flex align-center">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.two_coins
             </v-icon>
@@ -54,7 +53,7 @@
             >
               each
             </span>
-          </v-layout>
+          </div>
         </div>
       </div>
   
@@ -62,23 +61,22 @@
         <div
           v-if="model.weight !== undefined"
         >
-          <v-layout
+          <div
             v-if="model.quantity > 1"
-            align-center
-            class="mb-2"
+            class="d-flex align-center mb-2"
           >
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.injustice
             </v-icon>
             {{ totalWeight }} lb
-          </v-layout>
-          <v-layout align-center>
+          </div>
+          <div class="d-flex align-center">
             <v-icon
               class="mr-2"
-              small
+              size="small"
             >
               $vuetify.icons.weight
             </v-icon>
@@ -89,7 +87,7 @@
             >
               each
             </span>
-          </v-layout>
+          </div>
         </div>
       </div>
     </div>
@@ -101,64 +99,54 @@
   </div>
 </template>
 
-<script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed, useAttrs, inject } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
-export default {
-  components: {
-    CoinValue,
-    PropertyDescription,
-  },
-  mixins: [treeNodeViewMixin],
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    preparingSpells: Boolean,
-  },
-  data() {
-    return {
-      incrementLoading: false,
-    }
-  },
-  computed: {
-    hasClickListener() {
-      return this.$listeners && !!this.$listeners.click;
-    },
-    title() {
-      let model = this.model;
-      if (!model) return;
-      if (model.quantity !== 1) {
-        if (model.plural) {
-          return `${model.quantity} ${model.plural}`;
-        } else if (model.name) {
-          return `${model.quantity} ${model.name}`;
-        }
-      } else if (model.name) {
-        return model.name;
-      }
-      let prop = PROPERTIES[model.type]
-      return prop && prop.name;
-    },
-    totalValue() {
-      return stripFloatingPointOddities(this.model.value * this.model.quantity);
-    },
-    totalWeight() {
-      return stripFloatingPointOddities(this.model.weight * this.model.quantity);
-    },
-    attunementText() {
-      if (this.model.requiresAttunement) {
-        if (this.model.attuned) return 'Attuned';
-        return 'Requires attunement';
-      }
-      return undefined;
-    }
-  },
-}
+const props = defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+  preparingSpells?: boolean;
+}>();
+
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const hasClickListener = computed(() => !!(attrs as any).onClick);
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return undefined;
+  if (model.quantity !== 1) {
+    if (model.plural) return `${model.quantity} ${model.plural}`;
+    if (model.name) return `${model.quantity} ${model.name}`;
+  } else if (model.name) {
+    return model.name;
+  }
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
+
+const totalValue = computed(() =>
+  stripFloatingPointOddities(props.model!.value * props.model!.quantity)
+);
+
+const totalWeight = computed(() =>
+  stripFloatingPointOddities(props.model!.weight * props.model!.quantity)
+);
+
+const attunementText = computed(() => {
+  if (props.model?.requiresAttunement) {
+    if (props.model.attuned) return 'Attuned';
+    return 'Requires attunement';
+  }
+  return undefined;
+});
 </script>
 
 <style lang="css" scoped>

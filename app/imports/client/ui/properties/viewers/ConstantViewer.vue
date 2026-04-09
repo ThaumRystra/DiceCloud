@@ -14,10 +14,6 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
-
-export default {
-  mixins: [propertyViewerMixin],
-}
+<script setup lang="ts">
+defineProps<{ model: Record<string, any> }>();
 </script>

@@ -17,67 +17,64 @@ let schema = new SimpleSchema({
   },
 });
 
-Meteor.publish('singleCharacter', function (creatureId) {
-  const self = this;
+Meteor.publish('singleCharacter', async function (creatureId) {
   try {
     schema.validate({ creatureId });
   } catch (e) {
-    this.error(e);
+    return this.error(e);
   }
-  this.autorun(function (computation) {
-    let userId = this.userId;
-    let permissionCreature = Creatures.findOne({
-      _id: creatureId,
-    }, {
-      fields: {
-        owner: 1,
-        readers: 1,
-        writers: 1,
-        public: 1,
-        computeVersion: 1,
-        tabletopId: 1,
-      }
-    });
-    try { assertViewPermission(permissionCreature, userId) }
-    catch (e) { return [] }
-    loadCreature(creatureId, self);
-    if (permissionCreature?.computeVersion !== VERSION && computation.firstRun) {
-      try {
-        rebuildCreatureNestedSets(creatureId).then(() => {
-          try {
-            computeCreature(creatureId)
-          } catch (e) {
-            console.error(e);
-          }
-        });
-      }
-      catch (e) { console.error(e) }
+  let userId = this.userId;
+  let permissionCreature = await Creatures.findOneAsync({
+    _id: creatureId,
+  }, {
+    fields: {
+      owner: 1,
+      readers: 1,
+      writers: 1,
+      public: 1,
+      computeVersion: 1,
+      tabletopId: 1,
     }
-    return [
-      Creatures.find({
-        _id: creatureId,
-      }),
-      CreatureVariables.find({
-        _creatureId: creatureId,
-      }),
-      CreatureProperties.find({
-        'root.id': creatureId,
-      }),
-      CreatureLogs.find({
-        creatureId,
-      }, {
-        limit: 20,
-        sort: { date: -1 },
-      }),
-      EngineActions.find({
-        creatureId,
-      }),
-      // Also publish the owner's username
-      Meteor.users.find(permissionCreature.owner, {
-        fields: {
-          username: 1,
-        },
-      }),
-    ];
   });
+  try { assertViewPermission(permissionCreature, userId) }
+  catch (e) { return [] }
+  await loadCreature(creatureId, this);
+  if (permissionCreature?.computeVersion !== VERSION) {
+    try {
+      rebuildCreatureNestedSets(creatureId).then(() => {
+        try {
+          computeCreature(creatureId)
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    }
+    catch (e) { console.error(e) }
+  }
+  return [
+    Creatures.find({
+      _id: creatureId,
+    }),
+    CreatureVariables.find({
+      _creatureId: creatureId,
+    }),
+    CreatureProperties.find({
+      'root.id': creatureId,
+    }),
+    CreatureLogs.find({
+      creatureId,
+    }, {
+      limit: 20,
+      sort: { date: -1 },
+    }),
+    EngineActions.find({
+      creatureId,
+    }),
+    // Also publish the owner's username
+    Meteor.users.find(permissionCreature.owner, {
+      fields: {
+        username: 1,
+      },
+    }),
+  ];
 });

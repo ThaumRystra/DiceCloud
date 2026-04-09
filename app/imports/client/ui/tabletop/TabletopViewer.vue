@@ -73,27 +73,14 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
 
-export default {
-  name: 'TabletopViewer',
-  components: {
-    MarkdownText,
-    PropertyField,
-  },
-  props: {
-    model: {
-      type: Object ,
-      required: true,
-    },
-    users: {
-      type: Object,
-      required: true,
-    },
-  },
-}
+defineProps<{
+  model: object;
+  users: object;
+}>();
 </script>
 
 <style>

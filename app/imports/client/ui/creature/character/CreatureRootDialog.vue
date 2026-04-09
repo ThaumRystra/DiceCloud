@@ -25,7 +25,7 @@
           />
           <v-btn
             icon
-            outlined
+            variant="outlined"
             color="accent"
             data-id="insert-creature-property-btn"
             @click="addProperty"
@@ -45,24 +45,27 @@
         </div>
       </v-fade-transition>
     </template>
-    <div
-      v-if="!embedded"
-      slot="actions"
-      class="layout"
-    >
-      <v-spacer />
+    <template v-if="!embedded" #actions>
+      <div
+        class="layout"
+      >
+        <v-spacer />
       <v-btn
-        text
+        variant="text"
         color="accent"
         @click="$store.dispatch('popDialogStack')"
       >
         Close
       </v-btn>
-    </div>
+      </div>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch, provide, reactive, nextTick } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
@@ -75,108 +78,79 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 
-let formIndex = {};
-for (let key in propertyFormIndex){
-  formIndex[key + 'Form'] = propertyFormIndex[key];
-}
+const props = withDefaults(defineProps<{
+  _id?: string;
+  embedded?: boolean;
+  startInEditTab?: boolean;
+}>(), {
+  _id: undefined,
+  embedded: false,
+  startInEditTab: false,
+});
 
-let viewerIndex = {};
-for (let key in propertyViewerIndex){
-  formIndex[key + 'Viewer'] = propertyViewerIndex[key];
-}
+const store = useStore();
 
-export default {
-  components: {
-    ...formIndex,
-    ...viewerIndex,
-    DialogBase,
-    PropertyToolbar,
-    CreaturePropertiesTree,
-  },
-  props: {
-    _id: String,
-    embedded: Boolean, // This dialog is embedded in a page
-    startInEditTab: Boolean,
-  },
-  data(){ return {
-    editing: !!this.startInEditTab,
-    // CurrentId lags behind Id by one tick so that events fired by destroying
-    // forms keyed to the old ID are applied before the new ID overwrites it
-    currentId: undefined,
-    childrenLength: 0,
-  }},
-  meteor: {
-    editPermission(){
-      try {
-        assertEditPermission(this.creature, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-  },
-  computed: {
-    creature(){
-      return Creatures.findOne(this._id);
-    },
-  },
-  watch: {
-    _id: {
-      immediate: true,
-      handler(newId){
-        this.$nextTick(() => {
-          this.currentId = newId;
-        });
-      }
-    },
-  },
-  reactiveProvide: {
-    name: 'context',
-    include: ['creatureId', 'editPermission'],
-  },
-  methods: {
-    getPropertyName,
-    selectSubProperty(_id){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `tree-node-${_id}`,
-        data: {
-          _id,
-          startInEditTab: this.editing,
-        },
-      });
-    },
-    addProperty(){
-      let parentPropertyId = this._id;
-      this.$store.commit('pushDialogStack', {
-        component: 'insert-property-dialog',
-        elementId: 'insert-creature-property-btn',
-        data: {
-          parentDoc: this.creature,
-          creatureId: this._id,
-          noBackdropClose: true,
-        },
-        callback(result){
-          if (!result) return;
-          let parentRef = {
-            id: parentPropertyId,
-            collection: 'creatures',
-          };
-          if (Array.isArray(result)){
-            let nodeIds = result;
-            let id = insertPropertyFromLibraryNode.call({ nodeIds, parentRef });
-            return `tree-node-${id}`;
-          } else {
-            let creatureProperty = result;
-            // Insert the property
-            let id = insertProperty.call({creatureProperty, parentRef});
-            return `tree-node-${id}`;
-          }
-        }
-      });
-    },
+const editing = ref(!!props.startInEditTab);
+const currentId = ref<string | undefined>(undefined);
+const childrenLength = ref(0);
+
+watch(() => props._id, async (newId) => {
+  await nextTick();
+  currentId.value = newId;
+}, { immediate: true });
+
+const creature = computed(() => Creatures.findOne(props._id));
+
+const { result: editPermission } = autorun(() => {
+  try {
+    assertEditPermission(creature.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
   }
-};
+});
+
+provide('context', reactive({ creatureId: props._id, editPermission }));
+
+function selectSubProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: {
+      _id,
+      startInEditTab: editing.value,
+    },
+  });
+}
+
+function addProperty() {
+  const parentPropertyId = props._id;
+  store.commit('pushDialogStack', {
+    component: 'insert-property-dialog',
+    elementId: 'insert-creature-property-btn',
+    data: {
+      parentDoc: creature.value,
+      creatureId: props._id,
+      noBackdropClose: true,
+    },
+    async callback(result: any) {
+      if (!result) return;
+      const parentRef = {
+        id: parentPropertyId,
+        collection: 'creatures',
+      };
+      if (Array.isArray(result)) {
+        const nodeIds = result;
+        const id = await insertPropertyFromLibraryNode.callAsync({ nodeIds, parentRef });
+        return `tree-node-${id}`;
+      } else {
+        const creatureProperty = result;
+        const id = await insertProperty.callAsync({ creatureProperty, parentRef });
+        return `tree-node-${id}`;
+      }
+    },
+  });
+}
 </script>
 
 <style lang="css" scoped>

@@ -21,13 +21,13 @@ const equipItem = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, equipped }) {
-    let item = CreatureProperties.findOne(_id);
+  async run({ _id, equipped }) {
+    let item = await CreatureProperties.findOneAsync(_id);
     if (item.type !== 'item') throw new Meteor.Error('wrong type',
       'Equip and unequip can only be performed on items');
     let creature = getRootCreatureAncestor(item);
-    assertEditPermission(creature, this.userId);
-    CreatureProperties.update(_id, {
+    await assertEditPermission(creature, this.userId);
+    await CreatureProperties.updateAsync(_id, {
       $set: { equipped, dirty: true },
     }, {
       selector: { type: 'item' },

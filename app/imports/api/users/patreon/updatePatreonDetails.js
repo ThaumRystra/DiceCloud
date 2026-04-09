@@ -1,117 +1,87 @@
-import request from 'request';
+import { fetch } from 'meteor/fetch';
 if (!Meteor.isServer) throw 'Server only, do not import this code in the client';
 
-const config = ServiceConfiguration.configurations.findOne({service: 'patreon'});
-const getIdentity = function(accessToken, callback){
-  request({
-    uri: 'https://www.patreon.com/api/oauth2/v2/identity',
-    headers:{
+const getConfig = async function () {
+  return await ServiceConfiguration.configurations.findOneAsync({ service: 'patreon' });
+};
+
+const getIdentity = async function (accessToken) {
+  const params = new URLSearchParams({
+    'include': 'memberships.currently_entitled_tiers',
+    'fields[tier]': 'amount_cents,title',
+  });
+  const response = await fetch(`https://www.patreon.com/api/oauth2/v2/identity?${params}`, {
+    headers: {
       Authorization: 'Bearer ' + accessToken,
     },
-    qs: {
-      'include': 'memberships.currently_entitled_tiers',
-      'fields[tier]': 'amount_cents,title',
-    }
-  }, callback);
+  });
+  return await response.json();
 };
 
 // Should return a new access token for the user
-// callback is called with (error, response, body)
-const refreshAccessToken = Meteor.wrapAsync(function(refreshToken, userId, callback){
-  request({
+const refreshAccessToken = async function (refreshToken, userId) {
+  const config = await getConfig();
+  const params = new URLSearchParams({
+    grant_type: 'refresh_token',
+    refresh_token: refreshToken,
+    client_id: config.clientId,
+    client_secret: config.secret,
+  });
+  const response = await fetch(`https://www.patreon.com/api/oauth2/token?${params}`, {
     method: 'POST',
-    uri: 'https://www.patreon.com/api/oauth2/token',
-    qs: {
-      grant_type: 'refresh_token',
-      refresh_token: refreshToken,
-      client_id: config.clientId,
-      client_secret: config.secret,
-    }
-  }, Meteor.bindEnvironment((error, response, body) => {
-    // Should return an access token, valid for 1 month, which needs to be
-    // stored and used to make requests on behalf of the user
-    if (error){
-      if (callback){
-        callback(error);
-        return;
-      } else {
-        throw error;
-      }
-    }
-    let token;
-    try {
-      token = JSON.parse(body);
-      writePatreonToken(userId, token);
-      callback(undefined, token.access_token);
-    } catch(error) {
-      if (callback){
-        callback(error);
-        return;
-      } else {
-        throw error;
-      }
-    }
-  }));
-});
+  });
+  const body = await response.text();
+  // Should return an access token, valid for 1 month, which needs to be
+  // stored and used to make requests on behalf of the user
+  const token = JSON.parse(body);
+  await writePatreonToken(userId, token);
+  return token.access_token;
+};
 
-const updateIdentity = Meteor.wrapAsync(function(accessToken, userId, callback){
-  getIdentity(accessToken, Meteor.bindEnvironment((error, response, body) => {
-    if (error){
-      throw error;
-    }
-    try {
-      let identity = JSON.parse(body);
-      let entitledAmount = 0;
-      if (identity && identity.included){
-        identity.included.forEach(doc => {
-          if (
-            doc.type === 'tier' &&
-            doc.attributes &&
-            doc.attributes.amount_cents > entitledAmount
-          ){
-            entitledAmount = doc.attributes.amount_cents;
-          }
-        });
+const updateIdentity = async function (accessToken, userId) {
+  const identity = await getIdentity(accessToken);
+  let entitledAmount = 0;
+  if (identity && identity.included) {
+    identity.included.forEach(doc => {
+      if (
+        doc.type === 'tier' &&
+        doc.attributes &&
+        doc.attributes.amount_cents > entitledAmount
+      ) {
+        entitledAmount = doc.attributes.amount_cents;
       }
-      writeEntitledCents(userId, entitledAmount);
-      if (callback) callback();
-    } catch(error) {
-      if(callback) {
-        callback(error);
-      } else {
-        throw error;
-      }
-    }
-  }));
-});
+    });
+  }
+  await writeEntitledCents(userId, entitledAmount);
+};
 
-const updatePatreonDetails = function(user){
+const updatePatreonDetails = async function (user) {
   if (!user) {
     throw new Meteor.Error('no-user', 'User must be provided to update patreon details');
   }
-  if (!user.services.patreon || !user.services.patreon.accessToken){
+  if (!user.services.patreon || !user.services.patreon.accessToken) {
     throw new Meteor.Error('no-patreon-access', 'Patreon access token not found for this user');
   }
   let accessToken = user.services.patreon.accessToken;
-  if (user.services.patreon.expiresAt < new Date()){
+  if (user.services.patreon.expiresAt < new Date()) {
     // Token expired, refresh it before continuing
-    accessToken = refreshAccessToken(user.services.patreon.refreshToken, user._id);
+    accessToken = await refreshAccessToken(user.services.patreon.refreshToken, user._id);
   }
-  updateIdentity(accessToken, user._id);
+  await updateIdentity(accessToken, user._id);
 }
 
 Meteor.methods({
-  updateMyPatreonDetails(){
+  async updateMyPatreonDetails() {
     const userId = this.userId;
     if (!userId) throw new Meteor.Error('not-logged-in', 'You must be logged in to update Patreon details');
-    const user = Meteor.users.findOne(userId, {fields: {services: 1}});
-    updatePatreonDetails(user);
+    const user = await Meteor.users.findOneAsync(userId, { fields: { services: 1 } });
+    await updatePatreonDetails(user);
   },
 });
 
-const writePatreonToken = function(userId, {
+const writePatreonToken = async function (userId, {
   access_token, refresh_token, expires_in
-}){
+}) {
   // The expiry date is now plus `expires_in` seconds
   let expiryDate = new Date();
   expiryDate.setSeconds(expiryDate.getSeconds() + expires_in);
@@ -119,7 +89,7 @@ const writePatreonToken = function(userId, {
   expiryDate.setDate(expiryDate.getDate() - 1);
 
   // Write
-  Meteor.users.update(userId, {
+  await Meteor.users.updateAsync(userId, {
     $set: {
       'services.patreon.accessToken': access_token,
       'services.patreon.refreshToken': refresh_token,
@@ -131,8 +101,8 @@ const writePatreonToken = function(userId, {
   });
 };
 
-const writeEntitledCents = function(userId, amount){
-  Meteor.users.update(userId, {
+const writeEntitledCents = async function (userId, amount) {
+  await Meteor.users.updateAsync(userId, {
     $set: {
       'services.patreon.entitledCents': amount,
       'services.patreon.lastUpdatedIdentity': new Date(),

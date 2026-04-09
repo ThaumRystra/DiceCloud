@@ -1,9 +1,9 @@
 <template lang="html">
-  <div class="layout align-center justify-start">
+  <div class="d-flex align-center justify-start">
     <proficiency-icon
       v-if="!hideIcon"
       class="mr-2"
-      :class="selected && 'primary--text'"
+      :class="selected && 'text-primary'"
       :color="model.color"
       :value="model.value"
     />
@@ -18,15 +18,27 @@
   </div>
 </template>
 
-<script lang="js">
-// Most of this was copied from EffectViewer and should probably be generalised
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 
-export default {
-  components: {
-    ProficiencyIcon,
-  },
-  mixins: [treeNodeViewMixin]
-}
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+}>(), {
+  model: () => ({}),
+  selected: false,
+  hideIcon: false,
+});
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return;
+  if (model.name) return model.name;
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
 </script>

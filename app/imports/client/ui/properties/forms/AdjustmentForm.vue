@@ -76,19 +76,28 @@
   </div>
 </template>
 
-<script lang="js">
-import attributeListMixin from '/imports/client/ui/properties/forms/shared/lists/attributeListMixin';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
-export default {
-  mixins: [propertyFormMixin, attributeListMixin],
-  data() {
-    return {
-      damageHint: 'The amount of damage to apply, negative values will heal',
-      setHint: 'The value to set the stat to',
-    }
-  },
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
+
+const damageHint = 'The amount of damage to apply, negative values will heal';
+const setHint = 'The value to set the stat to';
+
+const { result: attributeList } = autorun(() =>
+  createListOfProperties({ type: { $in: ['attribute', 'skill'] } })
+);
 </script>
 
 <style lang="css" scoped>

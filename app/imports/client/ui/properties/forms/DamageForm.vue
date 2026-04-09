@@ -60,7 +60,7 @@
     <v-expand-transition>
       <v-row
         v-if="model.save"
-        dense
+        density="compact"
       >
         <v-col
           cols="12"
@@ -122,59 +122,58 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
-import saveListMixin from '/imports/client/ui/properties/forms/shared/lists/saveListMixin';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
-export default {
-  mixins: [propertyFormMixin, saveListMixin],
-  props: {
-    parentTarget: {
-      type: String,
-      default: undefined,
-    },
-  },
-  data() {
-    return {
-      DAMAGE_TYPES,
-      damageTypeRules: [
-        value => {
-          if (!value) return 'Damage type is required';
-          if (!VARIABLE_NAME_REGEX.test(value)) {
-            return `${value} is not a valid damage name`
-          }
-        }
-      ],
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+  parentTarget?: string;
+}>(), {
+  errors: () => ({}),
+  parentTarget: undefined,
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const { result: saveList } = autorun(() =>
+  createListOfProperties({ type: 'skill', skillType: 'save' })
+);
+
+const damageTypeRules = [
+  (value: string) => {
+    if (!value) return 'Damage type is required';
+    if (!VARIABLE_NAME_REGEX.test(value)) {
+      return `${value} is not a valid damage name`;
     }
   },
-  computed: {
-    targetOptions() {
-      return [
-        {
-          text: 'Self',
-          value: 'self',
-        }, {
-          text: 'Target',
-          value: 'target',
-        },
-      ];
-    },
-    targetOptionHint() {
-      let hints = {
-        self: 'The damage will be applied to the character taking the action',
-        target: 'The damage will be applied to the target of the action',
-      };
-      return hints[this.model.target];
-    }
-  },
-  methods: {
-    saveChange({ path, value, ack }) {
-      this.$emit('change', {path: [ 'save', ...path ], value, ack})
-      this.$emit('change', {path: [ 'silent' ], value: true, ack})
-    },
-  },
+];
+
+const targetOptions = computed(() => [
+  { text: 'Self', value: 'self' },
+  { text: 'Target', value: 'target' },
+]);
+
+const targetOptionHint = computed(() => {
+  const hints: Record<string, string> = {
+    self: 'The damage will be applied to the character taking the action',
+    target: 'The damage will be applied to the target of the action',
+  };
+  return hints[props.model.target];
+});
+
+function saveChange({ path, value, ack }: { path: string[]; value: any; ack?: Function }) {
+  emit('change', { path: ['save', ...path], value, ack });
+  emit('change', { path: ['silent'], value: true, ack });
 }
 </script>
 

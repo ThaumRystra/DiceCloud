@@ -33,7 +33,7 @@ const removeArchiveCreature = new ValidatedMethod({
     //Remove the archive once the restore succeeded
     ArchiveCreatureFiles.remove({ _id: fileId });
     // Update the user's file storage limits
-    incrementFileStorageUsed(userId, -file.size);
+    await incrementFileStorageUsed(userId, -file.size);
   },
 });
 

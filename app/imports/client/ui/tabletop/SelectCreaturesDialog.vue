@@ -1,8 +1,10 @@
 <template lang="html">
   <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      Add Characters
-    </v-toolbar-title>
+    <template #toolbar>
+      <v-toolbar-title>
+        Add Characters
+      </v-toolbar-title>
+    </template>
     <v-list>
       <p v-if="!creatures.length">
         There are no creatures to add or you have already added them all
@@ -16,10 +18,10 @@
         @click="toggleSelect(creature._id)"
       />
     </v-list>
-    <template slot="actions">
+    <template #actions>
       <v-spacer />
       <v-btn
-        text
+        variant="text"
         color="primary"
         @click="$store.dispatch('popDialogStack', selected)"
       >
@@ -29,39 +31,29 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
 
-export default {
-  components: {
-    DialogBase,
-    CreatureListTile,
-  },
-  props: {
-    startingSelection: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  data(){return {
-    selected: [],
-  }},
-  meteor: {
-    creatures(){
-      return Creatures.find({_id: {$nin: this.startingSelection}});
-    },
-  },
-  methods: {
-    toggleSelect(id){
-      const index = this.selected.indexOf(id);
-      if (index === -1){
-        this.selected.push(id);
-      } else {
-        this.selected.splice(index, 1);
-      }
-    },
+const props = defineProps<{
+  startingSelection?: any[];
+}>();
+
+const selected = ref<string[]>([]);
+
+const { result: creatures } = autorun(() =>
+  Creatures.find({ _id: { $nin: props.startingSelection ?? [] } })
+);
+
+function toggleSelect(id: string) {
+  const index = selected.value.indexOf(id);
+  if (index === -1) {
+    selected.value.push(id);
+  } else {
+    selected.value.splice(index, 1);
   }
 }
 </script>

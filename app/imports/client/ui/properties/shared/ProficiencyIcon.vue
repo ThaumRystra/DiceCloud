@@ -4,20 +4,15 @@
   </v-icon>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
-export default {
-  props: {
-    value: {
-      type: Number,
-      default: undefined,
-    },
-  },
-  computed: {
-    displayedIcon(){
-      return getProficiencyIcon(this.value);
-    }
-  }
-}
+const props = withDefaults(defineProps<{
+  value?: number;
+}>(), {
+  value: undefined,
+});
+
+const displayedIcon = computed(() => getProficiencyIcon(props.value));
 </script>

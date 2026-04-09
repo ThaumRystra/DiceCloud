@@ -35,30 +35,22 @@
   </div>
 </template>
 
-<script lang="js">
-  export default {
-    inject: {
-      theme: {
-        default: {
-          isDark: false,
-        },
-      },
-    },
-    props: {
-      height: {
-        type: Number,
-        default: 120,
-      },
-      width: {
-        type: Number,
-        default: 120,
-      },
-      disableHover: Boolean,
-    },
-    data(){return {
-      hover: false,
-    }},
-  }
+<script setup lang="ts">
+import { ref, inject } from 'vue';
+
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+defineProps<{
+  height?: number;
+  width?: number;
+  disableHover?: boolean;
+}>();
+
+const emit = defineEmits<{
+  click: [e: MouseEvent];
+}>();
+
+const hover = ref(false);
 </script>
 
 <style lang="css" scoped>

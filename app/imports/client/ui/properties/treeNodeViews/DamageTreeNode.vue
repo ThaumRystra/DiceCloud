@@ -1,14 +1,14 @@
 <template lang="html">
   <div>
     <div
-      class="layout align-center justify-start"
+      class="d-flex align-center justify-start"
       style="height:40px;"
     >
       <v-icon
         v-if="!hideIcon"
         class="mr-2"
         :color="model.color"
-        :class="selected && 'primary--text'"
+        :class="selected && 'text-primary'"
       >
         {{ icon }}
       </v-icon>
@@ -21,22 +21,36 @@
   </div>
 </template>
 
-<script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES';
-import InlineEffect from '../components/effects/InlineEffect.vue';
+import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
 
-export default {
-  components: {InlineEffect},
-  mixins: [treeNodeViewMixin],
-  computed: {
-    icon() {
-      if (this.model.damageType === 'healing') {
-        return 'mdi-hospital-box-outline'
-      } else {
-        return getPropertyIcon('damage');
-      }
-    },
-  },
-}
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+}>(), {
+  model: () => ({}),
+  selected: false,
+  hideIcon: false,
+});
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return;
+  if (model.name) return model.name;
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
+
+const icon = computed(() => {
+  if (props.model.damageType === 'healing') {
+    return 'mdi-hospital-box-outline';
+  } else {
+    return getPropertyIcon('damage');
+  }
+});
 </script>

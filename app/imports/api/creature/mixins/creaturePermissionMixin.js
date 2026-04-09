@@ -29,10 +29,11 @@ export default function creaturePermissionMixin(methodOptions) {
   if (methodOptions.getCharId) {
     getCharId = methodOptions.getCharId;
   } else if (methodOptions.collection) {
-    getCharId = function ({ _id }) {
-      return methodOptions.collection.findOne(_id, {
+    getCharId = async function ({ _id }) {
+      const doc = await methodOptions.collection.findOneAsync(_id, {
         fields: { charId: 1 }
-      }).charId;
+      });
+      return doc.charId;
     };
   } else {
     getCharId = function () {
@@ -42,10 +43,10 @@ export default function creaturePermissionMixin(methodOptions) {
   }
 
   let runFunc = methodOptions.run;
-  methodOptions.run = function (doc, ...rest) {
+  methodOptions.run = async function (doc, ...rest) {
     // Store the charId on the doc for other mixins if it had to be fetched
-    doc.charId = doc.charId || getCharId.apply(this, arguments);
-    assertPermission(doc.charId, this.userId);
+    doc.charId = doc.charId || await getCharId.apply(this, arguments);
+    await assertPermission(doc.charId, this.userId);
     return runFunc.call(this, doc, ...rest);
   };
   return methodOptions;

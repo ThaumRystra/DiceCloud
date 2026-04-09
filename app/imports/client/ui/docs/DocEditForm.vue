@@ -32,11 +32,11 @@
               left
               transition="slide-y-transition"
             >
-              <template #activator="{ on }">
+              <template #activator="{ props }">
                 <v-btn
                   icon
                   style="height: 56px; width: 56px;"
-                  v-on="on"
+                  v-bind="props"
                 >
                   <v-icon>mdi-dots-vertical</v-icon>
                 </v-btn>
@@ -45,14 +45,12 @@
                 <v-list-item
                   @click="remove()"
                 >
-                  <v-list-item-content>
-                    <v-list-item-title>
-                      Delete
-                    </v-list-item-title>
-                  </v-list-item-content>
-                  <v-list-item-action>
+                  <v-list-item-title>
+                    Delete
+                  </v-list-item-title>
+                  <template #append>
                     <v-icon>mdi-delete</v-icon>
-                  </v-list-item-action>
+                  </template>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -114,7 +112,7 @@
         >
           <smart-btn
             single-click
-            outlined
+            variant="outlined"
             color="accent"
             style="width: 100%; height: 240px;"
             @click="ack => add({ ack })"
@@ -127,7 +125,10 @@
   </v-row>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { get } from 'lodash';
 import Docs, {
   insertDoc,
   pullFromDoc,
@@ -136,75 +137,88 @@ import Docs, {
   softRemoveDoc,
   updateDoc,
 } from '/imports/api/docs/Docs';
-import { get } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import DocCard from '/imports/client/ui/docs/DocCard.vue';
 import getDocLink from '/imports/client/ui/docs/getDocLink';
 
-export default {
-  components: {
-    DocCard
-  },
-  props: {
-    doc: {
-      type: Object,
-      default: undefined,
-    },
-    childDocs: {
-      type: Array,
-      required: true,
-    },
-  },
-  computed: {
-    docId() {
-      return this.doc?._id;
-    },
-  },
-  methods: {
-    change({ path, value, ack }) {
-      updateDoc.call({ _id: this.docId, path, value }, ack);
-      if (path[0] === 'urlName' && path.length === 1 && value) {
-        this.$router.push(getDocLink(this.doc, value));
-      }
-    },
-    push({ path, value, ack }) {
-      pushToDoc.call({ _id: this.docId, path, value }, ack);
-    },
-    pull({ path, ack }) {
-      let itemId = get(this.model, path)._id;
-      path.pop();
-      pullFromDoc.call({ _id: this.docId, path, itemId }, ack);
-    },
-    add({ ack }) {
-      insertDoc.call({
-        doc: {
-          name: 'New Doc',
-        },
-        parentId: this.docId,
-      }, ack);
-    },
-    remove({ ack }) {
-      const _id = this.docId;
-      const docName = this.doc.name;
-      let parentHref = '/docs';
-      if (this.doc.parent) {
-        const parent = Docs.findOne({ _id: this.doc.parentId });
-        parentHref = parent?.href || parentHref;
-      }
-      softRemoveDoc.call({ _id }, (error) => {
-        ack?.(error);
-        if (!error) {
-          snackbar({
-            text: `Deleted ${docName}`,
-            callbackName: 'undo',
-            callback() {
-              restoreDoc.call({ _id });
-            },
-          });
-        }
-      });
-      this.$router.push(parentHref);
-    },
+const props = defineProps<{
+  doc?: any;
+  childDocs: any[];
+}>();
+
+const router = useRouter();
+
+const docId = computed(() => props.doc?._id);
+
+async function change({ path, value, ack }: { path: string[]; value: any; ack?: Function }) {
+  try {
+    await updateDoc.callAsync({ _id: docId.value, path, value });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
   }
+  if (path[0] === 'urlName' && path.length === 1 && value) {
+    router.push(getDocLink(props.doc, value));
+  }
+}
+
+async function push({ path, value, ack }: { path: string[]; value: any; ack?: Function }) {
+  try {
+    await pushToDoc.callAsync({ _id: docId.value, path, value });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
+
+async function pull({ path, ack }: { path: string[]; ack?: Function }) {
+  const itemId = get(props.doc, path)._id;
+  path.pop();
+  try {
+    await pullFromDoc.callAsync({ _id: docId.value, path, itemId });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
+
+async function add({ ack }: { ack?: Function }) {
+  try {
+    await insertDoc.callAsync({
+      doc: { name: 'New Doc' },
+      parentId: docId.value,
+    });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
+
+async function remove({ ack }: { ack?: Function }) {
+  const _id = docId.value;
+  const docName = props.doc?.name;
+  let parentHref = '/docs';
+  if (props.doc?.parent) {
+    const parent = Docs.findOne({ _id: props.doc.parentId });
+    parentHref = parent?.href || parentHref;
+  }
+  try {
+    await softRemoveDoc.callAsync({ _id });
+    ack?.();
+    snackbar({
+      text: `Deleted ${docName}`,
+      callbackName: 'undo',
+      callback() {
+        restoreDoc.callAsync({ _id });
+      },
+    });
+  } catch (error: any) {
+    ack?.(error);
+  }
+  router.push(parentHref);
 }
 </script>

@@ -43,22 +43,14 @@
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    multipliers:{
-      type: Array,
-      required: true,
-    }
-  },
-  methods: {
-    title(prop){
-      switch (prop.value){
-        case 0: return 'Immunity';
-        case 0.5: return 'Resistance';
-        case 2: return 'Vulnerability';
-      }
-    }
+<script setup lang="ts">
+const props = defineProps<{ multipliers: any[] }>();
+
+function title(prop: any): string | undefined {
+  switch (prop.value) {
+    case 0: return 'Immunity';
+    case 0.5: return 'Resistance';
+    case 2: return 'Vulnerability';
   }
 }
 </script>

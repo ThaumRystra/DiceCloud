@@ -5,7 +5,7 @@
       two-line
       subheader
     >
-      <v-subheader>Spell Slots</v-subheader>
+      <v-list-subheader>Spell Slots</v-list-subheader>
       <spell-slot-list-tile
         v-for="spellSlot in spellSlots"
         :key="spellSlot._id"
@@ -21,7 +21,7 @@
       <v-btn
         color="accent"
         style="width: 100%;"
-        outlined
+        variant="outlined"
         data-id="cast-spell-btn"
         @click="castSpell"
       >
@@ -31,45 +31,36 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 
-export default {
-  components: {
-    SpellSlotListTile,
-  },
-  props: {
-    creatureId: {
-      type: String,
-      required: true,
-    },
-    hasSpells: Boolean,
-    spellSlots: {
-      type: Array,
-      default: () => [],
-    },
-  },
-  data(){return {
-    castSpellLoading: false,
-  }},
-  methods: {
-    castSpell() {
-      // push spell cast dialog
-      this.$store.commit('pushDialogStack', {
-        component: 'cast-spell-with-slot-dialog',
-        elementId: 'spell-slot-card',
-        data: {
-          creatureId: this.creatureId,
-        },
-      });
-    },
-    clickProperty({ _id }) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `spell-slot-card-${_id}`,
-        data: { _id },
-      });
-    },
-  }
+const props = withDefaults(defineProps<{
+  creatureId: string;
+  hasSpells?: boolean;
+  spellSlots?: any[];
+}>(), {
+  hasSpells: false,
+  spellSlots: () => [],
+});
+
+const store = useStore();
+const castSpellLoading = ref(false);
+
+function castSpell() {
+  store.commit('pushDialogStack', {
+    component: 'cast-spell-with-slot-dialog',
+    elementId: 'spell-slot-card',
+    data: { creatureId: props.creatureId },
+  });
+}
+
+function clickProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `spell-slot-card-${_id}`,
+    data: { _id },
+  });
 }
 </script>

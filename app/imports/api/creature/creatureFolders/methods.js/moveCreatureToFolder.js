@@ -10,7 +10,7 @@ const moveCreatureToFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ creatureId, folderId }) {
+  async run({ creatureId, folderId }) {
     // Ensure logged in
     let userId = this.userId;
     if (!userId) {
@@ -19,14 +19,14 @@ const moveCreatureToFolder = new ValidatedMethod({
     }
     // Check that this folder is owned by the user
     if (folderId) {
-      let existingFolder = CreatureFolders.findOne(folderId);
+      let existingFolder = await CreatureFolders.findOneAsync(folderId);
       if (existingFolder.owner !== userId) {
         throw new Meteor.Error('creatureFolders.methods.updateName.denied',
           'This folder does not belong to you');
       }
     }
     // Remove from other folders
-    CreatureFolders.update({
+    await CreatureFolders.updateAsync({
       owner: userId
     }, {
       $pull: { creatures: creatureId },
@@ -35,7 +35,7 @@ const moveCreatureToFolder = new ValidatedMethod({
     });
     if (folderId) {
       // Add to this folder
-      CreatureFolders.update(folderId, {
+      await CreatureFolders.updateAsync(folderId, {
         $addToSet: { creatures: creatureId },
       });
     }

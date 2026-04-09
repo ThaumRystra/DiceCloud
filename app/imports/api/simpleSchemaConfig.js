@@ -1,24 +1,28 @@
 import SimpleSchema from 'simpl-schema';
+import MeteorSimpleSchema from 'meteor/aldeed:simple-schema';
 import { set } from 'lodash';
 
 set(Meteor.settings,
   'packages.collection2.disableCollectionNamesInValidation',
   true);
 
-SimpleSchema.extendOptions([
+const customOptions = [
   'parseLevel',
   'removeBeforeCompute',
   'inlineCalculationField',
   'computedField',
-]);
+];
+
+SimpleSchema.extendOptions(customOptions);
+MeteorSimpleSchema.extendOptions(customOptions);
 
 // Store a quick way of referencing keys that have specific tags === true
-function storeTaggedKeys(tag, fnName){
-  SimpleSchema.prototype[fnName] = function(){
-    if (!this['_' + fnName]){
+function storeTaggedKeys(tag, fnName) {
+  SimpleSchema.prototype[fnName] = function () {
+    if (!this['_' + fnName]) {
       this['_' + fnName] = [];
-      for (const key in this._schema){
-        if (this._schema[key][tag]){
+      for (const key in this._schema) {
+        if (this._schema[key][tag]) {
           this['_' + fnName].push(key);
         }
       }

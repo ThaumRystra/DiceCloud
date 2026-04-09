@@ -37,87 +37,60 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedSpell from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpell.vue';
 import PrintedSpellList from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpellList.vue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default {
-  components: {
-    ColumnLayout,
-    PrintedSpell,
-    PrintedSpellList,
-  },
-  props: {
-    creatureId: {
-      type: String,
-      required: true,
-    }
-  },
-  data() {
-    return {
-      organize: false,
-    }
-  },
-  meteor: {
-    spellLists() {
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'spellList',
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, {
-        sort: { left: 1 }
-      }).fetch();
-    },
-    spellsWithoutList() {
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        $nor: [getFilter.descendantsOfAll(this.spellLists)],
-        type: 'spell',
-        removed: { $ne: true },
-        deactivatedByAncestor: { $ne: true },
-        deactivatedByToggle: { $ne: true },
-      }, {
-        sort: {
-          level: 1,
-          order: 1,
-        }
-      });
-    },
-    spellListsWithoutAncestorSpellLists() {
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        $nor: [getFilter.descendantsOfAll(this.spellLists)],
-        type: 'spellList',
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, {
-        sort: { left: 1 }
-      }).map(sl => {
-        sl.spells = CreatureProperties.find({
-          ...getFilter.descendants(sl),
-          type: 'spell',
-          removed: { $ne: true },
-          inactive: { $ne: true },
-        }, {
-          sort: {
-            level: 1,
-            order: 1,
-          }
-        }).fetch();
-        return sl;
-      });
-    },
-  },
-  computed: {
-    spellListIds() {
-      return this.spellLists?.map(spellList => spellList._id);
-    },
-  },
-}
+const props = defineProps<{ creatureId: string }>();
+
+const { result: spellLists } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'spellList',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: spellsWithoutList } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    $nor: [getFilter.descendantsOfAll(spellLists.value || [])],
+    type: 'spell',
+    removed: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+  }, {
+    sort: { level: 1, order: 1 },
+  }).fetch()
+);
+
+const { result: spellListsWithoutAncestorSpellLists } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    $nor: [getFilter.descendantsOfAll(spellLists.value || [])],
+    type: 'spellList',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { sort: { left: 1 } }).map((sl: any) => {
+    sl.spells = CreatureProperties.find({
+      ...getFilter.descendants(sl),
+      type: 'spell',
+      removed: { $ne: true },
+      inactive: { $ne: true },
+    }, { sort: { level: 1, order: 1 } }).fetch();
+    return sl;
+  })
+);
+
+const spellListIds = computed(() =>
+  (spellLists.value || []).map((sl: any) => sl._id)
+);
 </script>
 
 <style lang="css" scoped>

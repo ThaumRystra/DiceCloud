@@ -1,9 +1,6 @@
 <template>
-  <v-layout
-    column
-    align-center
-    justify-center
-    class="fill-height"
+  <div
+    class="d-flex flex-column align-center justify-center fill-height"
   >
     <h1>
       DiceCloud version 2 beta will launch in
@@ -14,39 +11,34 @@
         :interval="100"
         tag="p"
       >
-        <template slot-scope="props">
+        <template #default="props">
           <span v-if="props.days">
             {{ props.days }} days,
           </span>{{ props.hours }}:{{ formatNumber(props.minutes) }}:{{ formatNumber(props.seconds) }}
         </template>
       </countdown>
     </h1>
-  </v-layout>
+  </div>
 </template>
 
 
-<script lang="js">
-  import VueCountdown from '@chenfengyuan/vue-countdown';
-  import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE';
-  export default{
-    components:{
-      countdown: VueCountdown,
-    },
-    data: function () {
-      let now = new Date();
-      let timeLeft = LAUNCH_DATE - now
-      setTimeout(() => {
-        this.$router.push('/');
-      }, timeLeft);
-      return {
-        counting: false,
-        time: timeLeft,
-      };
-    },
-    methods: {
-      formatNumber(num){
-        return ('0' + num).slice(-2)
-      }
-    }
-  }
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import countdown from '@chenfengyuan/vue-countdown';
+import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE';
+
+const router = useRouter();
+
+const now = new Date();
+const timeLeft = (LAUNCH_DATE as unknown as number) - now.getTime();
+setTimeout(() => {
+  router.push('/');
+}, timeLeft);
+
+const time = ref(timeLeft);
+
+function formatNumber(num: number): string {
+  return ('0' + num).slice(-2);
+}
 </script>

@@ -1,9 +1,7 @@
 <template lang="html">
   <div>
-    <v-layout
-      column
-      align-center
-      justify-center
+    <div
+      class="d-flex flex-column align-center justify-center"
     >
       <h2 style="margin: 48px 28px 16px">
         Invite Success
@@ -11,13 +9,11 @@
       <h3>
         You can now use DiceCloud
       </h3>
-    </v-layout>
+    </div>
   </div>
 </template>
 
-<script lang="js">
-export default {
-}
+<script setup lang="ts">
 </script>
 
 <style lang="css" scoped>

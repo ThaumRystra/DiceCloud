@@ -1,9 +1,7 @@
 <template>
   <div>
-    <v-layout
-      column
-      align-center
-      justify-center
+    <div
+      class="d-flex flex-column align-center justify-center"
     >
       <h2 style="margin: 48px 28px 16px">
         Your current Patreon tier is {{ tier.name }}
@@ -18,20 +16,17 @@
       >
         Join now
       </v-btn>
-    </v-layout>
+    </div>
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
 
-export default {
-  meteor: {
-    tier(){
-      let user = Meteor.user();
-      if (!user) return TIERS[0];
-      return getUserTier(user);
-    }
-  },
-}
+const { result: tier } = autorun(() => {
+  const user = Meteor.user();
+  if (!user) return TIERS[0];
+  return getUserTier(user);
+});
 </script>

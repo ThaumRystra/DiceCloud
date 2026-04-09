@@ -16,11 +16,11 @@ export default function updateSchemaMixin(methodOptions) {
     typeof methodOptions.schema === 'undefined' &&
     typeof methodOptions.validate !== 'undefined'
   ) || (
-    typeof methodOptions.schema !== 'undefined' &&
-    methodOptions.schema === null &&
-    typeof methodOptions.validate !== 'undefined' &&
-    methodOptions.validate !== null
-  )) {
+      typeof methodOptions.schema !== 'undefined' &&
+      methodOptions.schema === null &&
+      typeof methodOptions.validate !== 'undefined' &&
+      methodOptions.validate !== null
+    )) {
     return methodOptions;
   }
 
@@ -49,18 +49,18 @@ export default function updateSchemaMixin(methodOptions) {
   }
 
   // Set up the new validation
-  methodOptions.validate = function(args){
+  methodOptions.validate = function (args) {
     argumentSchema.validate(args);
     updateSchema.validate(
-      {$set: args.update},
+      { $set: args.update },
       methodOptions.schemaValidatorOptions
     );
   };
 
   // Give a default run function if one isn't supplied
-  if (!methodOptions.run){
-    methodOptions.run = function({_id, update}){
-      return methodOptions.collection.update(_id, {$set: update});
+  if (!methodOptions.run) {
+    methodOptions.run = async function ({ _id, update }) {
+      return methodOptions.collection.updateAsync(_id, { $set: update });
     };
   }
   return methodOptions;

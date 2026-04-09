@@ -1,9 +1,9 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <v-btn-toggle
-      :value="value"
+      :model-value="value"
       color="accent"
-      @change="emitInput"
+      @update:model-value="emitInput"
     >
       <v-btn :value="-1">
         Disadvantage
@@ -36,24 +36,16 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
 
-export default {
-  components: {
-    VerticalHex
-  },
-  props: {
-    value: {
-      type: Number,
-      required: true,
-    }
-  },
-  methods: {
-    emitInput(e) {
-      e = e || 0;
-      this.$emit('input', e)
-    }
-  }
-};
+const props = defineProps<{
+  value: number;
+}>();
+
+const emit = defineEmits(['input']);
+
+function emitInput(e: number) {
+  emit('input', e || 0);
+}
 </script>

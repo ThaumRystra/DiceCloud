@@ -21,12 +21,12 @@
         class="mx-2 mb-2"
         persistent-hint
         style="flex-grow: 0"
-        append-outer-icon="mdi-send"
+        append-icon="mdi-send"
         :hint="inputHint"
         :error-messages="inputError"
         :disabled="!editPermission"
         :loading="submitLoading"
-        @click:append-outer="submit"
+        @click:append="submit"
         @keyup.enter="submit"
         @keyup.up="decrementHistory"
         @keyup.down="incrementHistory"
@@ -35,8 +35,12 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, watch, onMounted } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { Tracker } from 'meteor/tracker';
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs';
+import { eventBus } from '/imports/client/ui/eventBus';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
@@ -44,139 +48,118 @@ import { parse, prettifyParseError } from '/imports/parser/parser';
 import resolve from '/imports/parser/resolve';
 import toString from '/imports/parser/toString';
 import TabletopLogEntry from '/imports/client/ui/log/TabletopLogEntry.vue';
-import { Tracker } from 'meteor/tracker'
 
-export default {
-  components: {
-    TabletopLogEntry,
-  },
-  props: {
-    tabletopId: {
-      type: String,
-      default: undefined,
-    },
-  },
-  data(){return {
-    inputHint: undefined,
-    inputError: undefined,
-    input: undefined,
-    history: [],
-    historyIndex: 1,
-    submitLoading: false,
-    creatureId: undefined,
-  }},
-  watch: {
-    input(value){
-      this.input = value;
-      this.recalculate();
-    },
-    creatureId() {
-      Tracker.afterFlush(() => this.recalculate())
-    },
-    historyIndex(i) {
-      if (typeof this.history[i] === 'string') {
-        this.input = this.history[i];
-      }
+const props = defineProps<{
+  tabletopId?: string;
+}>();
+
+const inputHint = ref<string | undefined>(undefined);
+const inputError = ref<string | undefined>(undefined);
+const input = ref<string | undefined>(undefined);
+const history = ref<string[]>([]);
+const historyIndex = ref(1);
+const submitLoading = ref(false);
+const creatureId = ref<string | undefined>(undefined);
+
+onMounted(() => {
+  eventBus.on('active-tabletop-character-change', (id: string) => {
+    creatureId.value = id;
+  });
+});
+
+const { result: logs } = autorun(() => {
+  const filter: any = {};
+  if (props.tabletopId) filter.tabletopId = props.tabletopId;
+  else if (creatureId.value) filter.creatureId = creatureId.value;
+  return CreatureLogs.find(filter, { sort: { date: -1 }, limit: 100 });
+});
+
+const { result: creature } = autorun(() => Creatures.findOne(creatureId.value) || {});
+const { result: variables } = autorun(() =>
+  CreatureVariables.findOne({ _creatureId: creatureId.value }) || {}
+);
+const { result: editPermission } = autorun(() => {
+  if (!(creature.value as any)?._id) return false;
+  try {
+    assertEditPermission(creature.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+watch(input, (value) => {
+  input.value = value;
+  recalculate();
+});
+
+watch(creatureId, () => {
+  Tracker.afterFlush(() => recalculate());
+});
+
+watch(historyIndex, (i) => {
+  if (typeof history.value[i] === 'string') {
+    input.value = history.value[i];
+  }
+});
+
+async function submit() {
+  if (!input.value) return;
+  if (submitLoading.value) return;
+  const log: any = { roll: input.value };
+  if (props.tabletopId) log.tabletopId = props.tabletopId;
+  if (creatureId.value) log.creatureId = creatureId.value;
+  submitLoading.value = true;
+  try {
+    await logRoll.callAsync(log);
+    submitLoading.value = false;
+    addHistory(input.value);
+    input.value = '';
+    inputError.value = undefined;
+  } catch (error: any) {
+    submitLoading.value = false;
+    inputError.value = error.message || error.toString();
+    console.error(error);
+  }
+}
+
+function addHistory(string: string) {
+  if (string === history.value[history.value.length - 1]) return;
+  history.value.push(string);
+  if (history.value.length > 50) history.value.shift();
+  historyIndex.value = history.value.length;
+}
+
+async function recalculate() {
+  inputHint.value = undefined;
+  inputError.value = undefined;
+  if (!input.value) return;
+  let result;
+  try {
+    result = parse(input.value);
+  } catch (e: any) {
+    if (e?.constructor?.name === 'EndOfInputError') {
+      inputError.value = '...';
+    } else {
+      inputError.value = prettifyParseError(e);
     }
-  },
-  mounted() {
-    this.$root.$on('active-tabletop-character-change', (id) => {
-      this.creatureId = id;
-    });
-  },
-  methods: {
-    submit() {
-      if (!this.input) return;
-      if (this.submitLoading) return;
-      const log = {
-        roll: this.input,
-      };
-      if (this.tabletopId) log.tabletopId = this.tabletopId;
-      if (this.creatureId) log.creatureId = this.creatureId;
-      this.submitLoading = true;
-      logRoll.call(log, (error) => {
-        this.submitLoading = false;
-        if (!error) {
-          this.addHistory(this.input);
-          this.input = '';
-          this.inputError = undefined;
-          return;
-        }
-        this.inputError = error.message || error.toString();
-        console.error(error);
-      });
-    },
-    addHistory(string) {
-      // Don't add duplicates back to back in history
-      if (string === this.history[this.history.length - 1]) return;
-      this.history.push(string);
-      if (this.history.length > 50) this.history.shift();
-      this.historyIndex = this.history.length;
-    },
-    async recalculate() {
-      this.inputHint = this.inputError = undefined;
-      if (!this.input) return;
-      let result;
-      try {
-        result = parse(this.input);
-      } catch (e){
-        if (e?.constructor?.name === 'EndOfInputError'){
-          this.inputError = '...';
-        } else {
-          let error = prettifyParseError(e);
-          this.inputError = error;
-        }
-        return;
-      }
-      try {
-        let {result: compiled} = await resolve('compile', result, this.variables);
-        this.inputHint = toString(compiled);
-        return;
-      } catch (e){
-        console.warn(e);
-        this.inputError = 'Compilation error';
-        return;
-      }
-    },
-    incrementHistory() {
-      if (this.historyIndex < this.history.length) {
-        this.historyIndex += 1;
-      }
-    },
-    decrementHistory() {
-      if (this.historyIndex > 0) {
-        this.historyIndex -= 1;
-      }
-    }
-  },
-  meteor: {
-    logs() {
-      const filter = {};
-      if (this.tabletopId) {
-        filter.tabletopId = this.tabletopId;
-      } else if (this.creatureId) {
-        filter.creatureId = this.creatureId;
-      }
-      return CreatureLogs.find(filter, {
-        sort: {date: -1},
-        limit: 100
-      });
-    },
-    creature(){
-      return Creatures.findOne(this.creatureId) || {};
-    },
-    variables(){
-      return CreatureVariables.findOne({_creatureId: this.creatureId}) || {};
-    },
-    editPermission(){
-      try {
-        assertEditPermission(this.creature, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-  },
+    return;
+  }
+  try {
+    const { result: compiled } = await resolve('compile', result, variables.value);
+    inputHint.value = toString(compiled);
+  } catch (e) {
+    console.warn(e);
+    inputError.value = 'Compilation error';
+  }
+}
+
+function incrementHistory() {
+  if (historyIndex.value < history.value.length) historyIndex.value += 1;
+}
+
+function decrementHistory() {
+  if (historyIndex.value > 0) historyIndex.value -= 1;
 }
 </script>
 

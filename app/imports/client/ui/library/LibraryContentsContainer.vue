@@ -11,119 +11,90 @@
       @move-within-root="moveWithinRoot"
       @move-between-roots="moveBetweenRoots"
     />
-    <v-layout
+    <div
       v-else
-      align-center
-      justify-center
+      class="d-flex align-center justify-center"
       style="width: 100%;"
     >
       <v-progress-circular
         color="primary"
         :indeterminate="slowShouldSubscribe"
       />
-    </v-layout>
+    </div>
   </v-fade-transition>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
 import Libraries from '/imports/api/library/Libraries';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { filterToForest } from '/imports/api/parenting/parentingFunctions';
+import { moveBetweenRoots as moveBetweenRootsMethod, moveWithinRoot as moveWithinRootMethod } from '/imports/api/parenting/organizeMethods';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { moveBetweenRoots, moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 
-export default {
-  components: {
-    TreeNodeList,
-  },
-  props: {
-    libraryId: {
-      type: String,
-      default: undefined,
-    },
-    organizeMode: Boolean,
-    selectedNode: {
-      type: Object,
-      default: undefined,
-    },
-    shouldSubscribe: Boolean,
-    filter: {
-      type: Object,
-      default: undefined,
-    },
-    extraFields: {
-      type: Array,
-      default: undefined,
-    },
-  },
-  data() {
-    return {
-      slowShouldSubscribe: this.shouldSubscribe,
-    };
-  },
-  watch: {
-    shouldSubscribe(newValue) {
-      if (this.timeoutId) {
-        clearTimeout(this.timeoutId);
-        delete this.timeoutId;
-      }
-      if (newValue) {
-        this.slowShouldSubscribe = newValue
-      } else {
-        this.timeoutId = setTimeout(() => {
-          this.slowShouldSubscribe = newValue
-        }, 2000);
-      }
+const props = defineProps<{
+  libraryId?: string;
+  organizeMode?: boolean;
+  selectedNode?: Record<string, any>;
+  shouldSubscribe?: boolean;
+  filter?: Record<string, any>;
+  extraFields?: any[];
+}>();
+
+const slowShouldSubscribe = ref(props.shouldSubscribe ?? false);
+let timeoutId: ReturnType<typeof setTimeout> | undefined;
+
+watch(() => props.shouldSubscribe, (newValue) => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    timeoutId = undefined;
+  }
+  if (newValue) {
+    slowShouldSubscribe.value = newValue;
+  } else {
+    timeoutId = setTimeout(() => {
+      slowShouldSubscribe.value = newValue ?? false;
+    }, 2000);
+  }
+});
+
+autorun(() => {
+  if (slowShouldSubscribe.value) {
+    Meteor.subscribe('libraryNodes', props.libraryId, props.extraFields);
+  }
+});
+
+const { result: library } = autorun(() => Libraries.findOne(props.libraryId));
+
+const { result: libraryChildren } = autorun(() => {
+  if (!library.value) return;
+  return filterToForest(
+    LibraryNodes,
+    props.libraryId,
+    props.filter,
+    {
+      includeFilteredDocAncestors: true,
+      includeFilteredDocDescendants: true,
     }
-  },
-  meteor: {
-    $subscribe: {
-      'libraryNodes'() {
-        if (this.slowShouldSubscribe) {
-          return [this.libraryId, this.extraFields];
-        } else {
-          return [];
-        }
-      }
-    },
-    library() {
-      return Libraries.findOne(this.libraryId);
-    },
-    libraryChildren() {
-      if (!this.library) return;
-      return filterToForest(
-        LibraryNodes,
-        this.libraryId,
-        this.filter,
-        {
-          includeFilteredDocAncestors: true,
-          includeFilteredDocDescendants: true,
-        }
-      );
-    },
-  },
-  methods: {
-    moveWithinRoot({ doc, newPosition }) {
-      moveWithinRoot.callAsync({
-        docRef: {
-          id: doc._id,
-          collection: 'libraryNodes',
-        },
-        newPosition,
-      });
-    },
-    moveBetweenRoots({ doc, newPosition, newRootRef }) {
-      moveBetweenRoots.callAsync({
-        docRef: {
-          id: doc._id,
-          collection: 'libraryNodes',
-        },
-        newPosition,
-        newRootRef,
-      });
-    },
-  },
-};
+  );
+});
+
+function moveWithinRoot({ doc, newPosition }: any) {
+  moveWithinRootMethod.callAsync({
+    docRef: { id: doc._id, collection: 'libraryNodes' },
+    newPosition,
+  });
+}
+
+function moveBetweenRoots({ doc, newPosition, newRootRef }: any) {
+  moveBetweenRootsMethod.callAsync({
+    docRef: { id: doc._id, collection: 'libraryNodes' },
+    newPosition,
+    newRootRef,
+  });
+}
 </script>
 
 <style lang="css" scoped>

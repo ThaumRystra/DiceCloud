@@ -57,49 +57,52 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default {
-  components: {
-    FormSection,
-  },
-  mixins: [propertyFormMixin],
-  computed: {
-    locationItems() {
-      if (this.model.tab === 'stats') {
-        return [
-          { text: 'Start', value: 'start' },
-          { text: 'After events', value: 'events' },
-          { text: 'After stats', value: 'stats' },
-          { text: 'After skills', value: 'skills' },
-          { text: 'After proficiencies', value: 'proficiencies' },
-          { text: 'End', value: 'end' },
-        ];
-      } else {
-        return [
-          { text: 'Start', value: 'start' },
-          { text: 'End', value: 'end' },
-        ];
-      }
-    }
-  },
-  methods: {
-    changeTab(path, value, ack) {
-      if (!Array.isArray(path)){
-        path = [path];
-      }
-      if (
-        value !== 'stats' &&
-        (this.model.location !== 'start' && this.model.location !== 'end')
-        || (!this.model.location && value)
-      )
-      this.$emit('change', {path: ['location'], value: 'start'});
-      this.$emit('change', {path, value, ack});
-    },
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const locationItems = computed(() => {
+  if (props.model.tab === 'stats') {
+    return [
+      { text: 'Start', value: 'start' },
+      { text: 'After events', value: 'events' },
+      { text: 'After stats', value: 'stats' },
+      { text: 'After skills', value: 'skills' },
+      { text: 'After proficiencies', value: 'proficiencies' },
+      { text: 'End', value: 'end' },
+    ];
+  } else {
+    return [
+      { text: 'Start', value: 'start' },
+      { text: 'End', value: 'end' },
+    ];
   }
-};
+});
+
+function changeTab(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  if (
+    value !== 'stats' &&
+    (props.model.location !== 'start' && props.model.location !== 'end')
+    || (!props.model.location && value)
+  ) {
+    emit('change', { path: ['location'], value: 'start' });
+  }
+  emit('change', { path: pathArray, value, ack });
+}
 </script>
 
 <style lang="css" scoped>

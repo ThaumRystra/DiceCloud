@@ -1,6 +1,5 @@
 <template
   lang="html"
-  functional
 >
   <div
     class="pa-4 layout column align-center card-background"
@@ -14,6 +13,5 @@
   </div>
 </template>
 
-<script lang="js">
-  export default {}
+<script setup lang="ts">
 </script>

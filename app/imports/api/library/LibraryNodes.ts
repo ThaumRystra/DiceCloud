@@ -156,7 +156,7 @@ const insertNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ libraryNode, parentRef }) {
+  async run({ libraryNode, parentRef }) {
     // get the new ancestry
     const parentDoc = fetchDocByRef(parentRef);
 
@@ -165,12 +165,12 @@ const insertNode = new ValidatedMethod({
     if (parentRef.collection === 'libraries') {
       rootLibrary = parentDoc;
     } else if (parentRef.collection === 'libraryNodes') {
-      rootLibrary = Libraries.findOne(parentDoc.root.id);
+      rootLibrary = await Libraries.findOneAsync(parentDoc.root.id);
       libraryNode.parentId = parentRef.id;
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
-    assertEditPermission(rootLibrary, this.userId);
+    await assertEditPermission(rootLibrary, this.userId);
 
     // Set the root of the node we are inserting
     libraryNode.root = { collection: 'libraries', id: rootLibrary._id };
@@ -180,7 +180,7 @@ const insertNode = new ValidatedMethod({
     delete libraryNode._id;
 
     // Insert the node
-    const nodeId = LibraryNodes.insert(libraryNode);
+    const nodeId = await LibraryNodes.insertAsync(libraryNode);
 
     // Update the node if it was a reference node
     if (libraryNode.type == 'reference') {
@@ -189,7 +189,7 @@ const insertNode = new ValidatedMethod({
     }
 
     // Tree structure changed by insert, reorder the tree
-    rebuildNestedSets(LibraryNodes, rootLibrary._id);
+    await rebuildNestedSets(LibraryNodes, rootLibrary._id);
 
     // Return the id of the inserted node
     return nodeId;
@@ -215,9 +215,9 @@ const updateLibraryNode = new ValidatedMethod({
     numRequests: 15,
     timeInterval: 5000,
   },
-  run({ _id, path, value }) {
-    let node = LibraryNodes.findOne(_id);
-    assertDocEditPermission(node, this.userId);
+  async run({ _id, path, value }) {
+    let node = await LibraryNodes.findOneAsync(_id);
+    await assertDocEditPermission(node, this.userId);
     const pathString = path.join('.');
     let modifier;
     // unset empty values
@@ -226,11 +226,11 @@ const updateLibraryNode = new ValidatedMethod({
     } else {
       modifier = { $set: { [pathString]: value } };
     }
-    const numUpdated = LibraryNodes.update(_id, modifier, {
+    const numUpdated = await LibraryNodes.updateAsync(_id, modifier, {
       selector: { type: node.type },
     });
     if (node.type == 'reference') {
-      node = LibraryNodes.findOne(_id);
+      node = await LibraryNodes.findOneAsync(_id);
       updateReferenceNodeWork(node, this.userId);
     }
     return numUpdated;
@@ -245,10 +245,10 @@ const pushToLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, path, value }) {
-    const node = LibraryNodes.findOne(_id);
-    assertDocEditPermission(node, this.userId);
-    return LibraryNodes.update(_id, {
+  async run({ _id, path, value }) {
+    const node = await LibraryNodes.findOneAsync(_id);
+    await assertDocEditPermission(node, this.userId);
+    return await LibraryNodes.updateAsync(_id, {
       $push: { [path.join('.')]: value },
     }, {
       selector: { type: node.type },
@@ -264,10 +264,10 @@ const pullFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, path, itemId }) {
-    const node = LibraryNodes.findOne(_id);
-    assertDocEditPermission(node, this.userId);
-    return LibraryNodes.update(_id, {
+  async run({ _id, path, itemId }) {
+    const node = await LibraryNodes.findOneAsync(_id);
+    await assertDocEditPermission(node, this.userId);
+    return await LibraryNodes.updateAsync(_id, {
       $pull: { [path.join('.')]: { _id: itemId } },
     }, {
       selector: { type: node.type },
@@ -286,9 +286,9 @@ const softRemoveLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
-    const node = LibraryNodes.findOne(_id);
-    assertDocEditPermission(node, this.userId);
+  async run({ _id }) {
+    const node = await LibraryNodes.findOneAsync(_id);
+    await assertDocEditPermission(node, this.userId);
     softRemove(LibraryNodes, node);
   }
 });
@@ -303,11 +303,11 @@ const restoreLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
+  async run({ _id }) {
     // Permissions
-    const node = LibraryNodes.findOne(_id);
+    const node = await LibraryNodes.findOneAsync(_id);
     if (!node) return;
-    assertDocEditPermission(node, this.userId);
+    await assertDocEditPermission(node, this.userId);
     // Do work
     restore(LibraryNodes, node);
   }

@@ -27,15 +27,15 @@ const updateCreature = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, path, value }) {
-    let creature = Creatures.findOne(_id);
-    assertEditPermission(creature, this.userId);
+  async run({ _id, path, value }) {
+    let creature = await Creatures.findOneAsync(_id);
+    await assertEditPermission(creature, this.userId);
     if (value === undefined || value === null) {
-      Creatures.update(_id, {
+      await Creatures.updateAsync(_id, {
         $unset: { [path.join('.')]: 1 },
       });
     } else {
-      Creatures.update(_id, {
+      await Creatures.updateAsync(_id, {
         $set: { [path.join('.')]: value },
       });
     }

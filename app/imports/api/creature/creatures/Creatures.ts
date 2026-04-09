@@ -165,7 +165,6 @@ const CreatureSchema = TypedSimpleSchema.from({
 
   // Tabletop
   tabletopId: {
-    index: 1,
     type: String,
     max: 32,
     optional: true,

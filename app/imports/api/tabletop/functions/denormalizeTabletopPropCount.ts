@@ -43,7 +43,7 @@ async function doUpdateTabletopPropCount(tabletopId: string) {
     creatureCount += 1;
     propCount += creature.propCount || 0;
   });
-  return Tabletops.update(tabletopId, {
+  return Tabletops.updateAsync(tabletopId, {
     $set: {
       propCount,
       creatureCount,

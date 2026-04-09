@@ -17,7 +17,6 @@ let MessagesSchema = new SimpleSchema({
   },
   timestamp: {
     type: Date,
-    index: 1,
   },
   userId: {
     type: String,

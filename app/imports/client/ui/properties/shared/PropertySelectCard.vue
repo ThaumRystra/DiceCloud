@@ -2,7 +2,7 @@
   <v-card
     hover
     style="height: 100%; overflow: hidden;"
-    :class="{'accent--text': disabled}"
+    :class="{'text-accent': disabled}"
     :disabled="disabled"
     @click="e => $emit('click', e)"
   >
@@ -11,7 +11,7 @@
       style="text-align: center;"
     >
       <v-avatar tile>
-        <v-icon x-large>
+        <v-icon size="x-large">
           {{ property.icon }}
         </v-icon>
       </v-avatar>
@@ -38,22 +38,18 @@
   </v-card>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    property: {
-      type: Object,
-      required: true,
-    },
-    disabled: Boolean,
-  },
-  meteor: {
-    showPropertyHelp(){
-      let user = Meteor.user();
-      return !(user?.preferences?.hidePropertySelectDialogHelp)
-    },
-  },
-}
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+
+defineProps<{
+  property: Record<string, any>;
+  disabled?: boolean;
+}>();
+
+const { result: showPropertyHelp } = autorun(() => {
+  const user = Meteor.user();
+  return !(user?.preferences?.hidePropertySelectDialogHelp);
+});
 </script>
 
 <style lang="css" scoped>

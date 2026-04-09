@@ -1,15 +1,17 @@
 <template lang="html">
   <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      Delete User Account
-    </v-toolbar-title>
+    <template #toolbar>
+      <v-toolbar-title>
+        Delete User Account
+      </v-toolbar-title>
+    </template>
     <div>
       <h2>Are you sure you want to delete your account?</h2>
       <v-alert
         :value="true"
         icon="mdi-alert"
         color="error"
-        outlined
+        variant="outlined"
       >
         Deleted accounts can not be recovered
       </v-alert>
@@ -45,9 +47,8 @@
           />
         </v-list>
       </template>
-      <v-layout
-        column
-        align-start
+      <div
+        class="d-flex flex-column align-start"
       >
         <v-text-field
           v-if="user.username"
@@ -72,82 +73,63 @@
         >
           Permanently delete account
         </v-btn>
-      </v-layout>
+      </div>
     </div>
-    <div
-      slot="actions"
-      class="layout justify-end"
-    >
-      <v-btn
-        text
-        @click="$store.dispatch('popDialogStack')"
+    <template #actions>
+      <div
+        class="d-flex justify-end"
       >
-        Cancel
-      </v-btn>
-    </div>
+        <v-btn
+          variant="text"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Cancel
+        </v-btn>
+      </div>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import Libraries from '/imports/api/library/Libraries';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
 
-export default {
-  components: {
-    DialogBase,
-    CreatureListTile,
-  },
-  data() {
-    return {
-      usernameInput: '',
-      verificationInput: '',
-    };
-  },
-  meteor: {
-    $subscribe: {
-      'ownedDocuments'() {
-        return [];
-      },
-    },
-    characters() {
-      return Creatures.find({ owner: Meteor.userId() });
-    },
-    libraries() {
-      return Libraries.find({ owner: Meteor.userId() });
-    },
-    user() {
-      return Meteor.user();
-    },
-  },
-  computed: {
-    usernameInputValid() {
-      let username = this.user.username;
-      if (!username) return true;
-      let input = this.usernameInput;
-      if (!input) return false;
-      if (input.toLowerCase() === username.toLowerCase()) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    verificationInputValid() {
-      let input = this.verificationInput || '';
-      return input.toLowerCase() === 'delete my account'
-    },
-    valid() {
-      return this.usernameInputValid && this.verificationInputValid;
-    }
-  },
-  methods: {
-    deleteAccount() {
-      this.$router.push('/');
-      Meteor.users.deleteMyAccount.call();
-      this.$store.dispatch('popDialogStack');
-    },
-  },
+const store = useStore();
+const router = useRouter();
+
+const usernameInput = ref('');
+const verificationInput = ref('');
+
+autorun(() => Meteor.subscribe('ownedDocuments'));
+
+const { result: characters } = autorun(() => Creatures.find({ owner: Meteor.userId() }));
+const { result: libraries } = autorun(() => Libraries.find({ owner: Meteor.userId() }));
+const { result: user } = autorun(() => Meteor.user());
+
+const usernameInputValid = computed(() => {
+  const username = user.value?.username;
+  if (!username) return true;
+  const input = usernameInput.value;
+  if (!input) return false;
+  return input.toLowerCase() === username.toLowerCase();
+});
+
+const verificationInputValid = computed(() =>
+  (verificationInput.value || '').toLowerCase() === 'delete my account'
+);
+
+const valid = computed(() => usernameInputValid.value && verificationInputValid.value);
+
+function deleteAccount() {
+  router.push('/');
+  Meteor.users.deleteMyAccount.callAsync();
+  store.dispatch('popDialogStack');
 }
 </script>
 

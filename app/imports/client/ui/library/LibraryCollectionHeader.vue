@@ -2,21 +2,25 @@
   <v-list-item
     style="min-height: 60px; min-width: 0;"
     class="px-0 font-weight-bold"
-    :class="isSelected && !disabled && 'primary--text v-list-item--active'"
+    :class="isSelected && !disabled && 'text-primary v-list-item--active'"
   >
-    <v-list-item-action
+    <template
       v-if="selection && !singleSelect"
+      #prepend
     >
       <v-checkbox
         :disabled="disabled"
-        :input-value="disabled || isSelected"
+        :model-value="disabled || isSelected"
         @change="e => $emit('select', e)"
         @click.stop
       />
-    </v-list-item-action>
-    <v-list-item-avatar v-else>
+    </template>
+    <template
+      v-else
+      #prepend
+    >
       <shared-icon :model="model" />
-    </v-list-item-avatar>
+    </template>
     <v-list-item-title class="d-flex align-center">
       <div
         class="text-truncate text-no-wrap"
@@ -51,48 +55,40 @@
   </v-list-item>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
+import { useStore } from 'vuex';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 
-export default {
-  components: {
-    SharedIcon,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    open: Boolean,
-    selection: Boolean,
-    singleSelect: Boolean,
-    dense: Boolean,
-    isSelected: Boolean,
-    disabled: Boolean,
-  },
-  data(){return {
-    renaming: false,
-  }},
-  meteor: {
-    canEdit(){
-      try {
-        assertDocEditPermission(this.model, Meteor.userId());
-        return true
-      } catch (e) {
-        return false;
-      }
-    }
-  },
-  methods: {
-    editLibraryCollection() {
-      this.$store.commit('pushDialogStack', {
-        data: { _id: this.model._id},
-        component: 'library-collection-edit-dialog',
-        elementId: `library-collection-${this.model._id}`,
-      });
-    }
+const props = defineProps<{
+  model: Record<string, any>;
+  open?: boolean;
+  selection?: boolean;
+  singleSelect?: boolean;
+  dense?: boolean;
+  isSelected?: boolean;
+  disabled?: boolean;
+}>();
+
+const store = useStore();
+
+const { result: canEdit } = autorun(() => {
+  try {
+    assertDocEditPermission(props.model, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
   }
+});
+
+function editLibraryCollection() {
+  store.commit('pushDialogStack', {
+    data: { _id: props.model._id },
+    component: 'library-collection-edit-dialog',
+    elementId: `library-collection-${props.model._id}`,
+  });
 }
 </script>
 

@@ -1,56 +1,43 @@
 <template
   lang="html"
-  functional
 >
   <v-list-item
     v-bind="$attrs"
-    :class="(isSelected || selectedByCollection) && !disabled && 'primary--text v-list-item--active'"
+    :class="(isSelected || selectedByCollection) && !disabled && 'text-primary v-list-item--active'"
     :to="selection ? undefined : to"
     @click="singleSelect && $emit('select')"
   >
-    <v-list-item-action
+    <template
       v-if="selection && !singleSelect"
+      #prepend
     >
       <v-checkbox
         :disabled="disabled"
-        :input-value="disabled || isSelected"
+        :model-value="disabled || isSelected"
         :off-icon="selectedByCollection ? 'mdi-checkbox-intermediate' : undefined"
         @change="e => $emit('select', e)"
         @click.stop
       />
-    </v-list-item-action>
-    <v-list-item-avatar v-else>
+    </template>
+    <template v-else #prepend>
       <shared-icon :model="model" />
-    </v-list-item-avatar>
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ model.name }}
-      </v-list-item-title>
-    </v-list-item-content>
+    </template>
+    <v-list-item-title>
+      {{ model.name }}
+    </v-list-item-title>
   </v-list-item>
 </template>
 
-<script lang="js" functional>
+<script setup lang="ts">
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 
-export default {
-  components: {
-    SharedIcon,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    selection: Boolean,
-    singleSelect: Boolean,
-    isSelected: Boolean,
-    selectedByCollection: Boolean,
-    disabled: Boolean,
-    to: {
-      type: Object,
-      required: true,
-    }
-  }
-}
+defineProps<{
+  model: Record<string, any>;
+  selection?: boolean;
+  singleSelect?: boolean;
+  isSelected?: boolean;
+  selectedByCollection?: boolean;
+  disabled?: boolean;
+  to: Record<string, any>;
+}>();
 </script>

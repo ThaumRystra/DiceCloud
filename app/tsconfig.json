@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "module": "esNext",
-    "moduleResolution": "Node",
     "target": "es2018",
     "lib": [
       "esnext",
@@ -10,43 +9,31 @@
     ],
     "jsx": "preserve",
     "strict": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
     "noImplicitAny": false,
-    "baseUrl": ".",
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
     "noErrorTruncation": true,
     "outDir": "build",
-    "paths": {
-      "/*": [
-        "*"
-      ],
-      "meteor/*": [
-        "node_modules/@types/meteor/*",
-        ".meteor/local/types/packages.d.ts"
-      ],
-      "meteor/aldeed:collection2": [
-        "packages/collection2/collection2.js"
-      ]
-    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "paths": {
+      "/imports/*": [
+        "./imports/*"
+      ]
+    },
+    "moduleResolution": "bundler",
+    "types": [
+      "meteor"
+    ]
   },
   "vueCompilerOptions": {
-    "target": 2
+    "target": 3
   },
   "exclude": [
     "node_modules",
     "**/node_modules/*",
     ".meteor",
     "./packages/**"
-  ],
-  "typeAcquisition": {
-    "include": [
-      "meteor",
-      "node_modules/@types/meteor/globals/*"
-    ]
-  }
+  ]
 }

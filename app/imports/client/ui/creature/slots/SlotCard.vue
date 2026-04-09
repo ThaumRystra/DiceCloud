@@ -36,87 +36,61 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { useTheme } from 'vuetify';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 
-export default {
-  components: {
-    CardHighlight,
-    PropertyDescription,
-  },
-  inject: {
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-    context: {
-      default: {},
-    },
-  },
-  props: {
-    model: {
-      type: Object,
-      default: undefined,
-    },
-  },
-  data(){ return {
-    hover: false,
-  }},
-  computed: {
-    accentColor() {
-      if (this.model.color) {
-        return this.model.color
-      } else if (this.theme.isDark){
-        return this.$vuetify.theme.themes.dark.primary;
-      } else {
-        return this.$vuetify.theme.themes.light.primary;
+const props = defineProps<{ model?: Record<string, any> }>();
+
+const theme = inject('theme', { isDark: false } as any);
+const context = inject('context', {} as any);
+const store = useStore();
+const vuetifyTheme = useTheme();
+const hover = ref(false);
+
+const accentColor = computed(() => {
+  if (props.model?.color) return props.model.color;
+  if (theme.isDark) return vuetifyTheme.themes.value['dark']?.colors?.primary;
+  return vuetifyTheme.themes.value['light']?.colors?.primary;
+});
+
+function fillSlot() {
+  const slotId = props.model?._id;
+  store.commit('pushDialogStack', {
+    component: 'slot-fill-dialog',
+    elementId: `slot-card-${slotId}`,
+    data: { slotId, creatureId: context.creatureId },
+    async callback(nodeIds: string[]) {
+      if (!nodeIds || !nodeIds.length) return;
+      try {
+        await insertPropertyFromLibraryNode.callAsync({
+          nodeIds,
+          parentRef: { id: slotId, collection: 'creatureProperties' },
+        });
+      } catch (error: any) {
+        console.error(error);
+        snackbar({ text: error.reason || error.message || error.toString() });
       }
-    }
-  },
-  methods: {
-    fillSlot() {
-      const slotId = this.model._id;
-      this.$store.commit('pushDialogStack', {
-        component: 'slot-fill-dialog',
-        elementId: `slot-card-${slotId}`,
-        data: {
-          slotId,
-          creatureId: this.context.creatureId,
-        },
-        callback(nodeIds){
-          if (!nodeIds || !nodeIds.length) return;
-          insertPropertyFromLibraryNode.call({
-            nodeIds,
-            parentRef: {
-              'id': slotId,
-              'collection': 'creatureProperties',
-            },
-          }, error => {
-            if (error){
-              console.error(error);
-              snackbar({text: error.reason || error.message || error.toString()});
-            }
-          });
-        }
-      });
     },
-    ignoreProp(){
-      updateCreatureProperty.call({
-        _id: this.model._id,
-        path: ['ignored'],
-        value: true
-      }, error => {
-        if (error){
-          console.error(error);
-          snackbar({text: error.reason || error.message || error.toString()});
-        }
-      });
-    },
+  });
+}
+
+async function ignoreProp() {
+  try {
+    await updateCreatureProperty.callAsync({
+      _id: props.model?._id,
+      path: ['ignored'],
+      value: true,
+    });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason || error.message || error.toString() });
   }
 }
 </script>

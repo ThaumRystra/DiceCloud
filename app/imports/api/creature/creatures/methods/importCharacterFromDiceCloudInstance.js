@@ -14,7 +14,7 @@ if (Meteor.isServer) {
   migrateApiCreature = require('/imports/migrations/apiCreature/migrateApiCreature.js').default;
 }
 
-function importApiCreature(apiCreature, userId) {
+async function importApiCreature(apiCreature, userId) {
   const apiVersion = apiCreature.meta?.schemaVersion ?? 2;
   const creature = apiCreature.creatures[0];
   const creatureId = creature._id;
@@ -36,7 +36,7 @@ function importApiCreature(apiCreature, userId) {
   });
 
   // Don't upload creatures twice
-  const existingCreature = Creatures.findOne(creature._id, {
+  const existingCreature = await Creatures.findOneAsync(creature._id, {
     fields: { _id: 1 }
   });
 
@@ -61,21 +61,27 @@ function importApiCreature(apiCreature, userId) {
 
   // Insert the creature sub documents
   // They still have their original _id's
-  Creatures.insert(creature);
+  await Creatures.insertAsync(creature);
   try {
     // Add all the properties
     if (apiCreature.creatureProperties && apiCreature.creatureProperties.length) {
-      CreatureProperties.batchInsert(apiCreature.creatureProperties);
+      for (const prop of apiCreature.creatureProperties) {
+        await CreatureProperties.insertAsync(prop);
+      }
     }
     if (apiCreature.experiences && apiCreature.experiences.length) {
-      Experiences.batchInsert(apiCreature.experiences);
+      for (const exp of apiCreature.experiences) {
+        await Experiences.insertAsync(exp);
+      }
     }
     if (apiCreature.logs && apiCreature.logs.length) {
-      CreatureLogs.batchInsert(apiCreature.logs);
+      for (const log of apiCreature.logs) {
+        await CreatureLogs.insertAsync(log);
+      }
     }
   } catch (e) {
     // If the above fails, delete the inserted creature
-    removeCreatureWork(creatureId);
+    await removeCreatureWork(creatureId);
     throw e;
   }
   return creatureId;
@@ -97,7 +103,7 @@ const importCharacterFromDiceCloudInstance = new ValidatedMethod({
       throw new Meteor.Error('no-input',
         'No character data was provided');
     }
-    assertHasCharactersSlots(this.userId);
+    await assertHasCharactersSlots(this.userId);
     if (Meteor.isServer) {
       return importApiCreature(characterData, this.userId)
     }

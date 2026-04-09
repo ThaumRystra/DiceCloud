@@ -1,13 +1,13 @@
 <template lang="html">
   <div
-    v-if="$vuetify.breakpoint.smAndUp"
-    class="layout split"
+    v-if="$vuetify.display.smAndUp"
+    class="d-flex split"
   >
     <v-list
       class="left"
       subheader
       two-line
-      dense
+      density="compact"
     >
       <v-slide-x-transition
         group
@@ -24,7 +24,7 @@
       class="right"
       subheader
       two-line
-      dense
+      density="compact"
     >
       <v-slide-x-transition
         group
@@ -39,7 +39,7 @@
     class="small"
     subheader
     two-line
-    dense
+    density="compact"
   >
     <v-slide-x-transition
       group
@@ -51,9 +51,7 @@
   </v-list>
 </template>
 
-<script lang="js">
-export default {
-}
+<script setup lang="ts">
 </script>
 
 <style lang="css" scoped>

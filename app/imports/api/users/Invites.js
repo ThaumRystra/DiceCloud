@@ -9,19 +9,15 @@ let InviteSchema = new SimpleSchema({
   inviter: {
     type: String,
     max: 32,
-    index: 1,
   },
   invitee: {
     type: String,
     max: 32,
     optional: true,
-    index: 1,
   },
   inviteToken: {
     type: String,
     optional: true,
-    index: 1,
-    unique: 1,
   },
   isFunded: {
     type: Boolean,
@@ -40,14 +36,14 @@ if (Meteor.isServer) {
   });
 }
 
-function alignInvitesWithPatreonTier(user) {
+async function alignInvitesWithPatreonTier(user) {
   const tier = getUserTier(user);
   let availableInvites = tier.invites;
   let currentlyFundedInvites = [];
   let currenltyUnfundedInvites = [];
-  Invites.find({
+  await Invites.find({
     inviter: user._id
-  }).forEach(invite => {
+  }).forEachAsync(invite => {
     if (invite.isFunded) {
       currentlyFundedInvites.push(invite);
     } else {
@@ -66,9 +62,9 @@ function alignInvitesWithPatreonTier(user) {
   while (currentlyFundedInvites.length > availableInvites) {
     let inviteToDefund = currentlyFundedInvites.pop();
     if (inviteToDefund.invitee) {
-      Invites.update(inviteToDefund._id, { $set: { isFunded: false } });
+      await Invites.updateAsync(inviteToDefund._id, { $set: { isFunded: false } });
     } else {
-      Invites.remove(inviteToDefund._id);
+      await Invites.removeAsync(inviteToDefund._id);
     }
   }
   // Fund unfunded invites or insert new ones
@@ -76,9 +72,9 @@ function alignInvitesWithPatreonTier(user) {
     if (currenltyUnfundedInvites.length) {
       let inviteToFund = currenltyUnfundedInvites.pop();
       currentlyFundedInvites.push(inviteToFund);
-      Invites.update(inviteToFund._id, { $set: { isFunded: true } });
+      await Invites.updateAsync(inviteToFund._id, { $set: { isFunded: true } });
     } else {
-      let inviteId = Invites.insert({ inviter: user._id, isFunded: true });
+      let inviteId = await Invites.insertAsync({ inviter: user._id, isFunded: true });
       currentlyFundedInvites.push({ _id: inviteId });
     }
   }
@@ -97,8 +93,8 @@ const getInviteToken = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ inviteId }) {
-    let invite = Invites.findOne(inviteId);
+  async run({ inviteId }) {
+    let invite = await Invites.findOneAsync(inviteId);
     if (this.userId !== invite.inviter) {
       throw new Meteor.Error('Invites.methods.getToken.denied',
         'You need to be the inviter of the invite to create a token');
@@ -107,7 +103,7 @@ const getInviteToken = new ValidatedMethod({
       return invite.inviteToken;
     } else {
       let inviteToken = Random.id(5);
-      Invites.update(inviteId, { $set: { inviteToken } })
+      await Invites.updateAsync(inviteId, { $set: { inviteToken } })
       return inviteToken;
     }
   },
@@ -125,20 +121,20 @@ const acceptInviteToken = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ inviteToken }) {
+  async run({ inviteToken }) {
     if (!this.userId) {
       throw new Meteor.Error('Invites.methods.acceptToken.denied',
         'You need to be the logged in to accept a token');
     }
     if (Meteor.isClient) return;
-    let invite = Invites.findOne({ inviteToken });
+    let invite = await Invites.findOneAsync({ inviteToken });
     if (!invite) {
       throw new Meteor.Error('Invites.methods.acceptToken.notFound',
         'No invite could be found for this link, maybe it has already been claimed');
     }
     // If the invitee is already filled, fix unexpected case by deleting the token
     if (invite.invitee) {
-      Invites.update(invite._id, {
+      await Invites.updateAsync(invite._id, {
         $unset: { inviteToken: 1 }
       });
       throw new Meteor.Error('Invites.methods.acceptToken.alreadyAccepted',
@@ -148,7 +144,7 @@ const acceptInviteToken = new ValidatedMethod({
       throw new Meteor.Error('Invites.methods.acceptToken.ownToken',
         'You can\'t accept your own invite');
     }
-    Invites.update(invite._id, {
+    await Invites.updateAsync(invite._id, {
       $set: { invitee: this.userId },
       $unset: { inviteToken: 1 },
     });
@@ -168,13 +164,13 @@ const revokeInvite = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ inviteId }) {
+  async run({ inviteId }) {
     if (!this.userId) {
       throw new Meteor.Error('Invites.methods.revokeInvite.denied',
         'You need to be the logged in to revoke a token');
     }
     if (Meteor.isClient) return;
-    let invite = Invites.findOne(inviteId);
+    let invite = await Invites.findOneAsync(inviteId);
     if (!invite) {
       throw new Meteor.Error('Invites.methods.revokeInvite.notFound',
         'No invite could be found for this id');
@@ -188,7 +184,7 @@ const revokeInvite = new ValidatedMethod({
     if (!invite.invitee) {
       return;
     }
-    Invites.update(invite._id, {
+    await Invites.updateAsync(invite._id, {
       $unset: { invitee: 1, dateConfirmed: 1 },
     });
   },

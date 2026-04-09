@@ -43,49 +43,51 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default {
-  mixins: [propertyFormMixin],
-  props: {
-    parentTarget: {
-      type: String,
-      default: undefined,
-    },
-  },
-  data() {
-    return {
-      typeOptions: [
-        { value: 'if', text: 'If condition is true' },
-        { value: 'hit', text: 'Attack hit' },
-        { value: 'miss', text: 'Attack miss' },
-        { value: 'failedSave', text: 'Save failed' },
-        { value: 'successfulSave', text: 'Save succeeded' },
-        { value: 'eachTarget', text: 'Apply to each target' },
-        { value: 'random', text: 'Random' },
-        { value: 'index', text: 'Calculated index' },
-        { value: 'choice', text: 'User choice' },
-      ],
-    }
-  },
-  computed: {
-    typeHint() {
-      switch (this.model.branchType) {
-        case 'if': return 'If the condition is true, the child properties are applied';
-        case 'hit': return 'If the parent attack hits, the child properties are applied';
-        case 'miss': return 'If the parent attack misses, the child properties are applied';
-        case 'failedSave': return 'If the parent save is failed, the child properties are applied';
-        case 'successfulSave': return 'If the parent save is made, the child properties are applied';
-        case 'eachTarget': return 'Applies each child property once per target';
-        case 'random': return 'Chooses one child property at random and applies it';
-        case 'index': return 'Chooses one child property to apply based on the given index';
-        case 'choice': return 'Pause the action and let the user choose which child to apply';
-        default: return '';
-      }
-    }
-  }
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+  parentTarget?: string;
+}>(), {
+  errors: () => ({}),
+  parentTarget: undefined,
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
+
+const typeOptions = [
+  { value: 'if', text: 'If condition is true' },
+  { value: 'hit', text: 'Attack hit' },
+  { value: 'miss', text: 'Attack miss' },
+  { value: 'failedSave', text: 'Save failed' },
+  { value: 'successfulSave', text: 'Save succeeded' },
+  { value: 'eachTarget', text: 'Apply to each target' },
+  { value: 'random', text: 'Random' },
+  { value: 'index', text: 'Calculated index' },
+  { value: 'choice', text: 'User choice' },
+];
+
+const typeHint = computed(() => {
+  switch (props.model.branchType) {
+    case 'if': return 'If the condition is true, the child properties are applied';
+    case 'hit': return 'If the parent attack hits, the child properties are applied';
+    case 'miss': return 'If the parent attack misses, the child properties are applied';
+    case 'failedSave': return 'If the parent save is failed, the child properties are applied';
+    case 'successfulSave': return 'If the parent save is made, the child properties are applied';
+    case 'eachTarget': return 'Applies each child property once per target';
+    case 'random': return 'Chooses one child property at random and applies it';
+    case 'index': return 'Chooses one child property to apply based on the given index';
+    case 'choice': return 'Pause the action and let the user choose which child to apply';
+    default: return '';
+  }
+});
 </script>
 
 <style lang="css" scoped>

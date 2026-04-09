@@ -12,24 +12,8 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
+<script setup lang="ts">
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
-export default {
-  components: {
-    MarkdownText,
-  },
-  mixins: [propertyViewerMixin],
-  inject: {
-    context: { default: {} }
-  },
-  computed: {
-    slotTypeName() {
-      if (!this.model.slotFillerType) return;
-      return getPropertyName(this.model.slotFillerType);
-    },
-  }
-}
+defineProps<{ model: Record<string, any> }>();
 </script>

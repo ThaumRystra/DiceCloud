@@ -32,17 +32,17 @@ const addCreaturesToTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({ tabletopId, creatureIds }) {
+  async run({ tabletopId, creatureIds }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.addCreatures.denied',
         'You need to be logged in to remove a tabletop');
     }
     assertUserHasPaidBenefits(this.userId);
-    const tabletop = Tabletops.findOne(tabletopId);
+    const tabletop = await Tabletops.findOneAsync(tabletopId);
     assertUserInTabletop(tabletop, this.userId);
     assertTabletopHasPropSpace(tabletop);
 
-    Creatures.update({
+    await Creatures.updateAsync({
       _id: { $in: creatureIds },
       // You must have write permission for the creatures you
       $or: [

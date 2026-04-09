@@ -6,12 +6,10 @@ const SharingSchema = TypedSimpleSchema.from({
   owner: {
     type: String,
     max: 32,
-    index: 1
   },
   readers: {
     type: Array,
     defaultValue: [],
-    index: 1,
     maxCount: STORAGE_LIMITS.readersCount,
   },
   'readers.$': {
@@ -21,7 +19,6 @@ const SharingSchema = TypedSimpleSchema.from({
   writers: {
     type: Array,
     defaultValue: [],
-    index: 1,
     maxCount: STORAGE_LIMITS.writersCount,
   },
   'writers.$': {
@@ -31,7 +28,6 @@ const SharingSchema = TypedSimpleSchema.from({
   public: {
     type: Boolean,
     defaultValue: false,
-    index: 1,
   },
   readersCanCopy: {
     type: Boolean,

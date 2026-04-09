@@ -3,7 +3,7 @@
     v-if="model"
     :color="model.color"
   >
-    <template slot="toolbar">
+    <template #toolbar>
       <v-toolbar-title>
         Character Details
       </v-toolbar-title>
@@ -21,67 +21,58 @@
         @change="change"
       />
     </div>
-    <v-spacer slot="actions" />
-    <v-btn
-      slot="actions"
-      text
-      @click="$store.dispatch('popDialogStack')"
-    >
-      Done
-    </v-btn>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import CreatureForm from '/imports/client/ui/creature/CreatureForm.vue'
+import CreatureForm from '/imports/client/ui/creature/CreatureForm.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
 
-export default {
-  components: {
-    DialogBase,
-    CreatureForm,
-    ColorPicker,
-  },
-  props: {
-    _id: {
-      type: String,
-      required: true,
-    },
-    startInEditTab: Boolean,
-  },
-  meteor: {
-    model() {
-      return Creatures.findOne(this._id);
-    },
-    editPermission() {
-      try {
-        assertEditPermission(this.model, Meteor.userId());
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-  },
-  methods: {
-    change({ path, value, ack }) {
-      updateCreature.call({ _id: this._id, path, value }, (error) => {
-        if (error) {
-          if (ack) {
-            ack(error && error.reason || error)
-          } else {
-            console.error(error)
-          }
-        } else if (ack) {
-          ack();
-        }
-      });
-    },
+const props = withDefaults(defineProps<{
+  _id: string;
+  startInEditTab?: boolean;
+}>(), {
+  startInEditTab: false,
+});
+
+const { result: model } = autorun(() => Creatures.findOne(props._id));
+
+const { result: editPermission } = autorun(() => {
+  if (!model.value) return false;
+  try {
+    assertEditPermission(model.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
   }
-};
+});
+
+async function change({ path, value, ack }: { path: string[]; value: any; ack?: Function }) {
+  try {
+    await updateCreature.callAsync({ _id: props._id, path, value });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) {
+      ack(error.reason || error);
+    } else {
+      console.error(error);
+    }
+  }
+}
 </script>
 
 <style lang="css" scoped>

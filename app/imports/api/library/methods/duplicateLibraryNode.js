@@ -31,19 +31,19 @@ const duplicateLibraryNode = new ValidatedMethod({
     numRequests: 4,
     timeInterval: 6000,
   },
-  run({ _id }) {
-    let libraryNode = LibraryNodes.findOne(_id);
+  async run({ _id }) {
+    let libraryNode = await LibraryNodes.findOneAsync(_id);
     if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
 
-    assertDocEditPermission(libraryNode, this.userId);
+    await assertDocEditPermission(libraryNode, this.userId);
 
-    let nodes = LibraryNodes.find({
+    let nodes = await LibraryNodes.find({
       ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
       sort: { left: 1 },
-    }).fetch();
+    }).fetchAsync();
 
     if (nodes.length > DUPLICATE_CHILDREN_LIMIT) {
       nodes.pop();
@@ -61,10 +61,12 @@ const duplicateLibraryNode = new ValidatedMethod({
     // Order the root node
     libraryNode.left += 0.5;
 
-    LibraryNodes.batchInsert(allNodes);
+    for (const node of allNodes) {
+      await LibraryNodes.insertAsync(node);
+    }
 
     // Tree structure changed by inserts, reorder the tree
-    rebuildNestedSets(LibraryNodes, libraryNode.root.id);
+    await rebuildNestedSets(LibraryNodes, libraryNode.root.id);
 
     return libraryNode._id;
   },

@@ -1,7 +1,7 @@
 // Modified from https://gitlab.com/tozd/vue/snackbar-que
-import Vue from 'vue';
+import { reactive } from 'vue';
 
-const globalState = Vue.observable({ queue: [] });
+const globalState = reactive({ queue: [] });
 let lastSnackbarId = 0;
 
 function snackbar(data) {

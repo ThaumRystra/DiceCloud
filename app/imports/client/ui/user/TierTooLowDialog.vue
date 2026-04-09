@@ -1,9 +1,7 @@
 <template lang="html">
   <dialog-base>
-    <v-layout
-      column
-      align-center
-      justify-center
+    <div
+      class="d-flex flex-column align-center justify-center"
     >
       <h2 style="margin: 48px 28px 16px">
         Your current Patreon tier is {{ tier.name }}
@@ -33,53 +31,48 @@
           </v-btn>
         </template>
       </div>
-    </v-layout>
-    <v-spacer slot="actions" />
-    <v-btn
-      slot="actions"
-      text
-      @click="$store.dispatch('popDialogStack')"
-    >
-      Cancel
-    </v-btn>
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Cancel
+      </v-btn>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon'
+import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
 
-export default {
-  components: {
-    DialogBase,
-  },
-  data(){return {
-    linkPatreonError: '',
-  }},
-  meteor: {
-    tier(){
-      let user = Meteor.user();
-      if (!user) return TIERS[0];
-      return getUserTier(user);
-    },
-    user(){
-      return Meteor.user();
-    },
-  },
-  methods: {
-    linkWithPatreon(){
-      this.linkPatreonError = '';
-      linkWithPatreon(error => {
-        if (error) {
-          this.linkPatreonError = error;
-        } else {
-          Meteor.call('updateMyPatreonDetails', error => {
-            if (error) this.linkPatreonError = error;
-          });
-        }
-      });
-    },
-  }
+const linkPatreonError = ref('');
+
+const { result: tier } = autorun(() => {
+  const user = Meteor.user();
+  if (!user) return TIERS[0];
+  return getUserTier(user);
+});
+
+const { result: user } = autorun(() => Meteor.user());
+
+async function linkWithPatreonFn() {
+  linkPatreonError.value = '';
+  linkWithPatreon(async (error: any) => {
+    if (error) {
+      linkPatreonError.value = error;
+    } else {
+      try {
+        await Meteor.callAsync('updateMyPatreonDetails');
+      } catch (e: any) {
+        linkPatreonError.value = e;
+      }
+    }
+  });
 }
 </script>

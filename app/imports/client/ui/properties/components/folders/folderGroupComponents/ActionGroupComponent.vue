@@ -16,20 +16,11 @@
   />
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
 
-export default {
-  components: {
-    ActionCard,
-    EventButton,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-}
+defineProps<{
+  model: Record<string, any>;
+}>();
 </script>

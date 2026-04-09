@@ -2,9 +2,9 @@
   <div class="d-flex flex-wrap">
     <div class="d-flex flex-column justify-center align-center ma-2">
       <v-btn-toggle
-        :value="value.advantage"
+        :model-value="value.advantage"
         color="accent"
-        @change="changeAdvantage"
+        @update:model-value="changeAdvantage"
       >
         <v-btn :value="-1">
           Disadvantage
@@ -57,51 +57,33 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
-export default {
-  components: {
-    VerticalHex
-  },
-  props: {
-    /**
-      advantage: 0 | 1 | -1;
-      skillVariableName?: string;
-      abilityVariableName?: string;
-      dc: number | null;
-      contest?: true;
-      targetSkillVariableName?: string;
-      targetAbilityVariableName?: string;
-    */
-    value: {
-      type: Object,
-      required: true,
-    }
-  },
-  data() {
-    return {
-      abilityOptions: createListOfProperties({
-        attributeType: 'ability',
-        'root.id': this.value.prop.root.id,
-      }, true),
-      skillOptions: createListOfProperties({
-        type: 'skill',
-        'root.id': this.value.prop.root.id,
-      }, true),
-    };
-  },
-  methods: {
-    changeAdvantage(e) {
-      const newValue = { ...this.value, advantage: e };
-      this.$emit('input', newValue)
-    },
-    change(key, value, ack) {
-      const newValue = { ...this.value, [key]: value };
-      this.$emit('input', newValue);
-      ack();
-    },
-  }
-};
+const props = defineProps<{
+  value: Record<string, any>;
+}>();
+
+const emit = defineEmits(['input']);
+
+const abilityOptions = ref(createListOfProperties({
+  attributeType: 'ability',
+  'root.id': props.value.prop.root.id,
+}, true));
+
+const skillOptions = ref(createListOfProperties({
+  type: 'skill',
+  'root.id': props.value.prop.root.id,
+}, true));
+
+function changeAdvantage(e: number) {
+  emit('input', { ...props.value, advantage: e });
+}
+
+function change(key: string, value: any, ack: Function) {
+  emit('input', { ...props.value, [key]: value });
+  ack();
+}
 </script>

@@ -17,8 +17,8 @@
         </v-btn>
       </v-slide-x-transition>
       <v-btn
-        tile
-        outlined
+        rounded="0"
+        variant="outlined"
         @click="toggleEditing"
       >
         <span style="width: 44px;">
@@ -68,7 +68,7 @@
         class="layout"
       >
         <v-btn
-          text
+          variant="text"
           @click="$store.dispatch('popDialogStack')"
         >
           Close
@@ -92,7 +92,11 @@
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TabletopForm from '/imports/client/ui/tabletop/TabletopForm.vue';
@@ -103,115 +107,89 @@ import updateTabletop from '/imports/api/tabletop/methods/updateTabletop';
 import removeTabletop from '/imports/api/tabletop/methods/removeTabletop';
 import updateTabletopSharing from '/imports/api/tabletop/methods/updateTabletopSharing';
 
-export default {
-  components: {
-    DialogBase,
-    TabletopForm,
-    TabletopViewer,
-  },
-  props: {
-    tabletopId: {
-      type: String,
-      required: true,
-    },
-    startInEditTab: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  data(){ return {
-    editing: !!this.startInEditTab,
-  }},
-  meteor: {
-    $subscribe: {
-      'tabletopUsers'() {
-        return [this.tabletopId];
-      },
-    },
-    model(){
-      return Tabletops.findOne(this.tabletopId);
-    },
-    editPermission(){
-      const userId = Meteor.userId();
-      if (!userId) return false;
-      try {
-        assertCanEditTabletop(this.model, userId);
-        return true;
-      } catch (e) {
-        return false;
-      }
-    },
-    users() {
-      return {
-        owner: Meteor.users.findOne(this.model.owner),
-        gameMasters: Meteor.users.find({
-          _id: { $in: this.model.gameMasters }
-        }).fetch(),
-        players: Meteor.users.find({
-          _id: { $in: this.model.players }
-        }).fetch(),
-        spectators: Meteor.users.find({
-          _id: { $in: this.model.spectators }
-        }).fetch(),
-      }
-    },
-  },
-  methods: {
-    notImplemented() {
-      snackbar({text: 'Not implemented'});
-    },
-    toggleEditing() {
-      this.editing = !this.editing;
-    },
-    changeEvent({ path, value, ack }) {
-      if (typeof path === 'string') {
-        path = path.split('.');
-      }
-      updateTabletop.call({
-        _id: this.tabletopId,
-        path,
-        value,
-      }, (error) => {
-        ack(error);
-      });
-    },
-    updateSharingEvent({ userId, role, ack }) {
-      updateTabletopSharing.call({
-        tabletopId: this.tabletopId,
-        userId,
-        role
-      }, error => {
-        ack?.(error);
-      });
-    },
-    removeTabletop() {
-      const router = this.$router;
-      const tabletopId = this.tabletopId;
-      const store = this.$store;
-      this.$store.commit('pushDialogStack', {
-        component: 'delete-confirmation-dialog',
-        elementId: 'remove-btn',
-        data: {
-          name: this.model.name,
-          typeName: 'Tabletop'
-        },
-        callback(confirmation) {
-          if (!confirmation) return;
-          store.dispatch('popDialogStack');
-          removeTabletop.call({ tabletopId }, (error) => {
-            if (error) {
-              snackbar({ text: error.reason || error.message || error.toString() });
-              console.error(error);
-            }
-          });
-          //Navigate back to tabletops page if we aren't there already
-          if (router.currentRoute.path !== '/tabletops') {
-            router.push('/tabletops');
-          }
-        }
-      });
-    }
+const props = defineProps<{
+  tabletopId: string;
+  startInEditTab?: boolean;
+}>();
+
+const store = useStore();
+const router = useRouter();
+const editing = ref(!!props.startInEditTab);
+
+autorun(() => Meteor.subscribe('tabletopUsers', props.tabletopId));
+
+const { result: model } = autorun(() => Tabletops.findOne(props.tabletopId));
+
+const { result: editPermission } = autorun(() => {
+  const userId = Meteor.userId();
+  if (!userId) return false;
+  try {
+    assertCanEditTabletop(model.value, userId);
+    return true;
+  } catch (e) {
+    return false;
   }
-};
+});
+
+const { result: users } = autorun(() => {
+  if (!model.value) return;
+  const m = model.value as any;
+  return {
+    owner: Meteor.users.findOne(m.owner),
+    gameMasters: Meteor.users.find({ _id: { $in: m.gameMasters } }).fetch(),
+    players: Meteor.users.find({ _id: { $in: m.players } }).fetch(),
+    spectators: Meteor.users.find({ _id: { $in: m.spectators } }).fetch(),
+  };
+});
+
+function notImplemented() {
+  snackbar({ text: 'Not implemented' });
+}
+
+function toggleEditing() {
+  editing.value = !editing.value;
+}
+
+async function changeEvent({ path, value, ack }: { path: any; value: any; ack: Function }) {
+  let resolvedPath = path;
+  if (typeof path === 'string') resolvedPath = path.split('.');
+  try {
+    await updateTabletop.callAsync({ _id: props.tabletopId, path: resolvedPath, value });
+    ack();
+  } catch (error: any) {
+    ack(error);
+  }
+}
+
+async function updateSharingEvent({ userId, role, ack }: { userId: string; role: string; ack?: Function }) {
+  try {
+    await updateTabletopSharing.callAsync({ tabletopId: props.tabletopId, userId, role });
+    ack?.();
+  } catch (error: any) {
+    ack?.(error);
+  }
+}
+
+function removeTabletopFn() {
+  const tabletopId = props.tabletopId;
+  store.commit('pushDialogStack', {
+    component: 'delete-confirmation-dialog',
+    elementId: 'remove-btn',
+    data: { name: (model.value as any)?.name, typeName: 'Tabletop' },
+    async callback(confirmation: boolean) {
+      if (!confirmation) return;
+      store.dispatch('popDialogStack');
+      try {
+        await removeTabletop.callAsync({ tabletopId });
+      } catch (error: any) {
+        snackbar({ text: error.reason || error.message || error.toString() });
+        console.error(error);
+      }
+      if (router.currentRoute.value.path !== '/tabletops') {
+        router.push('/tabletops');
+      }
+    },
+  });
+}
 </script>
 

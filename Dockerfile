@@ -1,17 +1,17 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 USER root
 RUN adduser --system mt
 
 RUN apt-get update
-RUN apt-get install --quiet --yes curl
-RUN curl -fsSL https://deb.nodesource.com/setup_14.x | bash -
+RUN apt-get install --quiet --yes curl ca-certificates gnupg
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
 RUN apt-get update
-RUN apt-get install --quiet --yes nodejs git
+RUN apt-get install --quiet --yes nodejs git python3 build-essential
 
 USER mt
 
-RUN curl https://install.meteor.com/ | sh
+RUN npx meteor
 
 WORKDIR /home/mt
 RUN git clone https://github.com/ThaumRystra/DiceCloud dicecloud
@@ -24,4 +24,4 @@ RUN npm install
 WORKDIR /home/mt/dc/bundle
 RUN rm -r /home/mt/dicecloud
 
-ENTRYPOINT node main.js
+ENTRYPOINT ["node", "main.js"]

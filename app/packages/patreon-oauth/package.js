@@ -4,10 +4,11 @@ Package.describe({
 });
 
 Package.onUse(api => {
+  api.versionsFrom(['2.3', '3.0']);
   api.use('ecmascript');
   api.use('oauth2', ['client', 'server']);
   api.use('oauth', ['client', 'server']);
-  api.use('http', 'server');
+  api.use('fetch', 'server');
   api.use('random', 'client');
   api.use('service-configuration', ['client', 'server']);
 

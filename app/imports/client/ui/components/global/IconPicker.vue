@@ -7,7 +7,7 @@
     style="overflow-y: auto;"
     left
   >
-    <template #activator="{ on }">
+    <template #activator="{ props }">
       <v-btn
         :loading="loading"
         :outlined="!!label"
@@ -18,8 +18,7 @@
         :width="width"
         :style="buttonStyle"
         :disabled="context.editPermission === false"
-        v-bind="$attrs"
-        v-on="on"
+        v-bind="{...$attrs, ...props}"
       >
         {{ label }}
         <svg-icon
@@ -38,7 +37,7 @@
     </template>
     <v-card>
       <v-card-text>
-        <div class="layout row align-center">
+        <div class="d-flex align-center">
           <text-field
             ref="iconSearchField"
             label="Search icons"
@@ -50,14 +49,14 @@
             @change="search"
           />
           <v-btn
-            text
+            variant="text"
             @click="select()"
           >
             clear
           </v-btn>
         </div>
-        <v-layout
-          wrap
+        <div
+          class="d-flex flex-wrap"
           style="max-height: 400px; overflow-y: auto;"
         >
           <v-scale-transition
@@ -68,84 +67,79 @@
               v-for="icon in icons"
               :key="icon._id"
               icon
-              large
+              size="large"
               @click="select(icon)"
             >
               <svg-icon
                 :shape="icon.shape"
-                x-large
+                size="x-large"
               />
             </v-btn>
           </v-scale-transition>
-        </v-layout>
+        </div>
       </v-card-text>
     </v-card>
   </v-menu>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, watch, inject, useAttrs } from 'vue';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 import SvgIcon from '/imports/client/ui/components/global/SvgIcon.vue';
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
 import { findIcons } from '/imports/api/icons/Icons';
 
-export default {
-  components: {
-    SvgIcon,
-  },
-  mixins: [SmartInput],
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    label: {
-      type: String,
-      default: undefined,
-    },
-    buttonStyle: {
-      type: String,
-      default: undefined,
-    },
-    height: {
-        type: Number,
-        default: undefined,
-    },
-    width: {
-      type: Number,
-      default: undefined,
-    },
-  },
-  data() {
-    return {
-      menu: false,
-      searchString: '',
-      icons: [],
-    };
-  },
-  watch: {
-    menu(value) {
-      if (value) {
-        setTimeout(() => {
-          if (this.$refs.iconSearchField) {
-            this.$refs.iconSearchField.$children[0].focus();
-          }
-        }, 100);
-      }
-    },
-  },
-  methods: {
-    search(value, ack) {
-      this.searchString = value;
-      this.icons = [];
-      findIcons.call({ search: value }, (error, result) => {
-        ack(error);
-        this.icons = result;
-      });
-    },
-    select(icon) {
-      this.menu = false;
-      this.change(icon);
-    },
-  },
+defineOptions({ inheritAttrs: false });
+
+const context = inject<{ editPermission?: boolean }>('context', {});
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+  label?: string;
+  buttonStyle?: string;
+  height?: number;
+  width?: number;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { loading, safeValue, change } = useSmartInput(props, emit, attrs);
+
+const menu = ref(false);
+const searchString = ref('');
+const icons = ref<any[]>([]);
+const iconSearchField = ref<{ $el?: HTMLElement } | null>(null);
+
+watch(menu, (value) => {
+  if (value) {
+    setTimeout(() => {
+      iconSearchField.value?.$el?.querySelector('input')?.focus();
+    }, 100);
+  }
+});
+
+async function search(value: string, ack?: (err?: unknown) => void) {
+  searchString.value = value;
+  icons.value = [];
+  try {
+    const result = await findIcons.callAsync({ search: value });
+    if (ack) ack();
+    icons.value = result;
+  } catch (error) {
+    if (ack) ack(error);
+  }
+}
+
+function select(icon?: unknown) {
+  menu.value = false;
+  change(icon);
 }
 </script>
 

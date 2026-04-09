@@ -43,7 +43,6 @@ let ExperienceSchema = new SimpleSchema({
   journalId: {
     type: String,
     max: 32,
-    index: 1,
   }
 });
 

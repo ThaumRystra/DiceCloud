@@ -6,9 +6,9 @@
     <v-container>
       <v-fade-transition mode="out-in">
         <v-row
-          v-if="$subReady.browseLibraries"
+          v-if="browseReady"
           key="loaded-cards"
-          dense
+          density="compact"
         >
           <v-col
             v-for="card in libraryCards"
@@ -21,7 +21,7 @@
             <v-sheet
               class="fill-height"
               rounded
-              outlined
+              border
               :color="card.subscribed ? 'accent': ''"
             >
               <v-card
@@ -42,7 +42,7 @@
                 <v-card-actions>
                   <v-spacer />
                   <smart-btn
-                    text
+                    variant="text"
                     single-click
                     :color="card.subscribed ? '': 'accent'"
                     @click="ack => changeSubscribe(card, ack)"
@@ -74,79 +74,81 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { orderBy } from 'lodash';
 import LibraryCollections from '/imports/api/library/LibraryCollections';
 import Libraries from '/imports/api/library/Libraries';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import formatter from '/imports/client/ui/utility/numberFormatter';
 
-export default {
-  components: {
-    MarkdownText
-  },
-  data(){ return{
-    loadingInsertLibraryCollection: false,
-    openCollections: [],
-  }},
-  meteor: {
-    $subscribe: {
-      'browseLibraries': [],
-    },
-    collections(){
-      const user = Meteor.user() || {};
-      const subCollections = user.subscribedLibraryCollections || [];
-      return LibraryCollections.find({
-        showInMarket: true,
-        public: true,
-      }, {
-        sort: { subscriberCount: 1, name: 1 }
-      }).map(col => {
-        col.subscribed = subCollections.includes(col._id);
-        col._type = 'libraryCollection';
-        return col;
-      });
-    },
-    libraries(){
-      const user = Meteor.user() || {};
-      const subLibraries = user.subscribedLibraries || [];
-      return Libraries.find({
-        showInMarket: true,
-        public: true,
-      }, {
-        sort: { subscriberCount: 1, name: 1 }
-      }).map(lib => {
-        lib.subscribed = subLibraries.includes(lib._id);
-        lib._type = 'library';
-        return lib;
-      });
-    },
-    libraryCards() {
-      return orderBy([...this.libraries, ...this.collections], ['subscriberCount', 'name'], ['desc', 'asc']);
-    },
-  },
-  methods: {
-    formatNumber(num) {
-      return formatter.format(num);
-    },
-    changeSubscribe(card, ack) {
-      const id = card._id;
-      const subscribe = !card.subscribed;
+const { ready: browseReady } = subscribe('browseLibraries');
 
-      if (card._type === 'library') {
-        Meteor.users.subscribeToLibrary.call({
-          libraryId: id,
-          subscribe,
-        }, ack);
-      } else if (card._type === 'libraryCollection') {
-        Meteor.users.subscribeToLibraryCollection.call({
-          libraryCollectionId: id,
-          subscribe,
-        }, ack);
-      } else {
-        ack('Library or Library Collection not found')
-      }
-    },
-  },
-};
+const { result: collections } = autorun(() => {
+  const user = (Meteor.user() as any) || {};
+  const subCollections = user.subscribedLibraryCollections || [];
+  return LibraryCollections.find({
+    showInMarket: true,
+    public: true,
+  }, {
+    sort: { subscriberCount: 1, name: 1 }
+  }).map((col: any) => {
+    col.subscribed = subCollections.includes(col._id);
+    col._type = 'libraryCollection';
+    return col;
+  });
+});
+
+const { result: libraries } = autorun(() => {
+  const user = (Meteor.user() as any) || {};
+  const subLibraries = user.subscribedLibraries || [];
+  return Libraries.find({
+    showInMarket: true,
+    public: true,
+  }, {
+    sort: { subscriberCount: 1, name: 1 }
+  }).map((lib: any) => {
+    lib.subscribed = subLibraries.includes(lib._id);
+    lib._type = 'library';
+    return lib;
+  });
+});
+
+const libraryCards = computed(() =>
+  orderBy(
+    [...(libraries.value ?? []), ...(collections.value ?? [])],
+    ['subscriberCount', 'name'],
+    ['desc', 'asc']
+  )
+);
+
+function formatNumber(num: number) {
+  return formatter.format(num);
+}
+
+async function changeSubscribe(card: any, ack: (err?: string) => void) {
+  const id = card._id;
+  const sub = !card.subscribed;
+  try {
+    if (card._type === 'library') {
+      await (Meteor.users as any).subscribeToLibrary.callAsync({
+        libraryId: id,
+        subscribe: sub,
+      });
+    } else if (card._type === 'libraryCollection') {
+      await (Meteor.users as any).subscribeToLibraryCollection.callAsync({
+        libraryCollectionId: id,
+        subscribe: sub,
+      });
+    } else {
+      ack('Library or Library Collection not found');
+      return;
+    }
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
 </script>

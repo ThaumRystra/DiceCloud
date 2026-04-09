@@ -1,45 +1,43 @@
-import Vue from 'vue';
-//import Vuetify from 'vuetify/lib';
-import Vuetify from 'vuetify/lib/framework';
-import { Scroll, Ripple, ClickOutside } from 'vuetify/lib/directives';
+import { h } from 'vue';
+import { createVuetify } from 'vuetify';
+import * as components from 'vuetify/components';
+import * as directives from 'vuetify/directives';
+import 'vuetify/styles';
+import { aliases as mdiAliases, mdi } from 'vuetify/lib/iconsets/mdi.js';
 import SVG_ICONS from '/imports/constants/SVG_ICONS';
 import SvgIconByName from '/imports/client/ui/icons/SvgIconByName.vue';
 import themes from '/imports/client/ui/themes';
-import minifyTheme from 'minify-css-string';
 
-Vue.use(Vuetify, {
-  directives: {
-    Scroll,
-    Ripple,
-    ClickOutside,
-  },
-});
-
-let icons = {};
-
-for (const name in SVG_ICONS) {
-  let icon = SVG_ICONS[name];
-  icons[icon.name] = {
-    component: SvgIconByName,
-    props: {
-      name: name,
-    }
-  }
+// Build aliases mapping from icon display name → custom icon set key
+const customAliases = {};
+for (const key in SVG_ICONS) {
+  const icon = SVG_ICONS[key];
+  customAliases[icon.name] = `custom:${key}`;
 }
 
-let vuetify = new Vuetify({
+// Custom icon set that renders SvgIconByName with the SVG_ICONS key
+const customSvgSet = {
+  component: (props) => h(SvgIconByName, { name: props.icon }),
+};
+
+let vuetify = createVuetify({
+  components,
+  directives,
   theme: {
-    themes,
-    options: {
-      variations: false,
-      minifyTheme,
+    themes: {
+      light: {
+        colors: themes.light,
+      },
+      dark: {
+        colors: themes.dark,
+      },
     },
-    //options: { customProperties: true },
   },
   icons: {
-    iconfont: 'mdi',
-    values: icons,
-  }
+    defaultSet: 'mdi',
+    aliases: { ...mdiAliases, ...customAliases },
+    sets: { mdi, custom: customSvgSet },
+  },
 });
 
 export default vuetify;

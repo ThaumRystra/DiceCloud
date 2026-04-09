@@ -35,7 +35,6 @@ const AttributeSchema = createPropertySchema({
       'utility', // Aren't displayed, Jump height, Carry capacity
     ] as const,
     defaultValue: 'stat',
-    index: 1,
   },
   // For type hitDice, the size needs to be stored separately
   hitDiceSize: {

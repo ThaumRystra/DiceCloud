@@ -43,30 +43,26 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import LibraryCollections from '/imports/api/library/LibraryCollections';
 import Libraries from '/imports/api/library/Libraries';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
-export default {
-  components: {
-    MarkdownText,
-  },
-  meteor: {
-    $subscribe: {
-      'libraryCollection'() {
-        return [this.$route.params.id];
-      },
-    },
-    collection() {
-      return LibraryCollections.findOne(this.$route.params.id);
-    },
-    libraries() {
-      if (!this.collection) return;
-      return Libraries.find({
-        _id: { $in: this.collection.libraries },
-      });
-    }
-  }   
-}
+const route = useRoute();
+
+subscribe(() => ['libraryCollection', route.params.id as string]);
+
+const { result: collection } = autorun(() =>
+  LibraryCollections.findOne(route.params.id as string)
+);
+
+const { result: libraries } = autorun(() => {
+  if (!collection.value) return undefined;
+  return Libraries.find({
+    _id: { $in: (collection.value as any).libraries },
+  }).fetch();
+});
 </script>

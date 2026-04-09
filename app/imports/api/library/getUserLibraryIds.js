@@ -2,22 +2,22 @@ import LibraryCollections from '/imports/api/library/LibraryCollections';
 import Libraries from '/imports/api/library/Libraries';
 import { union } from 'lodash';
 
-export default function getUserLibraryIds(userId) {
+export default async function getUserLibraryIds(userId) {
   if (!userId) return [];
-  const user = Meteor.users.findOne(userId);
+  const user = await Meteor.users.findOneAsync(userId);
   let subbedIds = user?.subscribedLibraries || [];
   const subCollections = user?.subscribedLibraryCollections || [];
-  LibraryCollections.find({
+  await LibraryCollections.find({
     $or: [
       { owner: userId },
       { writers: userId },
       { readers: userId },
       { _id: { $in: subCollections }, public: true },
     ]
-  }, { fields: { libraries: 1 } }).forEach(collection => {
+  }, { fields: { libraries: 1 } }).forEachAsync(collection => {
     subbedIds = union(subbedIds, collection.libraries);
   });
-  const libraryIds = Libraries.find({
+  const libraryDocs = await Libraries.find({
     $or: [
       { owner: userId },
       { writers: userId },
@@ -26,6 +26,6 @@ export default function getUserLibraryIds(userId) {
     ]
   }, {
     fields: { _id: 1 }
-  }).map(lib => lib._id);
-  return libraryIds;
+  }).fetchAsync();
+  return libraryDocs.map(lib => lib._id);
 }

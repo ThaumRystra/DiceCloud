@@ -21,7 +21,6 @@ let creatureFolderSchema = new SimpleSchema({
   owner: {
     type: String,
     max: 32,
-    index: 1,
   },
   archived: {
     type: Boolean,

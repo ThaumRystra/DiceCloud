@@ -13,9 +13,9 @@ export const insertAction = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 1000,
   },
-  run: function ({ action }: { action: EngineAction }) {
+  run: async function ({ action }: { action: EngineAction }) {
     const creature = getCreature(action.creatureId);
-    assertEditPermission(getCreature(creature), this.userId);
+    await assertEditPermission(getCreature(creature), this.userId);
     // Make sure the action shares the creature's tabletopId
     // It is assumed that if a character you control is in a tabletop, you have the rights
     // to do actions in that tabletop
@@ -34,9 +34,9 @@ export const insertAction = new ValidatedMethod({
 
     // First remove all other actions on this creature
     // only do one action at a time, don't wait for this to finish
-    EngineActions.remove({ creatureId: action.creatureId });
+    await EngineActions.removeAsync({ creatureId: action.creatureId });
     // Force a random id even if one was provided, we may use it later as the seed for PRNG
     delete action._id;
-    return EngineActions.insert(action);
+    return EngineActions.insertAsync(action);
   },
 });

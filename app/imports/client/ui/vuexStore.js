@@ -1,12 +1,10 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from 'vuex';
 import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 const tabs = ['stats', 'actions', 'spells', 'inventory', 'features', 'journal', 'build', 'tree'];
 const tabsWithoutSpells = ['stats', 'actions', 'inventory', 'features', 'journal', 'build', 'tree'];
 
-Vue.use(Vuex);
-const store = new Vuex.Store({
+const store = createStore({
   strict: process.env.NODE_ENV !== 'production',
   modules: {
     dialogStack: dialogStackStore,
@@ -68,7 +66,7 @@ const store = new Vuex.Store({
           tab = 0;
         }
       }
-      Vue.set(state.characterSheetTabs, id, tab);
+      state.characterSheetTabs[id] = tab;
     },
     setShowDetailsDialog(state, value) {
       state.showDetailsDialog = value;

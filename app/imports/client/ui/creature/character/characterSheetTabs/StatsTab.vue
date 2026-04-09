@@ -32,7 +32,7 @@
         class="character-buttons"
       >
         <v-card>
-          <v-card-text class="layout column align-center">
+          <v-card-text class="d-flex flex-column align-center">
             <rest-button
               v-if="!creature.settings.hideRestButtons"
               :creature-id="creatureId"
@@ -76,7 +76,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Buffs and conditions</v-subheader>
+            <v-list-subheader>Buffs and conditions</v-list-subheader>
             <buff-list-item
               v-for="buff in properties.buff"
               :key="buff._id"
@@ -95,13 +95,11 @@
       >
         <v-card>
           <v-list>
-            <template v-for="(ability, index) in properties.attribute.ability">
+            <template v-for="(ability, index) in properties.attribute.ability" :key="ability._id">
               <v-divider
                 v-if="index !== 0"
-                :key="index"
               />
               <ability-list-tile
-                :key="ability._id"
                 :model="ability"
                 :data-id="ability._id"
                 @click="clickProperty({_id: ability._id})"
@@ -166,14 +164,12 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Hit Dice</v-subheader>
-            <template v-for="(hitDie, index) in properties.attribute.hitDice">
+            <v-list-subheader>Hit Dice</v-list-subheader>
+            <template v-for="(hitDie, index) in properties.attribute.hitDice" :key="hitDie._id">
               <v-divider
                 v-if="index !== 0"
-                :key="hitDie._id + 'divider'"
               />
               <hit-dice-list-tile
-                :key="hitDie._id"
                 :model="hitDie"
                 :data-id="hitDie._id"
                 @click="clickProperty({_id: hitDie._id})"
@@ -222,7 +218,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Saving Throws</v-subheader>
+            <v-list-subheader>Saving Throws</v-list-subheader>
             <skill-list-tile
               v-for="save in properties.skill.save"
               :key="save._id"
@@ -237,11 +233,9 @@
               :class="{'mt-2': !index}"
               @click="clickProperty({_id: effect._id})"
             >
-              <v-list-item-content>
-                <v-list-item-subtitle style="white-space: unset;">
-                  {{ effect.text }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
+              <v-list-item-subtitle style="white-space: unset;">
+                {{ effect.text }}
+              </v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card>
@@ -253,7 +247,7 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>Skills</v-subheader>
+            <v-list-subheader>Skills</v-list-subheader>
             <skill-list-tile
               v-for="skill in properties.skill.skill"
               :key="skill._id"
@@ -268,11 +262,9 @@
               :class="{'mt-2': !index}"
               @click="clickProperty({_id: effect._id})"
             >
-              <v-list-item-content>
-                <v-list-item-subtitle style="white-space: unset;">
-                  {{ effect.text }}
-                </v-list-item-subtitle>
-              </v-list-item-content>
+              <v-list-item-subtitle style="white-space: unset;">
+                {{ effect.text }}
+              </v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card>
@@ -293,9 +285,9 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>
+            <v-list-subheader>
               Weapons
-            </v-subheader>
+            </v-list-subheader>
             <skill-list-tile
               v-for="weapon in properties.skill.weapon"
               :key="weapon._id"
@@ -313,9 +305,9 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>
+            <v-list-subheader>
               Armor
-            </v-subheader>
+            </v-list-subheader>
             <skill-list-tile
               v-for="armor in properties.skill.armor"
               :key="armor._id"
@@ -333,9 +325,9 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>
+            <v-list-subheader>
               Tools
-            </v-subheader>
+            </v-list-subheader>
             <skill-list-tile
               v-for="tool in properties.skill.tool"
               :key="tool._id"
@@ -353,9 +345,9 @@
       >
         <v-card>
           <v-list>
-            <v-subheader>
+            <v-list-subheader>
               Languages
-            </v-subheader>
+            </v-list-subheader>
             <skill-list-tile
               v-for="language in properties.skill.language"
               :key="language._id"
@@ -389,7 +381,10 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
@@ -409,15 +404,14 @@ import EventButton from '/imports/client/ui/properties/components/actions/EventB
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import { get, set, uniqBy } from 'lodash';
-import { docsToForest } from '/imports/api/parenting/parentingFunctions';
-import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 
-function walkDown(forest, callback){
-  let stack = [...forest].reverse();
-  while(stack.length){
-    let node = stack.pop();
+function walkDown(forest: any[], callback: (node: any) => { skipChildren?: boolean } | void) {
+  const stack = [...forest].reverse();
+  while (stack.length) {
+    const node = stack.pop();
     const { skipChildren } = callback(node) ?? { skipChildren: false };
     if (!skipChildren) {
       stack.push(...[...node.children].reverse());
@@ -425,13 +419,13 @@ function walkDown(forest, callback){
   }
 }
 
-const propertyHandlers = {
+const propertyHandlers: Record<string, (prop: any) => { propPath: any; skipChildren?: boolean }> = {
   folder(prop) {
     let propPath = null;
     if (prop.groupStats && prop.tab === 'stats') {
-      propPath = ['folder', prop.location]
+      propPath = ['folder', prop.location];
     }
-    return { propPath }
+    return { propPath };
   },
   attribute(prop) {
     if (
@@ -440,22 +434,14 @@ const propertyHandlers = {
       (prop.hideWhenTotalZero && prop.total === 0) ||
       (prop.hideWhenValueZero && prop.value === 0)
     ) return { propPath: null };
-    return {
-      propPath: ['attribute', prop.attributeType],
-    }
+    return { propPath: ['attribute', prop.attributeType] };
   },
   skill(prop) {
-    if (
-      prop.skillType === 'utility'
-    ) return { propPath: null };
-    return {
-      propPath: ['skill', prop.skillType],
-    }
+    if (prop.skillType === 'utility') return { propPath: null };
+    return { propPath: ['skill', prop.skillType] };
   },
   toggle(prop) {
-    if (
-      prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI
-    ) return { propPath: null };
+    if (prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI) return { propPath: null };
     return { propPath: 'toggle' };
   },
   action(prop) {
@@ -464,188 +450,150 @@ const propertyHandlers = {
     }
     return { propPath: null };
   },
-}
+};
 
-export default {
-  components: {
-    HealthBar,
-    RestButton,
-    BuffListItem,
-    AbilityListTile,
-    AttributeCard,
-    ColumnLayout,
-    DamageMultiplierCard,
-    HitDiceListTile,
-    SkillListTile,
-    ResourceCard,
-    SpellSlotCard,
-    ToggleCard,
-    EventButton,
-    FolderGroupCard,
-  },
-  props: {
+const props = defineProps<{ creatureId: string }>();
+const store = useStore();
     creatureId: {
       type: String,
       required: true,
-    },
-  },
-  data() {
-    return {
-      doCheckLoading: false,
-    }
-  },
-  computed: {
-    saveConditionals(){
-      const conditionals = [];
-      this.properties.skill?.save?.forEach(prop => {
-        prop?.effects?.forEach(effect => {
-          if (effect.operation === 'conditional') {
-            conditionals.push(effect);
-          }
-        });
-      });
-      return uniqBy(conditionals, '_id');
-    },
-    skillConditionals(){
-      const conditionals = [];
-      this.properties.skill?.skill?.forEach(prop => {
-        prop?.effects?.forEach(effect => {
-          if (effect.operation === 'conditional') {
-            conditionals.push(effect);
-          }
-        });
-      });
-      return uniqBy(conditionals, '_id');
-    },
-  },
-  meteor: {
-    properties() {
-      const creature = this.creature;
-      if (!creature) return;
-      const folderIds = CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'folder',
-        groupStats: true,
-        hideStatsGroup: true,
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, { fields: { _id: 1 } }).map(folder => folder._id);
 
-      const filter = {
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        parentId: {
-          $nin: folderIds,
-        },
-        $or: [
-          { inactive: { $ne: true } },
-          { type: 'toggle' },
-        ],
-        overridden: {$ne: true},
-        removed: { $ne: true },
-        type: {
-          $in: [
-            'action',
-            'attribute',
-            'buff',
-            'damageMultiplier',
-            'folder',
-            'skill',
-            'toggle',
-          ]
-        }
-      };
-      if (creature.settings.hideUnusedStats) {
-        filter.hide = { $ne: true };
+const { result: creature } = autorun(() =>
+  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
+);
+
+const { result: properties } = autorun(() => {
+  const cre = creature.value;
+  if (!cre) return undefined;
+  const folderIds = CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'folder',
+    groupStats: true,
+    hideStatsGroup: true,
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { fields: { _id: 1 } }).map((folder: any) => folder._id);
+
+  const filter: any = {
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    parentId: { $nin: folderIds },
+    $or: [
+      { inactive: { $ne: true } },
+      { type: 'toggle' },
+    ],
+    overridden: { $ne: true },
+    removed: { $ne: true },
+    type: {
+      $in: ['action', 'attribute', 'buff', 'damageMultiplier', 'folder', 'skill', 'toggle'],
+    },
+  };
+  if (cre.settings?.hideUnusedStats) {
+    filter.hide = { $ne: true };
+  }
+  const allProps = CreatureProperties.find(filter, { sort: { left: 1 } }).fetch();
+  const forest = docsToForest(allProps);
+  const result: any = { folder: {}, attribute: {}, skill: {} };
+  walkDown(forest, node => {
+    const prop = node.doc;
+    const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ?? { propPath: prop.type };
+    if (propPath) {
+      let propArray = get(result, propPath);
+      if (!propArray) {
+        propArray = [];
+        set(result, propPath, propArray);
       }
-      const allProps = CreatureProperties.find(filter, { sort: { left: 1 } }).fetch();
-      const forest = docsToForest(allProps);
-      const properties = { folder: {}, attribute: {}, skill: {} };
-      walkDown(forest, node => {
-        const prop = node.doc
-        const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ||
-          { propPath: prop.type };
-        if (propPath) {
-          let propArray = get(properties, propPath);
-          if (!propArray) {
-            propArray = [];
-            set(properties, propPath, propArray);
-          }
-          propArray.push(prop);
-        }
-        return { skipChildren };
-      });
-      properties.damageMultiplier?.sort((a, b) => a.value - b.value);
-      return properties;
-    },
-    creature() {
-      return Creatures.findOne(this.creatureId, { fields: { settings: 1 } });
-    },
-    
-    toggles() {
-      return CreatureProperties.find({
-        type: 'toggle',
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        removed: { $ne: true },
-        deactivatedByAncestor: { $ne: true },
-        deactivatedByToggle: { $ne: true },
-        showUI: true,
-      }, {
-        sort: { left: 1 }
-      });
-    },
-  },
-  methods: {
-    clickProperty({ _id }) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${_id}`,
-        data: { _id },
-      });
-    },
-    clickTreeProperty({ _id }) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `tree-node-${_id}`,
-        data: { _id },
-      });
-    },
-    incrementChange(_id, { type, value, ack }) {
-      const model = CreatureProperties.findOne(_id);
-      if (!model) return;
-      if (type === 'increment') value = -value;
-      doAction({
-        creatureId: model.root.id,
-        $store: this.$store,
-        elementId: `${model._id}`,
-        task: {
-          subtaskFn: 'damageProp',
-          targetIds: [model.root.id],
-          params: {
-            title: getPropertyTitle(model),
-            operation: type,
-            value,
-            targetProp: model,
-          },
+      propArray.push(prop);
+    }
+    return { skipChildren };
+  });
+  result.damageMultiplier?.sort((a: any, b: any) => a.value - b.value);
+  return result;
+});
+
+const { result: toggles } = autorun(() =>
+  CreatureProperties.find({
+    type: 'toggle',
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    removed: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+    showUI: true,
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const saveConditionals = computed(() => {
+  const conditionals: any[] = [];
+  properties.value?.skill?.save?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const skillConditionals = computed(() => {
+  const conditionals: any[] = [];
+  properties.value?.skill?.skill?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+function clickProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
+
+function clickTreeProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: { _id },
+  });
+}
+
+async function incrementChange(_id: string, { type, value, ack }: any) {
+  const model = CreatureProperties.findOne(_id);
+  if (!model) return;
+  if (type === 'increment') value = -value;
+  try {
+    await doAction({
+      creatureId: (model as any).root.id,
+      $store: store,
+      elementId: `${(model as any)._id}`,
+      task: {
+        subtaskFn: 'damageProp',
+        targetIds: [(model as any).root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
         },
-      }).then(() =>{
-        ack?.();
-      }).catch((error) => {
-        if (ack) {
-          ack(error);
-        } else  {
-          snackbar({ text: error.reason || error.message || error.toString() });
-          console.error(error);
-        }
-      });
-    },
-    softRemove(_id) {
-      softRemoveProperty.call({ _id }, error => {
-        if (error) {
-          snackbar({ text: error.reason || error.message || error.toString() });
-          console.error(error);
-        }
-      });
-    },
-  },
-};
+      },
+    });
+    ack?.();
+  } catch (error: any) {
+    if (ack) {
+      ack(error);
+    } else {
+      snackbar({ text: error.reason || error.message || error.toString() });
+      console.error(error);
+    }
+  }
+}
+
+async function softRemove(_id: string) {
+  try {
+    await softRemoveProperty.callAsync({ _id });
+  } catch (error: any) {
+    snackbar({ text: error.reason || error.message || error.toString() });
+    console.error(error);
+  }
+}
 </script>

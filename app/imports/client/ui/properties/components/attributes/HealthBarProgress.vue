@@ -23,47 +23,45 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useTheme } from 'vuetify';
 import chroma from 'chroma-js';
-export default {
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    height: {
-      type: Number,
-      default: 24,
-    },
-  },
-  computed: {
-    fillFraction() {
-      let fraction = this.model.value / this.model.total;
-      if (fraction < 0) fraction = 0;
-      if (fraction > 1) fraction = 1;
-      return fraction;
-    },
-    color() {
-      return this.model.color || this.$vuetify.theme.currentTheme.primary
-    },
-    barColor() {
-      const fraction = this.model.value / this.model.total;
-      if (!Number.isFinite(fraction)) return this.color;
-      if (fraction > 0.5) {
-        return this.color;
-      } else if (this.model.healthBarColorMid && this.model.healthBarColorLow) {
-        return chroma.mix(this.model.healthBarColorLow, this.model.healthBarColorMid, fraction * 2).hex();
-      } else if (this.model.healthBarColorMid) {
-        return this.model.healthBarColorMid;
-      }
-      return this.color;
-    },
-    barBackgroundColor() {
-      return chroma(this.barColor)
-        .darken(1.5)
-        .desaturate(1.5)
-        .hex();
-    },
-  },
-}
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  height?: number;
+}>(), {
+  height: 24,
+});
+
+const vuetify = useTheme();
+
+const fillFraction = computed(() => {
+  let fraction = props.model.value / props.model.total;
+  if (fraction < 0) fraction = 0;
+  if (fraction > 1) fraction = 1;
+  return fraction;
+});
+
+const color = computed(() =>
+  props.model.color || vuetify.current.value.colors.primary
+);
+
+const barColor = computed(() => {
+  const fraction = props.model.value / props.model.total;
+  if (!Number.isFinite(fraction)) return color.value;
+  if (fraction > 0.5) {
+    return color.value;
+  } else if (props.model.healthBarColorMid && props.model.healthBarColorLow) {
+    return chroma.mix(props.model.healthBarColorLow, props.model.healthBarColorMid, fraction * 2).hex();
+  } else if (props.model.healthBarColorMid) {
+    return props.model.healthBarColorMid;
+  }
+  return color.value;
+});
+
+const barBackgroundColor = computed(() =>
+  chroma(barColor.value).darken(1.5).desaturate(1.5).hex()
+);
 </script>

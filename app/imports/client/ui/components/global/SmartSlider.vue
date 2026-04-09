@@ -6,12 +6,10 @@
     :hide-details="!(errors && errors.length)"
     :loading="loading"
     :error-messages="errors"
-    :value="safeValue"
+    :model-value="safeValue"
     :disabled="isDisabled"
-    :outlined="!regular"
-    @change="change"
-    @input="e => $emit('input', e)"
-    @end="e => $emit('end', e)"
+    @end="e => { change(e); $emit('end', e) }"
+    @update:model-value="e => $emit('input', e)"
     @start="e => $emit('start', e)"
     @focus="focused = true"
     @blur="focused = false"
@@ -25,13 +23,28 @@
   </v-slider>
 </template>
 
-<script lang="js">
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+<script setup lang="ts">
+import { useAttrs } from 'vue';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 
-export default {
-  mixins: [SmartInput],
-  props: {
-    regular: Boolean,
-  },
-};
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+  regular?: boolean;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+  end: [val: unknown];
+  start: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { loading, errors, safeValue, isDisabled, focused, change } = useSmartInput(props, emit, attrs);
 </script>

@@ -1,4 +1,5 @@
 import { JsonRoutes } from 'meteor/simple:json-routes';
+import parseBearerToken from './middleware/parseBearerToken';
 import authenticateMeteorUserByToken from './middleware/authenticateUserByToken';
 /**
  * Login with username/email and password:
@@ -23,7 +24,7 @@ import authenticateMeteorUserByToken from './middleware/authenticateUserByToken'
  *  }, callback);
 **/
 
-JsonRoutes.Middleware.use(JsonRoutes.Middleware.parseBearerToken);
+JsonRoutes.Middleware.use(parseBearerToken);
 JsonRoutes.Middleware.use(authenticateMeteorUserByToken);
 
 JsonRoutes.add('options', 'api/login', function (req, res) {

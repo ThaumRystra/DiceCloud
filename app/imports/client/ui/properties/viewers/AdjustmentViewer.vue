@@ -25,54 +25,39 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
+<script setup lang="ts">
+import { computed } from 'vue';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 
-export default {
-  mixins: [propertyViewerMixin],
-  computed: {
-    effectIcon() {
-      let effectOp = this.model.operation === 'increment' ? 'add' : 'base';
-      let value = this.value;
-      if (typeof value === 'string') {
-        value = 1;
-      }
-      return getEffectIcon(effectOp, -value);
-    },
-    value() {
-      if (this.model.amount && 'value' in this.model.amount) {
-        return this.model.amount.value;
-      } else {
-        return this.model.amount.calculation;
-      }
-    },
-    displayedValue() {
-      if (
-        typeof this.value === 'number' &&
-        this.model.operation !== 'set'
-      ) {
-        return Math.abs(this.value);
-      } else {
-        return this.value;
-      }
-    },
-    tooltip() {
-      if (this.model.operation === 'increment') {
-        if (
-          typeof this.value === 'string' ||
-          this.value >= 0
-        ) {
-          return 'Minus';
-        } else {
-          return 'Add'
-        }
-      } else {
-        return 'Set'
-      }
-    }
-  },
-}
+const props = defineProps<{ model: Record<string, any> }>();
+
+const value = computed(() => {
+  if (props.model.amount && 'value' in props.model.amount) {
+    return props.model.amount.value;
+  } else {
+    return props.model.amount.calculation;
+  }
+});
+
+const effectIcon = computed(() => {
+  const effectOp = props.model.operation === 'increment' ? 'add' : 'base';
+  let val = value.value;
+  if (typeof val === 'string') {
+    val = 1;
+  }
+  return getEffectIcon(effectOp, -val);
+});
+
+const displayedValue = computed(() => {
+  if (
+    typeof value.value === 'number' &&
+    props.model.operation !== 'set'
+  ) {
+    return Math.abs(value.value);
+  } else {
+    return value.value;
+  }
+});
 </script>
 
 <style lang="css" scoped>

@@ -16,10 +16,11 @@ const getVersion = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run() {
+  async run() {
     if (Meteor.isClient) return;
     assertAdmin(this.userId);
-    const dbVersion = Migrations.getVersion();
+    const dbVersion = await Migrations.getVersion();
+    console.log(dbVersion);
     return {
       dbVersion,
       gitVersion: dbVersionToGitVersion[dbVersion],

@@ -27,22 +27,13 @@
   </div>
 </template>
 
-<script lang="js">
-  import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
-  import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+<script setup lang="ts">
+import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
-  export default {
-    components: {
-      OutlinedInput,
-      ColorPicker,
-    },
-    props: {
-      model: {
-        type: Object,
-        required: true,
-      },
-    },
-  }
+defineProps<{
+  model: Record<string, any>;
+}>();
 </script>
 
 <style lang="css" scoped>

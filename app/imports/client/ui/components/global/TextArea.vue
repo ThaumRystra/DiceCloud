@@ -3,26 +3,36 @@
     v-bind="$attrs"
     :loading="loading"
     :error-messages="errors"
-    :value="safeValue"
+    :model-value="safeValue"
     :disabled="isDisabled"
     :auto-grow="autoGrow"
-    outlined
-    @input="input"
+    variant="outlined"
+    @update:model-value="input"
     @focus="focused = true"
     @blur="focused = false"
   />
 </template>
 
-<script lang="js">
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+<script setup lang="ts">
+import { useAttrs } from 'vue';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 
-export default {
-  mixins: [SmartInput],
-  props: {
-    autoGrow: {
-      type: Boolean,
-      default: false,
-    },
-  },
-};
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+  autoGrow?: boolean;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { loading, errors, safeValue, isDisabled, focused, input } = useSmartInput(props, emit, attrs);
 </script>

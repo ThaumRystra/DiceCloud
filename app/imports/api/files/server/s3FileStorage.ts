@@ -109,17 +109,16 @@ if (Meteor.settings.useS3) {
                 }
               };
 
-              filesCollection.collection.update({
+              filesCollection.collection.updateAsync({
                 _id: fileRef._id
-              }, upd, undefined, (updError: any) => {
-                if (updError) {
-                  this.emit('s3Result', updError, fileRef);
-                  console.error(updError);
-                } else {
-                  // Unlink original files from FS after successful upload to AWS:S3
-                  filesCollection.unlink(filesCollection.findOne(fileRef._id), version);
-                  this.emit('s3Result', undefined, fileRef)
-                }
+              }, upd).then(() => {
+                // Unlink original files from FS after successful upload to AWS:S3
+                const file = filesCollection.findOne(fileRef._id);
+                if (file) filesCollection.unlink(file, version);
+                this.emit('s3Result', undefined, fileRef)
+              }).catch((updError: any) => {
+                this.emit('s3Result', updError, fileRef);
+                console.error(updError);
               });
             });
           });
@@ -197,7 +196,7 @@ if (Meteor.settings.useS3) {
     const _origRemove = filesCollection.remove;
     filesCollection.remove = function (search) {
       const cursor = this.collection.find(search);
-      cursor.forEach((fileRef) => {
+      cursor.forEach((fileRef: FileRef<S3Metadata>) => {
         each(fileRef.versions, (vRef) => {
           if (vRef?.meta?.pipePath) {
             // Remove the object from AWS:S3 first, then we will call the original FilesCollection remove

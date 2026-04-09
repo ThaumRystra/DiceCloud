@@ -14,7 +14,7 @@
         class="mb-4"
       >
         <div
-          class="warning--text mb-2 ml-4"
+          class="text-warning mb-2 ml-4"
           style="font-family: monospace;"
         >
           { {{ calc.calculation }} }
@@ -32,20 +32,12 @@
   </div>
 </template>
 
-<script lang="js">
-import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
-
-export default {
-  components: {
-    CalculationErrorList,
-  },
-  props: {
-    model: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-}
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model?: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
 </script>
 
 <style lang="css" scoped>

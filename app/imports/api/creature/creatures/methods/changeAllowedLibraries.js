@@ -36,9 +36,9 @@ const changeAllowedLibraries = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({ _id, allowedLibraries, allowedLibraryCollections }) {
-    let creature = Creatures.findOne(_id);
-    assertEditPermission(creature, this.userId);
+  async run({ _id, allowedLibraries, allowedLibraryCollections }) {
+    let creature = await Creatures.findOneAsync(_id);
+    await assertEditPermission(creature, this.userId);
     let $set;
     if (allowedLibraries) {
       $set = { allowedLibraries }
@@ -48,7 +48,7 @@ const changeAllowedLibraries = new ValidatedMethod({
       $set.allowedLibraryCollections = allowedLibraryCollections;
     }
     if (!$set) return;
-    Creatures.update(_id, { $set });
+    await Creatures.updateAsync(_id, { $set });
   },
 });
 
@@ -68,16 +68,16 @@ const toggleAllUserLibraries = new ValidatedMethod({
     numRequests: 10,
     timeInterval: 5000,
   },
-  run({ _id, value }) {
+  async run({ _id, value }) {
     if (value) {
-      Creatures.update(_id, {
+      await Creatures.updateAsync(_id, {
         $unset: {
           allowedLibraryCollections: 1,
           allowedLibraries: 1,
         },
       });
     } else {
-      Creatures.update(_id, {
+      await Creatures.updateAsync(_id, {
         $set: {
           allowedLibraryCollections: [],
           allowedLibraries: [],

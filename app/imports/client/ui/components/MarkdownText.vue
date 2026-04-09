@@ -7,22 +7,21 @@
   />
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 
-export default {
-  props: {
-    markdown: {
-      type: String,
-      default: undefined,
-    },
-  },
-  computed: {
-    compiledMarkdown() {
-      if (!this.markdown) return;
-      return DOMPurify.sanitize(marked(this.markdown));
-    },
-  },
-}
+const props = defineProps<{
+  markdown?: string;
+}>();
+
+const emit = defineEmits<{
+  click: [e: MouseEvent];
+}>();
+
+const compiledMarkdown = computed(() => {
+  if (!props.markdown) return;
+  return DOMPurify.sanitize(marked(props.markdown) as string);
+});
 </script>

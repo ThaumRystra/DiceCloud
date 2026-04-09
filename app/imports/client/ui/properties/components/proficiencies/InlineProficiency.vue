@@ -1,8 +1,8 @@
 <template lang="html">
   <v-list-item
     class="inline-proficiency layout align-center"
-    :class="{'text--disabled': model.overridden}"
-    dense
+    :class="{'text-disabled': model.overridden}"
+    density="compact"
     @click="click"
   >
     <div class="effect-icon">
@@ -11,53 +11,43 @@
         class="prof-icon"
       />
     </div>
-    <v-list-item-content>
-      <v-list-item-title>
-        <span
-          class="effect-value mr-2"
-        >
-          {{ displayedValue }}
-        </span>
-        {{ displayedText }}
-      </v-list-item-title>
-    </v-list-item-content>
+    <v-list-item-title>
+      <span
+        class="effect-value mr-2"
+      >
+        {{ displayedValue }}
+      </span>
+      {{ displayedText }}
+    </v-list-item-title>
   </v-list-item>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
-export default {
-  components: {
-    ProficiencyIcon,
-  },
-  props: {
-    proficiencyId: {
-      type: String,
-      required: true,
-    },
-  },
-  meteor: {
-    model() {
-      return CreatureProperties.findOne(this.proficiencyId);
-    },
-  },
-  computed: {
-    displayedText(){
-      return this.model.name || (this.model.type == 'proficiency' ? 'Proficiency' : 'Skill')
-    },
-    displayedValue() {
-      return numberToSignedString(this.model.value);
-    },
-  },
-  methods: {
-    click(e){
-      this.$emit('click', e);
-    },
-  },
-};
+const props = defineProps<{
+  proficiencyId: string;
+}>();
+
+const emit = defineEmits(['click']);
+
+const { result: model } = autorun(() =>
+  CreatureProperties.findOne(props.proficiencyId)
+);
+
+const displayedText = computed(() =>
+  model.value?.name || (model.value?.type === 'proficiency' ? 'Proficiency' : 'Skill')
+);
+
+const displayedValue = computed(() => numberToSignedString(model.value?.value));
+
+function click(e: Event) {
+  emit('click', e);
+}
 </script>
 
 <style lang="css" scoped>

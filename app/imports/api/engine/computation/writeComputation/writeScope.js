@@ -2,19 +2,19 @@ import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { EJSON } from 'meteor/ejson';
 
-export default function writeScope(creatureId, computation) {
+export default async function writeScope(creatureId, computation) {
   if (!creatureId) throw 'creatureId is required';
   const scope = computation.scope;
   let variables = computation.variables;
   // If the variables are not set, check if they can be fetched
   if (!variables) {
-    variables = CreatureVariables.findOne({
+    variables = await CreatureVariables.findOneAsync({
       _creatureId: creatureId
     });
   }
   // Otherwise create a new variables document
   if (!variables) {
-    CreatureVariables.insert({
+    await CreatureVariables.insertAsync({
       _creatureId: creatureId
     });
     variables = {};
@@ -75,10 +75,10 @@ export default function writeScope(creatureId, computation) {
     const update = {};
     if ($set) update.$set = $set;
     if ($unset) update.$unset = $unset;
-    CreatureVariables.update({ _creatureId: creatureId }, update);
+    CreatureVariables.updateAsync({ _creatureId: creatureId }, update);
   }
   if (computation.creature?.dirty) {
-    Creatures.update({ _id: creatureId }, { $unset: { dirty: 1 } });
+    Creatures.updateAsync({ _id: creatureId }, { $unset: { dirty: 1 } });
   }
 }
 /*

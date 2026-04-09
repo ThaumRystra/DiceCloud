@@ -24,29 +24,18 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
-export default {
-  components: {
-    MarkdownText,
-  },
-  props: {
-    model: {
-      type: Array,
-      default: () => [],
-    },
-    showSilenced: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  computed: {
-    filteredModel() {
-      return this.model.filter(content => !content.silenced || this.showSilenced);
-    }
-  }
-}
+const props = defineProps<{
+  model?: any[];
+  showSilenced?: boolean;
+}>();
+
+const filteredModel = computed(() =>
+  (props.model ?? []).filter(content => !content.silenced || props.showSilenced)
+);
 </script>
 
 <style lang="css" scoped>

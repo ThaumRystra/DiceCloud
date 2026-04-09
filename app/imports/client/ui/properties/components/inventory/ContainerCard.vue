@@ -4,14 +4,14 @@
     :data-id="model._id"
     @toolbarclick="clickContainer(model._id)"
   >
-    <template slot="toolbar">
+    <template #toolbar>
       <v-toolbar-title>
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer />
       <v-toolbar-title>
         <v-icon
-          small
+          size="small"
           style="width: 16px;"
           class="mr-1"
         >
@@ -20,11 +20,11 @@
         {{ weight }}
       </v-toolbar-title>
       <v-toolbar-title
-        class="layout align-center"
+        class="d-flex align-center"
         style="flex-grow: 0;"
       >
         <v-icon
-          small
+          size="small"
           style="width: 16px;"
           class="mr-1"
         >
@@ -42,71 +42,63 @@
   </toolbar-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { useStore } from 'vuex';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 
-export default {
-  components: {
-    ToolbarCard,
-    ItemList,
-    CoinValue,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  computed: {
-    weight() {
-      const contentWeight = this.model.contentsWeightless ?
-        0 :
-        this.model.contentsWeight || 0;
-      const ownWeight = this.model.weight || 0;
-      return stripFloatingPointOddities(contentWeight + ownWeight);
-    },
-    value() {
-      const contentValue = this.model.contentsValue || 0;
-      const ownValue = this.model.value || 0;
-      return contentValue + ownValue;
-    }
-  },
-  methods: {
-    clickContainer(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${_id}`,
-        data: { _id },
-      });
-    },
-    clickProperty(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `tree-node-${_id}`,
-        data: { _id },
-      });
-    },
-  },
-  meteor: {
-    itemIds() {
-      return CreatureProperties.find({
-        'parentId': this.model._id,
-        type: { $in: ['item', 'container'] },
-        removed: { $ne: true },
-        equipped: { $ne: true },
-        deactivatedByAncestor: { $ne: true },
-        deactivatedByToggle: { $ne: true },
-      }, {
-        sort: { left: 1 },
-        fields: { _id: 1 }
-      }).map(prop => prop._id);
-    },
-  }
-};
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const store = useStore();
+
+const weight = computed(() => {
+  const contentWeight = props.model.contentsWeightless ? 0 : props.model.contentsWeight || 0;
+  const ownWeight = props.model.weight || 0;
+  return stripFloatingPointOddities(contentWeight + ownWeight);
+});
+
+const value = computed(() => {
+  const contentValue = props.model.contentsValue || 0;
+  const ownValue = props.model.value || 0;
+  return contentValue + ownValue;
+});
+
+const { result: itemIds } = autorun(() =>
+  CreatureProperties.find({
+    'parentId': props.model._id,
+    type: { $in: ['item', 'container'] },
+    removed: { $ne: true },
+    equipped: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+  }, {
+    sort: { left: 1 },
+    fields: { _id: 1 },
+  }).map((prop: any) => prop._id)
+);
+
+function clickContainer(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
+
+function clickProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: { _id },
+  });
+}
 </script>
 
 <style lang="css" scoped>

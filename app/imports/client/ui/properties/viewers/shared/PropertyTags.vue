@@ -20,20 +20,15 @@
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props:{
-    tags: {
-      type: Array,
-      default: () => [],
-    },
-    noMargin: Boolean,
-    prefix: {
-      type: String,
-      default: undefined,
-    }
-  },
-}
+<script setup lang="ts">
+withDefaults(defineProps<{
+  tags?: string[];
+  noMargin?: boolean;
+  prefix?: string;
+}>(), {
+  tags: () => [],
+  prefix: undefined,
+});
 </script>
 
 <style lang="css" scoped>

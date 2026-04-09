@@ -14,19 +14,11 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import LogContent from '/imports/client/ui/log/LogContent.vue';
 
-export default {
-  components: {
-    LogContent,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    showName: Boolean,
-  },
-}
+defineProps<{
+  model: object;
+  showName?: boolean;
+}>();
 </script>

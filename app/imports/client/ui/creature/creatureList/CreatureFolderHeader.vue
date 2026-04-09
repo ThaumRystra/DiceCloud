@@ -1,5 +1,5 @@
 <template lang="html">
-  <v-list-item-content :style="dense ? undefined : 'min-height: 60px;'">
+  <div :style="dense ? undefined : 'min-height: 60px;'">
     <v-list-item-title class="d-flex align-center">
       <div
         v-if="!renaming"
@@ -12,13 +12,13 @@
         ref="name-input"
         regular
         hide-details
-        dense
+        density="compact"
         :value="newName"
         @change="renameFolder"
-        @click.native.stop=""
-        @input.native.stop=""
-        @keydown.native.stop=""
-        @keyup.native.stop=""
+        @click.stop=""
+        @input.stop=""
+        @keydown.stop=""
+        @keyup.stop=""
       />
       <template v-if="!selection && !dense">
         <v-spacer />
@@ -45,67 +45,56 @@
         </v-btn>
       </template>
     </v-list-item-title>
-  </v-list-item-content>
+  </div>
 </template>
 
-<script lang="js">
-  import Vue from 'vue';
-  import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName';
-  import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder';
-  import {snackbar} from '/imports/client/ui/components/snackbars/SnackbarQueue';
+<script setup lang="ts">
+import { ref, watch, nextTick } from 'vue';
+import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName';
+import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
-  export default {
-    props: {
-      model: {
-        type: Object,
-        required: true,
-      },
-      open: Boolean,
-      selection: Boolean,
-      dense: Boolean,
-    },
-    data(){return {
-      renaming: false,
-      newName: this.model?.name,
-    }},
-    watch: {
-      renaming(value){
-        if (value) {
-          Vue.nextTick(() => {
-            this.$refs['name-input'].focus();
-          });
-        } else if (this.newName && this.newName !== this.model.name) {
-          updateCreatureFolderName.call({
-            _id: this.model._id,
-            name: this.newName
-          }, error => {
-            if (!error) return;
-            console.error(error);
-            snackbar({
-              text: error.reason,
-            });
-          });
-        }
-      },
-    },
-    methods:{
-      renameFolder(name, ack){
-        this.newName = name;
-        ack();
-      },
-      removeFolder(){
-        removeCreatureFolder.call({
-          _id: this.model._id
-        }, error => {
-          if (!error) return;
-          console.error(error);
-          snackbar({
-            text: error.reason,
-          });
-        });
-      },
+const props = defineProps<{
+  model: Record<string, any>;
+  open?: boolean;
+  selection?: boolean;
+  dense?: boolean;
+}>();
+
+const nameInput = ref<any>(null);
+const renaming = ref(false);
+const newName = ref(props.model?.name);
+
+watch(renaming, async (value) => {
+  if (value) {
+    await nextTick();
+    nameInput.value?.focus();
+  } else if (newName.value && newName.value !== props.model.name) {
+    try {
+      await updateCreatureFolderName.callAsync({
+        _id: props.model._id,
+        name: newName.value,
+      });
+    } catch (error: any) {
+      console.error(error);
+      snackbar({ text: error.reason });
     }
   }
+});
+
+function renameFolder(name: string, ack: () => void) {
+  newName.value = name;
+  ack();
+}
+
+async function removeFolder() {
+  try {
+    await removeCreatureFolder.callAsync({ _id: props.model._id });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason });
+  }
+}
 </script>
 
 <style lang="css" scoped>

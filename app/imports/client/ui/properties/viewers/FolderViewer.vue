@@ -1,7 +1,7 @@
 <template lang="html">
   <div class="folder-viewer">
     <v-row
-      dense
+      density="compact"
     >
       <property-field
         name="Name"
@@ -15,11 +15,8 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
-export default {
-  mixins: [propertyViewerMixin],
-}
+<script setup lang="ts">
+defineProps<{ model: Record<string, any> }>();
 </script>
 
 <style lang="css" scoped>

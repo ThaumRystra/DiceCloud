@@ -12,7 +12,7 @@
           :key="index"
           class="mr-1"
           disabled
-          small
+          size="small"
         >
           {{ tag }}
         </v-chip>
@@ -30,7 +30,7 @@
             :key="index"
             class="mr-1"
             disabled
-            small
+            size="small"
           >
             {{ extraTag }}
           </v-chip>
@@ -40,18 +40,8 @@
   </property-field>
 </template>
 
-<script lang="js">
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-
-export default {
-  components: {
-    PropertyField,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-}
+<script setup lang="ts">
+defineProps<{
+  model: Record<string, any>;
+}>();
 </script>

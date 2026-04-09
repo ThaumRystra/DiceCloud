@@ -81,40 +81,37 @@
   </div>
 </template>
 
-<script lang="js">
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 import DAMAGE_TYPES from '/imports/constants/DAMAGE_TYPES';
 
-export default {
-  components: {
-    FormSections,
-    FormSection,
-  },
-  mixins: [propertyFormMixin],
-  data() {
-    return {
-      DAMAGE_TYPES,
-      damageTypeRules: [
-        value => {
-          if (value && value.length) {
-            for (let i = 0; i < value.length; i++) {
-              if (!VARIABLE_NAME_REGEX.test(value[i])) {
-                return `${value[i]} is not a valid damage name`
-              }
-            }
-          }
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const damageTypeRules = [
+  (value: string[]) => {
+    if (value && value.length) {
+      for (let i = 0; i < value.length; i++) {
+        if (!VARIABLE_NAME_REGEX.test(value[i])) {
+          return `${value[i]} is not a valid damage name`;
         }
-      ],
-    };
-  },
-  methods: {
-    error(e) {
-      console.error(e)
+      }
     }
-  }
-};
+  },
+];
+
+function error(e: any) {
+  console.error(e);
+}
 </script>
 
 <style lang="css" scoped>

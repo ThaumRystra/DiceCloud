@@ -21,7 +21,7 @@ export const runAction = new ValidatedMethod({
     if (!action) throw new Meteor.Error('not-found', 'Action not found');
 
     // Permissions
-    assertEditPermission(getCreature(action.creatureId), this.userId);
+    await assertEditPermission(getCreature(action.creatureId), this.userId);
 
     // Replay the user's decisions as user input
     const userInput = getReplayChoicesInputProvider(actionId, decisions);

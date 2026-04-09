@@ -29,7 +29,7 @@
         <div
           v-for="attributeConsumed in model.resources.attributesConsumed"
           :key="attributeConsumed._id"
-          class="layout align-center justify-start"
+          class="d-flex align-center justify-start"
         >
           Cost: {{ attributeConsumed.quantity && attributeConsumed.quantity.value }} {{ attributeConsumed.statName || attributeConsumed.variableName }}
         </div>
@@ -70,7 +70,9 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
@@ -80,96 +82,56 @@ import { getFilter, docsToForest } from '/imports/api/parenting/parentingFunctio
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 
-export default {
-  components: {
-    MarkdownText,
-    PropertyIcon,
-    TreeNodeList,
-  },
-  inject: {
-    context: {
-      default: {},
-    },
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      activated: undefined,
-      doActionLoading: false,
-      hovering: false,
+const props = defineProps<{ model: Record<string, any> }>();
+
+const context = inject('context', {} as any);
+const theme = inject('theme', { isDark: false } as any);
+
+const hovering = ref(false);
+const activated = ref<boolean | undefined>(undefined);
+
+const rollBonus = computed(() => {
+  if (!props.model.attackRoll) return undefined;
+  return numberToSignedString(props.model.attackRoll.value);
+});
+
+const rollBonusTooLong = computed(() => rollBonus.value && rollBonus.value.length > 3);
+
+const propertyName = computed(() => getPropertyName(props.model.type));
+
+const cardClasses = computed(() => ({
+  'v-theme--dark': theme.isDark,
+  'v-theme--light': !theme.isDark,
+  'muted-text': props.model.insufficientResources,
+  'active': activated.value,
+  'elevation-8': hovering.value,
+}));
+
+const actionTypeName = computed(() => ({
+  'action': 'Action',
+  'bonus': 'Bonus Action',
+  'attack': 'Attack',
+  'reaction': 'Reaction',
+  'free': 'Free Action',
+  'long': 'Long Action',
+} as Record<string, string>)[props.model.actionType] || props.model.actionType);
+
+const { result: children } = autorun(() => {
+  const rangesToExclude: { left: number; right: number }[] = [];
+  const descendants = CreatureProperties.find({
+    ...getFilter.descendants(props.model),
+    removed: { $ne: true },
+  }, { sort: { left: 1 } }).map((prop: any) => {
+    if (prop.type === 'buff' || prop.type === 'folder') {
+      rangesToExclude.push({ left: prop.left, right: prop.right });
     }
-  },
-  computed: {
-    rollBonus() {
-      if (!this.model.attackRoll) return;
-      return numberToSignedString(this.model.attackRoll.value);
-    },
-    rollBonusTooLong() {
-      return this.rollBonus && this.rollBonus.length > 3;
-    },
-    propertyName() {
-      return getPropertyName(this.model.type);
-    },
-    cardClasses() {
-      return {
-        'theme--dark': this.theme.isDark,
-        'theme--light': !this.theme.isDark,
-        'muted-text': this.model.insufficientResources,
-        'active': this.activated,
-        'elevation-8': this.hovering,
-      }
-    },
-    actionTypeName() {
-      return {
-        'action': 'Action',
-        'bonus': 'Bonus Action',
-        'attack': 'Attack',
-        'reaction': 'Reaction',
-        'free': 'Free Action',
-        'long': 'Long Action'
-      }[this.model.actionType] || this.model.actionType
-    },
-  },
-  meteor: {
-    children() {
-      const rangesToExclude = [];
-      const descendants = CreatureProperties.find({
-        ...getFilter.descendants(this.model),
-        'removed': { $ne: true },
-      }, {
-        sort: {left: 1}
-      }).map(prop => {
-        // Get all the props we don't want to show the descendants of and
-        // where they might appear in the ancestor list
-        if (prop.type === 'buff' || prop.type === 'folder') {
-          rangesToExclude.push({
-            left: prop.left,
-            right: prop.right,
-          });
-        }
-        return prop;
-      }).filter(prop => {
-        // Filter out folders entirely
-        if (prop.type === 'folder') return false;
-        // Filter out descendants of terminating props
-        return !some(rangesToExclude, range => {
-          return prop.left > range.left && prop.right < range.right;
-        });
-      });
-      return docsToForest(descendants);
-    },
-  },
-}
+    return prop;
+  }).filter((prop: any) => {
+    if (prop.type === 'folder') return false;
+    return !some(rangesToExclude, range => prop.left > range.left && prop.right < range.right);
+  });
+  return docsToForest(descendants);
+});
 </script>
 
 <style lang="css" scoped>
@@ -224,11 +186,11 @@ export default {
   height: 32px;
 }
 
-.theme--light.muted-text {
+.v-theme--light.muted-text {
   color: rgba(0, 0, 0, .3) !important;
 }
 
-.theme--dark.muted-text {
+.v-theme--dark.muted-text {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 
@@ -238,11 +200,11 @@ export default {
 </style>
 
 <style lang="css">
-.action-card.theme--light.muted-text .v-icon {
+.action-card.v-theme--light.muted-text .v-icon {
   color: rgba(0, 0, 0, .3) !important;
 }
 
-.action-card.theme--dark.muted-text .v-icon {
+.action-card.v-theme--dark.muted-text .v-icon {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 

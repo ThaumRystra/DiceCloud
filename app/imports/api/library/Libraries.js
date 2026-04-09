@@ -31,12 +31,10 @@ let LibrarySchema = new SimpleSchema({
     max: STORAGE_LIMITS.summary,
   },
   showInMarket: {
-    index: 1,
     type: Boolean,
     optional: true,
   },
   subscriberCount: {
-    index: 1,
     type: Number,
     optional: true,
   },
@@ -54,7 +52,7 @@ const insertLibrary = new ValidatedMethod({
     simpleSchemaMixin,
   ],
   schema: LibrarySchema.omit('owner'),
-  run(library) {
+  async run(library) {
     if (!this.userId) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         'You need to be logged in to insert a library');
@@ -65,7 +63,7 @@ const insertLibrary = new ValidatedMethod({
         `The ${tier.name} tier does not allow you to insert a library`);
     }
     library.owner = this.userId;
-    return Libraries.insert(library);
+    return await Libraries.insertAsync(library);
   },
 });
 
@@ -85,10 +83,10 @@ const updateLibraryName = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, name }) {
-    let library = Libraries.findOne(_id);
-    assertEditPermission(library, this.userId);
-    Libraries.update(_id, { $set: { name } });
+  async run({ _id, name }) {
+    let library = await Libraries.findOneAsync(_id);
+    await assertEditPermission(library, this.userId);
+    await Libraries.updateAsync(_id, { $set: { name } });
   },
 });
 
@@ -108,10 +106,10 @@ const updateLibraryDescription = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, description }) {
-    let library = Libraries.findOne(_id);
-    assertEditPermission(library, this.userId);
-    Libraries.update(_id, { $set: { description } });
+  async run({ _id, description }) {
+    let library = await Libraries.findOneAsync(_id);
+    await assertEditPermission(library, this.userId);
+    await Libraries.updateAsync(_id, { $set: { description } });
   },
 });
 
@@ -131,10 +129,10 @@ const updateLibraryShowInMarket = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, value }) {
-    let library = Libraries.findOne(_id);
-    assertEditPermission(library, this.userId);
-    Libraries.update(_id, { $set: { showInMarket: value } });
+  async run({ _id, value }) {
+    let library = await Libraries.findOneAsync(_id);
+    await assertEditPermission(library, this.userId);
+    await Libraries.updateAsync(_id, { $set: { showInMarket: value } });
   },
 });
 
@@ -151,17 +149,17 @@ const removeLibrary = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
-    let library = Libraries.findOne(_id);
+  async run({ _id }) {
+    let library = await Libraries.findOneAsync(_id);
     assertOwnership(library, this.userId);
     this.unblock();
-    removeLibaryWork(_id)
+    await removeLibaryWork(_id)
   }
 });
 
-export function removeLibaryWork(libraryId) {
-  Libraries.remove(libraryId);
-  LibraryNodes.remove(getFilter.descendantsOfRoot(libraryId));
+export async function removeLibaryWork(libraryId) {
+  await Libraries.removeAsync(libraryId);
+  await LibraryNodes.removeAsync(getFilter.descendantsOfRoot(libraryId));
 }
 
 export { LibrarySchema, insertLibrary, updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary };

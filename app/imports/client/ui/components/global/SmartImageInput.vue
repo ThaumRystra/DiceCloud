@@ -43,121 +43,70 @@
   </outlined-input>
 </template>
 
-<script lang="js">
-/*
-  <v-file-input
-      v-cloak
-      ref="input"
-      v-bind="$attrs"
-      v-model="file"
-      class="dc-file-field"
-      :loading="loading"
-      :error-messages="errors"
-      :disabled="isDisabled"
-      :outlined="!regular"
-      @drop.prevent="addDropFile"
-      @dragover.prevent
-      @focus="focused = true"
-      @blur="focused = false"
-      @keyup="e => $emit('keyup', e)"
-    />
-  States to handle:
-  - Empty
-  - Image from URL
-  - Image from file
-  - Image from file being uploaded
-  - Upload fail
-  - File invalid as image (size, extension)
-  Actions to handle
-  - Changing an image
-    - Do we delete the old one, or leave it in the user's account?
-  - Select image from user's files
-  - URL image
-
-  TODO
-  Clicking opens image input dialog
-  Drag-drop opens image input dialog with a file ready to upload
-*/
-import UserImages from '/imports/api/files/userImages/UserImages';
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+<script setup lang="ts">
+import { ref, computed, inject, useAttrs } from 'vue';
+import { useStore } from 'vuex';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
-export default {
-  components: {
-    OutlinedInput,
-  },
-  mixins: [SmartInput],
-  inject: {
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    label: {
-      type: String,
-      default: '',
-    },
-  },
-  data() {
-    return {
-      id: Random.id(),
-      dragging: false,
-    };
-  },
-  computed: {
-    themeClasses() {
-      return {
-        'theme--dark': this.theme.isDark,
-        'theme--light': !this.theme.isDark,
+defineOptions({ inheritAttrs: false });
+
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+const store = useStore();
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+  label?: string;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { change } = useSmartInput(props, emit, attrs);
+
+const id = ref(Random.id());
+const dragging = ref(false);
+
+const themeClasses = computed(() => ({
+  'v-theme--dark': theme.isDark,
+  'v-theme--light': !theme.isDark,
+}));
+
+function openImageInputDialog() {
+  store.commit('pushDialogStack', {
+    component: 'image-input-dialog',
+    elementId: id.value,
+    data: { href: props.value },
+    callback: (href: string) => {
+      if (href) {
+        change(href);
       }
     },
-  },
-  methods: {
-    openImageInputDialog() {
-      this.$store.commit('pushDialogStack', {
-        component: 'image-input-dialog',
-        elementId: this.id,
-        data: {
-          href: this.value,
-        },
-        callback: (href) => {
-          if (href) {
-            this.change(href);
-          }
-        },
-      });
-    },
-    handleUrlChange() {
-      this.$emit('change', this.url);
-    },
-    handleFileChange(event) {
-      const file = event.target.files[0];
-      this.uploadFile(file);
-    },
-    handleDragOver(event) {
-      // TODO
-      // event.preventDefault();
-      // this.dragging = true;
-    },
-    handleDragLeave() {
-      // TODO
-      // this.dragging = false;
-    },
-    handleDrop(event) {
-      // TODO
-      // console.log(event);
-      // event.preventDefault();
-      // const file = event.dataTransfer.files[0];
-      // this.dragging = false;
-      // this.uploadFile(file);
-    },
-    uploadFile(file) {
-      // Implement your file upload logic here
-    },
-  },
-};
+  });
+}
+
+function handleDragOver(_event: DragEvent) {
+  // TODO
+}
+
+function handleDragLeave() {
+  // TODO
+}
+
+function handleDrop(_event: DragEvent) {
+  // TODO
+}
+
+function uploadFile(_file: File) {
+  // Implement your file upload logic here
+}
 </script>
 
 <style scoped>
@@ -181,10 +130,10 @@ export default {
 .dragging {
   border-style: dashed;
 }
-.outlined-input.dragging.theme--dark:not(.no-hover) {
+.outlined-input.dragging.v-theme--dark:not(.no-hover) {
   border-color: #fff;
 }
-.outlined-input.dragging.theme--light:not(.no-hover) {
+.outlined-input.dragging.v-theme--light:not(.no-hover) {
   border-color: rgba(0,0,0,.86);
 }
 .image-overlay {
@@ -194,10 +143,10 @@ export default {
   left: 0;
   right: 0;
 }
-.image-overlay.theme--dark {
+.image-overlay.v-theme--dark {
   background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
 }
-.image-overlay.theme--light {
+.image-overlay.v-theme--light {
   background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
 }
 .add-image-text {

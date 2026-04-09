@@ -10,7 +10,7 @@ const removeCreatureFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
+  async run({ _id }) {
     // Ensure logged in
     let userId = this.userId;
     if (!userId) {
@@ -18,13 +18,13 @@ const removeCreatureFolder = new ValidatedMethod({
         'You need to be logged in to remove a folder');
     }
     // Check that this folder is owned by the user
-    let existingFolder = CreatureFolders.findOne(_id);
+    let existingFolder = await CreatureFolders.findOneAsync(_id);
     if (existingFolder.owner !== userId) {
       throw new Meteor.Error('creatureFolders.methods.updateName.denied',
         'This folder does not belong to you');
     }
     // Remove
-    return CreatureFolders.remove(_id);
+    return CreatureFolders.removeAsync(_id);
   },
 });
 

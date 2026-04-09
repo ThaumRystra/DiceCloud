@@ -10,17 +10,20 @@
         handler: clickOutsideMenu,
         include: menuClickOutsideInclude,
       }"
-      :position-x="menuX"
-      :position-y="menuY"
-      absolute
-      top
-      :nudge-left="150"
+      location="top"
       origin="center bottom"
       :close-on-click="false"
       :content-class="`tabletop-prop-menu rows-${rows}`"
       :close-on-content-click="false"
       style="z-index: 2"
     >
+      <template #activator>
+        <div
+          ref="menuActivator"
+          style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
+          :style="{ left: menuX + 'px', top: menuY + 'px' }"
+        />
+      </template>
       <tabletop-action-card
         v-if="selectedProp && selectedProp.type === 'action'"
         style="width: 300px;"
@@ -56,7 +59,7 @@
         data-id="tabletop-standard-card"
       >
         <v-card-title>
-          <v-icon left>
+          <v-icon class="mr-1">
             {{ activeIcon.icon }}
           </v-icon>
           {{ activeIcon.tabName }}
@@ -67,7 +70,7 @@
         style="width: 300px"
       >
         <v-card-title>
-          <v-icon left>
+          <v-icon class="mr-1">
             {{ activeIcon.icon }}
           </v-icon>
           {{ activeIcon.actionName }}
@@ -98,9 +101,9 @@
       >
         <template
           v-for="(icon, iconIndex) in row"
+          :key="icon.propId || iconIndex"
         >
           <creature-bar-icon
-            :key="icon.propId || iconIndex"
             :prop-id="icon.propId"
             :icon="icon.icon"
             :selected="selectedIcon === icon"
@@ -146,9 +149,9 @@
       >
         <template
           v-for="(icon, iconIndex) in row"
+          :key="icon.propId || iconIndex"
         >
           <creature-bar-icon
-            :key="icon.propId || iconIndex"
             :prop-id="icon.propId"
             :icon="icon.icon"
             :selected="selectedIcon === icon"
@@ -163,292 +166,248 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import TabletopBuffCard from '/imports/client/ui/tabletop/TabletopBuffCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';
 import { compact, chunk } from 'lodash';
-import doAction from '../../creature/actions/doAction';
 
-function splitToNChunks(inputArray, n) {
+function splitToNChunks(inputArray: any[], n: number) {
   return chunk(inputArray, Math.ceil(inputArray.length / n));
 }
 
-export default {
-  components: {
-    CreatureBarIcon,
-    TabletopActionCard,
-    TabletopBuffCard,
-  },
-  props: {
-    creatureId: {
-      type: String,
-      default: undefined,
-    },
-    targets: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      rows: 2,
-      hoveredIcon: undefined,
-      selectedIcon: undefined,
-      lastIcon: undefined,
-      menuOpen: false,
-      menuX: 200,
-      menuY: window.innerHeight - 216,
-    };
-  },
-  computed: {
-    activeIcon() {
-      return this.selectedIcon || this.hoveredIcon;
-    }
-  },
-  watch: {
-    menuOpen(val) {
-      if (!val && this.selectIcon) {
-        this.selectedIcon = undefined;
-      }
-    },
-    selectedIcon: {
-      immediate: true,
-      handler: function ({ propId } = {}) {
-        this.$emit('active-action-change', propId)
-      }
-    }
-  },
-  methods: {
-    hoverIcon(e, icon) {
-      if (this.selectedIcon) return;
-      // this.menuX = e.clientX - (e.clientX % 44);
-      const { left, right } = e.target.getBoundingClientRect();
-      const x = ( left + right ) / 2
-      this.menuX = x;
-      this.hoveredIcon = icon;
-      this.menuOpen = true;
-    },
-    unHoverIcon(icon) {
-      if (this.hoveredIcon === icon) {
-        this.hoveredIcon = undefined;
-        if (!this.selectedIcon) {
-          this.menuOpen = false;
-        }
-      }
-    },
-    selectIcon(e, icon) {
-      if (icon.tab) {
-        this.openCharacterSheet(icon.tab, icon.standardId);
-        return;
-      }
-      if (icon.actionName) {
-        this.openStandardAction(icon.standardId)
-        return;
-      }
-      if (this.selectedIcon === icon) {
-        this.selectedIcon = undefined;
-        this.menuOpen = false;
-        return;
-      }
-      const { left, right } = e.target.getBoundingClientRect();
-      const x = ( left + right ) / 2
-      this.menuX = x;
-      this.selectedIcon = icon;
-      this.menuOpen = true;
-    }, 
-    clickOutsideMenu () {
-      this.menuOpen = false;
-    },
-    menuClickOutsideInclude() {
-      const outside = compact([
-        document.querySelector('.selected-creature-bar'),
-        ...document.querySelectorAll('.tabletop-creature-card'),
-        document.querySelector('.tabletop-prop-menu'),
-      ]);
-      return outside;
-    },
-    openCharacterSheet(tab, elementId) {
-      this.menuOpen = false;
-      this.$store.commit(
-        'setTabForCharacterSheet',
-        { id: this.creatureId, tab }
-      );
-      this.$store.commit('pushDialogStack', {
-				component: 'character-sheet-dialog',
-				elementId,
-        data: {
-          creatureId: this.creatureId,
-        },
-      });
-    },
-    openStandardAction(standardId) {
-      this.menuOpen = false;
-      if (standardId === 'cast-spell') {
-        this.$store.commit('pushDialogStack', {
-          component: 'cast-spell-with-slot-dialog',
-          elementId: 'cast-spell',
-          data: {
-            creatureId: this.creatureId,
-          },
-        });
-      }
-    },
-    openPropertyDetails(elementId) {
-      this.menuOpen = false;
-      const propId = this.selectedProp._id;
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId,
-        data: { _id: propId },
-        callback: () => propId
-      });
-    },
-  },
-  meteor: {
-    creature() {
-      if (!this.creatureId) return;
-      return Creatures.findOne(this.creatureId)
-    },
-    selectedProp() {
-      const propId = this.activeIcon?.propId;
-      if (!propId) return;
-      return CreatureProperties.findOne(propId);
-    },
-    iconGroups() {
-      if (!this.creature) return;
-      const iconGroups = [];
+const props = defineProps<{
+  creatureId?: string;
+  targets: any[];
+}>();
 
-      // Get the standard icons
-      const standardIconsById = {
-        'cast-spell': {standardId: 'cast-spell', groupName: 'Standard Actions', icon: 'mdi-fire', actionName: 'Cast Spell' },
-        // 'make-check': {standardId: 'make-check', groupName: 'Standard Actions', icon: 'mdi-radiobox-marked',  actionName: 'Check' },
-        // 'roll-dice': {standardId: 'roll-dice', groupName: 'Standard Actions', icon: 'mdi-dice-d20', actionName: 'Roll' },
-        'tab-stats': {standardId: 'tab-stats', groupName: 'Tabs', icon: 'mdi-chart-box', tab: 'stats', tabName: 'Stats' },
-        'tab-actions': {standardId: 'tab-actions', groupName: 'Tabs', icon: 'mdi-lightning-bolt', tab: 'actions', tabName: 'Actions' },
-        'tab-spells': this.creature?.settings?.hideSpellsTab ? undefined : {standardId: 'tab-spells', groupName: 'Tabs', icon: 'mdi-fire', tab: 'spells', tabName: 'Spells' },
-        'tab-inventory': {standardId: 'tab-inventory', groupName: 'Tabs', icon: 'mdi-cube', tab: 'inventory', tabName: 'Inventory' },
-        'tab-features': {standardId: 'tab-features', groupName: 'Tabs', icon: 'mdi-text', tab: 'features', tabName: 'Features' },
-        'tab-journal': {standardId: 'tab-journal', groupName: 'Tabs', icon: 'mdi-book-open-variant', tab: 'journal', tabName: 'Journal' },
-        'tab-build': {standardId: 'tab-build', groupName: 'Tabs', icon: 'mdi-wrench', tab: 'build', tabName: 'Build' },
-      };
+const emit = defineEmits(['active-action-change']);
 
-      // Get the folders that could hide a property
-      const folderGroupsById = {};
-      CreatureProperties.find({
-        'root.id': this.creatureId,
-        type: 'folder',
-        groupStats: true,
-        hideStatsGroup: true,
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, { fields: { _id: 1 } }).forEach(folder => {
-        const folderGroup = { name: folder._id, iconList: [] };
-        iconGroups.push(folderGroup);
-        folderGroupsById[folder._id] = folderGroup;
-      });
+const store = useStore();
 
-      // Get the properties that need to be shown as an icon
-      const filter = {
-        'root.id': this.creatureId,
-        $and: [
-          {
-            $or: [
-              { type: 'action' },
-              // { type: 'attribute' },
-              // { type: 'toggle' },
-              { type: 'buff' }
-            ],
-          },
-          {
-            $or: [
-              { inactive: { $ne: true } },
-              { type: 'toggle' },
-            ]
-          }
-        ],
-        removed: { $ne: true },
-      };
-      if (this.creature.settings?.hideUnusedStats) {
-        filter.hide = { $ne: true };
-      }
+const rows = ref(2);
+const hoveredIcon = ref<any>(undefined);
+const selectedIcon = ref<any>(undefined);
+const lastIcon = ref<any>(undefined);
+const menuOpen = ref(false);
+const menuX = ref(200);
+const menuY = ref(window.innerHeight - 216);
 
-      // Get all the properties we wish to display, with just their IDs, and store them
-      const propsById = {};
-      const props = [];
-      CreatureProperties.find(filter, {
-        sort: { left: -1 },
-        fields: { _id: 1, type: 1, parentId: 1 },
-      }).forEach(prop => {
-        props.push(prop);
-        propsById[prop._id] = prop;
-        // If they are in a folder, group them by that folder first
-        if (folderGroupsById[prop.parentId]) {
-          prop._placedInGroup = true;
-          folderGroupsById[prop.parentId].iconList.push({ propId: prop._id });
-        }
-      });
+const activeIcon = computed(() => selectedIcon.value || hoveredIcon.value);
 
-      // Default groups
-      let groupsByName = {};
-      let defaultGroups = [];
+watch(menuOpen, (val) => {
+  if (!val && selectIcon) {
+    selectedIcon.value = undefined;
+  }
+});
 
-      // Add default groups for props that have not yet been collected into custom groups
-      props.forEach(prop => {
-        if (prop._placedInGroup) return;
-        let groupName;
-        switch (prop.type) {
-          case 'buff': groupName = 'Buffs'; break;
-          case 'action': groupName = 'Actions'; break;
-          case 'resource': groupName = 'Resources'; break;
-          case 'folder': groupName = 'Folders'; break;
-        }
-        if (!groupName) return;
-        if (!groupsByName[groupName]) {
-          groupsByName[groupName] = { name: groupName, iconList: [] };
-          if (groupName !== 'Buffs') { // don't add buffs to the default groups, it is handled differently
-            defaultGroups.push(groupsByName[groupName]);
-          }
-        }
-        groupsByName[groupName].iconList.push({ propId: prop._id });
-      });
+watch(selectedIcon, ({ propId } = {} as any) => {
+  emit('active-action-change', propId);
+}, { immediate: true });
 
-      // Add default groups for standard icons
-      for (let key in standardIconsById) {
-        const standardIcon = standardIconsById[key];
-        if (!standardIcon) continue;
-        if (standardIcon._placedInGroup) continue;
+defineExpose({ selectedIcon });
 
-        const groupName = standardIcon.groupName || 'no';
-        if (!groupsByName[groupName]) {
-          groupsByName[groupName] = { name: groupName, iconList: [] };
-          defaultGroups.push(groupsByName[groupName]);
-        }
-
-        groupsByName[groupName].iconList.push(standardIcon);
-      }
-
-      iconGroups.push(...defaultGroups);
-
-      // Store a specific reference to buffs outside of the list order
-      iconGroups.buffs = groupsByName['Buffs'];
-
-      // Divide the icons into rows
-      iconGroups.forEach(group => {
-        group.rows = splitToNChunks(group.iconList, this.rows);
-      });
-      if (iconGroups.buffs) {
-        iconGroups.buffs.rows = splitToNChunks(iconGroups.buffs.iconList, this.rows);
-      }
-
-      const filteredIconGroups = iconGroups.filter(group => group.iconList.length);
-      filteredIconGroups.buffs = iconGroups.buffs;
-      return filteredIconGroups;
-    }
-  },
+function hoverIcon(e: MouseEvent, icon: any) {
+  if (selectedIcon.value) return;
+  const { left, right } = (e.target as HTMLElement).getBoundingClientRect();
+  menuX.value = (left + right) / 2;
+  hoveredIcon.value = icon;
+  menuOpen.value = true;
 }
+
+function unHoverIcon(icon: any) {
+  if (hoveredIcon.value === icon) {
+    hoveredIcon.value = undefined;
+    if (!selectedIcon.value) {
+      menuOpen.value = false;
+    }
+  }
+}
+
+function selectIcon(e: MouseEvent, icon: any) {
+  if (icon.tab) {
+    openCharacterSheet(icon.tab, icon.standardId);
+    return;
+  }
+  if (icon.actionName) {
+    openStandardAction(icon.standardId);
+    return;
+  }
+  if (selectedIcon.value === icon) {
+    selectedIcon.value = undefined;
+    menuOpen.value = false;
+    return;
+  }
+  const { left, right } = (e.target as HTMLElement).getBoundingClientRect();
+  menuX.value = (left + right) / 2;
+  selectedIcon.value = icon;
+  menuOpen.value = true;
+}
+
+function clickOutsideMenu() {
+  menuOpen.value = false;
+}
+
+function menuClickOutsideInclude() {
+  const outside = compact([
+    document.querySelector('.selected-creature-bar'),
+    ...document.querySelectorAll('.tabletop-creature-card'),
+    document.querySelector('.tabletop-prop-menu'),
+  ]);
+  return outside;
+}
+
+function openCharacterSheet(tab: string, elementId: string) {
+  menuOpen.value = false;
+  store.commit('setTabForCharacterSheet', { id: props.creatureId, tab });
+  store.commit('pushDialogStack', {
+    component: 'character-sheet-dialog',
+    elementId,
+    data: { creatureId: props.creatureId },
+  });
+}
+
+function openStandardAction(standardId: string) {
+  menuOpen.value = false;
+  if (standardId === 'cast-spell') {
+    store.commit('pushDialogStack', {
+      component: 'cast-spell-with-slot-dialog',
+      elementId: 'cast-spell',
+      data: { creatureId: props.creatureId },
+    });
+  }
+}
+
+function openPropertyDetails(elementId: string) {
+  menuOpen.value = false;
+  const propId = selectedProp.value._id;
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId,
+    data: { _id: propId },
+    callback: () => propId,
+  });
+}
+
+const { result: creature } = autorun(() => {
+  if (!props.creatureId) return;
+  return Creatures.findOne(props.creatureId);
+});
+
+const { result: selectedProp } = autorun(() => {
+  const propId = activeIcon.value?.propId;
+  if (!propId) return;
+  return CreatureProperties.findOne(propId);
+});
+
+const { result: iconGroups } = autorun(() => {
+  if (!creature.value) return;
+  const iconGroupsArr: any[] = [];
+
+  const standardIconsById: Record<string, any> = {
+    'cast-spell': { standardId: 'cast-spell', groupName: 'Standard Actions', icon: 'mdi-fire', actionName: 'Cast Spell' },
+    'tab-stats': { standardId: 'tab-stats', groupName: 'Tabs', icon: 'mdi-chart-box', tab: 'stats', tabName: 'Stats' },
+    'tab-actions': { standardId: 'tab-actions', groupName: 'Tabs', icon: 'mdi-lightning-bolt', tab: 'actions', tabName: 'Actions' },
+    'tab-spells': (creature.value as any)?.settings?.hideSpellsTab ? undefined : { standardId: 'tab-spells', groupName: 'Tabs', icon: 'mdi-fire', tab: 'spells', tabName: 'Spells' },
+    'tab-inventory': { standardId: 'tab-inventory', groupName: 'Tabs', icon: 'mdi-cube', tab: 'inventory', tabName: 'Inventory' },
+    'tab-features': { standardId: 'tab-features', groupName: 'Tabs', icon: 'mdi-text', tab: 'features', tabName: 'Features' },
+    'tab-journal': { standardId: 'tab-journal', groupName: 'Tabs', icon: 'mdi-book-open-variant', tab: 'journal', tabName: 'Journal' },
+    'tab-build': { standardId: 'tab-build', groupName: 'Tabs', icon: 'mdi-wrench', tab: 'build', tabName: 'Build' },
+  };
+
+  const folderGroupsById: Record<string, any> = {};
+  CreatureProperties.find({
+    'root.id': props.creatureId,
+    type: 'folder',
+    groupStats: true,
+    hideStatsGroup: true,
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { fields: { _id: 1 } }).forEach((folder: any) => {
+    const folderGroup = { name: folder._id, iconList: [] };
+    iconGroupsArr.push(folderGroup);
+    folderGroupsById[folder._id] = folderGroup;
+  });
+
+  const filter: any = {
+    'root.id': props.creatureId,
+    $and: [
+      { $or: [{ type: 'action' }, { type: 'buff' }] },
+      { $or: [{ inactive: { $ne: true } }, { type: 'toggle' }] },
+    ],
+    removed: { $ne: true },
+  };
+  if ((creature.value as any).settings?.hideUnusedStats) {
+    filter.hide = { $ne: true };
+  }
+
+  const propsById: Record<string, any> = {};
+  const props_: any[] = [];
+  CreatureProperties.find(filter, {
+    sort: { left: -1 },
+    fields: { _id: 1, type: 1, parentId: 1 },
+  }).forEach((prop: any) => {
+    props_.push(prop);
+    propsById[prop._id] = prop;
+    if (folderGroupsById[prop.parentId]) {
+      prop._placedInGroup = true;
+      folderGroupsById[prop.parentId].iconList.push({ propId: prop._id });
+    }
+  });
+
+  const groupsByName: Record<string, any> = {};
+  const defaultGroups: any[] = [];
+
+  props_.forEach((prop: any) => {
+    if (prop._placedInGroup) return;
+    let groupName: string | undefined;
+    switch (prop.type) {
+      case 'buff': groupName = 'Buffs'; break;
+      case 'action': groupName = 'Actions'; break;
+      case 'resource': groupName = 'Resources'; break;
+      case 'folder': groupName = 'Folders'; break;
+    }
+    if (!groupName) return;
+    if (!groupsByName[groupName]) {
+      groupsByName[groupName] = { name: groupName, iconList: [] };
+      if (groupName !== 'Buffs') {
+        defaultGroups.push(groupsByName[groupName]);
+      }
+    }
+    groupsByName[groupName].iconList.push({ propId: prop._id });
+  });
+
+  for (const key in standardIconsById) {
+    const standardIcon = standardIconsById[key];
+    if (!standardIcon) continue;
+    if (standardIcon._placedInGroup) continue;
+    const groupName = standardIcon.groupName || 'no';
+    if (!groupsByName[groupName]) {
+      groupsByName[groupName] = { name: groupName, iconList: [] };
+      defaultGroups.push(groupsByName[groupName]);
+    }
+    groupsByName[groupName].iconList.push(standardIcon);
+  }
+
+  iconGroupsArr.push(...defaultGroups);
+  (iconGroupsArr as any).buffs = groupsByName['Buffs'];
+
+  iconGroupsArr.forEach((group: any) => {
+    group.rows = splitToNChunks(group.iconList, rows.value);
+  });
+  if ((iconGroupsArr as any).buffs) {
+    (iconGroupsArr as any).buffs.rows = splitToNChunks((iconGroupsArr as any).buffs.iconList, rows.value);
+  }
+
+  const filteredIconGroups = iconGroupsArr.filter((group: any) => group.iconList.length);
+  (filteredIconGroups as any).buffs = (iconGroupsArr as any).buffs;
+  return filteredIconGroups;
+});
 </script>
 
 <style lang="css">

@@ -3,15 +3,15 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import getUserLibraryIds from './getUserLibraryIds';
 import { intersection, union } from 'lodash';
 
-export default function getCreatureLibraryIds(creature, userId) {
+export default async function getCreatureLibraryIds(creature, userId) {
   if (!userId) return [];
 
   // Get the ids of libraries the user is permitted to view
-  const userLibIds = getUserLibraryIds(userId);
+  const userLibIds = await getUserLibraryIds(userId);
 
   // If given a creature Id, get the creature document
   if (typeof creature === 'string') {
-    creature = Creatures.findOne(creature, {
+    creature = await Creatures.findOneAsync(creature, {
       fields: {
         allowedLibraries: 1,
         allowedLibraryCollections: 1,
@@ -28,9 +28,9 @@ export default function getCreatureLibraryIds(creature, userId) {
   // Get the ids of the libraries that the creature allows
   const allowedCollections = creature.allowedLibraryCollections || [];
   let creatureLibIds = creature.allowedLibraries || [];
-  LibraryCollections.find({
+  await LibraryCollections.find({
     _id: { $in: allowedCollections }
-  }, { fields: { libraries: 1 } }).forEach(collection => {
+  }, { fields: { libraries: 1 } }).forEachAsync(collection => {
     creatureLibIds = union(creatureLibIds, collection.libraries);
   });
 

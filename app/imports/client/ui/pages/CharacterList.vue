@@ -25,8 +25,8 @@
           >
             You have hit your maximum number of characters.
             <archive-button
-              small
-              text
+              size="small"
+              variant="text"
               class="mx-2"
             />
             or
@@ -34,13 +34,11 @@
               href="https://www.patreon.com/join/dicecloud/"
               class="mx-2"
               target="_blank"
-              small
-              text
+              size="small"
+              variant="text"
+              append-icon="mdi-patreon"
             >
               Increase Patreon tier
-              <v-icon right>
-                mdi-patreon
-              </v-icon>
             </v-btn>
           </v-alert>
           <v-card :class="{ 'mb-4': folders && folders.length }">
@@ -49,17 +47,17 @@
               :folders="folders"
             />
           </v-card>
-          <div class="layout justify-end mt-2">
+          <div class="d-flex justify-end mt-2">
             <v-btn
               v-if="showImportButton"
-              text
+              variant="text"
               data-id="import-character-button"
               @click="importCharacter"
             >
               import character
             </v-btn>
             <v-btn
-              text
+              variant="text"
               :loading="loadingInsertFolder"
               @click="insertFolder"
             >
@@ -68,7 +66,6 @@
           </div>
           <v-btn
             color="accent"
-            fab
             fixed
             bottom
             right
@@ -84,7 +81,10 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
@@ -95,112 +95,96 @@ import ArchiveButton from '/imports/client/ui/creature/creatureList/ArchiveButto
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
 
-const characterTransform = function (char) {
+const store = useStore();
+
+const characterTransform = function (char: any) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;
   char.initial = char.name && char.name[0] || '?';
   return char;
 };
-export default {
-  components: {
-    CreatureFolderList,
-    ArchiveButton,
-  },
-  data() {
-    return {
-      fab: false,
-      loadingInsertFolder: false,
-      renamingFolder: undefined,
-    }
-  },
-  meteor: {
-    $subscribe: {
-      'characterList': [],
-    },
-    folders() {
-      const userId = Meteor.userId();
-      let folders = CreatureFolders.find(
-        { owner: userId, archived: { $ne: true } },
-        { sort: { name: 1 } },
-      ).map(folder => {
-        folder.creatures = Creatures.find(
-          {
-            _id: { $in: folder.creatures || [] },
-            $or: [{ readers: userId }, { writers: userId }, { owner: userId }],
-          }, {
-          sort: { name: 1 },
-        }
-        ).map(characterTransform);
-        return folder;
-      });
-      return folders;
-    },
-    CreaturesWithNoParty() {
-      var userId = Meteor.userId();
-      var charArrays = CreatureFolders.find({ owner: userId }).map(p => p.creatures);
-      var folderChars = uniq(flatten(charArrays));
-      return Creatures.find(
-        {
-          _id: { $nin: folderChars },
-          $or: [{ readers: userId }, { writers: userId }, { owner: userId }],
-        },
-        { sort: { name: 1 } }
-      ).map(characterTransform);
-    },
-    creatureCount() {
-      let userId = Meteor.userId();
-      return Creatures.find({
-        owner: userId,
+
+subscribe('characterList');
+
+const loadingInsertFolder = ref(false);
+
+const { result: folders } = autorun(() => {
+  const userId = Meteor.userId();
+  return CreatureFolders.find(
+    { owner: userId, archived: { $ne: true } },
+    { sort: { name: 1 } },
+  ).map((folder: any) => {
+    folder.creatures = Creatures.find(
+      {
+        _id: { $in: folder.creatures || [] },
+        $or: [{ readers: userId }, { writers: userId }, { owner: userId }],
       }, {
-        fields: { _id: 1 },
-      }).count();
-    },
-    tier() {
-      let userId = Meteor.userId();
-      return getUserTier(userId);
-    },
-    characterSpaceLeft() {
-      let tier = this.tier;
-      let currentCharacterCount = this.creatureCount;
-      if (tier.characterSlots === -1) return Number.POSITIVE_INFINITY;
-      return tier.characterSlots - currentCharacterCount
-    },
-    exceededCharacterSpace() {
-      let tier = this.tier;
-      let currentCharacterCount = this.creatureCount;
-      return tier.characterSlots !== -1 && currentCharacterCount > tier.characterSlots
-    },
-    showImportButton() {
-      return !Meteor.settings.public?.disallowCreatureApiImport;
+      sort: { name: 1 },
     }
-  },
-  methods: {
-    insertCharacter() {
-      const self = this;
-      self.$store.commit('pushDialogStack', {
-        component: 'character-creation-dialog',
-        elementId: 'new-character-button',
-        callback: creatureId => creatureId,
-      });
+    ).map(characterTransform);
+    return folder;
+  });
+});
+
+const { result: CreaturesWithNoParty } = autorun(() => {
+  const userId = Meteor.userId();
+  const charArrays = CreatureFolders.find({ owner: userId }).map((p: any) => p.creatures);
+  const folderChars = uniq(flatten(charArrays));
+  return Creatures.find(
+    {
+      _id: { $nin: folderChars },
+      $or: [{ readers: userId }, { writers: userId }, { owner: userId }],
     },
-    importCharacter() {
-      const self = this;
-      self.$store.commit('pushDialogStack', {
-        component: 'character-import-dialog',
-        elementId: 'import-character-button',
-        callback: creatureId => creatureId,
-      });
-    },
-    insertFolder() {
-      this.loadingInsertFolder = true;
-      insertCreatureFolder.call(error => {
-        this.loadingInsertFolder = false;
-        if (!error) return;
-        console.error(error);
-        snackbar({
-          text: error.reason,
-        });
-      });
-    },
-  },
-};
+    { sort: { name: 1 } }
+  ).map(characterTransform);
+});
+
+const { result: creatureCount } = autorun(() => {
+  const userId = Meteor.userId();
+  return Creatures.find({
+    owner: userId,
+  }, {
+    fields: { _id: 1 },
+  }).count();
+});
+
+const { result: tier } = autorun(() => {
+  const userId = Meteor.userId();
+  return getUserTier(userId);
+});
+
+const characterSpaceLeft = computed(() => {
+  const t = tier.value;
+  if (!t) return 0;
+  if (t.characterSlots === -1) return Number.POSITIVE_INFINITY;
+  return t.characterSlots - (creatureCount.value ?? 0);
+});
+
+const showImportButton = computed(() => !Meteor.settings.public?.disallowCreatureApiImport);
+
+function insertCharacter() {
+  store.commit('pushDialogStack', {
+    component: 'character-creation-dialog',
+    elementId: 'new-character-button',
+    callback: (creatureId: string) => creatureId,
+  });
+}
+
+function importCharacter() {
+  store.commit('pushDialogStack', {
+    component: 'character-import-dialog',
+    elementId: 'import-character-button',
+    callback: (creatureId: string) => creatureId,
+  });
+}
+
+async function insertFolder() {
+  loadingInsertFolder.value = true;
+  try {
+    await insertCreatureFolder.callAsync();
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason });
+  }
+  loadingInsertFolder.value = false;
+}
 </script>

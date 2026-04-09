@@ -2,7 +2,7 @@
   <div class="point-buy-spend-form">
     <v-row
       v-if="model.values && model.values.length"
-      dense
+      density="compact"
     >
       <v-col
         cols="10"
@@ -19,7 +19,7 @@
     <v-row
       v-for="(row, i) in model.values"
       :key="row._id"
-      dense
+      density="compact"
       align="center"
     >
       <v-col
@@ -41,7 +41,7 @@
       >
         <smart-slider
           thumb-label
-          dense
+          density="compact"
           :ticks="max(row) - min(row) <= 20"
           :min="min(row)"
           :max="max(row)"
@@ -70,15 +70,15 @@
       </v-col>
     </v-row>
     <v-row
-      dense
+      density="compact"
     >
       <v-col
         v-if="typeof model.spent === 'number'"
         cols="12"
         class="text-h4 mb-4 pr-8 d-flex justify-end"
         :class="{
-          'error--text': model.spent > (model.total && model.total.value),
-          'warning--text': model.spent < (model.total && model.total.value),
+          'text-error': model.spent > (model.total && model.total.value),
+          'text-warning': model.spent < (model.total && model.total.value),
         }"
       >
         {{ estimatedCost !== undefined ? estimatedCost : model.spent }}
@@ -90,61 +90,63 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
+<script setup lang="ts">
+import { ref } from 'vue';
 import { resolveCalculationNode } from '/imports/api/engine/computation/computeComputation/computeByType/computeCalculation';
-import { Tracker } from 'meteor/tracker'
+import { Tracker } from 'meteor/tracker';
 
-export default {
-  components: {
-    CalculationErrorList,
-  },
-  mixins: [propertyFormMixin],
-  data() {
-    return {
-      estimatedCost: undefined,
-      useEstimate: false,
-    };
-  },
-  methods: {
-    max(row) {
-      return row.max ? row.max && row.max.value : this.model.max && this.model.max.value;
-    },
-    min(row) {
-      return row.min ? row.min && row.min.value : this.model.min && this.model.min.value;
-    },
-    async dragSlider(row, value) {
-      const currentSpent = this.model.spent;
-      let newSpent = currentSpent - row.spent;
-      const costFunction = EJSON.clone(row.cost || this.model.cost);
-      if (!costFunction?.parseNode) return;
-      if (costFunction) costFunction.parseLevel = 'reduce';
-      await resolveCalculationNode(costFunction, costFunction.parseNode, { value });
-      if (Number.isFinite(costFunction.value)) {
-        newSpent += costFunction.value;
-        if (this.useEstimate) this.estimatedCost = newSpent;
-      }
-    },
-    startSlider() {
-      this.useEstimate = true;
-    },
-    endSlider() {
-      this.useEstimate = false;
-    },
-    releaseSlider(i, value, ack) {
-      const newAck = (error, result) => {
-        Tracker.afterFlush(() => {
-          this.estimatedCost = undefined;
-        });
-        ack?.(error, result);
-      }
-      this.$emit('change', {
-        path: ['values', i, 'value'],
-        value,
-        ack: newAck
-      });
-    },
-  },
-};
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+const estimatedCost = ref<number | undefined>(undefined);
+const useEstimate = ref(false);
+
+function max(row: any) {
+  return row.max ? row.max && row.max.value : props.model.max && props.model.max.value;
+}
+
+function min(row: any) {
+  return row.min ? row.min && row.min.value : props.model.min && props.model.min.value;
+}
+
+async function dragSlider(row: any, value: any) {
+  const currentSpent = props.model.spent;
+  let newSpent = currentSpent - row.spent;
+  const costFunction = EJSON.clone(row.cost || props.model.cost);
+  if (!costFunction?.parseNode) return;
+  if (costFunction) costFunction.parseLevel = 'reduce';
+  await resolveCalculationNode(costFunction, costFunction.parseNode, { value });
+  if (Number.isFinite(costFunction.value)) {
+    newSpent += costFunction.value;
+    if (useEstimate.value) estimatedCost.value = newSpent;
+  }
+}
+
+function startSlider() {
+  useEstimate.value = true;
+}
+
+function endSlider() {
+  useEstimate.value = false;
+}
+
+function releaseSlider(i: number, value: any, ack?: Function) {
+  const newAck = (error: any, result: any) => {
+    Tracker.afterFlush(() => {
+      estimatedCost.value = undefined;
+    });
+    ack?.(error, result);
+  };
+  emit('change', {
+    path: ['values', i, 'value'],
+    value,
+    ack: newAck,
+  });
+}
 </script>

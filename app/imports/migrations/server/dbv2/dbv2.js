@@ -13,34 +13,36 @@ Migrations.add({
   version: 2,
   name: 'Separates creature property tags from library tags',
 
-  up() {
+  async up() {
     console.log('migrating up library nodes 1 -> 2');
-    migrateCollection(LibraryNodes, migratePropUp);
+    await migrateCollection(LibraryNodes, migratePropUp);
     console.log('migrating up creature props 1 -> 2');
-    migrateCollection(CreatureProperties, migratePropUp);
+    await migrateCollection(CreatureProperties, migratePropUp);
     console.log('Migrating up libraries and collections to count subscribers');
-    countSubscribers();
+    await countSubscribers();
   },
 
-  down() {
+  async down() {
     console.log('Migrating down library nodes 2 -> 1');
-    migrateCollection(LibraryNodes, migratePropDown);
+    await migrateCollection(LibraryNodes, migratePropDown);
     console.log('Migrating down creature props 2 -> 1');
-    migrateCollection(CreatureProperties, migratePropDown);
+    await migrateCollection(CreatureProperties, migratePropDown);
   },
 
 });
 
-function migrateCollection(collection, migrateDoc) {
-  collection.find({}).forEach((doc, index) => {
+async function migrateCollection(collection, migrateDoc) {
+  let index = 0;
+  for await (const doc of collection.find({})) {
     if (index % 1000 === 0) {
       console.log(`Migrating document #${index}`);
     }
-    migrateDoc(doc, collection)
-  });
+    await migrateDoc(doc, collection);
+    index++;
+  }
 }
 
-export function migratePropUp(prop, collection) {
+export async function migratePropUp(prop, collection) {
   let update;
   if (prop.type === 'slotFiller') {
     update = update || { $set: {} };
@@ -77,16 +79,14 @@ export function migratePropUp(prop, collection) {
   // update the document
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { bypassCollection2: true }, e => {
-        if (e) console.warn('Doc Migration failed: ', prop._id, e);
-      });
+      await collection.updateAsync({ _id: prop._id }, update, { bypassCollection2: true });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }
   }
 }
 
-export function migratePropDown(prop, collection) {
+export async function migratePropDown(prop, collection) {
   const update = {
     $unset: {
       slotFillImage: 1,
@@ -103,39 +103,31 @@ export function migratePropDown(prop, collection) {
   }
   if (update) {
     try {
-      collection.update({ _id: prop._id }, update, { bypassCollection2: true }, e => {
-        if (e) console.warn('Doc Migration failed: ', prop._id, e);
-      });
+      await collection.updateAsync({ _id: prop._id }, update, { bypassCollection2: true });
     } catch (e) {
       console.warn('Doc Migration failed: ', prop._id, e);
     }
   }
 }
 
-function countSubscribers() {
+async function countSubscribers() {
   const bulkLib = Libraries.rawCollection().initializeUnorderedBulkOp();
-  Libraries.find({}, {
-    fields: { _id: 1 }
-  }).forEach(lib => {
+  for await (const lib of Libraries.find({}, { fields: { _id: 1 } })) {
+    const subscriberCount = await Meteor.users.find({ subscribedLibraries: lib._id }).countAsync();
     bulkLib.find({ _id: lib._id }).updateOne({
-      $set: {
-        subscriberCount: Meteor.users.find({ subscribedLibraries: lib._id }).count(),
-      }
+      $set: { subscriberCount }
     });
-  });
-  bulkLib.execute();
+  }
+  await bulkLib.execute();
 
   const bulkLibCols = LibraryCollections.rawCollection().initializeUnorderedBulkOp();
-  LibraryCollections.find({}, {
-    fields: { _id: 1 }
-  }).forEach(col => {
+  for await (const col of LibraryCollections.find({}, { fields: { _id: 1 } })) {
+    const subscriberCount = await Meteor.users.find({ subscribedLibraryCollections: col._id }).countAsync();
     bulkLibCols.find({ _id: col._id }).updateOne({
-      $set: {
-        subscriberCount: Meteor.users.find({ subscribedLibraryCollections: col._id }).count(),
-      }
+      $set: { subscriberCount }
     });
-  });
-  bulkLibCols.execute();
+  }
+  await bulkLibCols.execute();
 }
 
 const dollarSignRegex = /(\W|^)\$(\w+)/gi;

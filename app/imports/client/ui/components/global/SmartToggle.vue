@@ -6,9 +6,9 @@
     <v-btn-toggle
       v-bind="$attrs"
       mandatory
-      tile
+      rounded="0"
       group
-      :value="safeValue"
+      :model-value="safeValue"
       color="accent"
       style="flex-wrap: wrap;"
     >
@@ -34,7 +34,7 @@
     <v-expand-transition>
       <div
         v-if="errors.length"
-        class="pa-2 error--text"
+        class="pa-2 text-error"
       >
         {{ errors.join('\n\n') }}
       </div>
@@ -42,35 +42,35 @@
   </outlined-input>
 </template>
 
-<script lang="js">
-import SmartInput from '/imports/client/ui/components/global/SmartInputMixin';
+<script setup lang="ts">
+import { ref, useAttrs } from 'vue';
+import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 
-export default {
-  components: {
-    OutlinedInput,
-  },
-  mixins: [SmartInput],
-  props: {
-    label: {
-      type: String,
-      default: '',
-    },
-    options: {
-      type: Array,
-      default: () => [],
-    }
-  },
-  data() {
-    return {
-      clickedValue: undefined,
-    };
-  },
-  methods: {
-    click(val) {
-      this.clickedValue = val;
-      this.change(val);
-    },
-  }
-};
+defineOptions({ inheritAttrs: false });
+
+const props = defineProps<{
+  value?: string | number | Date | unknown[] | object | boolean;
+  errorMessages?: string | string[];;
+  disabled?: boolean;
+  debounce?: number;
+  rules?: Array<(val: unknown) => string | true>;
+  label?: string;
+  options?: Array<{ value: unknown; name: string; icon?: string }>;
+}>();
+
+const emit = defineEmits<{
+  change: [val: unknown, ack: (err?: unknown) => void];
+  input: [val: unknown];
+}>();
+
+const attrs = useAttrs();
+const { loading, errors, safeValue, isDisabled, change } = useSmartInput(props, emit, attrs);
+
+const clickedValue = ref<unknown>(undefined);
+
+function click(val: unknown) {
+  clickedValue.value = val;
+  change(val);
+}
 </script>

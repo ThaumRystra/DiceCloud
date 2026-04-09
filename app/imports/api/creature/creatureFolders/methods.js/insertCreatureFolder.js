@@ -10,7 +10,7 @@ const insertCreatureFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run() {
+  async run() {
     // Ensure logged in
     let userId = this.userId;
     if (!userId) {
@@ -18,24 +18,29 @@ const insertCreatureFolder = new ValidatedMethod({
         'You need to be logged in to insert a folder');
     }
     // Limit folders to 50 per user
-    let existingFolders = CreatureFolders.find({
+    let existingFolderCount = await CreatureFolders.find({
       owner: userId
     }, {
       fields: { order: 1 },
       sort: { left: -1 }
-    });
-    if (existingFolders.count() >= 50) {
+    }).countAsync();
+    if (existingFolderCount >= 50) {
       throw new Meteor.Error('creatureFolders.methods.insert.denied',
         'You can not have more than 50 folders');
     }
     // Make the new folder the last in the order
     let order = 0;
-    let lastFolder = existingFolders.fetch()[0];
+    let lastFolder = await CreatureFolders.findOneAsync({
+      owner: userId
+    }, {
+      fields: { order: 1 },
+      sort: { left: -1 }
+    });
     if (lastFolder) {
       order = (lastFolder.order || 0) + 1;
     }
     // Insert
-    return CreatureFolders.insert({
+    return CreatureFolders.insertAsync({
       name: 'Folder',
       owner: userId,
       order,

@@ -1,26 +1,24 @@
 <template>
-  <v-layout
-    align-center
-    justify-center
-    class="increment-menu"
+  <div
+    class="d-flex align-center justify-center increment-menu"
   >
     <v-spacer />
     <v-btn-toggle
-      :value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
+      :model-value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
       class="mx-2"
-      @click="$refs.editInput.focus()"
+      @click="$refs.editInput?.focus()"
     >
       <v-btn
         :disabled="context.editPermission === false"
         class="filled"
-        @click="toggleAdd(); $nextTick(() => $refs.editInput.focus())"
+        @click="toggleAdd(); $nextTick(() => editInput?.focus())"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>
       <v-btn
         :disabled="context.editPermission === false"
         class="filled"
-        @click="toggleSubtract(); $nextTick(() => $refs.editInput.focus())"
+        @click="toggleSubtract(); $nextTick(() => editInput?.focus())"
       >
         <v-icon>mdi-minus</v-icon>
       </v-btn>
@@ -61,107 +59,101 @@
       <v-icon>mdi-close</v-icon>
     </v-btn>
     <v-spacer />
-  </v-layout>
+  </div>
 </template>
 
-<script lang="js">
-export default {
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    value: {
-      type: Number,
-      default: 0,
-    },
-    open: Boolean,
-    flat: Boolean,
-  },
-  data() {
-    return {
-      editValue: this.value,
-      operation: 'set',
-      hover: false,
-    };
-  },
-  watch: {
-    open: {
-      immediate: true,
-      handler(isOpen) {
-        if (isOpen) this.resetData();
-      },
-    },
-  },
-  methods: {
-    resetData() {
-      this.editValue = this.value;
-      this.operation = 'set';
-      // this.$nextTick didn't work, using timeout instead did
-      setTimeout(() => {
-        if (this.$refs.editInput) {
-          this.$refs.editInput.focus();
-        }
-      }, 100);
-    },
-    cancelEdit() {
-      this.$emit('close');
-    },
-    commitEdit() {
-      this.editing = false;
-      let value = +this.$refs.editInput.lazyValue;
-      if (this.operation === 'add') {
-        value = -value;
-      }
-      let type = this.operation === 'set' ? 'set' : 'increment';
-      this.$emit('change', { type, value });
-    },
-    operationIcon(operation) {
-      switch (operation) {
-        case 'set':
-          return 'mdi-forward';
-        case 'add':
-          return 'mdi-plus';
-        case 'subtract':
-          return 'mdi-minus';
-      }
-    },
-    toggleAdd() {
-      this.operation = (this.operation === 'add') ? 'set' : 'add';
-    },
-    toggleSubtract() {
-      this.operation = (this.operation === 'subtract') ? 'set' : 'subtract';
-    },
-    keypress(event) {
-      let digitsOnly = /[0-9]/;
-      let key = event.key;
-      if (key === '+') {
-        this.toggleAdd();
-        event.preventDefault();
-      } else if (key === '-') {
-        this.toggleSubtract();
-        event.preventDefault();
-      } else if (key === 'Enter') {
-        this.commitEdit();
-      } else if (!digitsOnly.test(key)) {
-        event.preventDefault();
-      }
-    },
-    input(value) {
-      if (+value < 0) {
-        this.editValue = -value;
-        this.operation = 'subtract';
-      }
-    }
+<script setup lang="ts">
+import { ref, watch, inject, nextTick } from 'vue';
+
+const context = inject<{ editPermission?: boolean; debounceTime?: number }>('context', {});
+
+const props = defineProps<{
+  value?: number;
+  open?: boolean;
+  flat?: boolean;
+}>();
+
+const emit = defineEmits<{
+  close: [];
+  change: [payload: { type: string; value: number }];
+}>();
+
+const editInput = ref<{ focus: () => void; lazyValue?: string } | null>(null);
+const editValue = ref(props.value ?? 0);
+const operation = ref<'set' | 'add' | 'subtract'>('set');
+
+watch(() => props.open, (isOpen) => {
+  if (isOpen) resetData();
+}, { immediate: true });
+
+function resetData() {
+  editValue.value = props.value ?? 0;
+  operation.value = 'set';
+  setTimeout(() => {
+    editInput.value?.focus();
+  }, 100);
+}
+
+function cancelEdit() {
+  emit('close');
+}
+
+function commitEdit() {
+  let value = +(editInput.value?.lazyValue ?? editValue.value);
+  if (operation.value === 'add') {
+    value = -value;
   }
-};
+  const type = operation.value === 'set' ? 'set' : 'increment';
+  emit('change', { type, value });
+}
+
+function operationIcon(op: string): string {
+  switch (op) {
+    case 'set': return 'mdi-forward';
+    case 'add': return 'mdi-plus';
+    case 'subtract': return 'mdi-minus';
+    default: return '';
+  }
+}
+
+function toggleAdd() {
+  operation.value = (operation.value === 'add') ? 'set' : 'add';
+}
+
+function toggleSubtract() {
+  operation.value = (operation.value === 'subtract') ? 'set' : 'subtract';
+}
+
+function keypress(event: KeyboardEvent) {
+  const digitsOnly = /[0-9]/;
+  const key = event.key;
+  if (key === '+') {
+    toggleAdd();
+    event.preventDefault();
+  } else if (key === '-') {
+    toggleSubtract();
+    event.preventDefault();
+  } else if (key === 'Enter') {
+    commitEdit();
+  } else if (!digitsOnly.test(key)) {
+    event.preventDefault();
+  }
+}
+
+function input(value: string) {
+  if (+value < 0) {
+    editValue.value = -Number(value);
+    operation.value = 'subtract';
+  }
+}
 </script>
 
 <style scoped>
-.filled.theme--light {
+.filled.v-theme--light {
   background: #fff !important;
 }
 
-.filled.theme--dark {
+.filled.v-theme--dark {
   background: #424242 !important;
 }
 </style>

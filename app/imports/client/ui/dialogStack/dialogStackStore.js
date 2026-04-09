@@ -1,4 +1,3 @@
-import Vue from 'vue';
 import { clone } from 'lodash';
 
 let dialogStack = {};
@@ -30,7 +29,7 @@ const dialogStackStore = {
       }
       let currentDialog = state.dialogs[state.dialogs.length - 1]
       state.replacingDialog = currentDialog._id;
-      Vue.set(state.dialogs, state.dialogs.length - 1, {
+      state.dialogs[state.dialogs.length - 1] = {
         _id: Random.id(),
         component,
         data,
@@ -39,7 +38,7 @@ const dialogStackStore = {
           callback?.(...args);
           return currentDialog.callback?.(...args);
         },
-      });
+      };
     },
     popDialogStackMutation(state, result) {
       const dialog = state.dialogs.pop();

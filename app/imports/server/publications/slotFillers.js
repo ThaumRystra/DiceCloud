@@ -9,200 +9,212 @@ import escapeRegex from '/imports/api/utility/escapeRegex';
 
 // Publish docs the user has already selected so they don't disappear when searching
 Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
-  let autorun = this.autorun;
-  autorun(function () {
-    let userId = this.userId;
-    if (!userId) {
-      return [];
-    }
+  let userId = this.userId;
+  if (!userId) {
+    return [];
+  }
 
-    // Get the slot from the right collection
-    let slot;
-    if (isDummySlot) {
-      slot = LibraryNodes.findOne(slotId);
-    } else {
-      slot = CreatureProperties.findOne(slotId);
-    }
+  // Get the slot from the right collection
+  let slot;
+  if (isDummySlot) {
+    slot = LibraryNodes.findOne(slotId);
+  } else {
+    slot = CreatureProperties.findOne(slotId);
+  }
 
-    if (!slot) return [];
+  if (!slot) return [];
 
-    // Get all the ids of libraries the user can access
-    const creatureId = slot.root.id;
-    const libraryIds = getCreatureLibraryIds(creatureId, userId);
-    const libraries = Libraries.find({
+  // Get all the ids of libraries the user can access
+  const creatureId = slot.root.id;
+  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraries = Libraries.find({
+    $or: [
+      { owner: userId },
+      { writers: userId },
+      { readers: userId },
+      { _id: { $in: libraryIds }, public: true },
+    ]
+  }, {
+    sort: { name: 1 }
+  });
+
+  let filter = { _id: { $in: nodeIds } };
+  // Get the limit of the documents the user can fetch
+  let options = {
+    sort: {
+      name: 1,
+      order: 1,
+    },
+    limit: 100,
+    fields: LIBRARY_NODE_TREE_FIELDS,
+  };
+  return [
+    LibraryNodes.find(filter, options),
+    libraries
+  ];
+});
+
+Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) {
+  if (searchTerm) check(searchTerm, String);
+  limit = limit || 50;
+  check(limit, Number);
+
+  let userId = this.userId;
+  if (!userId) {
+    return [];
+  }
+
+  // Get the slot from the right collection
+  let slot;
+  if (isDummySlot) {
+    slot = LibraryNodes.findOne(slotId);
+  } else {
+    slot = CreatureProperties.findOne(slotId);
+  }
+
+  if (!slot) return [];
+
+  // Get all the ids of libraries the user can access
+  const creatureId = slot.root.id;
+  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraries = Libraries.find({
+    $or: [
+      { owner: userId },
+      { writers: userId },
+      { readers: userId },
+      { _id: { $in: libraryIds }, public: true },
+    ]
+  }, {
+    sort: { name: 1 }
+  });
+
+  // Build a filter for nodes in those libraries that match the slot
+  let filter = getSlotFillFilter({ slot, libraryIds });
+
+  let options = undefined;
+  if (searchTerm) {
+    if (!filter.$and) filter.$and = [];
+    filter.$and.push({
       $or: [
-        { owner: userId },
-        { writers: userId },
-        { readers: userId },
-        { _id: { $in: libraryIds }, public: true },
+        { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
+        { libraryTags: searchTerm }
       ]
-    }, {
-      sort: { name: 1 }
     });
-
-    let filter = { _id: { $in: nodeIds } };
-    // Get the limit of the documents the user can fetch
-    let options = {
+    options = {
+      fields: {
+        ...LIBRARY_NODE_TREE_FIELDS,
+      },
       sort: {
+        'cache.node.name': 1,
+        name: 1,
+        order: 1,
+      }
+    }
+  } else {
+    //delete filter.$text
+    delete filter.name
+    options = {
+      sort: {
+        // References sorted in name order, but with non-references first, because undefined
+        // is sorted before docs with cached name defined
+        'cache.node.name': 1,
         name: 1,
         order: 1,
       },
-      limit: 100,
       fields: LIBRARY_NODE_TREE_FIELDS,
     };
-    autorun(function () {
-      return [
-        LibraryNodes.find(filter, options),
-        libraries
-      ];
-    });
-  });
-});
-
-Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot) {
-  if (searchTerm) check(searchTerm, String);
+  }
+  options.limit = limit;
 
   let self = this;
-  this.autorun(function () {
-    let userId = this.userId;
-    if (!userId) {
-      return [];
+  Mongo.Collection._publishCursor(libraries, self, 'libraries');
+
+  let cursor = LibraryNodes.find(filter, options);
+  let observeHandle = cursor.observeChanges({
+    added: function (id, fields) {
+      fields._slotFillerResult = true;
+      self.added('libraryNodes', id, fields);
+    },
+    changed: function (id, fields) {
+      self.changed('libraryNodes', id, fields);
+    },
+    removed: function (id) {
+      self.removed('libraryNodes', id);
     }
+  },
+    { nonMutatingCallbacks: true }
+  );
 
-    // Get the slot from the right collection
-    let slot;
-    if (isDummySlot) {
-      slot = LibraryNodes.findOne(slotId);
-    } else {
-      slot = CreatureProperties.findOne(slotId);
-    }
-
-    if (!slot) return [];
-
-    // Get all the ids of libraries the user can access
-    const creatureId = slot.root.id;
-    const libraryIds = getCreatureLibraryIds(creatureId, userId);
-    const libraries = Libraries.find({
-      $or: [
-        { owner: userId },
-        { writers: userId },
-        { readers: userId },
-        { _id: { $in: libraryIds }, public: true },
-      ]
-    }, {
-      sort: { name: 1 }
-    });
-
-    this.autorun(function () {
-      // Build a filter for nodes in those libraries that match the slot
-      let filter = getSlotFillFilter({ slot, libraryIds });
-      // Get the limit of the documents the user can fetch
-      var limit = self.data('limit') || 50;
-      check(limit, Number);
-
-      let options = undefined;
-      if (searchTerm) {
-        if (!filter.$and) filter.$and = [];
-        filter.$and.push({
-          $or: [
-            { name: { $regex: escapeRegex(searchTerm), '$options': 'i' } },
-            { libraryTags: searchTerm }
-          ]
-        });
-        options = {
-          fields: {
-            ...LIBRARY_NODE_TREE_FIELDS,
-          },
-          sort: {
-            'cache.node.name': 1,
-            name: 1,
-            order: 1,
-          }
-        }
-      } else {
-        //delete filter.$text
-        delete filter.name
-        options = {
-          sort: {
-            // References sorted in name order, but with non-references first, because undefined
-            // is sorted before docs with cached name defined
-            'cache.node.name': 1,
-            name: 1,
-            order: 1,
-          },
-          fields: LIBRARY_NODE_TREE_FIELDS,
-        };
-      }
-      options.limit = limit;
-
-      self.autorun(function () {
-        self.setData('countAll', LibraryNodes.find(filter).count());
-        self.setData('libraryNodeFilter', EJSON.stringify(filter));
-      });
-      self.autorun(function () {
-        return [
-          LibraryNodes.find(filter, options),
-          libraries
-        ];
-      });
-    });
+  self.onStop(function () {
+    observeHandle.stop();
   });
+  self.ready();
 });
 
-Meteor.publish('classFillers', function (classId) {
-  let self = this;
+Meteor.publish('classFillers', function (classId, searchTerm, limit) {
   if (!classId) return [];
+  if (searchTerm) check(searchTerm, String);
+  limit = limit || 50;
+  check(limit, Number);
 
-  this.autorun(function () {
-    let userId = this.userId;
-    if (!userId) {
-      return [];
-    }
-    // Get the class
-    let classProp = CreatureProperties.findOne(classId);
-    if (!classProp) {
-      return [];
-    }
+  let userId = this.userId;
+  if (!userId) {
+    return [];
+  }
+  // Get the class
+  let classProp = CreatureProperties.findOne(classId);
+  if (!classProp) {
+    return [];
+  }
 
-    // Get all the ids of libraries the user can access
-    const creatureId = classProp.root.id;
-    const libraryIds = getCreatureLibraryIds(creatureId, userId);
-    const libraries = Libraries.find({
-      $or: [
-        { owner: userId },
-        { writers: userId },
-        { readers: userId },
-        { _id: { $in: libraryIds }, public: true },
-      ]
-    }, {
-      sort: { name: 1 }
-    });
-
-    // Build a filter for nodes in those libraries that match the slot
-    let filter = getSlotFillFilter({ slot: classProp, libraryIds });
-
-    this.autorun(function () {
-      // Get the limit of the documents the user can fetch
-      var limit = self.data('limit') || 50;
-      check(limit, Number);
-
-      let options = {
-        sort: {
-          level: 1,
-          name: 1,
-          order: 1,
-        },
-        fields: LIBRARY_NODE_TREE_FIELDS,
-        limit,
-      };
-
-      self.autorun(function () {
-        self.setData('countAll', LibraryNodes.find(filter).count());
-        self.setData('libraryNodeFilter', EJSON.stringify(filter));
-      });
-      self.autorun(function () {
-        return [LibraryNodes.find(filter, options), libraries];
-      });
-    });
+  // Get all the ids of libraries the user can access
+  const creatureId = classProp.root.id;
+  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraries = Libraries.find({
+    $or: [
+      { owner: userId },
+      { writers: userId },
+      { readers: userId },
+      { _id: { $in: libraryIds }, public: true },
+    ]
+  }, {
+    sort: { name: 1 }
   });
+
+  // Build a filter for nodes in those libraries that match the slot
+  let filter = getSlotFillFilter({ slot: classProp, libraryIds });
+
+  let options = {
+    sort: {
+      level: 1,
+      name: 1,
+      order: 1,
+    },
+    fields: LIBRARY_NODE_TREE_FIELDS,
+    limit,
+  };
+
+  let self = this;
+  Mongo.Collection._publishCursor(libraries, self, 'libraries');
+
+  let cursor = LibraryNodes.find(filter, options);
+  let observeHandle = cursor.observeChanges({
+    added: function (id, fields) {
+      fields._classFillerResult = true;
+      self.added('libraryNodes', id, fields);
+    },
+    changed: function (id, fields) {
+      self.changed('libraryNodes', id, fields);
+    },
+    removed: function (id) {
+      self.removed('libraryNodes', id);
+    }
+  },
+    { nonMutatingCallbacks: true }
+  );
+
+  self.onStop(function () {
+    observeHandle.stop();
+  });
+  self.ready();
 });

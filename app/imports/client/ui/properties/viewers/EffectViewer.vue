@@ -45,62 +45,57 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin';
-import PropertyTargetTags from '/imports/client/ui/properties/viewers/shared/PropertyTargetTags.vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 import { isFinite } from 'lodash';
 
-export default {
-  components: {
-    PropertyTargetTags,
-  },
-  mixins: [propertyViewerMixin],
-  computed: {
-    resolvedValue() {
-      if (!this.model.amount) return;
-      return this.model.amount.value !== undefined ?
-        this.model.amount.value :
-        this.model.amount.calculation;
-    },
-    effectIcon() {
-      let value = this.resolvedValue;
-      return getEffectIcon(this.model.operation, value);
-    },
-    operation() {
-      switch (this.model.operation) {
-        case 'base': return 'Base value';
-        case 'add': return 'Add';
-        case 'mul': return 'Multiply';
-        case 'min': return 'Minimum';
-        case 'max': return 'Maximum';
-        case 'set': return 'Set';
-        case 'advantage': return 'Advantage';
-        case 'disadvantage': return 'Disadvantage';
-        case 'passiveAdd': return 'Passive bonus';
-        case 'fail': return 'Always fail';
-        case 'conditional': return 'Conditional benefit';
-        default: return this.model.operation;
-      }
-    },
-    displayedValue() {
-      let value = this.resolvedValue;
-      switch (this.model.operation) {
-        case 'base': return value;
-        case 'add': return isFinite(value) ? Math.abs(value) : value;
-        case 'mul': return value;
-        case 'min': return value;
-        case 'max': return value;
-        case 'advantage': return;
-        case 'disadvantage': return;
-        case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
-        case 'fail': return;
-        case 'conditional': return;
-        default: return undefined;
-      }
-    }
-  },
-};
+const props = defineProps<{ model: Record<string, any> }>();
+
+const resolvedValue = computed(() => {
+  if (!props.model.amount) return undefined;
+  return props.model.amount.value !== undefined
+    ? props.model.amount.value
+    : props.model.amount.calculation;
+});
+
+const effectIcon = computed(() => {
+  return getEffectIcon(props.model.operation, resolvedValue.value);
+});
+
+const operation = computed(() => {
+  switch (props.model.operation) {
+    case 'base': return 'Base value';
+    case 'add': return 'Add';
+    case 'mul': return 'Multiply';
+    case 'min': return 'Minimum';
+    case 'max': return 'Maximum';
+    case 'set': return 'Set';
+    case 'advantage': return 'Advantage';
+    case 'disadvantage': return 'Disadvantage';
+    case 'passiveAdd': return 'Passive bonus';
+    case 'fail': return 'Always fail';
+    case 'conditional': return 'Conditional benefit';
+    default: return props.model.operation;
+  }
+});
+
+const displayedValue = computed(() => {
+  const value = resolvedValue.value;
+  switch (props.model.operation) {
+    case 'base': return value;
+    case 'add': return isFinite(value) ? Math.abs(value) : value;
+    case 'mul': return value;
+    case 'min': return value;
+    case 'max': return value;
+    case 'advantage': return undefined;
+    case 'disadvantage': return undefined;
+    case 'passiveAdd': return isFinite(value) ? Math.abs(value) : value;
+    case 'fail': return undefined;
+    case 'conditional': return undefined;
+    default: return undefined;
+  }
+});
 </script>
 
 <style lang="css" scoped>

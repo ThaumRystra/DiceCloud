@@ -20,18 +20,18 @@ const adjustQuantity = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, operation, value }) {
+  async run({ _id, operation, value }) {
     // Permissions
-    let property = CreatureProperties.findOne(_id);
+    let property = await CreatureProperties.findOneAsync(_id);
     let rootCreature = getRootCreatureAncestor(property);
-    assertEditPermission(rootCreature, this.userId);
+    await assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    adjustQuantityWork({ property, operation, value });
+    await adjustQuantityWork({ property, operation, value });
   },
 });
 
-export function adjustQuantityWork({ property, operation, value }) {
+export async function adjustQuantityWork({ property, operation, value }) {
   // Check if property has quantity
   let schema = CreatureProperties.simpleSchema(property);
   if (!schema.allowsKey('quantity')) {
@@ -41,7 +41,7 @@ export function adjustQuantityWork({ property, operation, value }) {
     );
   }
   if (operation === 'set') {
-    CreatureProperties.update(property._id, {
+    await CreatureProperties.updateAsync(property._id, {
       $set: { quantity: value, dirty: true }
     }, {
       selector: property
@@ -51,7 +51,7 @@ export function adjustQuantityWork({ property, operation, value }) {
     value = -value;
     let currentQuantity = property.quantity;
     if (currentQuantity + value < 0) value = -currentQuantity;
-    CreatureProperties.update(property._id, {
+    await CreatureProperties.updateAsync(property._id, {
       $inc: { quantity: value },
       $set: { dirty: true }
     }, {

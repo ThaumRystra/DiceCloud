@@ -17,7 +17,7 @@ export const loadedCreatures: Map<string, LoadedCreature> = new Map(); // creatu
 //   console.log(creatureLoadString);
 // }
 
-export function loadCreature(creatureId: string, subscription: Tracker.Computation) {
+export async function loadCreature(creatureId: string, subscription: Tracker.Computation) {
   if (!creatureId) throw 'creatureId is required';
   let creature = loadedCreatures.get(creatureId);
   if (!creature?.subs.has(subscription)) {
@@ -28,17 +28,17 @@ export function loadCreature(creatureId: string, subscription: Tracker.Computati
   if (creature) {
     creature.subs.add(subscription);
   } else {
-    creature = new LoadedCreature(subscription, creatureId);
+    creature = await LoadedCreature.create(subscription, creatureId);
     loadedCreatures.set(creatureId, creature);
   }
   // logLoadedCreatures()
 }
 
 export function unloadAllCreatures() {
-  loadedCreatures.forEach((creature, id) => {
+  for (const [id, creature] of loadedCreatures) {
     creature.stop();
     loadedCreatures.delete(id);
-  });
+  }
 }
 
 function unloadCreature(creatureId: string, subscription: Tracker.Computation) {
@@ -47,8 +47,8 @@ function unloadCreature(creatureId: string, subscription: Tracker.Computation) {
   if (!creature) return;
   creature.subs.delete(subscription);
   if (creature.subs.size === 0) {
-    creature.stop();
     loadedCreatures.delete(creatureId);
+    creature.stop();
   }
   // logLoadedCreatures()
 }
@@ -258,83 +258,87 @@ export function getPropertyChildren(creatureId: string, property: string | Creat
 }
 
 class LoadedCreature {
-  subs!: Set<Tracker.Computation>;
+  subs: Set<Tracker.Computation>;
   propertyObserver!: Meteor.LiveQueryHandle;
   creatureObserver!: Meteor.LiveQueryHandle;
   variablesObserver!: Meteor.LiveQueryHandle;
-  properties!: Map<string, CreatureProperty>;
+  properties: Map<string, CreatureProperty>;
   creature?: Creature;
   variables: any;
 
-  constructor(sub: Tracker.Computation, creatureId: string) {
-    const self = this;
+  private constructor(sub: Tracker.Computation) {
+    this.subs = new Set([sub]);
+    this.properties = new Map();
+  }
+
+  static async create(sub: Tracker.Computation, creatureId: string): Promise<LoadedCreature> {
+    const loaded = new LoadedCreature(sub);
     // This may be called from a subscription, but we don't want the observers
     // to be destroyed with it, so use a non-reactive context to observe
     // the required documents
-    Tracker.nonreactive(() => {
-      self.subs = new Set([sub]);
+    await Tracker.nonreactive(async () => {
       const compute = debounce(Meteor.bindEnvironment(() => {
         // It's possible that the creature was unloaded before we get around to computing it
         if (!loadedCreatures.has(creatureId)) return;
         computeCreature(creatureId);
       }), COMPUTE_DEBOUNCE_TIME);
 
-      self.properties = new Map();
       // Observe all creature properties which are needed for computation
-      self.propertyObserver = CreatureProperties.find({
+      loaded.propertyObserver = await CreatureProperties.find({
         'root.id': creatureId,
-      }).observeChanges({
+      }).observeChangesAsync({
         added(id, fields: CreatureProperty) {
           fields._id = id;
-          self.addProperty(fields);
+          loaded.addProperty(fields);
           if (fields.dirty) compute();
         },
         changed(id, fields) {
-          self.changeProperty(id, fields);
+          loaded.changeProperty(id, fields);
           if (fields.dirty) compute();
         },
         removed(id) {
-          self.removeProperty(id);
+          loaded.removeProperty(id);
           compute();
         },
       });
 
       // Observe the creature itself
-      self.creatureObserver = Creatures.find({
+      loaded.creatureObserver = await Creatures.find({
         _id: creatureId,
-      }).observeChanges({
+      }).observeChangesAsync({
         added(id, fields: Creature) {
           fields._id = id;
-          self.addCreature(fields)
+          loaded.addCreature(fields)
           if (fields.dirty) compute();
         },
         changed(id, fields) {
-          self.changeCreature(id, fields);
+          loaded.changeCreature(id, fields);
           if (fields.dirty) compute();
         },
         removed() {
-          self.removeCreature();
+          loaded.removeCreature();
         },
       });
 
       // Observe the creature's variables
-      self.variablesObserver = CreatureVariables.find({
+      loaded.variablesObserver = await CreatureVariables.find({
         _creatureId: creatureId,
       }, {
         fields: { _creatureId: 0 },
-      }).observeChanges({
+      }).observeChangesAsync({
         added(id, fields: any) {
           fields._id = id;
-          self.addVariables(fields)
+          loaded.addVariables(fields)
         },
         changed(id, fields) {
-          self.changeVariables(id, fields);
+          loaded.changeVariables(id, fields);
         },
         removed() {
-          self.removeVariables();
+          loaded.removeVariables();
         },
       });
     });
+    return loaded;
   }
   stop() {
     this.propertyObserver.stop();

@@ -1,37 +1,35 @@
 <template lang="html">
   <form-sections v-if="standalone">
     <v-expansion-panel>
-      <v-expansion-panel-header>
+      <v-expansion-panel-title>
         {{ name }}
-      </v-expansion-panel-header>
-      <v-expansion-panel-content class="pt-4">
+      </v-expansion-panel-title>
+      <v-expansion-panel-text class="pt-4">
         <slot />
-      </v-expansion-panel-content>
+      </v-expansion-panel-text>
     </v-expansion-panel>
   </form-sections>
   <v-expansion-panel v-else>
-    <v-expansion-panel-header>
+    <v-expansion-panel-title>
       {{ name }}
-    </v-expansion-panel-header>
-    <v-expansion-panel-content class="pt-4">
+    </v-expansion-panel-title>
+    <v-expansion-panel-text class="pt-4">
       <slot />
-    </v-expansion-panel-content>
+    </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
 
-<script lang="js">
+<script lang="ts">
 import FormSections from '/imports/client/ui/properties/forms/shared/FormSections.vue';
-export default {
-  components: {
-    FormSections,
-  },
-  props: {
-    name: {
-      type: String,
-      default: '',
-    },
-    standalone: Boolean,
-  },
-}
 export { FormSections };
+</script>
+
+<script setup lang="ts">
+withDefaults(defineProps<{
+  name?: string;
+  standalone?: boolean;
+}>(), {
+  name: '',
+  standalone: false,
+});
 </script>

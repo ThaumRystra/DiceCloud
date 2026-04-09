@@ -12,29 +12,19 @@ let schema = new SimpleSchema({
 
 Meteor.publish('experiences', function (creatureId) {
   schema.validate({ creatureId });
-  this.autorun(function () {
-    let userId = this.userId;
-    if (!userId) {
-      return [];
-    }
-    let creatureCursor = Creatures.find({
-      _id: creatureId,
-      $or: [
-        { readers: userId },
-        { writers: userId },
-        { owner: userId },
-        { public: true },
-      ],
-    });
-    try {
-      assertViewPermission(creatureCursor.fetch()[0], this.userId);
-    } catch (e) {
-      return [];
-    }
-    return [
-      Experiences.find({
-        creatureId,
-      }),
-    ];
-  });
+  let userId = this.userId;
+  if (!userId) {
+    return [];
+  }
+  let creature = Creatures.findOne(creatureId);
+  try {
+    assertViewPermission(creature, userId);
+  } catch (e) {
+    return [];
+  }
+  return [
+    Experiences.find({
+      creatureId,
+    }),
+  ];
 });

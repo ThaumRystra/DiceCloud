@@ -75,84 +75,80 @@ Meteor.publish('otherTabletopCreatures', function (creatureId) {
   });
 });
 
-Meteor.publish('tabletop', function (tabletopId) {
+Meteor.publish('tabletop', async function (tabletopId) {
   var userId = this.userId;
   if (!userId) {
     return [];
   }
-  this.autorun(function () {
-    if (!userId) return [];
-    const self = this;
-    let tabletopCursor = Tabletops.find({
-      _id: tabletopId,
-      $or: [
-        { owner: userId },
-        { players: userId },
-        { gameMasters: userId },
-        { spectators: userId },
-      ]
-    });
-    let tabletop = tabletopCursor.fetch()[0];
-    if (!tabletop) {
-      return [];
-    }
-
-    // Warning, this leaks data to users of the same tabletop who may not have
-    // read permission of this specific creature, so publish as few fields as
-    // possible
-    let creatureSummariesCursor = Creatures.find({
-      tabletopId,
-    }, {
-      fields: {
-        _id: 1,
-        name: 1,
-        picture: 1,
-        avatarPicture: 1,
-        tabletopId: 1,
-        initiativeRoll: 1,
-        settings: 1,
-        propCount: 1,
-        readers: 1,
-        writers: 1,
-        owner: 1,
-        public: 1,
-      },
-      limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
-    });
-    const creatureIds = creatureSummariesCursor.map(c => c._id);
-
-    // Load all the creatures into memory
-    creatureIds.forEach(creatureId => {
-      loadCreature(creatureId, self);
-    });
-    const variablesCursor = CreatureVariables.find({
-      _creatureId: { $in: creatureIds }
-    }, {
-      limit: 110,
-    });
-    const propertiesCursor = CreatureProperties.find({
-      'root.id': { $in: creatureIds },
-      removed: { $ne: true },
-    }, {
-      limit: 10_000,
-    });
-    const logsCursor = CreatureLogs.find({
-      tabletopId,
-    }, {
-      limit: 100,
-      sort: { date: -1 },
-    });
-    const actionsCursor = EngineActions.find({
-      tabletopId,
-    });
-
-    return [
-      tabletopCursor,
-      creatureSummariesCursor,
-      propertiesCursor,
-      logsCursor,
-      variablesCursor,
-      actionsCursor
-    ];
+  let tabletopCursor = Tabletops.find({
+    _id: tabletopId,
+    $or: [
+      { owner: userId },
+      { players: userId },
+      { gameMasters: userId },
+      { spectators: userId },
+    ]
   });
+  let tabletop = tabletopCursor.fetch()[0];
+  if (!tabletop) {
+    return [];
+  }
+
+  // Warning, this leaks data to users of the same tabletop who may not have
+  // read permission of this specific creature, so publish as few fields as
+  // possible
+  let creatureSummariesCursor = Creatures.find({
+    tabletopId,
+  }, {
+    fields: {
+      _id: 1,
+      name: 1,
+      picture: 1,
+      avatarPicture: 1,
+      tabletopId: 1,
+      initiativeRoll: 1,
+      settings: 1,
+      propCount: 1,
+      readers: 1,
+      writers: 1,
+      owner: 1,
+      public: 1,
+    },
+    limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
+  });
+  const creatureIds = creatureSummariesCursor.map(c => c._id);
+
+  // Load all the creatures into memory
+  for (const creatureId of creatureIds) {
+    await loadCreature(creatureId, this);
+  }
+  const variablesCursor = CreatureVariables.find({
+    _creatureId: { $in: creatureIds }
+  }, {
+    limit: 110,
+  });
+  const propertiesCursor = CreatureProperties.find({
+    'root.id': { $in: creatureIds },
+    removed: { $ne: true },
+  }, {
+    limit: 10_000,
+  });
+  const logsCursor = CreatureLogs.find({
+    tabletopId,
+  }, {
+    limit: 100,
+    sort: { date: -1 },
+  });
+  const actionsCursor = EngineActions.find({
+    tabletopId,
+  });
+
+  return [
+    tabletopCursor,
+    creatureSummariesCursor,
+    propertiesCursor,
+    logsCursor,
+    variablesCursor,
+    actionsCursor
+  ];
 });

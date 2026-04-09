@@ -6,20 +6,15 @@
   />
 </template>
 
-<script lang="js">
-  export default {
-    inject: {
-      theme: {
-        default: {
-          isDark: false,
-        },
-      },
-    },
-    props: {
-      active: Boolean,
-      dark: Boolean,
-    },
-  }
+<script setup lang="ts">
+import { inject } from 'vue';
+
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+defineProps<{
+  active?: boolean;
+  dark?: boolean;
+}>();
 </script>
 
 <style lang="css" scoped>

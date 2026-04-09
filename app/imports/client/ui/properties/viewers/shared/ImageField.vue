@@ -4,7 +4,7 @@
     v-bind="cols"
   >
     <fieldset
-      :class="theme.isDark? 'theme--dark' :'theme--light'"
+      :class="theme.isDark? 'v-theme--dark' :'v-theme--light'"
       class="d-flex rounded v-sheet--outlined pt-4 layout column align-center justify-center fill-height"
       style="overflow: hidden"
       @click="$emit('click', $event)"
@@ -27,45 +27,34 @@
   </v-col>
 </template>
 
-<script lang="js">
-export default {
- inject: {
-   theme: {
-     default: {
-       isDark: false,
-     },
-   },
- },
- props: {
-    name: {
-      type: String,
-      default: undefined,
+<script setup lang="ts">
+import { inject } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+const props = withDefaults(defineProps<{
+  name?: string;
+  href?: string;
+  aspectRatio?: number;
+  cols?: Record<string, number>;
+}>(), {
+  name: undefined,
+  href: undefined,
+  aspectRatio: 1,
+  cols: () => ({ cols: 12, sm: 6, md: 4 }),
+});
+
+function previewImage() {
+  store.commit('pushDialogStack', {
+    component: 'image-preview-dialog',
+    elementId: `image-${props.href}`,
+    data: {
+      href: props.href,
+      aspectRatio: props.aspectRatio,
     },
-    href: {
-      type: String,
-      default: undefined,
-    },
-    aspectRatio: {
-      type: Number,
-      default: 1,
-    },
-    cols: {
-      type: Object,
-      default: () => ({cols: 12, sm: 6, md: 4}),
-    },
-  },
-  methods: {
-    previewImage() {
-      this.$store.commit('pushDialogStack', {
-        component: 'image-preview-dialog',
-        elementId: `image-${this.href}`,
-        data: {
-          href: this.href,
-          aspectRatio: this.aspectRatio,
-        },
-      });
-    },
-  }
+  });
 }
 </script>
 

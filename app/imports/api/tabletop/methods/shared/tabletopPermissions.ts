@@ -15,7 +15,7 @@ function getTabletop(tabletop: TabletopOrId): Tabletop | undefined {
       fields: { gameMasters: 1, players: 1, owner: 1, spectators: 1 }
     });
   } else {
-    return tabletop
+    return tabletop;
   }
 }
 

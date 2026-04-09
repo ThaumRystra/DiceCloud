@@ -36,18 +36,15 @@ let CreatureLogSchema = new SimpleSchema({
         return new Date();
       }
     },
-    index: 1,
   },
   // The acting creature initiating the logged events
   creatureId: {
     type: String,
-    index: 1,
   },
   // The tabletop this log is associated with
   tabletopId: {
     type: String,
     optional: true,
-    index: 1,
   },
   // The action that caused this log entry
   actionId: {
@@ -63,7 +60,7 @@ let CreatureLogSchema = new SimpleSchema({
 
 CreatureLogs.attachSchema(CreatureLogSchema);
 
-function removeOldLogs({ creatureId, tabletopId }) {
+async function removeOldLogs({ creatureId, tabletopId }) {
   let filter;
   if (creatureId && tabletopId || (!creatureId && !tabletopId)) {
     throw Error('Provide either creatureId or tabletopId')
@@ -73,13 +70,13 @@ function removeOldLogs({ creatureId, tabletopId }) {
     filter = { tabletopId }
   }
   // Find the first log that is over the limit
-  let firstExpiredLog = CreatureLogs.find(filter, {
+  let firstExpiredLog = await CreatureLogs.findOneAsync(filter, {
     sort: { date: -1 },
     skip: PER_CREATURE_LOG_LIMIT,
   });
   if (!firstExpiredLog) return;
   // Remove all logs older than the one over the limit
-  CreatureLogs.remove({
+  await CreatureLogs.removeAsync({
     creatureId,
     date: { $lte: firstExpiredLog.date },
   });
@@ -127,9 +124,9 @@ const insertCreatureLog = new ValidatedMethod({
   validate: new SimpleSchema({
     log: CreatureLogSchema.omit('date'),
   }).validator(),
-  run({ log }) {
+  async run({ log }) {
     const creatureId = log.creatureId;
-    const creature = Creatures.findOne(creatureId, {
+    const creature = await Creatures.findOneAsync(creatureId, {
       fields: {
         readers: 1,
         writers: 1,
@@ -140,14 +137,14 @@ const insertCreatureLog = new ValidatedMethod({
         tabletop: 1,
       }
     });
-    assertEditPermission(creature, this.userId);
+    await assertEditPermission(creature, this.userId);
     // Build the new log
-    let id = insertCreatureLogWork({ log, creature, method: this })
+    let id = await insertCreatureLogWork({ log, creature, method: this })
     return id;
   },
 });
 
-export function insertCreatureLogWork({ log, creature, method }) {
+export async function insertCreatureLogWork({ log, creature, method }) {
   // Build the new log
   if (typeof log === 'string') {
     log = { content: [{ value: log }] };
@@ -163,16 +160,16 @@ export function insertCreatureLogWork({ log, creature, method }) {
   log.date = new Date();
   if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
   // Insert it
-  let id = CreatureLogs.insert(log);
+  let id = await CreatureLogs.insertAsync(log);
   if (Meteor.isServer) {
     method?.unblock();
     if (creature) {
       logWebhook({ log, creature });
     }
     if (log.tabletopId) {
-      removeOldLogs({ tabletopId: log.tabletopId });
+      await removeOldLogs({ tabletopId: log.tabletopId });
     } else {
-      removeOldLogs({ creatureId: creature._id });
+      await removeOldLogs({ creatureId: creature._id });
     }
   }
   return id;
@@ -207,7 +204,7 @@ const logRoll = new ValidatedMethod({
     );
     let creature;
     if (creatureId) {
-      creature = Creatures.findOne(creatureId, {
+      creature = await Creatures.findOneAsync(creatureId, {
         fields: {
           readers: 1,
           writers: 1,
@@ -217,9 +214,9 @@ const logRoll = new ValidatedMethod({
           avatarPicture: 1,
         }
       });
-      assertEditPermission(creature, this.userId);
+      await assertEditPermission(creature, this.userId);
     }
-    const variables = CreatureVariables.findOne({ _creatureId: creatureId }) || {};
+    const variables = await CreatureVariables.findOneAsync({ _creatureId: creatureId }) || {};
     let logContent = []
     let parsedResult = undefined;
     try {

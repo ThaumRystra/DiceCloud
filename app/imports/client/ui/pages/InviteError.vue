@@ -1,9 +1,7 @@
 <template lang="html">
   <div>
-    <v-layout
-      column
-      align-center
-      justify-center
+    <div
+      class="d-flex flex-column align-center justify-center"
     >
       <h2 style="margin: 48px 28px 16px">
         Invite Error
@@ -11,19 +9,14 @@
       <h3>
         {{ error.reason || error.message || error }}
       </h3>
-    </v-layout>
+    </div>
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    error: {
-      type: [Object, String],
-      default: '',
-    }
-  }
-}
+<script setup lang="ts">
+defineProps<{
+  error: object | string;
+}>();
 </script>
 
 <style lang="css" scoped>

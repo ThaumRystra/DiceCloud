@@ -1,11 +1,11 @@
 <template>
   <v-row
-    dense 
+    density="compact"
     @drop.prevent="addDropFile"
     @dragover.prevent="imageDragOver"
   >
     <v-col cols="12">
-      <v-subheader> Images </v-subheader>
+      <v-list-subheader> Images </v-list-subheader>
     </v-col>
     <template v-if="userImages && userImages.length">
       <v-col
@@ -27,7 +27,7 @@
       md="4"
       lg="3"
       xl="2"
-      class="layout column justify-center"
+      class="d-flex flex-column justify-center"
     >
       <input
         ref="uploadImageInput"
@@ -37,16 +37,14 @@
         @input="uploadImageFile"
       >
       <v-btn
-        outlined
+        variant="outlined"
         style="height: 100%; width: 100%; min-height: 120px;"
         class="archive-button"
         :color="uploadImageError ? 'error' : undefined"
         :disabled="uploadImageInProgress"
         @click="$refs.uploadImageInput.click()"
+        prepend-icon="mdi-file-upload-outline"
       >
-        <v-icon left>
-          mdi-file-upload-outline
-        </v-icon>
         <template v-if="uploadImageError">
           {{ uploadImageError }}
         </template>
@@ -63,33 +61,20 @@
   </v-row>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import prettyBytes from 'pretty-bytes';
 import UserImages from '/imports/api/files/userImages/UserImages';
-import UserImageCard from '/imports/client/ui/files/UserImageCard.vue';
+import UserImageCard from '/imports/client/ui/files/userImages/UserImageCard.vue';
 
-export default {
-  components: {
-    UserImageCard,
-  },
-  meteor: {
-    $subscribe: {
-      'userImages': [],
-    },
-    userImages() {
-      const userId = Meteor.userId();
-      return UserImages.find({
-        userId
-      }, {
-        sort: {
-          size: -1
-        },
-      }).map(f => {
-        f.size = prettyBytes(f.size);
-        f.link = UserImages.link(f);
-        return f;
-      });
-    }
-  }
-}
+autorun(() => Meteor.subscribe('userImages'));
+
+const { result: userImages } = autorun(() => {
+  const userId = Meteor.userId();
+  return UserImages.find({ userId }, { sort: { size: -1 } }).map((f: any) => {
+    f.size = prettyBytes(f.size);
+    f.link = UserImages.link(f);
+    return f;
+  });
+});
 </script>

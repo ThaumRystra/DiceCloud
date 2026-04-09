@@ -51,59 +51,55 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import { SlotSchema } from '/imports/api/properties/Slots';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 
-export default {
-  components: {
-    FormSection,
-    TagTargeting,
-  },
-  mixins: [propertyFormMixin],
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    classForm: Boolean,
-  },
-  data() {
-    let slotTypes = [];
-    for (let key in PROPERTIES) {
-      slotTypes.push({ text: PROPERTIES[key].name, value: key });
-    }
-    return {
-      slotTypes,
-      addExtraTagsLoading: false,
-      extraTagOperations: ['OR', 'NOT'],
-    };
-  },
-  computed: {
-    extraTagsFull() {
-      if (!this.model.extraTags) return false;
-      let maxCount = SlotSchema.get('extraTags', 'maxCount');
-      return this.model.extraTags.length >= maxCount;
-    }
-  },
-  methods: {
-    acknowledgeAddResult() {
-      this.addExtraTagsLoading = false;
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+  classForm?: boolean;
+}>(), {
+  errors: () => ({}),
+  classForm: false,
+});
+
+const emit = defineEmits(['change', 'push']);
+
+const context = inject<any>('context', {});
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const slotTypes: Array<{ text: string; value: string }> = [];
+for (const key in PROPERTIES) {
+  slotTypes.push({ text: (PROPERTIES as any)[key].name, value: key });
+}
+
+const addExtraTagsLoading = ref(false);
+
+const extraTagsFull = computed(() => {
+  if (!props.model.extraTags) return false;
+  const maxCount = SlotSchema.get('extraTags', 'maxCount');
+  return props.model.extraTags.length >= maxCount;
+});
+
+function addExtraTags() {
+  addExtraTagsLoading.value = true;
+  emit('push', {
+    path: ['extraTags'],
+    value: {
+      _id: Random.id(),
+      operation: 'OR',
+      tags: [],
     },
-    addExtraTags() {
-      this.addExtraTagsLoading = true;
-      this.$emit('push', {
-        path: ['extraTags'],
-        value: {
-          _id: Random.id(),
-          operation: 'OR',
-          tags: [],
-        },
-        ack: this.acknowledgeAddResult,
-      });
+    ack() {
+      addExtraTagsLoading.value = false;
     },
-  },
-};
+  });
+}
 </script>

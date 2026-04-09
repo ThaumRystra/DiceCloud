@@ -2,7 +2,7 @@
   <v-expansion-panels
     v-model="expand"
     accordion
-    tile
+    rounded="0"
     multiple
     hover
   >
@@ -10,24 +10,22 @@
   </v-expansion-panels>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    type: {
-      type: String,
-      default: undefined,
-    }
-  },
-  data() {
-    return {
-      expand: this.$store.getters.formExpansionByType(this.type),
-    };
-  },
-  watch: {
-    expand(value) {
-      if (!this.type) return;
-      this.$store.commit('setFormExpansion', {type: this.type, value});
-    }
-  }
-}
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import { useStore } from 'vuex';
+
+const props = withDefaults(defineProps<{
+  type?: string;
+}>(), {
+  type: undefined,
+});
+
+const store = useStore();
+
+const expand = ref(store.getters.formExpansionByType(props.type));
+
+watch(expand, (value) => {
+  if (!props.type) return;
+  store.commit('setFormExpansion', { type: props.type, value });
+});
 </script>

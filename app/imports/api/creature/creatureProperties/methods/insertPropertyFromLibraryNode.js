@@ -34,7 +34,7 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ nodeIds, parentRef }) {
+  async run({ nodeIds, parentRef }) {
     // get the new ancestry for the properties
     const parentDoc = fetchDocByRef(parentRef);
 
@@ -47,18 +47,18 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
-    assertEditPermission(rootCreature, this.userId);
+    await assertEditPermission(rootCreature, this.userId);
 
     const root = { collection: 'creatures', id: rootCreature._id };
     const parentId = parentRef.id;
 
     let node;
-    nodeIds.forEach(nodeId => {
-      node = insertPropertyFromNode(nodeId, root, parentId);
-    });
+    for (const nodeId of nodeIds) {
+      node = await insertPropertyFromNode(nodeId, root, parentId);
+    }
 
     // Tree structure changed by inserts, reorder the tree
-    rebuildNestedSets(CreatureProperties, rootCreature._id);
+    await rebuildNestedSets(CreatureProperties, rootCreature._id);
 
     // get one of the root inserted docs
     const lastInsertedId = node?._id;
@@ -66,10 +66,10 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
   },
 });
 
-function insertPropertyFromNode(nodeId, root, parentId) {
+async function insertPropertyFromNode(nodeId, root, parentId) {
   // Fetch the library node and its descendants, provided they have not been
   // removed
-  let node = LibraryNodes.findOne({
+  let node = await LibraryNodes.findOneAsync({
     _id: nodeId,
     removed: { $ne: true },
   });
@@ -83,17 +83,17 @@ function insertPropertyFromNode(nodeId, root, parentId) {
     }
   }
 
-  let nodes = LibraryNodes.find({
+  let nodes = await LibraryNodes.find({
     ...getFilter.descendants(node),
     removed: { $ne: true },
-  }).fetch();
+  }).fetchAsync();
 
   // The root node is first in the array of nodes
   // It must get the first generated ID to prevent flickering
   nodes = [node, ...nodes];
 
   // Convert all references into actual nodes
-  nodes = reifyNodeReferences(nodes);
+  nodes = await reifyNodeReferences(nodes);
   // Refetch the root node, it might have been reified
   node = nodes[0] || node;
 
@@ -113,7 +113,9 @@ function insertPropertyFromNode(nodeId, root, parentId) {
   node.left = Number.MAX_SAFE_INTEGER;
 
   // Insert the creature properties
-  CreatureProperties.batchInsert(nodes);
+  for (const n of nodes) {
+    await CreatureProperties.insertAsync(n);
+  }
   return node;
 }
 
@@ -126,24 +128,29 @@ export function storeLibraryNodeReferences(nodes) {
 
 // Covert node references into actual nodes
 // TODO: check permissions for each library a reference node references
-export function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
+export async function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
   depth += 1;
   // New nodes added this function
   let newNodes = [];
 
   // Filter out the reference nodes we replace
-  let resultingNodes = nodes.filter(node => {
+  let resultingNodes = [];
+  for (const node of nodes) {
     // This isn't a reference node, continue as normal
-    if (node.type !== 'reference') return true;
+    if (node.type !== 'reference') {
+      resultingNodes.push(node);
+      continue;
+    }
 
     // We have gone too deep, keep the reference node as an error
     if (depth >= 10) {
       if (Meteor.isClient) console.warn('Reference depth limit exceeded');
       node.cache = { error: 'Reference depth limit exceeded' };
-      return true;
+      resultingNodes.push(node);
+      continue;
     }
 
-    let referencedNode
+    let referencedNode;
     try {
       referencedNode = fetchDocByRef(node.ref);
       referencedNode.tags = union(node.tags, referencedNode.tags);
@@ -151,16 +158,17 @@ export function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
       visitedRefs.add(node._id);
     } catch (e) {
       node.cache = { error: e.reason || e.message || e.toString() };
-      return true;
+      resultingNodes.push(node);
+      continue;
     }
 
     // Get all the descendants of the referenced node
-    let descendants = LibraryNodes.find({
+    let descendants = await LibraryNodes.find({
       ...getFilter.descendants(referencedNode),
       removed: { $ne: true },
     }, {
       sort: { left: 1 },
-    }).fetch();
+    }).fetchAsync();
 
     // We are adding the referenced node and its descendants
     let addedNodes = [referencedNode, ...descendants];
@@ -193,12 +201,12 @@ export function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
     });
 
     // Reify the subtree as well with recursion
-    addedNodes = reifyNodeReferences(addedNodes, visitedRefs, depth);
+    addedNodes = await reifyNodeReferences(addedNodes, visitedRefs, depth);
 
     // Store the new nodes from this inner loop without altering the array
     // we are looping over
     newNodes.push(...addedNodes);
-  });
+  }
 
   // We are done filtering the array, we can add the new nodes to it
   resultingNodes.push(...newNodes);

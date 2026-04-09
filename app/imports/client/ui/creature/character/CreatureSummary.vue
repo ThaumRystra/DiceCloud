@@ -21,33 +21,24 @@
   </v-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 
-export default {
-  components: {
-    CardHighlight,
-  },
-  props: {
-    creature: {
-      type: Object,
-      required: true,
-    },
-  },
-  data(){ return {
-    hover: false,
-  }},
-  methods: {
-      showCharacterForm(){
-        this.$store.commit('pushDialogStack', {
-          component: 'creature-form-dialog',
-          elementId: 'creature-summary',
-          data: {
-            _id: this.creature._id,
-          },
-        });
-      },
-  }
+const props = defineProps<{
+  creature: Record<string, any>;
+}>();
+
+const store = useStore();
+const hover = ref(false);
+
+function showCharacterForm() {
+  store.commit('pushDialogStack', {
+    component: 'creature-form-dialog',
+    elementId: 'creature-summary',
+    data: { _id: props.creature._id },
+  });
 }
 </script>
 

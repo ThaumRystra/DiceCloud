@@ -31,24 +31,29 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 import { ConstantSchema } from '/imports/api/properties/Constants';
 
-export default {
-  components: {
-    CalculationErrorList,
-  },
-  mixins: [propertyFormMixin],
-  computed: {
-    // We can't rely on autoValue running in every form, so recalculate errors
-    clientErrors(){
-      let cleanModel = ConstantSchema.clean(this.model);
-      return cleanModel.errors;
-    }
-  }
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
+
+// We can't rely on autoValue running in every form, so recalculate errors
+const clientErrors = computed(() => {
+  const cleanModel = ConstantSchema.clean(props.model);
+  return cleanModel.errors;
+});
 </script>
 
 <style lang="css" scoped>

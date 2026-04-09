@@ -12,14 +12,14 @@ const pullFromProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id, path, itemId }) {
+  async run({ _id, path, itemId }) {
     // Permissions
-    let property = CreatureProperties.findOne(_id);
+    let property = await CreatureProperties.findOneAsync(_id);
     let rootCreature = getRootCreatureAncestor(property);
-    assertEditPermission(rootCreature, this.userId);
+    await assertEditPermission(rootCreature, this.userId);
 
     // Do work
-    CreatureProperties.update(_id, {
+    await CreatureProperties.updateAsync(_id, {
       $pull: { [path.join('.')]: { _id: itemId } },
       $set: { dirty: true }
     }, {

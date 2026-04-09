@@ -4,9 +4,8 @@
       ref="form"
       class="mt-4"
     >
-      <v-layout
-        column
-        align-center
+      <div
+        class="d-flex flex-column align-center"
       >
         <v-img
           src="crown-dice-logo-cropped-transparent.png"
@@ -19,7 +18,7 @@
           label="Email"
           :rules="emailRules"
           class="ma-2"
-          outlined
+          variant="outlined"
           required
           @keyup.enter="submit"
         />
@@ -29,7 +28,7 @@
           label="Username"
           :rules="usernameRules"
           class="ma-2"
-          outlined
+          variant="outlined"
           required
           @keyup.enter="submit"
         />
@@ -39,7 +38,7 @@
           label="Password"
           :rules="passwordRules"
           class="ma-2"
-          outlined
+          variant="outlined"
           required
           @keyup.enter="submit"
         />
@@ -49,14 +48,14 @@
           label="Password Again"
           :rules="password2Rules"
           class="ma-2"
-          outlined
+          variant="outlined"
           required
           @keyup.enter="submit"
         />
-        <div class="error--text">
+        <div class="text-error">
           {{ error }}
         </div>
-        <v-layout>
+        <div class="d-flex">
           <v-btn
             :disabled="!valid"
             color="accent"
@@ -64,15 +63,14 @@
           >
             Register
           </v-btn>
-        </v-layout>
-      </v-layout>
+        </div>
+      </div>
     </v-form>
     <v-divider class="ma-4" />
-    <v-layout
-      column
-      align-center
+    <div
+      class="d-flex flex-column align-center"
     >
-      <div class="error--text">
+      <div class="text-error">
         {{ googleError }}
       </div>
       <v-btn
@@ -81,58 +79,59 @@
       >
         Register in with Google
       </v-btn>
-    </v-layout>
+    </div>
   </div>
 </template>
 
-<script lang="js">
-  export default {
-    data() {
-      return {
-        valid: true,
-        username: '',
-        usernameRules: [
-          v => !!v || 'Name is required',
-        ],
-        email: '',
-        emailRules: [
-          v => !!v || 'E-mail is required',
-          v => /.+@.+/.test(v) || 'E-mail must be valid',
-        ],
-        password: '',
-        passwordRules: [
-          v => !!v || 'Password is required',
-        ],
-        password2: '',
-        password2Rules: [
-          v => !!v || 'Password is required',
-          v => v == this.password || 'Passwords don\'t match',
-        ],
-        error: '',
-        googleError: '',
-      }
-    },
-    methods: {
-      submit () {
-        if (this.$refs.form.validate()) {
-          Accounts.createUser({
-            username: this.username,
-            password: this.password,
-            email: this.email,
-          }, error => {
-            if (error){
-              this.error = error.reason;
-            } else {
-              this.$router.push(this.$route.query.redirect || 'characterList');
-            }
-          });
-        }
-      },
-      googleLogin() {
-        Meteor.loginWithGoogle(error => {
-          if (error) this.googleError = error.reason;
-        });
-      },
-    },
-  }
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+const form = ref<any>(null);
+const valid = ref(true);
+const username = ref('');
+const usernameRules = [
+  (v: string) => !!v || 'Name is required',
+];
+const email = ref('');
+const emailRules = [
+  (v: string) => !!v || 'E-mail is required',
+  (v: string) => /.+@.+/.test(v) || 'E-mail must be valid',
+];
+const password = ref('');
+const passwordRules = [
+  (v: string) => !!v || 'Password is required',
+];
+const password2 = ref('');
+const password2Rules = computed(() => [
+  (v: string) => !!v || 'Password is required',
+  (v: string) => v === password.value || "Passwords don't match",
+]);
+const error = ref('');
+const googleError = ref('');
+
+async function submit() {
+  const { valid: isValid } = await form.value?.validate() ?? { valid: false };
+  if (!isValid) return;
+  Accounts.createUser({
+    username: username.value,
+    password: password.value,
+    email: email.value,
+  }, (err: any) => {
+    if (err) {
+      error.value = err.reason;
+    } else {
+      router.push((route.query.redirect as string) || 'characterList');
+    }
+  });
+}
+
+function googleLogin() {
+  Meteor.loginWithGoogle((err: any) => {
+    if (err) googleError.value = err.reason;
+  });
+}
 </script>

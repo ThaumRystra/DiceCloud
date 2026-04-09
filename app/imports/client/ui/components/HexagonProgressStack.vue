@@ -12,7 +12,7 @@
     <slot v-if="bars.length === 1" />
     <hexagon-progress-stack
       v-else
-      :bars="tail"
+      :bars="tailBars"
       class="child"
     >
       <slot />
@@ -20,27 +20,16 @@
   </hexagon-progress>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed } from 'vue';
 import { tail } from 'lodash';
 import HexagonProgress from '/imports/client/ui/components/HexagonProgress.vue';
 
-export default {
-  name: 'HexagonProgressStack',
-  components: {
-    HexagonProgress,
-  },
-  props: {
-    bars: {
-      type: Array,
-      required: true
-    },
-  },
-  computed: {
-    tail() {
-      return tail(this.bars);
-    }
-  }
-};
+const props = defineProps<{
+  bars: object[];
+}>();
+
+const tailBars = computed(() => tail(props.bars));
 </script>
 
 <style scoped>

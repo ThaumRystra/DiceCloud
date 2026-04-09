@@ -49,7 +49,7 @@
         :cols="{cols: 12}"
       >
         <fill-slot-button :model="model">
-          <v-icon left>
+          <v-icon class="mr-1">
             mdi-plus
           </v-icon>
           Fill Slot
@@ -59,35 +59,26 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyViewerMixin from '/imports/client/ui/properties/viewers/shared/propertyViewerMixin'
+<script setup lang="ts">
+import { computed, inject } from 'vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
 
-const uniqueText = {
+const props = defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+
+const uniqueTextMap: Record<string, string> = {
   uniqueInSlot: 'Each property inside this slot should be unique',
   uniqueInCreature: 'Properties in this slot should be unique across the whole character',
-}
+};
 
-export default {
-  components: {
-    FillSlotButton,
-  },
-  mixins: [propertyViewerMixin],
-  inject: {
-    context: {
-      default: {},
-    },
-  },
-  computed: {
-    slotTypeName() {
-      if (!this.model.slotType) return;
-      return getPropertyName(this.model.slotType);
-    },
-    uniqueText() {
-      if (!this.model.unique) return;
-      return uniqueText[this.model.unique]
-    },
-  }
-}
+const slotTypeName = computed(() => {
+  if (!props.model.slotType) return undefined;
+  return getPropertyName(props.model.slotType);
+});
+
+const uniqueText = computed(() => {
+  if (!props.model.unique) return undefined;
+  return uniqueTextMap[props.model.unique];
+});
 </script>

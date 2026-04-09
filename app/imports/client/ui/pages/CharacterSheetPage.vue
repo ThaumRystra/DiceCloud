@@ -1,7 +1,7 @@
 <template>
   <v-fade-transition mode="out-in">
     <div
-      v-if="!$subReady.singleCharacter"
+      v-if="!characterReady"
       key="character-loading"
       class="fill-height layout justify-center align-center"
     >
@@ -14,23 +14,16 @@
     <character-sheet
       v-else
       show-menu-button
-      :creature-id="$route.params.id"
+      :creature-id="route.params.id"
     />
   </v-fade-transition>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+import { subscribe } from 'vue-meteor-tracker';
 import CharacterSheet from '/imports/client/ui/creature/character/CharacterSheet.vue';
-export default {
-  components: {
-    CharacterSheet,
-  },
-  meteor: {
-    $subscribe: {
-      'singleCharacter'() {
-        return [this.$route.params.id];
-      },
-    },
-  }
-}
+
+const route = useRoute();
+const { ready: characterReady } = subscribe(() => ['singleCharacter', route.params.id as string]);
 </script>

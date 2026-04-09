@@ -13,47 +13,33 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
-import dialogStackStore from '/imports/client/ui/dialogStack/dialogStackStore.js';
 
-export default {
-  components: {
-    TabletopLogStreamEntry,
-  },
-  props: {
-    tabletopId: {
-      type: String,
-      default: undefined,
-    },
-  },
-  computed: {
-    openActionDialogs(){
-      const dialogs = this.$store.state.dialogStack.dialogs;
-      return new Set(dialogs.map(dialog => dialog.data?.actionId).filter(actionId => !!actionId));
-    },
-  },
-  methods: {
-    hideAction(actionId){
-      return this.openActionDialogs.has(actionId);
-    },
-  },
-  meteor: {
-    logs() {
-      const filter = {};
-      if (this.tabletopId) {
-        filter.tabletopId = this.tabletopId;
-      } else if (this.creatureId) {
-        filter.creatureId = this.creatureId;
-      }
-      return CreatureLogs.find(filter, {
-        sort: {date: -1},
-        limit: 100
-      });
-    },
-  },
+const props = defineProps<{
+  tabletopId?: string;
+}>();
+
+const store = useStore();
+
+const openActionDialogs = computed(() => {
+  const dialogs = store.state.dialogStack.dialogs;
+  return new Set(dialogs.map((dialog: any) => dialog.data?.actionId).filter((actionId: any) => !!actionId));
+});
+
+function hideAction(actionId: string) {
+  return openActionDialogs.value.has(actionId);
 }
+
+const { result: logs } = autorun(() => {
+  const filter: any = {};
+  if (props.tabletopId) filter.tabletopId = props.tabletopId;
+  return CreatureLogs.find(filter, { sort: { date: -1 }, limit: 100 });
+});
 </script>
 
 <style lang="css" scoped>

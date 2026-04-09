@@ -9,63 +9,56 @@
     :value="value"
     @change="(value, ack) => $emit('change', value, ack)"
   >
-    <v-icon
-      slot="prepend"
-      class="icon"
-      :class="iconClass"
-    >
-      {{ displayedIcon }}
-    </v-icon>
+    <template #prepend>
+      <v-icon
+        class="icon"
+        :class="iconClass"
+      >
+        {{ displayedIcon }}
+      </v-icon>
+    </template>
   </smart-select>
 </template>
 
-<script lang="js">
-  import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
+<script setup lang="ts">
+import { ref, watch } from 'vue';
+import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 
-  const ICON_SPIN_DURATION = 300;
+const ICON_SPIN_DURATION = 300;
 
-  export default {
-    props: {
-      value: {
-        type: Number,
-        default: undefined,
-      },
-      clearable: {
-        type: Boolean,
-        default: true,
-      },
-    },
-    data(){ return {
-      displayedIcon: 'mdi-radiobox-blank',
-      iconClass: '',
-      values: [
-        {value: 1, text: 'Proficient'},
-        {value: 0.49, text: 'Half proficiency bonus rounded down'},
-        {value: 0.5, text: 'Half proficiency bonus rounded up'},
-        {value: 2, text: 'Double proficiency bonus'},
-      ],
-    }},
-    watch: {
-      'value': {
-        immediate: true,
-        handler(newValue){
-          let newIcon = getProficiencyIcon(newValue);
-          this.iconClass='leaving';
-          setTimeout(() => {
-            this.displayedIcon = newIcon;
-            this.iconClass='arriving';
-            requestAnimationFrame(() => {
-              this.iconClass='';
-            });
-          }, ICON_SPIN_DURATION / 2);
-        },
-      },
-    }
-  }
+const props = withDefaults(defineProps<{
+  value?: number;
+  clearable?: boolean;
+}>(), {
+  value: undefined,
+  clearable: true,
+});
+
+const values = [
+  { value: 1, text: 'Proficient' },
+  { value: 0.49, text: 'Half proficiency bonus rounded down' },
+  { value: 0.5, text: 'Half proficiency bonus rounded up' },
+  { value: 2, text: 'Double proficiency bonus' },
+];
+
+const displayedIcon = ref('mdi-radiobox-blank');
+const iconClass = ref('');
+
+watch(() => props.value, (newValue) => {
+  const newIcon = getProficiencyIcon(newValue);
+  iconClass.value = 'leaving';
+  setTimeout(() => {
+    displayedIcon.value = newIcon;
+    iconClass.value = 'arriving';
+    requestAnimationFrame(() => {
+      iconClass.value = '';
+    });
+  }, ICON_SPIN_DURATION / 2);
+}, { immediate: true });
 </script>
 
 <style lang="css" scoped>
-  .theme--light .icon {
+  .v-theme--light .icon {
     color: black;
   }
   .icon {

@@ -1,11 +1,8 @@
 <template lang="html">
   <v-app-bar
-    app
     color="secondary"
-    dark
-    tabs
-    extended
-    dense
+    theme="dark"
+    density="compact"
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-toolbar-title>
@@ -20,43 +17,36 @@
     </v-app-bar-nav-icon>
     <v-btn
       v-if="canEdit"
-      icon
+      :icon="editing ? 'mdi-check' : 'mdi-pencil'"
       @click="toggleEdit"
-    >
-      <v-icon v-if="editing">
-        mdi-check
-      </v-icon>
-      <v-icon v-else>
-        mdi-pencil
-      </v-icon>
-    </v-btn>
+    />
   </v-app-bar>
 </template>
 
-<script lang="js">
-import { mapMutations } from 'vuex';
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { useStore } from 'vuex';
 import { Session } from 'meteor/session';
 
-export default {
-  meteor: {
-    editing() {
-      return Session.get('editingDocs');
-    },
-    canEdit() {
-      const user = Meteor.user();
-      if (!user) return false;
-      return user.roles?.includes('docsWriter');
-    }
-  },
-  methods: {
-    ...mapMutations([
-      'toggleDrawer',
-      'toggleRightDrawer',
-    ]),
-    toggleEdit() {
-      if (!this.canEdit) return;
-      Session.set('editingDocs', !Session.get('editingDocs'));
-    },
-  },
+const store = useStore();
+
+const { result: editing } = autorun(() => Session.get('editingDocs'));
+const { result: canEdit } = autorun(() => {
+  const user = Meteor.user();
+  if (!user) return false;
+  return user.roles?.includes('docsWriter');
+});
+
+function toggleDrawer() {
+  store.commit('toggleDrawer');
+}
+
+function toggleRightDrawer() {
+  store.commit('toggleRightDrawer');
+}
+
+function toggleEdit() {
+  if (!canEdit.value) return;
+  Session.set('editingDocs', !Session.get('editingDocs'));
 }
 </script>

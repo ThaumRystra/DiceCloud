@@ -19,48 +19,41 @@
   </div>
 </template>
 
-<script lang="js">
-import CalculationErrorList from '/imports/client/ui/properties/forms/shared/CalculationErrorList.vue';
+<script setup lang="ts">
+import { computed } from 'vue';
 
-export default {
-  components: {
-    CalculationErrorList,
-  },
-  props: {
-    model: {
-      type: Object,
-      default: () => ({}),
-    },
-    hideValue: {
-      type: Boolean,
-    },
-  },
-  computed: {
-    showValue() {
-      let value = this.displayedValue;
-      if (
-        this.hideValue || 
-        (value === undefined || value === null) ||
-        value == this.model.calculation
-      ) return false;
-      return true;
-    },
-    displayedValue() {
-      // Use the unaffected value instead if the calculation has it, because effects can modify the value
-      if (this.model.unaffected !== undefined) {
-        return this.model.unaffected;
-      }
-      return this.model.value;
-    },
-    errorList(){
-      if (this.model.parseError){
-        return [this.model.parseError, ...this.model.errors];
-      } else {
-        return this.model.errors;
-      }
-    }
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  hideValue?: boolean;
+}>(), {
+  model: () => ({}),
+  hideValue: false,
+});
+
+const displayedValue = computed(() => {
+  if (props.model.unaffected !== undefined) {
+    return props.model.unaffected;
   }
-}
+  return props.model.value;
+});
+
+const showValue = computed(() => {
+  const value = displayedValue.value;
+  if (
+    props.hideValue ||
+    value === undefined || value === null ||
+    value == props.model.calculation
+  ) return false;
+  return true;
+});
+
+const errorList = computed(() => {
+  if (props.model.parseError) {
+    return [props.model.parseError, ...props.model.errors];
+  } else {
+    return props.model.errors;
+  }
+});
 </script>
 
 <style lang="css" scoped>

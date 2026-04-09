@@ -7,17 +7,17 @@
     :data-id="`tree-node-${doc._id}`"
   >
     <div
-      class="layout align-center justify-start tree-node-title"
+      class="d-flex align-center justify-start tree-node-title"
       style="cursor: pointer;"
       @click.stop="$emit('selected', doc._id)"
     >
       <v-btn
-        small
+        size="small"
         icon
         class="expand-button"
         :class="{
           'rotate-90': showExpanded,
-          'accent--text': doc._descendantCanFill || canFillWithMany
+          'text-accent': doc._descendantCanFill || canFillWithMany
         }"
         :disabled="!canExpand"
         @click.stop="expanded = !expanded"
@@ -27,7 +27,7 @@
         </v-icon>
       </v-btn>
       <div
-        class="layout align-center justify-start pr-1"
+        class="d-flex align-center justify-start pr-1"
       >
         <!--{{doc && doc.order}}-->
         <div
@@ -36,8 +36,8 @@
         >
           <span
             :class="{
-              'text--secondary': !canFill,
-              'accent--text': canFill,
+              'text-secondary': !canFill,
+              'text-accent': canFill,
             }"
           >
             {{ doc.name }}
@@ -117,146 +117,112 @@
   </v-sheet>
 </template>
 
-<script lang="js">
-/**
-* TreeNode's are list item views of character properties. Every property which
-* can belong to the character is shown in the tree view of the character
-* the tree view shows off the full character structure, and where each part of
-* character comes from.
-**/
+<script setup lang="ts">
+import { ref, computed, watch, defineAsyncComponent, inject } from 'vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
-import { some } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import { isAncestor } from '/imports/api/parenting/parentingFunctions';
 
-export default {
-  name: 'BuildTreeNode',
-  components: {
-    TreeNodeView,
-    FillSlotButton,
-  },
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    depth: {
-      type: Number,
-      default: 0,
-    },
-    doc: {
-      type: Object,
-      required: true,
-    },
-    children: {
-      type: Array,
-      default: () => [],
-    },
-    parentSlotId: {
-      type: String,
-      default: undefined,
-    },
-  },
-  data(){return {
-    expanded: this.depth <= 2,
-    /* expand if there's a slot needing attention:
-      this.doc._descendantCanFill || (
-        this.doc.type === 'propertySlot' &&
-        this. node.quantityExpected?.value === 0 ||
-        (this.doc.quantityExpected?.value > 1 && this.doc.spaceLeft > 0)
-      )
-    */
-  }},
-  computed: {
-    condenseChild(){
-      return this.doc.type === 'propertySlot' &&
-      this.children.length === 1 &&
-      this.children[0].doc.type !== 'propertySlot' &&
-      this.doc.quantityExpected &&
-      this.doc.quantityExpected.value === 1 &&
-      !this.canFill;
-    },
-    isSlot(){
-      return this.doc.type === 'propertySlot';
-    },
-    canFill(){
-      return !!this.doc._canFill;
-    },
-    canFillWithOne(){
-      return this.isSlot &&
-        this.canFill &&
-        this.doc.quantityExpected &&
-        this.doc.quantityExpected.value === 1 &&
-        this.doc.spaceLeft === 1 &&
-        !this.children?.length;
-    },
-    canFillWithMany(){
-      return this.isSlot && this.canFill && (
-        !this.doc.quantityExpected ||
-        this.doc.quantityExpected.value === 0 ||
-        (this.doc.quantityExpected.value > 1 && this.doc.spaceLeft > 0) ||
-        (this.doc.quantityExpected.value === 1 && this.children?.length) 
-      );
-    },
-    hasChildren(){
-      return !!this.children && !!this.computedChildren.length || this.lazy && !this.expanded;
-    },
-    showExpanded(){
-      return this.canExpand && this.expanded;
-    },
-    computedChildren(){
-      if (this.condenseChild){
-        return this.children[0].children;
-      }
-      return this.children;
-    },
-    computedSlotId() {
-      if (this.condenseChild) {
-        if (this.children[0].doc.type === 'propertySlot') {
-          return this.children[0].doc._id;
-        } else {
-          return undefined;
-        }
-      } else {
-        if (this.doc.type === 'propertySlot') {
-          return this.doc._id;
-        } else {
-          return undefined;
-        }
-      }
-    },
-    canExpand(){
-      return !!this.computedChildren.length || this.canFillWithMany;
-    },
-  },
-  watch: {
-    'doc._ancestorOfMatchedDocument'(value){
-      this.expanded = !!value || isAncestor(this.doc, this.selectedNode);
-    },
-    'selectedNode.parentId'(){
-      this.expanded = isAncestor(this.doc, this.selectedNode) || this.expanded;
-    },
-  },
-  beforeCreate() {
-    this.$options.components.BuildTreeNodeList = require('./BuildTreeNodeList.vue').default
-  },
-  methods: {
-    remove(model) {
-      const _id = model._id;
-      softRemoveProperty.call({_id});
-      snackbar({
-        text: `Deleted ${getPropertyTitle(model)}`,
-        callbackName: 'undo',
-        callback(){
-          restoreProperty.call({_id});
-        },
-      });
+// Lazy import to break circular dependency
+const BuildTreeNodeList = defineAsyncComponent(() =>
+  import('/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue')
+);
+
+const props = withDefaults(defineProps<{
+  depth?: number;
+  doc: Record<string, any>;
+  children?: any[];
+  parentSlotId?: string;
+}>(), {
+  depth: 0,
+  children: () => [],
+  parentSlotId: undefined,
+});
+
+const context = inject('context', {} as any);
+
+const expanded = ref(props.depth <= 2);
+
+const condenseChild = computed(() =>
+  props.doc.type === 'propertySlot' &&
+  props.children.length === 1 &&
+  props.children[0].doc.type !== 'propertySlot' &&
+  props.doc.quantityExpected &&
+  props.doc.quantityExpected.value === 1 &&
+  !canFill.value
+);
+
+const isSlot = computed(() => props.doc.type === 'propertySlot');
+const canFill = computed(() => !!props.doc._canFill);
+
+const canFillWithOne = computed(() =>
+  isSlot.value &&
+  canFill.value &&
+  props.doc.quantityExpected &&
+  props.doc.quantityExpected.value === 1 &&
+  props.doc.spaceLeft === 1 &&
+  !props.children?.length
+);
+
+const canFillWithMany = computed(() =>
+  isSlot.value && canFill.value && (
+    !props.doc.quantityExpected ||
+    props.doc.quantityExpected.value === 0 ||
+    (props.doc.quantityExpected.value > 1 && props.doc.spaceLeft > 0) ||
+    (props.doc.quantityExpected.value === 1 && props.children?.length)
+  )
+);
+
+const computedChildren = computed(() => {
+  if (condenseChild.value) {
+    return props.children[0].children;
+  }
+  return props.children;
+});
+
+const hasChildren = computed(() =>
+  !!props.children && !!computedChildren.value.length
+);
+
+const showExpanded = computed(() => canExpand.value && expanded.value);
+
+const computedSlotId = computed(() => {
+  if (condenseChild.value) {
+    if (props.children[0].doc.type === 'propertySlot') {
+      return props.children[0].doc._id;
+    } else {
+      return undefined;
     }
-  },
-};
+  } else {
+    if (props.doc.type === 'propertySlot') {
+      return props.doc._id;
+    } else {
+      return undefined;
+    }
+  }
+});
+
+const canExpand = computed(() => !!computedChildren.value.length || canFillWithMany.value);
+
+watch(() => props.doc._ancestorOfMatchedDocument, (value) => {
+  expanded.value = !!value;
+});
+
+function remove(model: Record<string, any>) {
+  const _id = model._id;
+  softRemoveProperty.callAsync({ _id });
+  snackbar({
+    text: `Deleted ${getPropertyTitle(model)}`,
+    callbackName: 'undo',
+    callback() {
+      restoreProperty.callAsync({ _id });
+    },
+  });
+}
 </script>
 
 <style lang="css" scoped>
@@ -289,10 +255,10 @@ export default {
   .v-icon {
     transition: none !important;
   }
-  .theme--light .tree-node-title:hover {
+  .v-theme--light .tree-node-title:hover {
     background-color: rgba(0,0,0,.04);
   }
-  .theme--dark .tree-node-title:hover {
+  .v-theme--dark .tree-node-title:hover {
     background-color: rgba(255,255,255,.04);
   }
   .tree-node-title{

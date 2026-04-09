@@ -12,17 +12,19 @@ Meteor.users.deleteMyAccount = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 5000,
   },
-  run() {
+  async run() {
     let userId = Meteor.userId();
     if (!userId) throw new Meteor.Error('No user',
       'You must be logged in to delete your account');
 
     // Delete all creatures
-    let creatures = Creatures.find({ owner: userId }, { fields: { _id: 1 } }).fetch();
-    creatures.forEach(creature => removeCreatureWork(creature._id));
+    let creatures = await Creatures.find({ owner: userId }, { fields: { _id: 1 } }).fetchAsync();
+    for (const creature of creatures) {
+      await removeCreatureWork(creature._id);
+    }
 
     // Remove permissions from all creatures
-    Creatures.update({
+    await Creatures.updateAsync({
       $or: [
         { writers: userId },
         { readers: userId },
@@ -37,11 +39,13 @@ Meteor.users.deleteMyAccount = new ValidatedMethod({
     });
 
     // Delete all libraries
-    let libraries = Libraries.find({ owner: userId }, { fields: { _id: 1 } }).fetch();
-    libraries.forEach(library => removeLibaryWork(library._id));
+    let libraries = await Libraries.find({ owner: userId }, { fields: { _id: 1 } }).fetchAsync();
+    for (const library of libraries) {
+      await removeLibaryWork(library._id);
+    }
 
-    // Remove permissions from all creatures
-    Libraries.update({
+    // Remove permissions from all libraries
+    await Libraries.updateAsync({
       $or: [
         { writers: userId },
         { readers: userId },
@@ -56,6 +60,6 @@ Meteor.users.deleteMyAccount = new ValidatedMethod({
     });
 
     // delete the account
-    Meteor.users.remove(userId);
+    await Meteor.users.removeAsync(userId);
   }
 });

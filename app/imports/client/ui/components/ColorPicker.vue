@@ -5,7 +5,7 @@
     transition="slide-y-transition"
     left
   >
-    <template #activator="{ on }">
+    <template #activator="{ props }">
       <v-btn
         :icon="!label"
         :tile="!label"
@@ -13,7 +13,7 @@
         :height="height"
         :width="width"
         :disabled="context.editPermission === false"
-        v-on="on"
+        v-bind="props"
       >
         {{ label }}
         <v-icon
@@ -26,9 +26,7 @@
     </template>
     <v-card class="overflow-hidden">
       <v-card-text>
-        <v-layout
-          wrap
-        >
+        <div class="d-flex flex-wrap">
           <div
             v-for="colorOption in colors"
             :key="colorOption"
@@ -50,12 +48,11 @@
             :key="i"
             class="spacer"
           />
-        </v-layout>
+        </div>
         <v-fade-transition>
-          <v-layout
+          <div
             v-show="color"
-            wrap
-            class="mt-2"
+            class="d-flex flex-wrap mt-2"
           >
             <div
               v-for="shadeOption in shades"
@@ -78,19 +75,19 @@
               :key="i"
               class="spacer"
             />
-          </v-layout>
+          </div>
         </v-fade-transition>
       </v-card-text>
       <v-card-actions>
         <v-btn
-          text
+          variant="text"
           @click="$emit('input')"
         >
           Clear
         </v-btn>
         <v-spacer />
         <v-btn
-          text
+          variant="text"
           @click="opened = false"
         >
           Done
@@ -100,126 +97,91 @@
   </v-menu>
 </template>
 
-<script lang="js">
-  import isDarkColor from '/imports/client/ui/utility/isDarkColor';
-  import vuetifyColors from 'vuetify/es5/util/colors';
-  import { kebabToCamelCase, camelToKebabCase } from '/imports/client/ui/utility/swapCase';
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import vuetifyColors from 'vuetify/lib/util/colors.js';
+import { kebabToCamelCase, camelToKebabCase } from '/imports/client/ui/utility/swapCase';
 
-  function colorToHex(color, shade = 'base'){
-    if (!color) return;
-    color = kebabToCamelCase(color);
-    shade = kebabToCamelCase(shade);
-    return vuetifyColors[color] && vuetifyColors[color][shade];
-  }
+const context = inject<{ editPermission?: boolean }>('context', {});
 
-  // Create an index of hex colors and what color/shade combination makes them
-  let colorIndex = {};
-  for (let color in vuetifyColors){
-    color = kebabToCamelCase(color);
-    for (let shade in vuetifyColors[color]){
-      shade = kebabToCamelCase(shade);
-      colorIndex[vuetifyColors[color][shade]] = {color, shade};
-    }
-  }
-  function hexToColor(hex){
-    if (!hex) return undefined;
-    return colorIndex[hex.toLowerCase()];
-  }
+function colorToHex(color: string | undefined, shade = 'base'): string | undefined {
+  if (!color) return;
+  const c = kebabToCamelCase(color) as string;
+  const s = kebabToCamelCase(shade) as string;
+  return (vuetifyColors as Record<string, Record<string, string>>)[c]?.[s];
+}
 
-  export default {
-    inject: {
-      context: { default: {} }
-    },
-    props: {
-     //hex string
-      value: {
-        type: String,
-        default: undefined,
-      },
-      label: {
-        type: String,
-        default: undefined,
-      },
-      height: {
-        type: Number,
-        default: undefined,
-      },
-      width: {
-        type: Number,
-        default: undefined,
-      },
-      noColorChange: Boolean,
-    },
-    data(){ return {
-      colors: [
-        'red',
-        'pink',
-        'purple',
-        'deep-purple',
-        'indigo',
-        'blue',
-        'light-blue',
-        'cyan',
-        'teal',
-        'green',
-        'light-green',
-        'lime',
-        'yellow',
-        'amber',
-        'orange',
-        'deep-orange',
-        'brown',
-        'grey',
-      ],
-      shades: [
-        'lighten-4',
-        'lighten-3',
-        'lighten-2',
-        'lighten-1',
-        'base',
-        'darken-1',
-        'darken-2',
-        'darken-3',
-        'darken-4',
-      ],
-      opened: false,
-    }},
-    computed: {
-      combination (){
-        if (!this.value) return;
-        return hexToColor(this.value) || {};
-      },
-      color: {
-        get(){
-          return this.combination && this.combination.color;
-        },
-        set(newColor){
-          this.$emit('input', colorToHex(newColor, this.shade));
-        },
-      },
-      shade: {
-        get(){
-          return this.combination && this.combination.shade;
-        },
-        set(newShade){
-          this.$emit('input', colorToHex(this.color, newShade));
-        },
-      },
-      kebabColor(){
-        return camelToKebabCase(this.color);
-      },
-      kebabShade(){
-        return camelToKebabCase(this.shade);
-      },
-    },
-    methods: {
-      isDark(kebabColor, kebabShade){
-        let color = colorToHex(kebabColor, kebabShade);
-        return isDarkColor(color);
-      },
-      kebabToCamelCase,
-    },
-  };
+// Create an index of hex colors and what color/shade combination makes them
+const colorIndex: Record<string, { color: string; shade: string }> = {};
+for (const colorKey in vuetifyColors) {
+  const c = kebabToCamelCase(colorKey) as string;
+  const colorShades = (vuetifyColors as Record<string, Record<string, string>>)[c];
+  for (const shadeKey in colorShades) {
+    const s = kebabToCamelCase(shadeKey) as string;
+    colorIndex[colorShades[shadeKey]] = { color: c, shade: s };
+  }
+}
+
+function hexToColor(hex: string | undefined): { color: string; shade: string } | undefined {
+  if (!hex) return undefined;
+  return colorIndex[hex.toLowerCase()];
+}
+
+const props = defineProps<{
+  value?: string;
+  label?: string;
+  height?: number;
+  width?: number;
+  noColorChange?: boolean;
+}>();
+
+const emit = defineEmits<{
+  input: [value: string | undefined];
+}>();
+
+const colors = [
+  'red', 'pink', 'purple', 'deep-purple', 'indigo', 'blue', 'light-blue',
+  'cyan', 'teal', 'green', 'light-green', 'lime', 'yellow', 'amber',
+  'orange', 'deep-orange', 'brown', 'grey',
+];
+const shades = [
+  'lighten-4', 'lighten-3', 'lighten-2', 'lighten-1', 'base',
+  'darken-1', 'darken-2', 'darken-3', 'darken-4',
+];
+
+const opened = ref(false);
+
+const combination = computed(() => {
+  if (!props.value) return undefined;
+  return hexToColor(props.value) || {};
+});
+
+const color = computed({
+  get() {
+    return combination.value?.color;
+  },
+  set(newColor: string | undefined) {
+    emit('input', colorToHex(newColor, shade.value));
+  },
+});
+
+const shade = computed({
+  get() {
+    return combination.value?.shade;
+  },
+  set(newShade: string | undefined) {
+    emit('input', colorToHex(color.value, newShade));
+  },
+});
+
+const kebabColor = computed(() => camelToKebabCase(color.value) as string);
+const kebabShade = computed(() => camelToKebabCase(shade.value) as string);
+
+function isDark(kebabColorVal: string, kebabShadeVal: string): boolean {
+  const hex = colorToHex(kebabColorVal, kebabShadeVal);
+  return isDarkColor(hex);
+}
 </script>
 
 <style lang="css" scoped>

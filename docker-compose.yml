@@ -2,7 +2,7 @@ version: '3.7'
 services:
   dicecloud-db:
     container_name: dicecloud-db
-    image: mongo:latest
+    image: mongo:7
     command:
       - --storageEngine=wiredTiger
     volumes:
@@ -17,7 +17,7 @@ services:
     environment:
     #update ROOT_URL, PORT, and MAIL_URL for your environment
       - ROOT_URL=http://localhost:3000
-      - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017
+      - MONGO_URL=mongodb://meteor:meteor@dicecloud-db:27017/dicecloud?authSource=admin
       - PORT=3000
       - NODE_ENV=production
       - METEOR_SETTINGS={"public":{"environment":"production","disablePatreon":true}}

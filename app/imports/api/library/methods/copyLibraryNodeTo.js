@@ -13,7 +13,7 @@ import {
   getFilter
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+import { fetchDocByRefAsync } from '/imports/api/parenting/parentingFunctions';
 
 var snackbar;
 if (Meteor.isClient) {
@@ -40,26 +40,26 @@ const copyLibraryNodeTo = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 10000,
   },
-  run({ _id, parent }) {
+  async run({ _id, parent }) {
     if (parent.collection !== 'libraryNodes' && parent.collection !== 'libraries') {
       throw new Meteor.Error('Invalid destination',
         'Library documents can only be copied to destinations inside other libraries'
       );
     }
-    const libraryNode = LibraryNodes.findOne(_id);
+    const libraryNode = await LibraryNodes.findOneAsync(_id);
     if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
 
-    const parentDoc = fetchDocByRef(parent);
-    assertDocCopyPermission(libraryNode, this.userId);
-    assertDocEditPermission(parentDoc, this.userId);
+    const parentDoc = await fetchDocByRefAsync(parent);
+    await assertDocCopyPermission(libraryNode, this.userId);
+    await assertDocEditPermission(parentDoc, this.userId);
 
-    let decendants = LibraryNodes.find({
+    let decendants = await LibraryNodes.find({
       ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
       sort: { left: 1 },
-    }).fetch();
+    }).fetchAsync();
 
     if (decendants.length > DUPLICATE_CHILDREN_LIMIT) {
       decendants.pop();
@@ -79,10 +79,12 @@ const copyLibraryNodeTo = new ValidatedMethod({
     libraryNode.left = Number.MAX_SAFE_INTEGER - 1;
     libraryNode.right = Number.MAX_SAFE_INTEGER;
 
-    LibraryNodes.batchInsert(nodes);
+    for (const node of nodes) {
+      await LibraryNodes.insertAsync(node);
+    }
 
     // Tree structure changed by inserts, reorder the tree
-    rebuildNestedSets(LibraryNodes, parentDoc.root.id);
+    await rebuildNestedSets(LibraryNodes, parentDoc.root.id);
   },
 });
 

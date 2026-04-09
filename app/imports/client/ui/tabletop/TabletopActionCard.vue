@@ -4,13 +4,13 @@
     rounded
     :class="cardClasses"
   >
-    <div class="layout align-center px-3">
+    <div class="d-flex align-center px-3">
       <div
         class="avatar"
       >
         <v-btn
           icon
-          outlined
+          variant="outlined"
           style="letter-spacing: normal;"
           class="mr-2"
           :style="{
@@ -42,7 +42,7 @@
         <div class="action-sub-title layout align-center">
           <div
             v-if="targetingError"
-            class="flex error--text"
+            class="flex text-error"
           >
             {{ targetingError }}
           </div>
@@ -95,7 +95,10 @@
   </v-sheet>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import { getPropertyName } from '/imports/constants/PROPERTIES.js';
 import numberToSignedString from '/imports/api/utility/numberToSignedString.js';
 import doAction from '/imports/client/ui/creature/actions/doAction';
@@ -105,140 +108,98 @@ import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue'
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue.js';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { docsToForest } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
-import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default {
-  components: {
-    AttributeConsumedView,
-    ItemConsumedView,
-    MarkdownText,
-    PropertyIcon,
-    TreeNodeList,
-  },
-  inject: {
-    context: {
-      default: {},
-    },
-    theme: {
-      default: {
-        isDark: false,
-      },
-    },
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    targets: {
-      type: Array,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      activated: undefined,
-      doActionLoading: false,
-      hovering: false,
+const props = defineProps<{
+  model: any;
+  targets: any[];
+  active?: boolean;
+}>();
+
+const emit = defineEmits(['click', 'close-menu']);
+
+const store = useStore();
+const context = inject<any>('context', {});
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+const activated = ref<boolean | undefined>(undefined);
+const doActionLoading = ref(false);
+const hovering = ref(false);
+
+const rollBonus = computed(() => {
+  if (!props.model.attackRoll) return;
+  return numberToSignedString(props.model.attackRoll.value);
+});
+
+const rollBonusTooLong = computed(() => rollBonus.value && rollBonus.value.length > 3);
+const propertyName = computed(() => getPropertyName(props.model.type));
+
+const cardClasses = computed(() => ({
+  'v-theme--dark': theme.isDark,
+  'v-theme--light': !theme.isDark,
+  'muted-text': props.model.insufficientResources,
+  'active': activated.value,
+  'tabletop-active': props.active,
+  'elevation-8': hovering.value,
+}));
+
+const actionTypeIcon = computed(() => `$vuetify.icons.${props.model.actionType}`);
+
+const targetingError = computed(() => {
+  if (!props.active) return;
+  const targets = props.targets || [];
+  if (props.model.target === 'singleTarget' && targets.length === 0) return 'Select target';
+  if (targets.length > 1 && props.model.target !== 'multipleTargets') return 'Single target only';
+  if (props.model.target === 'self' && targets.length > 0) return 'Can only target self';
+  return undefined;
+});
+
+const { result: children } = autorun(() => {
+  const excludedRanges: any[] = [];
+  const descendants = CreatureProperties.find({
+    ...getFilter.descendants(props.model),
+    removed: { $ne: true },
+  }, { sort: { left: 1 } }).map((prop: any) => {
+    if (prop.type === 'buff' || prop.type === 'folder') {
+      excludedRanges.push({ left: prop.left, right: prop.right });
     }
-  },
-  computed: {
-    rollBonus() {
-      if (!this.model.attackRoll) return;
-      return numberToSignedString(this.model.attackRoll.value);
-    },
-    rollBonusTooLong() {
-      return this.rollBonus && this.rollBonus.length > 3;
-    },
-    propertyName() {
-      return getPropertyName(this.model.type);
-    },
-    cardClasses() {
-      return {
-        'theme--dark': this.theme.isDark,
-        'theme--light': !this.theme.isDark,
-        'muted-text': this.model.insufficientResources,
-        'active': this.activated,
-        'tabletop-active': this.active,
-        'elevation-8': this.hovering,
-      }
-    },
-    actionTypeIcon() {
-      return `$vuetify.icons.${this.model.actionType}`;
-    },
-    targetingError() {
-      if (!this.active) return;
-      const targets = this.targets || [];
-      if (this.model.target === 'singleTarget' && targets.length === 0) {
-        return 'Select target';
-      } else if (targets.length > 1 && this.model.target !== 'multipleTargets'){
-        return 'Single target only';
-      } else if (this.model.target === 'self' && targets.length > 0){
-        return 'Can only target self';
-      }
-      return undefined;
-    }
-  },
-  meteor: {
-    children() {
-      const excludedRanges = [];
-      const decendants = CreatureProperties.find({
-        ...getFilter.descendants(this.model),
-        'removed': { $ne: true },
-      }, {
-        sort: {left: 1}
-      }).map(prop => {
-        // Get all the props we don't want to show the decendants of and
-        // where they might appear in the ancestor list
-        if (prop.type === 'buff' || prop.type === 'folder') {
-          excludedRanges.push({
-            left: prop.left,
-            right: prop.right,
-          });
-        }
-        return prop;
-      }).filter(prop => {
-        // Filter out folders entirely
-        if (prop.type === 'folder') return false;
-        // Filter out decendants of terminating props
-        return !some(excludedRanges, range => {
-          return prop.left > range.left && prop.right < range.right;
-        });
-      });
-      return docsToForest(decendants);
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e);
-    },
-    doAction() {
-      this.doActionLoading = true;
-      this.$emit('close-menu')
-      doAction({
-        propId: this.model._id,
-        creatureId: this.model.root.id,
-        targetIds: this.targets,
-        $store: this.$store,
-        elementId: 'do-action-button',
-        callback: action => action?._id || this.model._id,
-      }).catch((e) => {
-        console.error(e);
-        snackbar({ text: e.message || e.reason || e.toString() });
-      }).finally(() => {
-        this.doActionLoading = false;
-      });
-    },
-    shwing() {
-      this.activated = true;
-      setTimeout(() => {
-        this.activated = undefined;
-      }, 150);
-    },
+    return prop;
+  }).filter((prop: any) => {
+    if (prop.type === 'folder') return false;
+    return !some(excludedRanges, range => prop.left > range.left && prop.right < range.right);
+  });
+  return docsToForest(descendants);
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+async function doActionFn() {
+  doActionLoading.value = true;
+  emit('close-menu');
+  try {
+    await doAction({
+      propId: props.model._id,
+      creatureId: props.model.root.id,
+      targetIds: props.targets,
+      $store: store,
+      elementId: 'do-action-button',
+      callback: (action: any) => action?._id || props.model._id,
+    });
+  } catch (e: any) {
+    console.error(e);
+    snackbar({ text: e.message || e.reason || e.toString() });
+  } finally {
+    doActionLoading.value = false;
   }
+}
+
+function shwing() {
+  activated.value = true;
+  setTimeout(() => { activated.value = undefined; }, 150);
 }
 </script>
 
@@ -296,11 +257,11 @@ export default {
   height: 32px;
 }
 
-.theme--light.muted-text {
+.v-theme--light.muted-text {
   color: rgba(0, 0, 0, .3) !important;
 }
 
-.theme--dark.muted-text {
+.v-theme--dark.muted-text {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 
@@ -310,11 +271,11 @@ export default {
 </style>
 
 <style lang="css">
-.action-card.theme--light.muted-text .v-icon {
+.action-card.v-theme--light.muted-text .v-icon {
   color: rgba(0, 0, 0, .3) !important;
 }
 
-.action-card.theme--dark.muted-text .v-icon {
+.action-card.v-theme--dark.muted-text .v-icon {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 

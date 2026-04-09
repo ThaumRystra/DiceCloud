@@ -85,7 +85,7 @@
           data-id="test-slot-button"
         >
           <v-btn
-            text
+            variant="text"
             class="ma-0"
             height="54"
             width="100%"
@@ -143,50 +143,46 @@
   </div>
 </template>
 
-<script lang="js">
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
-import FormSection from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import PROPERTIES from '/imports/constants/PROPERTIES';
+<script setup lang="ts">
+import { inject } from 'vue';
+import { useStore } from 'vuex';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
 
-export default {
-  components: {
-    FormSection,
-    TagTargeting,
-    OutlinedInput,
-  },
-  mixins: [propertyFormMixin],
-  inject: {
-    context: { default: {} }
-  },
-  data() {
-    let slotTypes = [];
-    for (let key in PROPERTIES) {
-      slotTypes.push({ text: PROPERTIES[key].name, value: key });
-    }
-    return {
-      slotTypes,
-      uniqueOptions: [{
-        text: 'Each property inside this slot should be unique',
-        value: 'uniqueInSlot',
-      }, {
-        text: 'Properties in this slot should be unique across the whole character',
-        value: 'uniqueInCreature',
-      }],
-    };
-  },
-  methods: {
-    testSlot() {
-      if (!this.context.isLibraryForm) return;
-      this.$store.commit('pushDialogStack', {
-        component: 'slot-fill-dialog',
-        elementId: 'test-slot-button',
-        data: {
-          dummySlot: this.model,
-        },
-      });
-    }
-  },
-};
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+const context = inject<any>('context', {});
+const store = useStore();
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const slotTypes: Array<{ text: string; value: string }> = [];
+for (const key in PROPERTIES) {
+  slotTypes.push({ text: (PROPERTIES as any)[key].name, value: key });
+}
+
+const uniqueOptions = [
+  { text: 'Each property inside this slot should be unique', value: 'uniqueInSlot' },
+  { text: 'Properties in this slot should be unique across the whole character', value: 'uniqueInCreature' },
+];
+
+function testSlot() {
+  if (!context.isLibraryForm) return;
+  store.commit('pushDialogStack', {
+    component: 'slot-fill-dialog',
+    elementId: 'test-slot-button',
+    data: {
+      dummySlot: props.model,
+    },
+  });
+}
 </script>

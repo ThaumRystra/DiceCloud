@@ -42,27 +42,20 @@
   </div>
 </template>
 
-<script lang="js">
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
 
-export default {
-  components: {
-    FormSection,
-    FormSections,
-  },
-  mixins: [propertyFormMixin],
-  data() {
-    return {
-      addResultLoading: false,
-    }
-  },
-  methods: {
-    acknowledgeAddResult() {
-      this.addResultLoading = false;
-    },
-  },
-};
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
 </script>
 
 <style lang="css" scoped>

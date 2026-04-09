@@ -5,7 +5,7 @@
         v-for="(item, i) in model"
         :key="item._id || i"
       >
-        <div class="layout align-center">
+        <div class="d-flex align-center">
           <div style="flex-grow: 1;">
             <item-consumed-form
               :model="item"
@@ -13,9 +13,9 @@
             />
           </div>
           <v-btn
-            outlined
+            variant="outlined"
             icon
-            large
+            size="large"
             class="ma-3"
             style="margin-bottom: 30px !important;"
             @click="$emit('pull', {path: [i]})"
@@ -28,14 +28,18 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
 import ItemConsumedForm from '/imports/client/ui/properties/forms/ItemConsumedForm.vue';
-import propertyFormMixin from '/imports/client/ui/properties/forms/shared/propertyFormMixin';
 
-export default {
-  components: {
-    ItemConsumedForm,
-  },
-  mixins: [propertyFormMixin],
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change', 'pull']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
 }
 </script>

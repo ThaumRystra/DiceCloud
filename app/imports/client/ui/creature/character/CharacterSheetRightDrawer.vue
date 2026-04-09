@@ -1,31 +1,27 @@
 <template lang="html">
   <v-navigation-drawer
     v-model="drawer"
-    app
-    right
-    clipped
+    location="right"
   >
     <character-log :creature-id="$route.params.id" />
   </v-navigation-drawer>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
-export default {
-  components: {
-    CharacterLog,
+
+const store = useStore();
+
+const drawer = computed({
+  get() {
+    return store.state.rightDrawer;
   },
-  computed: {
-    drawer: {
-      get () {
-        return this.$store.state.rightDrawer;
-      },
-      set (value) {
-        this.$store.commit('setRightDrawer', value);
-      },
-    },
+  set(value) {
+    store.commit('setRightDrawer', value);
   },
-}
+});
 </script>
 
 <style lang="css" scoped>

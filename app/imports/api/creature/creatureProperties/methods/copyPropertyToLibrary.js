@@ -38,7 +38,7 @@ const copyPropertyToLibrary = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 5000,
   },
-  run({ propId, parentRef, order }) {
+  async run({ propId, parentRef, order }) {
     // get the new ancestry for the properties
     const parentDoc = fetchDocByRef(parentRef);
 
@@ -47,26 +47,26 @@ const copyPropertyToLibrary = new ValidatedMethod({
     if (parentRef.collection === 'libraries') {
       rootLibrary = parentDoc;
     } else if (parentRef.collection === 'libraryNodes') {
-      rootLibrary = Libraries.findOne(parentDoc.root.id)
+      rootLibrary = await Libraries.findOneAsync(parentDoc.root.id)
     } else {
       throw `${parentRef.collection} is not a valid parent collection`
     }
-    assertEditPermission(rootLibrary, this.userId);
+    await assertEditPermission(rootLibrary, this.userId);
 
-    const insertedRootNode = insertNodeFromProperty(propId, order, this);
+    const insertedRootNode = await insertNodeFromProperty(propId, order, this);
 
     // Tree structure changed by inserts, reorder the tree
-    rebuildNestedSets(LibraryNodes, rootLibrary._id);
+    await rebuildNestedSets(LibraryNodes, rootLibrary._id);
 
     // Return the docId of the inserted root property
     return insertedRootNode?._id;
   },
 });
 
-function insertNodeFromProperty(propId, order, method) {
+async function insertNodeFromProperty(propId, order, method) {
   // Fetch the property and its descendants, provided they have not been
   // removed
-  let prop = CreatureProperties.findOne({
+  let prop = await CreatureProperties.findOneAsync({
     _id: propId,
     removed: { $ne: true },
   });
@@ -81,21 +81,24 @@ function insertNodeFromProperty(propId, order, method) {
   }
 
   // Make sure we can edit this property
-  assertDocEditPermission(prop, method.userId);
+  await assertDocEditPermission(prop, method.userId);
 
   let oldParentId = prop.parentId;
-  const propCursor = CreatureProperties.find({
+  const descCount = await CreatureProperties.find({
     ...getFilter.descendants(prop),
     removed: { $ne: true },
-  });
+  }).countAsync();
 
   // Make sure there aren't too many descendants
-  if (propCursor.count() > DUPLICATE_CHILDREN_LIMIT) {
+  if (descCount > DUPLICATE_CHILDREN_LIMIT) {
     throw new Meteor.Error('Copy children limit',
       `The property has over ${DUPLICATE_CHILDREN_LIMIT} descendants and cannot be copied`);
   }
 
-  let props = propCursor.fetch();
+  let props = await CreatureProperties.find({
+    ...getFilter.descendants(prop),
+    removed: { $ne: true },
+  }).fetchAsync();
 
   // The root prop is first in the array of props
   // It must get the first generated ID to prevent flickering
@@ -119,7 +122,9 @@ function insertNodeFromProperty(propId, order, method) {
   props = cleanProps(props);
 
   // Insert the props as library nodes
-  LibraryNodes.batchInsert(props);
+  for (const p of props) {
+    await LibraryNodes.insertAsync(p);
+  }
   return prop;
 }
 

@@ -33,7 +33,7 @@ const removeCreatureFromTabletop = new ValidatedMethod({
     timeInterval: 5000,
   },
 
-  run({ tabletopId, creatureIds }) {
+  async run({ tabletopId, creatureIds }) {
     if (!this.userId) {
       throw new Meteor.Error('tabletops.removeCreature.denied',
         'You need to be logged in to remove creatures from tabletop');
@@ -62,7 +62,7 @@ const removeCreatureFromTabletop = new ValidatedMethod({
     }
 
     // Clear tabletopId from all player characters
-    if (creatureIdsToClearTabletopId.length) Creatures.update({
+    if (creatureIdsToClearTabletopId.length) await Creatures.updateAsync({
       _id: { $in: creatureIdsToClearTabletopId },
       $or: [
         { writers: this.userId },
@@ -77,7 +77,7 @@ const removeCreatureFromTabletop = new ValidatedMethod({
     // Remove all non player characters and monsters
     for (const creature of creaturesToRemove) {
       assertOwnership(creature, this.userId)
-      removeCreatureWork(creature._id);
+      await removeCreatureWork(creature._id);
     }
 
     if (Meteor.isServer) {

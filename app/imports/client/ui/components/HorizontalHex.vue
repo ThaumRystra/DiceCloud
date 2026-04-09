@@ -31,12 +31,10 @@
   </div>
 </template>
 
-<script lang="js">
-  export default {
-    data(){return {
-      hover: false,
-    }},
-  }
+<script setup lang="ts">
+import { ref } from 'vue';
+
+const hover = ref(false);
 </script>
 
 <style lang="css" scoped>

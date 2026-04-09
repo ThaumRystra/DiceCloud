@@ -62,7 +62,6 @@ const userSchema = new SimpleSchema({
   },
   apiKey: {
     type: String,
-    index: 1,
     optional: true,
   },
   darkMode: {
@@ -130,13 +129,13 @@ Meteor.users.generateApiKey = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run() {
+  async run() {
     if (Meteor.isClient) return;
-    var user = Meteor.users.findOne(this.userId);
+    var user = await Meteor.users.findOneAsync(this.userId);
     if (!user) return;
     if (user && user.apiKey) return;
     var apiKey = Random.id(30);
-    Meteor.users.update(this.userId, { $set: { apiKey } });
+    await Meteor.users.updateAsync(this.userId, { $set: { apiKey } });
   },
 });
 
@@ -150,9 +149,9 @@ Meteor.users.setDarkMode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 2000,
   },
-  run({ darkMode }) {
+  async run({ darkMode }) {
     if (!this.userId) return;
-    Meteor.users.update(this.userId, { $set: { darkMode } });
+    await Meteor.users.updateAsync(this.userId, { $set: { darkMode } });
   },
 });
 
@@ -172,9 +171,9 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ userId, address }) {
+  async run({ userId, address }) {
     userId = this.userId || userId;
-    let user = Meteor.users.findOne(userId);
+    let user = await Meteor.users.findOneAsync(userId);
     if (!user) {
       throw new Meteor.Error('User not found',
         'Can\'t send a validation email to a user that does not exist');
@@ -236,15 +235,15 @@ Meteor.users.setPreference = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ preference, value }) {
+  async run({ preference, value }) {
     if (!this.userId) throw 'You can only set preferences once logged in';
     let prefPath = `preferences.${preference}`
     if (value == true) {
-      return Meteor.users.update(this.userId, {
+      return await Meteor.users.updateAsync(this.userId, {
         $set: { [prefPath]: true },
       });
     } else {
-      return Meteor.users.update(this.userId, {
+      return await Meteor.users.updateAsync(this.userId, {
         $unset: { [prefPath]: 1 },
       });
     }
@@ -254,22 +253,22 @@ Meteor.users.setPreference = new ValidatedMethod({
 if (Meteor.isServer) {
   Accounts.onCreateUser((options, user) => {
     if (defaultLibraries?.length) {
-      Libraries.update({
+      Libraries.updateAsync({
         _id: { $in: defaultLibraries }
       }, {
         $inc: { subscriberCount: 1 }
       }, {
         multi: true,
-      }, () => {/**/ });
+      });
     }
     if (defaultLibraryCollections?.length) {
-      LibraryCollections.update({
+      LibraryCollections.updateAsync({
         _id: { $in: defaultLibraryCollections }
       }, {
         $inc: { subscriberCount: 1 }
       }, {
         multi: true,
-      }, () => {/**/ });
+      });
     }
     return user;
   });
@@ -291,16 +290,16 @@ Meteor.users.subscribeToLibrary = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 2000,
   },
-  run({ libraryId, subscribe }) {
+  async run({ libraryId, subscribe }) {
     if (!this.userId) throw 'Can only subscribe if logged in';
     if (subscribe) {
-      Libraries.update({ _id: libraryId }, { $inc: { subscriberCount: 1 } }, () => {/**/ });
-      return Meteor.users.update(this.userId, {
+      await Libraries.updateAsync({ _id: libraryId }, { $inc: { subscriberCount: 1 } });
+      return await Meteor.users.updateAsync(this.userId, {
         $addToSet: { subscribedLibraries: libraryId },
       });
     } else {
-      Libraries.update({ _id: libraryId }, { $inc: { subscriberCount: -1 } }, () => {/**/ });
-      return Meteor.users.update(this.userId, {
+      await Libraries.updateAsync({ _id: libraryId }, { $inc: { subscriberCount: -1 } });
+      return await Meteor.users.updateAsync(this.userId, {
         $pullAll: { subscribedLibraries: libraryId },
       });
     }
@@ -323,16 +322,16 @@ Meteor.users.subscribeToLibraryCollection = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ libraryCollectionId, subscribe }) {
+  async run({ libraryCollectionId, subscribe }) {
     if (!this.userId) throw 'Can only subscribe if logged in';
     if (subscribe) {
-      LibraryCollections.update({ _id: libraryCollectionId }, { $inc: { subscriberCount: 1 } }, () => {/**/ });
-      return Meteor.users.update(this.userId, {
+      await LibraryCollections.updateAsync({ _id: libraryCollectionId }, { $inc: { subscriberCount: 1 } });
+      return await Meteor.users.updateAsync(this.userId, {
         $addToSet: { subscribedLibraryCollections: libraryCollectionId },
       });
     } else {
-      LibraryCollections.update({ _id: libraryCollectionId }, { $inc: { subscriberCount: -1 } }, () => {/**/ });
-      return Meteor.users.update(this.userId, {
+      await LibraryCollections.updateAsync({ _id: libraryCollectionId }, { $inc: { subscriberCount: -1 } });
+      return await Meteor.users.updateAsync(this.userId, {
         $pullAll: { subscribedLibraryCollections: libraryCollectionId },
       });
     }

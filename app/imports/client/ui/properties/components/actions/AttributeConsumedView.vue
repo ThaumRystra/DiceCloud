@@ -1,7 +1,7 @@
 <template lang="html">
   <div
-    class="layout align-center justify-start"
-    :class="insufficient && 'error--text'"
+    class="d-flex align-center justify-start"
+    :class="insufficient && 'text-error'"
   >
     <div
       v-if="model.quantity && model.quantity.value !== 1"
@@ -18,25 +18,21 @@
     </div>
     <div
       v-if="(typeof model.available) == 'number'"
-      class="text--disabled text-no-wrap text-truncate ml-1 flex-shrink-0"
+      class="text-disabled text-no-wrap text-truncate ml-1 flex-shrink-0"
     >
       ({{ model.available }})
     </div>
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  computed: {
-    insufficient(){
-      return this.model.quantity > this.model.available;
-    },
-  },
-}
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
+
+const insufficient = computed(() => props.model.quantity > props.model.available);
 </script>

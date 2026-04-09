@@ -7,7 +7,7 @@
     <v-container>
       <v-fade-transition mode="out-in">
         <v-row
-          v-if="!$subReady.tabletops"
+          v-if="!tabletopsReady"
           key="loading-spinner"
         >
           <v-col
@@ -24,7 +24,7 @@
         <v-row
           v-else-if="tabletops.length"
           key="loaded-cards"
-          dense
+          density="compact"
         >
           <v-col
             v-for="tabletop in tabletops"
@@ -57,14 +57,12 @@
               <v-card-actions>
                 <v-spacer />
                 <v-btn
-                  text
+                  variant="text"
                   :to="`/tabletop/${tabletop._id}`"
-                  @click.native.stop=""
+                  @click.stop=""
+                  append-icon="mdi-play"
                 >
                   Launch
-                  <v-icon right>
-                    mdi-play
-                  </v-icon> 
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -85,7 +83,6 @@
     </v-container>
     <v-btn
       color="primary"
-      fab
       fixed
       bottom
       right
@@ -97,48 +94,38 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import Tabletops from '/imports/api/tabletop/Tabletops';
 import insertTabletop from '/imports/api/tabletop/methods/insertTabletop';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 
-export default {
-  components: {
-    MarkdownText,
-  },
-  data(){return {
-    addTabletopLoading: false,
-  }},
-  meteor: {
-    tabletops(){
-      return Tabletops.find();
-    },
-    $subscribe: {
-      'tabletops': [],
-    },
-  },
-  methods: {
-    addTabletop(){
-      this.addTabletopLoading = true;
-      insertTabletop.call(error => {
-        if (error) {
-          console.error(error)
-          snackbar({ text: error.reason || error.message || error.toString() });
-        }
-        this.addTabletopLoading = false;
-      });
-    },
-    clickTabletop(tabletopId) {
-      this.$store.commit('pushDialogStack', {
-        component: 'tabletop-dialog',
-        elementId: `tabletop-${tabletopId}`,
-        data: {
-          tabletopId,
-        },
-      });
-    },
+const store = useStore();
+const { ready: tabletopsReady } = subscribe('tabletops');
+const addTabletopLoading = ref(false);
+
+const { result: tabletops } = autorun(() => Tabletops.find().fetch());
+
+async function addTabletop() {
+  addTabletopLoading.value = true;
+  try {
+    await insertTabletop.callAsync();
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason || error.message || error.toString() });
   }
+  addTabletopLoading.value = false;
+}
+
+function clickTabletop(tabletopId: string) {
+  store.commit('pushDialogStack', {
+    component: 'tabletop-dialog',
+    elementId: `tabletop-${tabletopId}`,
+    data: { tabletopId },
+  });
 }
 </script>
 

@@ -21,8 +21,8 @@ function assertDocFound(doc, ref) {
   }
 }
 
-export function fetchDocByRefAsync(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
-  const doc = getCollectionByName(ref.collection).findOneAsync(ref.id, options);
+export async function fetchDocByRefAsync(ref: Reference, options?: Mongo.Options<object>): Promise<TreeDoc> {
+  const doc = await getCollectionByName(ref.collection).findOneAsync(ref.id, options);
   assertDocFound(doc, ref);
   return doc;
 }
@@ -623,9 +623,9 @@ export async function changeParent(doc: TreeDoc, parent: TreeDoc | null, collect
   await collection.updateAsync(doc._id, update);
 
   // Rebuild the nested sets of everything on the root document(s)
-  rebuildNestedSets(collection, doc.root.id);
+  await rebuildNestedSets(collection, doc.root.id);
   if (rootChange) {
-    rebuildNestedSets(collection, parent.root.id);
+    await rebuildNestedSets(collection, parent.root.id);
   }
 }
 
@@ -674,8 +674,8 @@ export function setDocToLastOrder(collection: Mongo.Collection<TreeDoc>, doc: Tr
   doc.left = Number.MAX_SAFE_INTEGER;
 }
 
-export function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId: string) {
-  const docs = collection.find({
+export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId: string) {
+  const docs = await collection.find({
     'root.id': rootId,
     removed: { $ne: true }
   }, {
@@ -684,13 +684,13 @@ export function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, rootId:
       //Reverse sorting so that arrays can be used as stacks with the first item on top
       left: 1,
     },
-  }).fetch();
+  }).fetchAsync();
 
   const operations = calculateNestedSetOperations(docs);
   return writeBulkOperations(collection, operations);
 }
 
-export function rebuildCreatureNestedSets(creatureId) {
+export async function rebuildCreatureNestedSets(creatureId) {
   const docs = getProperties(creatureId);
   const operations = calculateNestedSetOperations(docs);
   return writeBulkOperations(CreatureProperties as Mongo.Collection<TreeDoc, TreeDoc>, operations);

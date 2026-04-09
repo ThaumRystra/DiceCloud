@@ -1,7 +1,7 @@
 <template>
   <v-btn
-    fab
-    small
+    icon
+    size="small"
     v-bind="$attrs"
     :disabled="disabled"
     :style="disabled ? 'background-color: #616161 !important;' : ''"
@@ -14,14 +14,15 @@
   </v-btn>
 </template>
 
-<script lang="js">
-  /*
-   * Because speed dials only work well with v-btn's as children, this hacky
-   * component creates a v-btn with a label.
-   */
-  export default {
-    props: ['icon', 'label', 'disabled'],
-  }
+<script setup lang="ts">
+defineProps<{
+  icon?: string;
+  label?: string;
+  disabled?: boolean;
+}>();
+const emit = defineEmits<{
+  click: [];
+}>();
 </script>
 
 <style scoped>

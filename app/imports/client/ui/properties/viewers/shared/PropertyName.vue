@@ -4,13 +4,10 @@
   </div>
 </template>
 
-<script lang="js">
-export default {
-  props: {
-    value: {
-      type: String,
-      default: undefined,
-    },
-  }
-}
+<script setup lang="ts">
+withDefaults(defineProps<{
+  value?: string;
+}>(), {
+  value: undefined,
+});
 </script>

@@ -2,7 +2,7 @@
   <div class="choice-input">
     <v-expansion-panels
       accordion
-      tile
+      rounded="0"
       multiple
       hover
     >
@@ -12,7 +12,7 @@
         :model="prop"
         :data-id="prop._id"
       >
-        <v-expansion-panel-header>
+        <v-expansion-panel-title>
           <template #default="{ open }">
             <v-checkbox
               v-model="selectedItems"
@@ -34,10 +34,10 @@
               </v-btn>
             </template>
           </template>
-        </v-expansion-panel-header>
-        <v-expansion-panel-content class="py-4">
+        </v-expansion-panel-title>
+        <v-expansion-panel-text class="py-4">
           <property-viewer :model="prop" />
-        </v-expansion-panel-content>
+        </v-expansion-panel-text>
       </v-expansion-panel>
     </v-expansion-panels>
     <v-btn
@@ -49,39 +49,25 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed, watch } from 'vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 
-export default {
-  components: {
-    TreeNodeView,
-    PropertyViewer,
-  },
-  props: {
-    choices: {
-      type: Array,
-      required: true
-    },
-    quantity: {
-      type: Object,
-      default: () => ({min: 0, max: 1}),
-    },
-  },
-  data() {
-    return {
-      selectedItems: [],
-    };
-  },
-  computed: {
-    canContinue() {
-      return this.selectedItems.length >= this.quantity.min;
-    }
-  },
-  watch: {
-    selectedItems(val) {
-      this.$emit('input', val)
-    },
-  },
-};
+const props = withDefaults(defineProps<{
+  choices: any[];
+  quantity?: { min: number; max: number };
+}>(), {
+  quantity: () => ({ min: 0, max: 1 }),
+});
+
+const emit = defineEmits(['input']);
+
+const selectedItems = ref<any[]>([]);
+
+const canContinue = computed(() => selectedItems.value.length >= props.quantity.min);
+
+watch(selectedItems, (val) => {
+  emit('input', val);
+});
 </script>

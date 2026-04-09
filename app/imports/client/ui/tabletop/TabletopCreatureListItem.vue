@@ -26,49 +26,34 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import HexagonProgressStack from '/imports/client/ui/components/HexagonProgressStack.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 
-export default {
-  components: { 
-    HexagonProgressStack,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-  },
-  meteor: {
-    healthBars() {
-      const folderIds = CreatureProperties.find({
-        'root.id': this.model._id,
-        type: 'folder',
-        groupStats: true,
-        hideStatsGroup: true,
-        removed: { $ne: true },
-        inactive: { $ne: true },
-      }, { fields: { _id: 1 } }).map(folder => folder._id);
-      // Get the properties that need to be shown as a health bar
-      return CreatureProperties.find({
-        'root.id': this.model._id,
-        'parentId': {
-          $nin: folderIds,
-        },
-        type: 'attribute',
-        attributeType: 'healthBar',
-        healthBarNoDamage: { $ne: true },
-        inactive: { $ne: true },
-        removed: { $ne: true },
-      }, {
-        sort: {
-          order: 1,
-        },
-      });
-    }
-  },
-};
+const props = defineProps<{
+  model: any;
+}>();
+
+const { result: healthBars } = autorun(() => {
+  const folderIds = CreatureProperties.find({
+    'root.id': props.model._id,
+    type: 'folder',
+    groupStats: true,
+    hideStatsGroup: true,
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { fields: { _id: 1 } }).map((folder: any) => folder._id);
+  return CreatureProperties.find({
+    'root.id': props.model._id,
+    parentId: { $nin: folderIds },
+    type: 'attribute',
+    attributeType: 'healthBar',
+    healthBarNoDamage: { $ne: true },
+    inactive: { $ne: true },
+    removed: { $ne: true },
+  }, { sort: { order: 1 } });
+});
 </script>
 
 <style scoped>

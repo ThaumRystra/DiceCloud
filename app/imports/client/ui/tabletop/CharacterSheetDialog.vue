@@ -12,18 +12,18 @@
         :creature-id="creatureId"
       />
     </template>
-    <v-bottom-navigation
-      slot="actions"
-      shift
-      mandatory
-      class="bottom-nav-btns"
-      style="position: relative;"
-      :value="$store.getters.tabById(creatureId)"
-      @change="e => $store.commit(
-        'setTabForCharacterSheet',
-        {id: creatureId, tab: e}
-      )"
-    >
+    <template #actions>
+      <v-bottom-navigation
+        shift
+        mandatory
+        class="bottom-nav-btns"
+        style="position: relative;"
+        :value="$store.getters.tabById(creatureId)"
+        @change="e => $store.commit(
+          'setTabForCharacterSheet',
+          {id: creatureId, tab: e}
+        )"
+      >
       <v-btn>
         <span>Stats</span>
         <v-icon>mdi-chart-box</v-icon>
@@ -53,32 +53,24 @@
         <v-icon>mdi-wrench</v-icon>
       </v-btn>
     </v-bottom-navigation>
+    </template>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import CharacterSheet from '/imports/client/ui/creature/character/CharacterSheet.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 
-export default {
-	components: {
-    DialogBase,
-		CharacterSheet,
-	},
-  props: {
-    creatureId: {
-      type: String,
-      required: true,
-    },
-  },
-  meteor: {
-    creature() {
-      if (!this.creatureId) return;
-      return Creatures.findOne(this.creatureId);
-    },
-  },
-}
+const props = defineProps<{
+  creatureId: string;
+}>();
+
+const { result: creature } = autorun(() => {
+  if (!props.creatureId) return;
+  return Creatures.findOne(props.creatureId);
+});
 </script>
 
 <style lang="css" scoped>

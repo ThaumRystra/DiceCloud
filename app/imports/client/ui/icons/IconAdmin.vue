@@ -3,10 +3,7 @@
     <div class="content">
       <v-card class="ma-4">
         <v-card-text>
-          <v-layout
-            column
-            align-center
-          >
+          <div class="d-flex flex-column align-center">
             <upload-btn
               title="Metadata JSON"
               @file-update="metadataFileChanged"
@@ -19,42 +16,36 @@
               :value="testIcon"
               @change="testIconChange"
             />
-          </v-layout>
+          </div>
         </v-card-text>
       </v-card>
     </div>
   </div>
 </template>
 
-<script lang="js">
-  import {importIcons, importIconMetadata} from '/imports/client/ui/icons/importIcons';
-  import IconPicker from '/imports/client/ui/components/global/IconPicker.vue';
-  import UploadButton from 'vuetify-upload-button';
+<script setup lang="ts">
+import { ref } from 'vue';
+import { importIcons, importIconMetadata } from '/imports/client/ui/icons/importIcons';
+import IconPicker from '/imports/client/ui/components/global/IconPicker.vue';
+import UploadButton from '/imports/client/ui/components/UploadBtn.vue';
 
-  export default {
-    components: {
-      IconPicker,
-      UploadBtn: UploadButton,
-    },
-    data(){ return {
-      searchString: '',
-      testIcon: undefined,
-    }},
-    methods: {
-      fileChanged (file) {
-        importIcons(file);
-      },
-      metadataFileChanged(file){
-        importIconMetadata(file);
-      },
-      testIconChange(value, ack){
-        setTimeout(() => {
-          this.testIcon = value;
-          ack();
-        }, 1000);
-      },
-    },
-  };
+const searchString = ref('');
+const testIcon = ref<string | undefined>(undefined);
+
+function fileChanged(file: File) {
+  importIcons(file);
+}
+
+function metadataFileChanged(file: File) {
+  importIconMetadata(file);
+}
+
+function testIconChange(value: string, ack: Function) {
+  setTimeout(() => {
+    testIcon.value = value;
+    ack();
+  }, 1000);
+}
 </script>
 
 <style lang="css" scoped>

@@ -14,7 +14,7 @@ import inputProvider from './userInput/inputProviderForTests.testFn';
  */
 export async function removeAllCreaturesAndProps() {
   if (Meteor.isServer) {
-    unloadAllCreatures();
+    await unloadAllCreatures();
     return Promise.all([
       CreatureProperties.removeAsync({}),
       Creatures.removeAsync({}),
@@ -44,7 +44,7 @@ export async function createTestCreature(creature: TestCreature) {
     return CreatureProperties.insertAsync(prop);
   });
   await Promise.all(propsInserted);
-  loadCreature(creature._id, dummySubscription);
+  await loadCreature(creature._id, dummySubscription);
   await computeCreature(creature._id,);
 }
 

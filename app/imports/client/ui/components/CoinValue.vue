@@ -18,22 +18,15 @@
   </div>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import valueToCoins from '/imports/client/ui/utility/valueToCoins';
 
-export default {
-  props:{
-    value: {
-      type: Number,
-      default: undefined,
-    },
-  },
-  computed:{
-    coinValue(){
-      return valueToCoins(this.value);
-    }
-  },
-}
+const props = defineProps<{
+  value?: number;
+}>();
+
+const coinValue = computed(() => valueToCoins(props.value));
 </script>
 
 <style lang="css" scoped>

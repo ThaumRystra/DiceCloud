@@ -4,7 +4,7 @@
     :style="{
       left: `${$vuetify.application.left}px`,
       right: `${$vuetify.application.right}px`,
-      bottom: $vuetify.breakpoint.xsOnly ? '60px' : '4px',
+      bottom: $vuetify.display.xs ? '60px' : '4px',
     }"
   >
     <v-card
@@ -20,11 +20,7 @@
   </div>
 </template>
 
-<script lang="js">
-
-export default {
-  
-}
+<script setup lang="ts">
 </script>
 
 <style scoped>

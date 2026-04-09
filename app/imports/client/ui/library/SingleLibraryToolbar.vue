@@ -1,26 +1,21 @@
 <template lang="html">
   <v-app-bar
-    app
     color="secondary"
-    dark
-    :extended="$vuetify.breakpoint.smAndUp"
-    :tabs="$vuetify.breakpoint.smAndUp"
-    dense
+    theme="dark"
+    density="compact"
   >
     <v-app-bar-nav-icon @click="toggleDrawer" />
     <v-btn
-      icon
+      icon="mdi-arrow-left"
       @click="back"
-    >
-      <v-icon>mdi-arrow-left</v-icon>
-    </v-btn>
+    />
     <v-toolbar-title>
       {{ library && library.name }}
     </v-toolbar-title>
     <v-spacer />
     <v-btn
       v-if="showSubscribeButton"
-      text
+      variant="text"
       :loading="loading"
       @click="subscribe(!subscribed)"
     >
@@ -28,97 +23,96 @@
     </v-btn>
     <v-btn
       v-if="canEdit"
-      icon
+      icon="mdi-cog"
       data-id="library-edit-button"
       @click="editLibrary(library._id)"
-    >
-      <v-icon>mdi-cog</v-icon>
-    </v-btn>
-    <v-spacer slot="extension" />
-    <div
-      v-if="library && library.subscriberCount"
-      slot="extension"
-      class="mx-4 text--disabled"
-    >
-      {{ formatNumber(library.subscriberCount) }} subscribers
-    </div>
+    />
+    <template #extension>
+      <v-spacer />
+      <div
+        v-if="library && library.subscriberCount"
+        class="mx-4 text-disabled"
+      >
+        {{ formatNumber(library.subscriberCount) }} subscribers
+      </div>
+    </template>
   </v-app-bar>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter, useRoute } from 'vue-router';
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
 import Libraries from '/imports/api/library/Libraries';
 import formatter from '/imports/client/ui/utility/numberFormatter';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
-import { mapMutations } from 'vuex';
 
-export default {
-  data() {
-    return {
-      loading: false,
-    }
-  },
-  meteor: {
-    library() {
-      return Libraries.findOne(this.$route.params.id);
-    },
-    subscribed() {
-      let libraryId = this.$route.params.id;
-      let user = Meteor.user();
-      return user?.subscribedLibraries?.includes(libraryId);
-    },
-    showSubscribeButton() {
-      let user = Meteor.user();
-      let library = this.library;
-      if (!user || !library) return;
-      let userId = user._id;
-      if (user.subscribedLibraries.includes(library._id)) {
-        return true
-      } else if (
-        library.readers.includes(userId) ||
-        library.writers.includes(userId) ||
-        library.owner === userId
-      ) {
-        return false
-      } else {
-        return true;
-      }
-    },
-    canEdit() {
-      try {
-        assertDocEditPermission(this.library, Meteor.userId());
-        return true
-      } catch (e) {
-        return false;
-      }
-    }
-  },
-  methods: {
-    ...mapMutations([
-      'toggleDrawer',
-    ]),
-    formatNumber(num) {
-      return formatter.format(num);
-    },
-    subscribe(value) {
-      this.loading = true;
-      Meteor.users.subscribeToLibrary.call({
-        libraryId: this.$route.params.id,
-        subscribe: value,
-      }, () => {
-        this.loading = false;
-      });
-    },
-    editLibrary() {
-      this.$store.commit('pushDialogStack', {
-        component: 'library-edit-dialog',
-        elementId: 'library-edit-button',
-        data: { _id: this.$route.params.id },
-      });
-    },
-    back() {
-      return window.history.length > 2 ? this.$router.back() : this.$router.push('/library');
-    },
-  },
+const store = useStore();
+const router = useRouter();
+const route = useRoute();
+const loading = ref(false);
+
+const { result: library } = autorun(() =>
+  Libraries.findOne(route.params.id as string)
+);
+
+const { result: subscribed } = autorun(() => {
+  const libraryId = route.params.id as string;
+  const user = Meteor.user();
+  return user?.subscribedLibraries?.includes(libraryId);
+});
+
+const { result: showSubscribeButton } = autorun(() => {
+  const user = Meteor.user();
+  const lib = library.value;
+  if (!user || !lib) return;
+  const userId = user._id;
+  if (user.subscribedLibraries.includes(lib._id)) return true;
+  if (lib.readers.includes(userId) || lib.writers.includes(userId) || lib.owner === userId) return false;
+  return true;
+});
+
+const { result: canEdit } = autorun(() => {
+  try {
+    assertDocEditPermission(library.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+function formatNumber(num: number) {
+  return formatter.format(num);
+}
+
+async function subscribe(value: boolean) {
+  loading.value = true;
+  try {
+    await (Meteor as any).users.subscribeToLibrary.callAsync({
+      libraryId: route.params.id,
+      subscribe: value,
+    });
+  } finally {
+    loading.value = false;
+  }
+}
+
+function editLibrary() {
+  store.commit('pushDialogStack', {
+    component: 'library-edit-dialog',
+    elementId: 'library-edit-button',
+    data: { _id: route.params.id },
+  });
+}
+
+function back() {
+  return window.history.length > 2 ? router.back() : router.push('/library');
+}
+
+function toggleDrawer() {
+  store.commit('toggleDrawer');
 }
 </script>
 

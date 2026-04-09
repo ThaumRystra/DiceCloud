@@ -4,7 +4,7 @@
     :data-id="model._id"
     @toolbarclick="clickSpellList(model._id)"
   >
-    <template slot="toolbar">
+    <template #toolbar>
       <v-toolbar-title
         v-if="!preparingSpells"
       >
@@ -13,7 +13,7 @@
       <v-spacer v-if="!preparingSpells && preparedError" />
       <v-toolbar-title
         v-if="preparingSpells || preparedError"
-        :class="{'error--text' : preparedError}"
+        :class="{'text-error' : preparedError}"
       >
         {{ numPrepared }}/{{ model.maxPrepared && model.maxPrepared.value || 0 }} spells prepared
       </v-toolbar-title>
@@ -25,10 +25,10 @@
         transition="slide-y-transition"
         style="margin-right: -12px;"
       >
-        <template #activator="{ on }">
+        <template #activator="{ props }">
           <v-btn
             icon
-            v-on="on"
+            v-bind="props"
             @click.stop
           >
             <v-icon>mdi-dots-vertical</v-icon>
@@ -58,77 +58,76 @@
   </toolbar-card>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { useStore } from 'vuex';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default {
-  components: {
-    ToolbarCard,
-    SpellList,
-  },
-  props: {
-    model: {
-      type: Object,
-      required: true,
-    },
-    organize: Boolean,
-  },
-  data() {
-    return {
-      preparingSpells: false,
-    }
-  },
-  meteor: {
-    spells() {
-      let filter = {
-        ...getFilter.descendants(this.model),
-        type: 'spell',
-        removed: { $ne: true },
-      };
-      if (this.preparingSpells) {
-        filter.deactivatedByAncestor = { $ne: true };
-        filter.deactivatedByToggle = { $ne: true };
-      } else {
-        filter.inactive = { $ne: true };
-      }
-      return CreatureProperties.find(filter, {
-        sort: {
-          level: 1,
-          left: 1,
-        }
-      });
-    },
-    numPrepared() {
-      return CreatureProperties.find({
-        ...getFilter.descendants(this.model),
-        type: 'spell',
-        removed: { $ne: true },
-        prepared: true,
-        alwaysPrepared: { $ne: true },
-        deactivatedByAncestor: { $ne: true },
-        deactivatedByToggle: { $ne: true },
-      }).count();
-    },
-    preparedError() {
-      if (!this.model.maxPrepared) return;
-      let numPrepared = this.numPrepared;
-      let maxPrepared = this.model.maxPrepared.value || 0;
-      return numPrepared !== maxPrepared
-    },
-  },
-  methods: {
-    clickSpellList(_id) {
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${_id}`,
-        data: { _id },
-      });
-    },
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  organize?: boolean;
+}>(), {
+  organize: false,
+});
+
+const store = useStore();
+const preparingSpells = ref(false);
+
+const { result: spells } = autorun(() => {
+  const filter: any = {
+    ...getFilter.descendants(props.model),
+    type: 'spell',
+    removed: { $ne: true },
+  };
+  if (preparingSpells.value) {
+    filter.deactivatedByAncestor = { $ne: true };
+    filter.deactivatedByToggle = { $ne: true };
+  } else {
+    filter.inactive = { $ne: true };
   }
-};
+  return CreatureProperties.find(filter, {
+    sort: { level: 1, left: 1 },
+  }).fetch();
+});
+
+const { result: numPrepared } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendants(props.model),
+    type: 'spell',
+    removed: { $ne: true },
+    prepared: true,
+    alwaysPrepared: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+  }).count()
+);
+
+const { result: preparedError } = autorun(() => {
+  if (!props.model.maxPrepared) return undefined;
+  const prepared = CreatureProperties.find({
+    ...getFilter.descendants(props.model),
+    type: 'spell',
+    removed: { $ne: true },
+    prepared: true,
+    alwaysPrepared: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+  }).count();
+  const maxPrepared = props.model.maxPrepared.value || 0;
+  return prepared !== maxPrepared;
+});
+
+function clickSpellList(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
 </script>
 
 <style lang="css" scoped>

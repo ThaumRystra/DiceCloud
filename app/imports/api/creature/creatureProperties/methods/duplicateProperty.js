@@ -31,13 +31,13 @@ const duplicateProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  run({ _id }) {
-    let property = CreatureProperties.findOne(_id);
+  async run({ _id }) {
+    let property = await CreatureProperties.findOneAsync(_id);
     if (!property) throw new Meteor.Error('not-found', 'The source property was not found');
 
     const creature = getRootCreatureAncestor(property);
 
-    assertEditPermission(creature, this.userId);
+    await assertEditPermission(creature, this.userId);
 
     // Renew the doc ID
     const randomSrc = DDP.randomStream('duplicateProperty');
@@ -50,13 +50,13 @@ const duplicateProperty = new ValidatedMethod({
     }
 
     // Get all the descendants
-    const nodes = CreatureProperties.find({
+    const nodes = await CreatureProperties.find({
       ...getFilter.descendants(property),
       removed: { $ne: true },
     }, {
       limit: DUPLICATE_CHILDREN_LIMIT + 1,
       sort: { left: 1 },
-    }).fetch();
+    }).fetchAsync();
 
     // Alert the user if the limit was hit
     if (nodes.length > DUPLICATE_CHILDREN_LIMIT) {
@@ -86,10 +86,12 @@ const duplicateProperty = new ValidatedMethod({
     property.dirty = true;
 
     // Insert the properties
-    CreatureProperties.batchInsert(allNodes);
+    for (const node of allNodes) {
+      await CreatureProperties.insertAsync(node);
+    }
 
     // Tree structure changed by inserts, reorder the tree
-    rebuildNestedSets(CreatureProperties, property.root.id);
+    await rebuildNestedSets(CreatureProperties, property.root.id);
 
     return propertyId;
   },

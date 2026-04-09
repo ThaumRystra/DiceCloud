@@ -37,10 +37,9 @@
                 left
                 transition="slide-y-transition"
               >
-                <template #activator="{ on }">
+                <template #activator="{ props }">
                   <v-badge
                     v-show="hiddenCount"
-                    slot="activator"
                     color="primary"
                     overlap
                     :value="hiddenCount"
@@ -48,19 +47,19 @@
                   >
                     <v-btn
                       icon
-                      v-on="on"
+                      v-bind="props"
                     >
                       <v-icon>mdi-file-hidden</v-icon>
                     </v-btn>
                   </v-badge>
                 </template>
                 <v-list>
-                  <v-subheader>
+                  <v-list-subheader>
                     <v-icon class="mr-2">
                       mdi-file-hidden
                     </v-icon>
                     {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'properties' : 'property' }}
-                  </v-subheader>
+                  </v-list-subheader>
                   <v-list-item
                     v-for="pointBuy in hiddenPointBuys"
                     :key="pointBuy._id"
@@ -100,10 +99,9 @@
           >
             Level {{ variables.level.value }}
           </v-card-title>
-          <v-list two-line>
+          <v-list lines="two">
             <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title
+              <v-list-item-title
                   v-if="
                     variables.milestoneLevels &&
                       variables.milestoneLevels.value
@@ -125,8 +123,7 @@
                       0
                   }} XP
                 </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-action>
+              <template #append>
                 <v-btn
                   icon
                   data-id="experience-info-button"
@@ -134,8 +131,6 @@
                 >
                   <v-icon>mdi-information-outline</v-icon>
                 </v-btn>
-              </v-list-item-action>
-              <v-list-item-action>
                 <v-btn
                   icon
                   data-id="experience-add-button"
@@ -143,7 +138,7 @@
                 >
                   <v-icon>mdi-plus</v-icon>
                 </v-btn>
-              </v-list-item-action>
+              </template>
             </v-list-item>
             <v-list-item
               v-for="cls in classes"
@@ -151,25 +146,22 @@
               :data-id="`class-${cls._id}`"
               v-on="cls.type === 'class' ? {click: () => propertyClicked({_id: cls._id, prefix: 'class-'})} : {}"
             >
-              <v-list-item-content>
-                <v-list-item-title>
+              <v-list-item-title>
                   {{ cls.name }}
                 </v-list-item-title>
-              </v-list-item-content>
-              <v-list-item-avatar>
+              <template #prepend>
                 {{ cls.level }}
-              </v-list-item-avatar>
-              <v-list-item-action v-if="cls.type === 'class'">
+              </template>
+              <template #append>
                 <v-btn
-                  outlined
+                  v-if="cls.type === 'class'"
+                  variant="outlined"
                   color="accent"
                   data-id="level-up-btn"
                   :disabled="cls.slotCondition && cls.slotCondition.hasOwnProperty('value') && !cls.slotCondition.value"
                   @click.stop="levelUpDialog(cls._id)"
+                  prepend-icon="mdi-plus"
                 >
-                  <v-icon left>
-                    mdi-plus
-                  </v-icon>
                   <template v-if="cls.missingLevels && cls.missingLevels.length">
                     Get Missing Levels 
                   </template>
@@ -177,7 +169,7 @@
                     Level Up
                   </template> 
                 </v-btn>
-              </v-list-item-action>
+              </template>
             </v-list-item>
           </v-list>
         </v-card>
@@ -198,255 +190,279 @@
   </v-container>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { docsToForest } from '/imports/api/parenting/parentingFunctions';
+import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
+import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CharacterErrors from '/imports/client/ui/creature/character/errors/CharacterErrors.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
-import tabFoldersMixin from '/imports/client/ui/properties/components/folders/tabFoldersMixin';
-import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 
-function traverse(tree, callback, parents = []){
+function traverse(tree: any[], callback: (node: any, parents: any[]) => void, parents: any[] = []) {
   tree.forEach(node => {
     callback(node, parents);
     traverse(node.children, callback, [...parents, node]);
   });
 }
 
-export default {
-  components: {
-    CharacterErrors,
-    BuildTreeNodeList,
-    SlotCardsToFill,
-  },
-  mixins: [tabFoldersMixin],
-  props: {
-    creatureId: {
-      type: String,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      tabName: 'build',
-      cols: {
-        cols: '12',
-        md: '6',
-        xl: '4',
-      }
-    };
-  },
-  computed: {
-    highestLevels(){
-      let highestLevels = {};
-      let highestLevelsList = [];
-      this.classLevels.forEach(classLevel => {
-        let name = classLevel.variableName;
-        if (
-          !highestLevels[name] ||
-          highestLevels[name].level < classLevel.level
-        ){
-          highestLevels[name] = classLevel;
-        }
-      });
-      for (let name in highestLevels){
-        highestLevelsList.push(highestLevels[name]);
-      }
-      highestLevelsList.sort((a, b) => a.level - b.level);
-      return highestLevelsList;
-    },
-    classes() {
-      return [
-        ...this.highestLevels,
-        ...this.classProperties
-      ].sort((a, b) => a.order - b.order);
-    },
-    hiddenCount() {
-      return this.hiddenSlots.length + this.hiddenPointBuys.length;
-    },
-  },
-  meteor: {
-    creature(){
-      return Creatures.findOne(this.creatureId);
-    },
-    variables() {
-      return CreatureVariables.findOne({ _creatureId: this.creatureId }) || {};
-    },
-    hiddenPointBuys() {
-      return CreatureProperties.find({
-        type: 'pointBuy',
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        ignored: true,
-        pointsLeft: {$ne: 0},
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }).fetch();
-    },
-    hiddenSlots(){
-      return CreatureProperties.find({
-        type: 'propertySlot',
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        ignored: true,
-        $and: [
-          { 
-            $or: [
-              {'slotCondition.value': {$nin: [false, 0, '']}},
-              {'slotCondition.value': {$exists: false}},
-            ]
-          },{
-            $or: [
-              { 'quantityExpected.value': {$in: [false, 0, '', undefined]} },
-              { 'quantityExpected.value': {exists: false} },
-              {spaceLeft: {$gt: 0}},
-            ]
-          },
-        ],        
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }).fetch();
-    },
-    classProperties(){
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'class',
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {left: 1}
-      }).fetch();
-    },
-    classLevels() {
-      const classVariableNames = this.classProperties.map(c => c.variableName)
-      return CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: 'classLevel',
-        variableName: {$nin: classVariableNames},
-        removed: {$ne: true},
-        inactive: {$ne: true},
-      }, {
-        sort: {left: 1}
-      });
-    },
-    slotBuildTree(){
-      const slots = CreatureProperties.find({
-        ...getFilter.descendantsOfRoot(this.creatureId),
-        type: {$in: ['propertySlot', 'pointBuy']},
+const props = defineProps<{ creatureId: string }>();
+const store = useStore();
+const tabName = 'build';
+const cols = { cols: '12', md: '6', xl: '4' };
+
+const { result: startFolders } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    groupStats: true,
+    inactive: { $ne: true },
+    removed: { $ne: true },
+    tab: tabName,
+    location: 'start',
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: endFolders } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    groupStats: true,
+    inactive: { $ne: true },
+    removed: { $ne: true },
+    tab: tabName,
+    location: 'end',
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: creature } = autorun(() =>
+  Creatures.findOne(props.creatureId)
+);
+
+const { result: variables } = autorun(() =>
+  CreatureVariables.findOne({ _creatureId: props.creatureId }) || {}
+);
+
+const { result: hiddenPointBuys } = autorun(() =>
+  CreatureProperties.find({
+    type: 'pointBuy',
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    ignored: true,
+    pointsLeft: { $ne: 0 },
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }).fetch()
+);
+
+const { result: hiddenSlots } = autorun(() =>
+  CreatureProperties.find({
+    type: 'propertySlot',
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    ignored: true,
+    $and: [
+      {
         $or: [
-          {'slotCondition.value': {$nin: [false, 0, '']}},
-          {'slotCondition.value': {$exists: false}},
-          {'slotCondition': {$exists: false}},
+          { 'slotCondition.value': { $nin: [false, 0, ''] } },
+          { 'slotCondition.value': { $exists: false } },
         ],
-        removed: {$ne: true},
-        inactive: {$ne: true},
+      }, {
+        $or: [
+          { 'quantityExpected.value': { $in: [false, 0, '', undefined] } },
+          { 'quantityExpected.value': { exists: false } },
+          { spaceLeft: { $gt: 0 } },
+        ],
+      },
+    ],
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }).fetch()
+);
+
+const { result: classProperties } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'class',
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, {
+    sort: { left: 1 },
+  }).fetch()
+);
+
+const { result: classLevels } = autorun(() => {
+  const classVariableNames = (classProperties.value || []).map((c: any) => c.variableName);
+  return CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'classLevel',
+    variableName: { $nin: classVariableNames },
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, {
+    sort: { left: 1 },
+  }).fetch();
+});
+
+const { result: slotBuildTree } = autorun(() => {
+  const slots = CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: { $in: ['propertySlot', 'pointBuy'] },
+    $or: [
+      { 'slotCondition.value': { $nin: [false, 0, ''] } },
+      { 'slotCondition.value': { $exists: false } },
+      { 'slotCondition': { $exists: false } },
+    ],
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  });
+  const slotIds = slots.map((s: any) => s._id);
+  const slotChildren = CreatureProperties.find({
+    'parentId': { $in: slotIds },
+    removed: { $ne: true },
+  });
+  const tree = docsToForest([
+    ...slots.fetch(),
+    ...slotChildren.fetch(),
+  ].sort((a: any, b: any) => a.left - b.left));
+  traverse(tree, (child, parents) => {
+    const model = child.doc;
+    const isSlotWithSpace = model.type === 'propertySlot' && (
+      model.spaceLeft > 0 ||
+      !model.quantityExpected ||
+      model.quantityExpected.value === 0
+    );
+    if (isSlotWithSpace) {
+      model._canFill = true;
+      parents.forEach((node: any) => {
+        node.doc._descendantCanFill = true;
       });
-      const slotIds = slots.map(s => s._id);
-      const slotChildren = CreatureProperties.find({
-        'parentId': {$in: slotIds},
-        removed: {$ne: true},
-      });
-      const tree = docsToForest([
-        ...slots.fetch(),
-        ...slotChildren.fetch()
-      ].sort((a, b) => a.left - b.left));
-      traverse(tree, (child, parents) => {
-        const model = child.doc;
-        const isSlotWithSpace = model.type === 'propertySlot' && (
-          model.spaceLeft > 0 || 
-          !model.quantityExpected ||
-          model.quantityExpected.value === 0
-        );
-        if(isSlotWithSpace) {
-          model._canFill = true;
-          parents.forEach(node => {
-            node.doc._descendantCanFill = true;
-          });
-        }
-      });
-      return tree;
+    }
+  });
+  return tree;
+});
+
+const highestLevels = computed(() => {
+  const highestLevelsMap: Record<string, any> = {};
+  (classLevels.value || []).forEach((classLevel: any) => {
+    const name = classLevel.variableName;
+    if (!highestLevelsMap[name] || highestLevelsMap[name].level < classLevel.level) {
+      highestLevelsMap[name] = classLevel;
+    }
+  });
+  return Object.values(highestLevelsMap).sort((a, b) => a.level - b.level);
+});
+
+const classes = computed(() =>
+  [...highestLevels.value, ...(classProperties.value || [])].sort((a: any, b: any) => a.order - b.order)
+);
+
+const hiddenCount = computed(() =>
+  (hiddenSlots.value?.length || 0) + (hiddenPointBuys.value?.length || 0)
+);
+
+function clickProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
+
+function clickTreeProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: { _id },
+  });
+}
+
+function softRemove(_id: string) {
+  softRemoveProperty.call({ _id }, (error: any) => {
+    if (error) {
+      snackbar({ text: error.reason || error.message || error.toString() });
+      console.error(error);
+    }
+  });
+}
+
+function propertyClicked({ _id, prefix }: { _id: string; prefix?: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${prefix || ''}${_id}`,
+    data: { _id },
+  });
+}
+
+function addExperience() {
+  store.commit('pushDialogStack', {
+    component: 'experience-insert-dialog',
+    elementId: 'experience-add-button',
+    data: {
+      creatureIds: [props.creatureId],
+      startAsMilestone: (variables.value as any)?.milestoneLevels?.value,
     },
-  },
-  methods: {
-    propertyClicked({_id, prefix}){
-      this.$store.commit('pushDialogStack', {
-        component: 'creature-property-dialog',
-        elementId: `${prefix}${_id}`,
-        data: {_id},
-      });
+  });
+}
+
+function showExperienceList() {
+  store.commit('pushDialogStack', {
+    component: 'experience-list-dialog',
+    elementId: 'experience-info-button',
+    data: {
+      creatureId: props.creatureId,
+      startAsMilestone: (variables.value as any)?.milestoneLevels?.value,
     },
-    addExperience(){
-      this.$store.commit('pushDialogStack', {
-        component: 'experience-insert-dialog',
-        elementId: 'experience-add-button',
-        data: {
-          creatureIds: [this.creatureId],
-          startAsMilestone: this.variables.milestoneLevels &&
-            !!this.variables.milestoneLevels.value,
+  });
+}
+
+function showSlotDialog() {
+  store.commit('pushDialogStack', {
+    component: 'slot-details-dialog',
+    elementId: 'slot-card',
+    data: { creatureId: props.creatureId },
+  });
+}
+
+function levelUpDialog(classId: string) {
+  store.commit('pushDialogStack', {
+    component: 'level-up-dialog',
+    elementId: 'level-up-btn',
+    data: {
+      creatureId: props.creatureId,
+      classId,
+    },
+    async callback(nodeIds: string[]) {
+      if (!nodeIds || !nodeIds.length) return;
+      const newPropertyId = await insertPropertyFromLibraryNode.callAsync({
+        nodeIds,
+        parentRef: {
+          id: classId,
+          collection: 'creatureProperties',
         },
       });
+      return `tree-node-${newPropertyId}`;
     },
-    showExperienceList(){
-      this.$store.commit('pushDialogStack', {
-        component: 'experience-list-dialog',
-        elementId: 'experience-info-button',
-        data: {
-          creatureId: this.creatureId,
-          startAsMilestone: this.variables.milestoneLevels &&
-            !!this.variables.milestoneLevels.value,
-        },
-      });
-    },
-    showSlotDialog(){
-      this.$store.commit('pushDialogStack', {
-        component: 'slot-details-dialog',
-        elementId: 'slot-card',
-        data: {
-          creatureId: this.creatureId,
-        },
-      });
-    },
-    levelUpDialog(classId){
-      this.$store.commit('pushDialogStack', {
-        component: 'level-up-dialog',
-        elementId: 'level-up-btn',
-        data: {
-          creatureId: this.creatureId,
-          classId,
-        },
-        callback(nodeIds){
-          if (!nodeIds || !nodeIds.length) return;
-          let newPropertyId = insertPropertyFromLibraryNode.call({
-            nodeIds,
-            parentRef: {
-              'id': classId,
-              'collection': 'creatureProperties',
-            },
-          });
-          return `tree-node-${newPropertyId}`;
-        }
-      });
-    },
-    getPropertyTitle,
-    unhideProp(_id) {
-      updateCreatureProperty.call({
-        _id,
-        path: ['ignored'],
-        value: false,
-      }, error => {
-        if (error){
-          console.error(error);
-          snackbar({text: error.reason || error.message || error.toString()});
-        }
-      });
-    },
-  },
-};
+  });
+}
+
+async function unhideProp(_id: string) {
+  try {
+    await updateCreatureProperty.callAsync({
+      _id,
+      path: ['ignored'],
+      value: false,
+    });
+  } catch (error: any) {
+    console.error(error);
+    snackbar({ text: error.reason || error.message || error.toString() });
+  }
+}
 </script>
 
 <style lang="css" scoped>

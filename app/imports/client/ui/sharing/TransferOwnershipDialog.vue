@@ -1,11 +1,13 @@
 <template lang="html">
   <dialog-base>
-    <v-toolbar-title slot="toolbar">
-      Transfer Ownership
-    </v-toolbar-title>
+    <template #toolbar>
+      <v-toolbar-title>
+        Transfer Ownership
+      </v-toolbar-title>
+    </template>
     <v-alert
       type="error"
-      outlined
+      variant="outlined"
     >
       <template v-if="error">
         <p>
@@ -22,7 +24,7 @@
         </p>
       </template>
     </v-alert>
-    <v-layout justify-center>
+    <div class="d-flex justify-center">
       <v-btn
         color="accent"
         @click="transfer"
@@ -32,46 +34,35 @@
           to {{ user.username }}
         </template>
       </v-btn>
-    </v-layout>
+    </div>
   </dialog-base>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { transferOwnership } from '/imports/api/sharing/sharing';
 
-export default {
-  components: {
-    DialogBase,
-  },
-  props: {
-    docRef: {
-      type: Object,
-      required: true,
-    },
-    user: {
-      type: Object,
-      required: true,
-    },
-  },
-  data(){ return {
-    error: undefined,
-  }},
-  methods: {
-    transfer(){
-      transferOwnership.call({
-        docRef: this.docRef,
-        userId: this.user._id
-      }, error => {
-        if (!error){
-          this.error = undefined;
-          this.$store.dispatch('popDialogStack')
-          return;
-        }
-        this.error = error.reason || error.message || error.toString();
-      });
-    },
-  },
+const props = defineProps<{
+  docRef: object;
+  user: object;
+}>();
+
+const store = useStore();
+const error = ref<string | undefined>(undefined);
+
+async function transfer() {
+  try {
+    await transferOwnership.callAsync({
+      docRef: props.docRef,
+      userId: (props.user as any)._id,
+    });
+    error.value = undefined;
+    store.dispatch('popDialogStack');
+  } catch (e: any) {
+    error.value = e.reason || e.message || e.toString();
+  }
 }
 </script>
 

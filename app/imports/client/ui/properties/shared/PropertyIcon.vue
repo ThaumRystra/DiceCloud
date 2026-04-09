@@ -14,27 +14,21 @@
   </v-icon>
 </template>
 
-<script lang="js">
+<script setup lang="ts">
+import { computed } from 'vue';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES';
 
-export default {
-  props: {
-    model: {
-      type: Object,
-      default: () => ({}),
-    },
-    color: {
-      type: String,
-      default: undefined,
-    },
-    disabled: Boolean,
-  },
-  computed: {
-    icon() {
-      return getPropertyIcon(this.model && this.model.type);
-    },
-  },
-}
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  color?: string;
+  disabled?: boolean;
+}>(), {
+  model: () => ({}),
+  color: undefined,
+  disabled: false,
+});
+
+const icon = computed(() => getPropertyIcon(props.model?.type));
 </script>
 
 <style lang="css" scoped>

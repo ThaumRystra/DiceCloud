@@ -5,28 +5,26 @@
     :disabled="disabled"
     v-on="hasClickListener ? {click} : {}"
   >
-    <v-list-item-avatar class="spell-avatar">
+    <template #prepend>
       <property-icon
         class="mr-2"
         :model="model"
         :color="model.color"
         :disabled="disabled"
       />
-    </v-list-item-avatar>
-    <v-list-item-content>
-      <v-list-item-title>
-        {{ title }}
-      </v-list-item-title>
-      <v-list-item-subtitle v-if="spellComponents">
-        {{ spellComponents }}
-      </v-list-item-subtitle>
-    </v-list-item-content>
-    <v-list-item-action v-if="preparingSpells || showInfoButton">
+    </template>
+    <v-list-item-title>
+      {{ title }}
+    </v-list-item-title>
+    <v-list-item-subtitle v-if="spellComponents">
+      {{ spellComponents }}
+    </v-list-item-subtitle>
+    <template v-if="preparingSpells || showInfoButton" #append>
       <smart-checkbox
         v-if="preparingSpells"
         :value="model.prepared || model.alwaysPrepared"
         :disabled="model.alwaysPrepared || context.editPermission === false"
-        @click.native.stop="() => {}"
+        @click.stop="() => {}"
         @change="setPrepared"
       />
       <v-btn
@@ -39,50 +37,73 @@
       >
         <v-icon>mdi-information</v-icon>
       </v-btn>
-    </v-list-item-action>
+    </template>
   </v-list-item>
 </template>
 
-<script lang="js">
-import treeNodeViewMixin from '/imports/client/ui/properties/treeNodeViews/treeNodeViewMixin';
+<script setup lang="ts">
+import { computed, useAttrs, inject } from 'vue';
+import { useStore } from 'vuex';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 
-export default {
-  mixins: [treeNodeViewMixin],
-  inject: {
-    context: { default: {} }
-  },
-  props: {
-    preparingSpells: Boolean,
-    showInfoButton: Boolean,
-    disabled: Boolean,
-  },
-  computed: {
-    hasClickListener() {
-      return this.$listeners && !!this.$listeners.click;
-    },
-    spellComponents() {
-      let components = [];
-      if (this.model.ritual) components.push('R');
-      if (this.model.concentration) components.push('C');
-      if (this.model.verbal) components.push('V');
-      if (this.model.somatic) components.push('S');
-      if (this.model.material) components.push(`M (${this.model.material})`);
-      return components.join(', ');
-    },
-  },
-  methods: {
-    click(e) {
-      this.$emit('click', e);
-    },
-    setPrepared(val, ack) {
-      updateCreatureProperty.call({
-        _id: this.model._id,
-        path: ['prepared'],
-        value: val
-      }, ack);
-    }
-  },
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+  preparingSpells?: boolean;
+  showInfoButton?: boolean;
+  disabled?: boolean;
+}>(), {
+  model: () => ({}),
+  selected: false,
+  hideIcon: false,
+  preparingSpells: false,
+  showInfoButton: false,
+  disabled: false,
+});
+
+const emit = defineEmits(['click']);
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const hasClickListener = computed(() => !!attrs.onClick);
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return undefined;
+  if (model.name) return model.name;
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
+
+const spellComponents = computed(() => {
+  const components: string[] = [];
+  if (props.model.ritual) components.push('R');
+  if (props.model.concentration) components.push('C');
+  if (props.model.verbal) components.push('V');
+  if (props.model.somatic) components.push('S');
+  if (props.model.material) components.push(`M (${props.model.material})`);
+  return components.join(', ');
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+async function setPrepared(val: boolean, ack?: Function) {
+  try {
+    await updateCreatureProperty.callAsync({
+      _id: props.model._id,
+      path: ['prepared'],
+      value: val,
+    });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
 }
 </script>
 
@@ -95,12 +116,12 @@ export default {
   background-color: inherit;
 }
 
-.primary--text .v-icon,
-.primary--text .v-list__tile__sub-title {
+.text-primary .v-icon,
+.text-primary .v-list__tile__sub-title {
   color: #b71c1c
 }
 
-.theme--light.info-icon {
+.v-theme--light.info-icon {
   color: rgba(0, 0, 0, .54) !important;
 }
 </style>
