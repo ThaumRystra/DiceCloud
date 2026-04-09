@@ -80,7 +80,7 @@
       </v-list>
     </template>
     <v-progress-circular
-      v-if="!$subReady.softRemovedLibraryNodes"
+      v-if="!softRemovedReady"
       indeterminate
       color="primary"
     />
@@ -100,7 +100,7 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Libraries, { updateLibraryName, updateLibraryDescription, updateLibraryShowInMarket, removeLibrary } from '/imports/api/library/Libraries';
@@ -113,9 +113,7 @@ const props = defineProps<{ _id: string }>();
 const store = useStore();
 const router = useRouter();
 
-autorun(() => {
-  Meteor.subscribe('softRemovedLibraryNodes', props._id);
-});
+const { ready: softRemovedReady } = subscribe(() => ['softRemovedLibraryNodes', props._id]);
 
 const { result: model } = autorun(() => Libraries.findOne(props._id));
 

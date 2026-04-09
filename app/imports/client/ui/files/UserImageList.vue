@@ -62,12 +62,12 @@
 </template>
 
 <script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import prettyBytes from 'pretty-bytes';
 import UserImages from '/imports/api/files/userImages/UserImages';
 import UserImageCard from '/imports/client/ui/files/userImages/UserImageCard.vue';
 
-autorun(() => Meteor.subscribe('userImages'));
+subscribe('userImages');
 
 const { result: userImages } = autorun(() => {
   const userId = Meteor.userId();

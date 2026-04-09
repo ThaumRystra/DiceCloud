@@ -47,7 +47,7 @@
         @select="val => $emit('select-library', library._id, val)"
       />
     </v-list-group>
-    <v-list-item v-if="!$subReady.libraries">
+    <v-list-item v-if="!librariesReady">
       <v-spacer />
       <v-progress-circular
         indeterminate
@@ -62,7 +62,7 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import { union } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
@@ -86,7 +86,7 @@ const router = useRouter();
 
 const openCollections = ref<string[]>([]);
 
-autorun(() => { Meteor.subscribe('libraries'); });
+const { ready: librariesReady } = subscribe('libraries');
 
 const { result: paidBenefits } = autorun(() => {
   const tier = getUserTier(Meteor.userId());

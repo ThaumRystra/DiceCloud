@@ -1,7 +1,7 @@
 <template lang="html">
   <v-fade-transition hide-on-leave>
     <tree-node-list
-      v-if="slowShouldSubscribe && $subReady.libraryNodes"
+      v-if="slowShouldSubscribe && libraryNodesReady"
       group="library"
       :children="libraryChildren"
       :organize="organizeMode"
@@ -26,8 +26,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import { Meteor } from 'meteor/meteor';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import Libraries from '/imports/api/library/Libraries';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { filterToForest } from '/imports/api/parenting/parentingFunctions';
@@ -60,9 +59,9 @@ watch(() => props.shouldSubscribe, (newValue) => {
   }
 });
 
-autorun(() => {
+const { ready: libraryNodesReady } = subscribe(() => {
   if (slowShouldSubscribe.value) {
-    Meteor.subscribe('libraryNodes', props.libraryId, props.extraFields);
+    return ['libraryNodes', props.libraryId, props.extraFields];
   }
 });
 

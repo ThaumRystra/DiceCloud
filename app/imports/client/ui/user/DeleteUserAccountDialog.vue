@@ -94,7 +94,7 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import Libraries from '/imports/api/library/Libraries';
@@ -106,7 +106,7 @@ const router = useRouter();
 const usernameInput = ref('');
 const verificationInput = ref('');
 
-autorun(() => Meteor.subscribe('ownedDocuments'));
+subscribe('ownedDocuments');
 
 const { result: characters } = autorun(() => Creatures.find({ owner: Meteor.userId() }));
 const { result: libraries } = autorun(() => Libraries.find({ owner: Meteor.userId() }));

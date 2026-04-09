@@ -96,7 +96,7 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TabletopForm from '/imports/client/ui/tabletop/TabletopForm.vue';
@@ -116,7 +116,7 @@ const store = useStore();
 const router = useRouter();
 const editing = ref(!!props.startInEditTab);
 
-autorun(() => Meteor.subscribe('tabletopUsers', props.tabletopId));
+subscribe(() => ['tabletopUsers', props.tabletopId]);
 
 const { result: model } = autorun(() => Tabletops.findOne(props.tabletopId));
 

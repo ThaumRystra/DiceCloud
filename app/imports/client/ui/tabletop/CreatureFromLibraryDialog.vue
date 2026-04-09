@@ -22,7 +22,7 @@
     </template>
     <v-fade-transition>
       <div
-        v-if="!$subReady.creatureTemplates"
+        v-if="!creatureTemplatesReady"
         class="fill-height layout justify-center align-center"
       >
         <v-progress-circular
@@ -110,11 +110,11 @@
       </v-expansion-panels>
     </v-fade-transition>
     <div
-      v-if="(!$subReady.creatureTemplates && !searchValue) || hasMore"
+      v-if="(!creatureTemplatesReady && !searchValue) || hasMore"
       class="d-flex flex-column align-center justify-center ma-3 mt-8"
     >
       <v-btn
-        :loading="!$subReady.creatureTemplates"
+        :loading="!creatureTemplatesReady"
         color="accent"
         variant="outlined"
         @click="loadMore"
@@ -173,7 +173,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, toRef, provide } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
@@ -203,12 +203,9 @@ const currentLimit = ref(50);
 
 const hasMore = computed(() => libraryNodes.value && libraryNodes.value.length >= currentLimit.value);
 
-const { result: creatureTemplatesSubReady } = autorun(() => {
-  const handle = Meteor.subscribe('creatureTemplates', searchValue.value || undefined, currentLimit.value);
-  return handle.ready();
-});
+const { ready: creatureTemplatesReady } = subscribe(() => ['creatureTemplates', searchValue.value || undefined, currentLimit.value]);
 
-const { result: searchLoading } = autorun(() => !!searchValue.value && !creatureTemplatesSubReady.value);
+const { result: searchLoading } = autorun(() => !!searchValue.value && !creatureTemplatesReady.value);
 
 const { result: libraryNames } = autorun(() => {
   const names: Record<string, string> = {};
@@ -217,7 +214,7 @@ const { result: libraryNames } = autorun(() => {
 });
 
 const { result: libraryNodes } = autorun(() => {
-  if (!creatureTemplatesSubReady.value) return [];
+  if (!creatureTemplatesReady.value) return [];
   const nodes = LibraryNodes.find({ _creatureTemplateResult: true }, {
     sort: { name: 1, order: 1 },
   }).fetch();

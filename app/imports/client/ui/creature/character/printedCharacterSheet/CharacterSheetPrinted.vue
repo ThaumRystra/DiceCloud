@@ -2,7 +2,7 @@
   <div class="character-sheet-printed fill-height">
     <v-fade-transition mode="out-in">
       <div
-        v-if="!$subReady.singleCharacter"
+        v-if="!characterReady"
         key="character-loading"
         class="fill-height layout justify-center align-center"
       >
@@ -107,7 +107,7 @@ const creatureUrl = computed(() => {
   return new URL(resolved?.href, 'https://dicecloud.com').href;
 });
 
-autorun(() => { subscribe('singleCharacter', creatureId.value); });
+const { ready: characterReady } = subscribe(() => ['singleCharacter', creatureId.value]);
 
 const { result: creature } = autorun(() =>
   Creatures.findOne(creatureId.value)

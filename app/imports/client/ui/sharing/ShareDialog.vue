@@ -23,13 +23,13 @@
           {text: 'Anyone with read permission', value: 'true'}
         ]"
         :value="!!model.readersCanCopy + ''"
-        @change="(value, ack) => setReadersCanCopy({value, ack})"
+        @change="(value, ack) => setReadersCanCopyFn({value, ack})"
       />
       <text-field
         v-if="model.public && docRef.collection === 'libraries'"
         readonly
         label="Link"
-        :value="window.location.origin + $router.resolve({
+        :value="location.origin + $router.resolve({
           name: 'singleLibrary',
           params: { id: model._id },
         }).href"
@@ -117,7 +117,7 @@
       </v-list>
       <v-fade-transition>
         <v-progress-circular
-          v-if="!$subReady.userPublicProfiles"
+          v-if="!userProfilesReady"
           indeterminate
         />
       </v-fade-transition>
@@ -126,7 +126,7 @@
       <v-spacer />
       <v-btn
         variant="text"
-        @click="$store.dispatch('popDialogStack')"
+        @click="store.dispatch('popDialogStack')"
       >
         Done
       </v-btn>
@@ -137,7 +137,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import {
   setPublic,
   setReadersCanCopy,
@@ -145,6 +145,7 @@ import {
 } from '/imports/api/sharing/sharing';
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import type { Shared } from '/imports/api/sharing/SharingSchema';
 
 const props = defineProps<{
   docRef: any;
@@ -157,14 +158,16 @@ const userId = ref<string | undefined>(undefined);
 
 const { result: model } = autorun(() => {
   if (!props.docRef || !props.docRef.id) return undefined;
-  return fetchDocByRef(props.docRef);
+  return fetchDocByRef<Shared & {_id: string}>(props.docRef);
 });
 
-autorun(() => {
-  if (!model.value) return;
-  const m = model.value as any;
-  Meteor.subscribe('userPublicProfiles', [m.owner, ...m.writers, ...m.readers]);
+const { ready: userProfilesReady } = subscribe(() => {
+  if (!model.value) return false;
+  const m = model.value;
+  return ['userPublicProfiles', m.owner, ...m.writers, ...m.readers];
 });
+
+const location = ref(window.location);
 
 const { result: sharedUsers } = autorun(() => {
   if (!model.value) return [];
@@ -240,7 +243,8 @@ async function getUser({ value, ack }: { value: string; ack: Function }) {
   }
 }
 
-function updateSharing(uid: string, role: string) {
+function updateSharing(uid: string | undefined, role: string) {
+  if (!uid) return;
   updateUserSharePermissions.callAsync({
     docRef: props.docRef,
     userId: uid,
@@ -259,7 +263,3 @@ function makeOwner(user: any) {
   });
 }
 </script>
-
-<style lang="css" scoped>
-
-</style>

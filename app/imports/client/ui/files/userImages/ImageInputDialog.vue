@@ -100,7 +100,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import UserImages from '/imports/api/files/userImages/UserImages';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
@@ -116,7 +116,7 @@ const tab = ref(0);
 const progress = ref(0);
 const inputHref = ref(props.href);
 
-autorun(() => Meteor.subscribe('userImages'));
+subscribe('userImages');
 
 const { result: userImages } = autorun(() => {
   const userId = Meteor.userId();

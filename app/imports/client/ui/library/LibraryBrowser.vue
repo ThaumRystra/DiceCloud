@@ -69,7 +69,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
@@ -93,7 +93,7 @@ const noLibrariesExpanded = computed(() =>
   !expandedLibrary.value || expandedLibrary.value.length === 0
 );
 
-autorun(() => { Meteor.subscribe('libraries'); });
+subscribe('libraries');
 
 const { result: libraries } = autorun(() =>
   Libraries.find({}, { sort: { name: 1 } }).fetch()

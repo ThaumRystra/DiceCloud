@@ -146,7 +146,7 @@
               <v-btn
                 v-if="hasMore"
                 key="load-more-btn"
-                :loading="!$subReady.searchLibraryNodes"
+                :loading="!searchLibraryNodesReady"
                 color="accent"
                 class="ma-4"
                 @click="loadMore"
@@ -251,10 +251,8 @@ const contextToProvide = reactive({ debounceTime, isLibraryForm });
 provide('context', contextToProvide);
 
 // Reactive subscriptions
-autorun(() => {
-  subscribe('searchLibraryNodes', props.creatureId, type.value, searchValue.value, currentLimit.value);
-  subscribe('selectedLibraryNodes', selectedNodeIds.value);
-});
+const { ready: searchLibraryNodesReady } = subscribe(() => ['searchLibraryNodes', props.creatureId, type.value, searchValue.value, currentLimit.value]);
+subscribe(() => ['selectedLibraryNodes', selectedNodeIds.value]);
 
 const { result: showPropertyHelp } = autorun(() => {
   const user = Meteor.user();
