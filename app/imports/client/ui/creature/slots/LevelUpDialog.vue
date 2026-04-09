@@ -179,7 +179,7 @@ import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import Libraries from '/imports/api/library/Libraries';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
@@ -189,14 +189,16 @@ import resolve from '/imports/parser/resolve';
 import { prettifyParseError, parse } from '/imports/parser/parser';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
-import { clone, difference, isEqual } from 'lodash';
+import { difference, isEqual } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
-import { toString as nodeToString } from '/imports/parser/toString';
+import nodeToString from '/imports/parser/toString';
+import { ComputedClassSchema } from '/imports/api/properties/Classes';
+import type { InferType } from '/imports/api/utility/TypedSimpleSchema';
 
 const props = defineProps<{
-  classId?: string;
+  classId: string;
   creatureId?: string;
-  dummySlot?: Record<string, any>;
+  dummySlot?: InferType<typeof ComputedClassSchema>;
 }>();
 
 const store = useStore();
@@ -215,16 +217,7 @@ const { result: classFillerSubReady } = autorun(() => {
 });
 
 const { result: model } = autorun(() => {
-  if (props.classId) {
-    return CreatureProperties.findOne(props.classId) ?? {};
-  } else if (props.dummySlot) {
-    const m = clone(props.dummySlot);
-    if (!m.quantityExpected) m.quantityExpected = {};
-    m.quantityExpected.value = +m.quantityExpected.calculation;
-    m.spaceLeft = m.quantityExpected.value;
-    return m;
-  }
-  return {};
+  return CreatureProperties.findOne(props.classId) as CreaturePropertyTypes['class'] ?? null;
 });
 
 const { result: variables } = autorun(() => {
@@ -234,15 +227,10 @@ const { result: variables } = autorun(() => {
 
 const { result: alreadyAdded } = autorun(() => {
   const added = new Set<string>();
-  if (!model.value?.unique) return added;
-  let ancestorId: string | undefined;
-  if (model.value.unique === 'uniqueInSlot') {
-    ancestorId = model.value._id;
-  } else if (model.value.unique === 'uniqueInCreature') {
-    ancestorId = props.creatureId;
-  }
+  const ancestorId = model.value?.root.id;
+  if (!ancestorId) return added;
   CreatureProperties.find({
-    ...getFilter.descendants(ancestorId),
+    ...getFilter.descendantsOfRoot(ancestorId),
     libraryNodeId: { $exists: true },
     removed: { $ne: true },
   }, {
@@ -267,11 +255,6 @@ const { result: totalQuantitySelected } = autorun(() => {
   return quantitySelected;
 });
 
-const spaceLeft = computed(() => {
-  if (!model.value?.quantityExpected || model.value.quantityExpected.value === 0) return undefined;
-  return model.value.spaceLeft - (totalQuantitySelected.value ?? 0);
-});
-
 const { result: libraryNames } = autorun(() => {
   const names: Record<string, string> = {};
   Libraries.find().forEach((lib: any) => { names[lib._id] = lib.name; });
@@ -284,7 +267,7 @@ const { result: filledLevels } = autorun(() =>
     .sort((a: number, b: number) => a - b)
 );
 
-const { result: libraryNodesResult } = autorun(() => {
+const { result: libraryNodesResult } = autorun(async () => {
   if (!classFillerSubReady.value) return { nodes: [], count: 0 };
   const nodes: any[] = LibraryNodes.find({ _classFillerResult: true }, {
     sort: { level: 1, name: 1, order: 1 },

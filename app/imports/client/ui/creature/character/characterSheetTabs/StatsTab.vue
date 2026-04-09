@@ -454,9 +454,6 @@ const propertyHandlers: Record<string, (prop: any) => { propPath: any; skipChild
 
 const props = defineProps<{ creatureId: string }>();
 const store = useStore();
-    creatureId: {
-      type: String,
-      required: true,
 
 const { result: creature } = autorun(() =>
   Creatures.findOne(props.creatureId, { fields: { settings: 1 } })

@@ -60,8 +60,3 @@ function insertLibraryNode() {
 
 <style lang="css" scoped>
 </style>
-
-</script>
-
-<style lang="css" scoped>
-</style>

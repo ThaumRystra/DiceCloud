@@ -196,35 +196,5 @@ async function archiveAction() {
 }
 </script>
 
-const characterTransform = function(char){
-  char.url = `/character/${char._id}/${char.urlName || '-'}`;
-  char.initial = char.name && char.name[0] || '?';
-  return char;
-};
-
-const fileTransform = function(file){
-  return {
-    _id: file._id,
-    name: file.meta.creatureName,
-    owner: file.userId,
-    creatureId: file.meta.creatureId,
-  };
-}
-
-const creatureFields = {
-  'color': 1,
-  'avatarPicture': 1,
-  'name': 1,
-  'initial': 1,
-  'alignment': 1,
-  'gender': 1,
-  'race': 1,
-  'readers': 1,
-  'writers': 1,
-  'owner': 1,
-};
-
-</script>
-
 <style lang="css" scoped>
 </style>

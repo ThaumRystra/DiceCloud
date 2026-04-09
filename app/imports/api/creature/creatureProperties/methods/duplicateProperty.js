@@ -45,7 +45,7 @@ const duplicateProperty = new ValidatedMethod({
     property._id = propertyId;
 
     // Change the variableName so it isn't immediately overridden
-    if (property.variableName) {
+    if ('variableName' in property && property.variableName) {
       property.variableName += 'Copy'
     }
 

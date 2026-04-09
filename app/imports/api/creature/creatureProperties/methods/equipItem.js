@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods';
+import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import getParentRefByTag from './getParentByTag';
@@ -23,9 +23,14 @@ const equipItem = new ValidatedMethod({
   },
   async run({ _id, equipped }) {
     let item = await CreatureProperties.findOneAsync(_id);
+    if (!item) throw new Meteor.Error('item not found',
+      'Could not find the item to equip or unequip');
     if (item.type !== 'item') throw new Meteor.Error('wrong type',
       'Equip and unequip can only be performed on items');
-    let creature = getRootCreatureAncestor(item);
+    const creature = getRootCreatureAncestor(item);
+    if (!creature) throw new Meteor.Error('creature not found',
+      'The item you are trying to equip is not on a creature'
+    );
     await assertEditPermission(creature, this.userId);
     await CreatureProperties.updateAsync(_id, {
       $set: { equipped, dirty: true },
@@ -33,16 +38,16 @@ const equipItem = new ValidatedMethod({
       selector: { type: 'item' },
     });
     let tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
-    let parentRef = getParentRefByTag(creature._id, tag);
-    if (!parentRef) parentRef = { id: creature._id, collection: 'creatures' };
+    let newPosition = 0.5;
+    const newParent = getParentRefByTag(creature._id, tag);
+    if (newParent) newPosition = newParent.left + 0.5;
 
-    organizeDoc.callAsync({
+    moveWithinRoot.callAsync({
       docRef: {
         id: _id,
         collection: 'creatureProperties',
       },
-      parentRef,
-      order: Number.MAX_SAFE_INTEGER,
+      newPosition,
       skipRecompute: true,
     });
   },

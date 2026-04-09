@@ -9,6 +9,8 @@ module.exports = defineConfig(Meteor => {
   if (Meteor.isServer) {
     config.externals = [
       /^zlib-sync/,
+      /^bufferutil$/,
+      /^utf-8-validate$/,
     ];
   }
 

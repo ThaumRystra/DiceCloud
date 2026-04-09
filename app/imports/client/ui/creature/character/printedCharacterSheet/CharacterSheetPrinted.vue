@@ -219,8 +219,6 @@ onBeforeUnmount(() => {
 });
 </script>
 
-</script>
-
 <style>
 .character-sheet-printed {
   background: white;

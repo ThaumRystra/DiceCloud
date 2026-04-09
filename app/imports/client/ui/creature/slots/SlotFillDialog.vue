@@ -1,11 +1,11 @@
 <template lang="html">
   <dialog-base
-    :color="model.color"
+    :color="model?.color"
     dark-body
   >
     <template #toolbar>
       <v-toolbar-title>
-        {{ model.name }}
+        {{ model?.name }}
       </v-toolbar-title>
       <v-spacer />
       <v-text-field
@@ -23,7 +23,7 @@
     </template>
     <property-description
       text
-      :string="model.description"
+      :string="model?.description"
     />
     <p>
       {{ slotPropertyTypeName }} with library tags:
@@ -67,7 +67,7 @@
             :class="{disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition}"
           >
             <v-expansion-panel-title>
-              <template #default="{ open }">
+              <template #default="{ expanded }">
                 <div
                   class="d-flex align-center flex-grow-0 mr-2"
                 >
@@ -113,7 +113,7 @@
                 >
                   {{ libraryNode.slotQuantityFilled }} slots
                 </div>
-                <template v-if="open">
+                <template v-if="expanded">
                   <v-btn
                     icon
                     class="flex-grow-0"
@@ -206,7 +206,7 @@
         :disabled="!dummySlot && !selectedNodeIds.length"
         @click="store.dispatch('popDialogStack', selectedNodeIds)"
       >
-        <template v-if="model.spaceLeft">
+        <template v-if="model?.spaceLeft">
           {{ totalQuantitySelected }} / {{ model.spaceLeft }}
         </template>
         <template v-if="slotId">
@@ -223,16 +223,17 @@
 <script setup lang="ts">
 import { ref, computed, reactive, watch, toRef, provide } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import Libraries from '/imports/api/library/Libraries';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import resolve, { toString } from '/imports/parser/resolve';
+import resolve from '/imports/parser/resolve';
+import toString from '/imports/parser/toString';
 import { prettifyParseError, parse } from '/imports/parser/parser';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
 import PropertyTags from '/imports/client/ui/properties/viewers/shared/PropertyTags.vue';
@@ -270,28 +271,26 @@ const { result: slotFillerSubReady } = autorun(() => {
   return handle.ready();
 });
 
-autorun(() => {
-  Meteor.subscribe(
-    'selectedFillers',
-    props.slotId || props.dummySlot?._id,
-    selectedNodeIds.value,
-    !!props.dummySlot
-  );
-});
+subscribe(() => [
+  'selectedFillers',
+  props.slotId || props.dummySlot?._id,
+  selectedNodeIds.value,
+  !!props.dummySlot,
+]);
 
 const searchLoading = computed(() => !!searchValue.value && !slotFillerSubReady.value);
 
 const { result: model } = autorun(() => {
   if (props.slotId) {
-    return CreatureProperties.findOne(props.slotId) ?? {};
+    return CreatureProperties.findOne(props.slotId) as CreaturePropertyTypes['propertySlot'] ?? null;
   } else if (props.dummySlot) {
-    const m = clone(props.dummySlot);
+    const m = clone(props.dummySlot as CreaturePropertyTypes['propertySlot']);
     if (!m.quantityExpected) m.quantityExpected = {};
-    m.quantityExpected.value = +m.quantityExpected.calculation;
+    m.quantityExpected.value = +(m.quantityExpected.calculation ?? 0);
     m.spaceLeft = m.quantityExpected.value;
     return m;
   }
-  return {};
+  return null;
 });
 
 const { result: variables } = autorun(() => {
@@ -336,7 +335,7 @@ const { result: totalQuantitySelected } = autorun(() => {
 
 const spaceLeft = computed(() => {
   if (!model.value?.quantityExpected || model.value.quantityExpected.value === 0) return undefined;
-  return model.value.spaceLeft - (totalQuantitySelected.value ?? 0);
+  return (model.value.spaceLeft ?? 0) - (totalQuantitySelected.value ?? 0);
 });
 
 const { result: libraryNames } = autorun(() => {
@@ -379,7 +378,7 @@ const { result: libraryNodesResult } = autorun(() => {
       }
     }
     const quantityToFill = typeof node.slotQuantityFilled === 'number' ? node.slotQuantityFilled : 1;
-    if (quantityToFill > spaceLeft.value) {
+    if (quantityToFill > (spaceLeft.value ?? 0)) {
       node._disabled = true;
       node._disabledByQuantityFilled = true;
     }
@@ -461,7 +460,7 @@ function insertCustomFiller() {
   if (!model.value) return;
   const prop = getDefaultSlotFiller(model.value);
   const parentRef = { id: props.slotId, collection: 'creatureProperties' };
-  const order = model.value.order + 0.5;
+  const order = model.value.left + 0.5;
   store.commit('pushDialogStack', {
     component: 'insert-property-dialog',
     elementId: 'custom-button',

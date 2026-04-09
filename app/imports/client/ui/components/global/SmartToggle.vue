@@ -51,7 +51,7 @@ defineOptions({ inheritAttrs: false });
 
 const props = defineProps<{
   value?: string | number | Date | unknown[] | object | boolean;
-  errorMessages?: string | string[];;
+  errorMessages?: string | string[];
   disabled?: boolean;
   debounce?: number;
   rules?: Array<(val: unknown) => string | true>;

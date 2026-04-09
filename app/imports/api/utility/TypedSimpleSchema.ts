@@ -1,4 +1,4 @@
-import SimpleSchema, { SimpleSchemaDefinition } from 'simpl-schema';
+import SimpleSchema, { SimpleSchemaDefinition, SchemaDefinition, SchemaDefinitionType } from 'simpl-schema';
 import type {
   FieldToCalculate, CalculatedOnlyField
 } from '/imports/api/properties/subSchemas/computedField';
@@ -7,13 +7,22 @@ import type {
 } from '/imports/api/properties/subSchemas/inlineCalculationField';
 import type { Simplify } from 'type-fest';
 
+export type SchemaDefinitionCustom = Omit<SchemaDefinition, 'type'> & {
+  type: SchemaDefinitionType | 'inlineCalculationFieldToCompute'
+  | 'fieldToCompute'
+  | 'computedOnlyInlineCalculationField'
+  | 'computedOnlyField';
+}
+
 // It DOES NOT support a constructor with multiple schemas.
-export type Definition = Exclude<SimpleSchemaDefinition, any[]>;
+export type Definition = {
+  [key: string]: SchemaDefinitionCustom
+}
 
 // This is a no-op wrapper, effectively implementing a phantom type.
 export class TypedSimpleSchema<T> extends SimpleSchema {
   private constructor(definition: Definition) {
-    super(definition);
+    super(definition as SimpleSchemaDefinition);
   }
   static from<D extends Definition>(definition: D): TypedSimpleSchema<InferSchema<D>> {
     return new TypedSimpleSchema(definition);
@@ -53,7 +62,6 @@ export type InferType<T> = T extends TypedSimpleSchema<infer X> ? X : never;
 type InferTypeInner<T> =
   T extends typeof Array ? ArrayMarker :
   T extends typeof Boolean ? boolean :
-  // eslint-disable-next-line @typescript-eslint/ban-types
   T extends typeof Function ? Function :
   T extends typeof Number ? number :
   T extends typeof SimpleSchema.Integer ? number :

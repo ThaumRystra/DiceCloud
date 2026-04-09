@@ -121,6 +121,7 @@ async function submit() {
     password: password.value,
     email: email.value,
   }, (err: any) => {
+    console.error(err);
     if (err) {
       error.value = err.reason;
     } else {

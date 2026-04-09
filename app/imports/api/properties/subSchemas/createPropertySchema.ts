@@ -22,7 +22,7 @@ export default function createPropertySchema<D extends Definition>(definition: D
 
   for (const key in definition) {
     const def = definition[key];
-    if (typeof def === 'object' && 'type' in def && computedKeys.includes(def.type)) {
+    if (typeof def === 'object' && 'type' in def && typeof def.type === 'string' && computedKeys.includes(def.type)) {
       computationFields[def.type].push(key);
       applyDefaultCalculationValue(definition, key);
       def.type = Object;

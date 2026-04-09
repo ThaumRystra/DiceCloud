@@ -38,7 +38,7 @@
     >
       <div v-if="!_id" />
       <div
-        v-else-if="!$subReady.libraryNode"
+        v-else-if="!ready"
         class="fill-height layout justify-center align-center"
       >
         <v-progress-circular
@@ -49,7 +49,7 @@
       </div>
       <property-form
         v-else-if="model && editing"
-        :key="_id"
+        :key="_id + '-editing'"
         class="library-node-form"
         collection="libraryNodes"
         :model="model"
@@ -61,7 +61,7 @@
         @select-sub-property="selectSubProperty"
       />
       <property-viewer 
-        v-else-if="model"
+        v-else-if="model + '-viewing'"
         :key="_id"
         :model="model"
         collection="libraryNodes"
@@ -75,14 +75,14 @@
         <template v-if="selection">
         <v-btn
           variant="text"
-          @click="$store.dispatch('popDialogStack', false)"
+          @click="store.dispatch('popDialogStack', false)"
         >
           Cancel
         </v-btn>
         <v-spacer />
         <v-btn
           variant="text"
-          @click="$store.dispatch('popDialogStack', true)"
+          @click="store.dispatch('popDialogStack', true)"
         >
           Select
         </v-btn>
@@ -90,7 +90,7 @@
       <v-btn
         v-else
         variant="text"
-        @click="$store.dispatch('popDialogStack')"
+        @click="store.dispatch('popDialogStack')"
       >
         Done
       </v-btn>
@@ -102,7 +102,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, watch, nextTick, provide } from 'vue';
 import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
+import { autorun, subscribe } from 'vue-meteor-tracker';
 import LibraryNodes, {
   updateLibraryNode,
   pushToLibraryNode,
@@ -119,7 +119,6 @@ import { get } from 'lodash';
 import {
   assertDocEditPermission, assertDocCopyPermission
 } from '/imports/api/sharing/sharingPermissions';
-import { organizeDoc } from '/imports/api/parenting/organizeMethods';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo';
@@ -150,9 +149,7 @@ watch(() => props._id, (newId) => {
   });
 }, { immediate: true });
 
-autorun(() => {
-  Meteor.subscribe('libraryNode', props._id);
-});
+const { ready } = subscribe(() => ['libraryNode', props._id]);
 
 const { result: model } = autorun(() => {
   return LibraryNodes.findOne(currentId.value);
@@ -201,6 +198,10 @@ async function duplicate() {
 }
 
 async function makeReference() {
+  if (!model.value) {
+    console.error('Expected model to exist before calling makeReference');
+    return;
+  }
   try {
     const docId = await insertNode.callAsync({
       libraryNode: {
@@ -210,7 +211,7 @@ async function makeReference() {
           id: model.value._id,
         },
       },
-      parentRef: model.value.parent,
+      parentRef: model.value.parentId,
     });
     if (props.embedded) {
       emit('duplicated', docId);
@@ -317,6 +318,10 @@ function addLibraryNode({ elementId, suggestedType }: { elementId: string; sugge
       component: 'tier-too-low-dialog',
       elementId,
     });
+    return;
+  }
+  if (!model.value) {
+    console.error('Expected model to exist before calling addLibraryNode');
     return;
   }
   const parentPropertyId = model.value._id;
