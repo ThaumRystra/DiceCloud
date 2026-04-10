@@ -61,4 +61,19 @@ declare namespace Mongo {
       callback?: Function
     ): Promise<number>
   }
+  interface Cursor<T, U = T> {
+    /**
+     * Watch a query. Receive callbacks as the result set changes.
+     * @param callbacks Functions to call to deliver the result set as it changes
+     */
+    observeAsync(callbacks: ObserveCallbacks<U>): Promise<Meteor.LiveQueryHandle>;
+    /**
+     * Watch a query. Receive callbacks as the result set changes. Only the differences between the old and new documents are passed to the callbacks.
+     * @param callbacks Functions to call to deliver the result set as it changes
+     */
+    observeChangesAsync(
+      callbacks: ObserveChangesCallbacks<T>,
+      options?: { nonMutatingCallbacks?: boolean | undefined },
+    ): Promise<Meteor.LiveQueryHandle>;
+  }
 }

@@ -21,7 +21,8 @@ Meteor.publish('singleCharacter', async function (creatureId) {
   try {
     schema.validate({ creatureId });
   } catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   let userId = this.userId;
   let permissionCreature = await Creatures.findOneAsync({
@@ -36,20 +37,21 @@ Meteor.publish('singleCharacter', async function (creatureId) {
       tabletopId: 1,
     }
   });
-  try { assertViewPermission(permissionCreature, userId) }
-  catch (e) { return [] }
+  try {
+    assertViewPermission(permissionCreature, userId);
+  }
+  catch (e) {
+    console.warn(e);
+    return this.error(e as Error);
+  }
   await loadCreature(creatureId, this);
   if (permissionCreature?.computeVersion !== VERSION) {
     try {
-      rebuildCreatureNestedSets(creatureId).then(() => {
-        try {
-          computeCreature(creatureId)
-        } catch (e) {
-          console.error(e);
-        }
-      });
+      await rebuildCreatureNestedSets(creatureId);
+      await computeCreature(creatureId);
+    } catch (e) {
+      console.error(e);
     }
-    catch (e) { console.error(e) }
   }
   return [
     Creatures.find({
@@ -71,7 +73,7 @@ Meteor.publish('singleCharacter', async function (creatureId) {
       creatureId,
     }),
     // Also publish the owner's username
-    Meteor.users.find(permissionCreature.owner, {
+    Meteor.users.find(permissionCreature?.owner ?? '_', {
       fields: {
         username: 1,
       },

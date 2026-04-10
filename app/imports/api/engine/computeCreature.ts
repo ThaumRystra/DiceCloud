@@ -7,8 +7,7 @@ import type CreatureComputation from './computation/CreatureComputation';
 
 export default async function computeCreature(creatureId: string) {
   if (Meteor.isClient) return;
-  // console.log('compute ' + creatureId);
-  const computation = buildCreatureComputation(creatureId);
+  const computation = await buildCreatureComputation(creatureId);
   await computeComputation(computation, creatureId);
 }
 
@@ -31,7 +30,7 @@ async function computeComputation(computation: CreatureComputation, creatureId: 
     });
   } finally {
     checkPropertyCount(computation)
-    writeErrorsAndPropCount(creatureId, computation.errors, computation.props.length);
+    await writeErrorsAndPropCount(creatureId, computation.errors, computation.props.length);
   }
 }
 

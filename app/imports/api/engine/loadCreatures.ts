@@ -17,7 +17,7 @@ function logLoadedCreatures() {
   console.log(creatureLoadString);
 }
 
-export async function loadCreature(creatureId: string, subscription: Tracker.Computation) {
+export async function loadCreature(creatureId: string, subscription: Subscription) {
   if (!creatureId) throw 'creatureId is required';
   let creature = loadedCreatures.get(creatureId);
   if (!creature?.subs.has(subscription)) {
@@ -41,7 +41,7 @@ export function unloadAllCreatures() {
   }
 }
 
-function unloadCreature(creatureId: string, subscription: Tracker.Computation) {
+function unloadCreature(creatureId: string, subscription: Subscription) {
   if (!creatureId) throw 'creatureId is required';
   const creature = loadedCreatures.get(creatureId);
   if (!creature) return;
@@ -151,14 +151,14 @@ export function getCreature(creatureId: string) {
   return creature;
 }
 
-export function getVariables(creatureId: string) {
+export async function getVariables(creatureId: string) {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedVariables = loadedCreature?.variables;
   if (loadedVariables) {
     return EJSON.clone(loadedVariables);
   }
   console.time(`Cache miss on variables: ${creatureId}`);
-  const variables = CreatureVariables.findOne({ _creatureId: creatureId });
+  const variables = CreatureVariables.findOneAsync({ _creatureId: creatureId });
   console.timeEnd(`Cache miss on variables: ${creatureId}`);
   return variables;
 }
@@ -171,8 +171,8 @@ export function replaceLinkedVariablesWithProps(variables: any) {
   }
 }
 
-export function getPropertyAncestors(creatureId: string, propertyId: string) {
-  const prop = getSingleProperty(creatureId, propertyId);
+export async function getPropertyAncestors(creatureId: string, propertyId: string) {
+  const prop = await getSingleProperty(creatureId, propertyId);
   if (!prop) return [];
   const loadedCreature = loadedCreatures.get(creatureId);
   if (loadedCreature) {
@@ -181,7 +181,7 @@ export function getPropertyAncestors(creatureId: string, propertyId: string) {
     let currentProp: CreatureProperty | undefined = prop;
     // Iterate through parent chain to get all linked ancestors
     while (currentProp?.parentId) {
-      currentProp = getSingleProperty(creatureId, currentProp.parentId);
+      currentProp = await getSingleProperty(creatureId, currentProp.parentId);
       if (currentProp) props.push(currentProp);
     }
     return EJSON.clone(props);
@@ -196,8 +196,8 @@ export function getPropertyAncestors(creatureId: string, propertyId: string) {
   }
 }
 
-export function getPropertyDescendants(creatureId: string, propertyId: string) {
-  const property = getSingleProperty(creatureId, propertyId);
+export async function getPropertyDescendants(creatureId: string, propertyId: string) {
+  const property = await getSingleProperty(creatureId, propertyId);
   if (!property) return [];
   if (loadedCreatures.has(creatureId)) {
     const creature = loadedCreatures.get(creatureId);
@@ -230,9 +230,9 @@ export function getPropertyDescendants(creatureId: string, propertyId: string) {
  * @param {string | any} property prop or prop ID to get children of
  * @returns {any[]} An array of child properties in tree order
  */
-export function getPropertyChildren(creatureId: string, property: string | CreatureProperty | undefined) {
+export async function getPropertyChildren(creatureId: string, property: string | CreatureProperty | undefined) {
   if (typeof property === 'string') {
-    property = getSingleProperty(creatureId, property);
+    property = await getSingleProperty(creatureId, property);
   }
   if (!property) return [];
   // This propertyId will always appear in the parent of the children
@@ -258,47 +258,49 @@ export function getPropertyChildren(creatureId: string, property: string | Creat
 }
 
 class LoadedCreature {
-  subs: Set<Tracker.Computation>;
+  subs: Set<Subscription>;
   propertyObserver!: Meteor.LiveQueryHandle;
   creatureObserver!: Meteor.LiveQueryHandle;
   variablesObserver!: Meteor.LiveQueryHandle;
   properties: Map<string, CreatureProperty>;
   creature?: Creature;
-  variables: any;
+  variables: Record<string, any>;
 
-  private constructor(sub: Tracker.Computation) {
+  private constructor(sub: Subscription) {
     this.subs = new Set([sub]);
     this.properties = new Map();
+    this.variables = {};
   }
 
-  static async create(sub: Tracker.Computation, creatureId: string): Promise<LoadedCreature> {
+  static async create(sub: Subscription, creatureId: string): Promise<LoadedCreature> {
     const loaded = new LoadedCreature(sub);
     // This may be called from a subscription, but we don't want the observers
     // to be destroyed with it, so use a non-reactive context to observe
     // the required documents
     await Tracker.nonreactive(async () => {
-      const compute = debounce(Meteor.bindEnvironment(() => {
+      const compute = debounce(async () => {
         // It's possible that the creature was unloaded before we get around to computing it
         if (!loadedCreatures.has(creatureId)) return;
-        computeCreature(creatureId);
-      }), COMPUTE_DEBOUNCE_TIME);
+        console.log('Computing: ', creatureId)
+        await computeCreature(creatureId);
+      }, COMPUTE_DEBOUNCE_TIME);
 
       // Observe all creature properties which are needed for computation
       loaded.propertyObserver = await CreatureProperties.find({
         'root.id': creatureId,
       }).observeChangesAsync({
-        added(id, fields: CreatureProperty) {
+        async added(id, fields: CreatureProperty) {
           fields._id = id;
           loaded.addProperty(fields);
-          if (fields.dirty) compute();
+          if (fields.dirty) await compute();
         },
-        changed(id, fields) {
+        async changed(id, fields) {
           loaded.changeProperty(id, fields);
-          if (fields.dirty) compute();
+          if (fields.dirty) await compute();
         },
-        removed(id) {
+        async removed(id) {
           loaded.removeProperty(id);
-          compute();
+          await compute();
         },
       });
 
@@ -306,16 +308,16 @@ class LoadedCreature {
       loaded.creatureObserver = await Creatures.find({
         _id: creatureId,
       }).observeChangesAsync({
-        added(id, fields: Creature) {
+        async added(id, fields: Creature) {
           fields._id = id;
           loaded.addCreature(fields)
-          if (fields.dirty) compute();
+          if (fields.dirty) await compute();
         },
-        changed(id, fields) {
+        async changed(id, fields) {
           loaded.changeCreature(id, fields);
-          if (fields.dirty) compute();
+          if (fields.dirty) await compute();
         },
-        removed() {
+        async removed() {
           loaded.removeCreature();
         },
       });
@@ -370,7 +372,7 @@ class LoadedCreature {
     LoadedCreature.changeDoc(this.variables, fields);
   }
   removeVariables() {
-    delete this.variables;
+    this.variables = {};
   }
   static changeMap(id: string, fields: any, map: any) {
     const doc = map.get(id);

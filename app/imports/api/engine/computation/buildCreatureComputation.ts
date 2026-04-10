@@ -30,7 +30,7 @@ import type { Creature } from '/imports/api/creature/creatures/Creatures';
  * computed toggles
  */
 
-export default function buildCreatureComputation(creatureId: string) {
+export default async function buildCreatureComputation(creatureId: string) {
   const creature = getCreature(creatureId);
   if (!creature) {
     throw new Meteor.Error('not-found',
@@ -38,8 +38,8 @@ export default function buildCreatureComputation(creatureId: string) {
       '\nid: ' + creatureId
     );
   }
-  const variables = getVariables(creatureId);
-  const properties = getProperties(creatureId);
+  const variables = await getVariables(creatureId);
+  const properties = await getProperties(creatureId);
   const computation = buildComputationFromProps(properties, creature, variables);
   return computation;
 }

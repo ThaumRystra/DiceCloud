@@ -691,7 +691,7 @@ export async function rebuildNestedSets(collection: Mongo.Collection<TreeDoc>, r
 }
 
 export async function rebuildCreatureNestedSets(creatureId) {
-  const docs = getProperties(creatureId);
+  const docs = await getProperties(creatureId);
   const operations = calculateNestedSetOperations(docs);
   return writeBulkOperations(CreatureProperties as Mongo.Collection<TreeDoc, TreeDoc>, operations);
 }
