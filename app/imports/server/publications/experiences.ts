@@ -10,17 +10,18 @@ let schema = new SimpleSchema({
   },
 });
 
-Meteor.publish('experiences', function (creatureId) {
+Meteor.publish('experiences', async function (creatureId) {
   schema.validate({ creatureId });
   let userId = this.userId;
   if (!userId) {
-    return [];
+    return this.error(new Meteor.Error('logged-out', 'You must be logged in to get a creature\'s experiences'));
   }
-  let creature = Creatures.findOne(creatureId);
+  const creature = await Creatures.findOneAsync(creatureId);
   try {
-    assertViewPermission(creature, userId);
+    await assertViewPermission(creature, userId);
   } catch (e) {
-    return [];
+    console.warn(e);
+    return this.error(e as Error);
   }
   return [
     Experiences.find({

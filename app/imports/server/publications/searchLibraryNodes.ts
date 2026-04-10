@@ -1,26 +1,26 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
+import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds';
 import getUserLibraryIds from '/imports/api/library/getUserLibraryIds';
 import { assertViewPermission } from '/imports/api/sharing/sharingPermissions';
 import escapeRegex from '/imports/api/utility/escapeRegex';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
+Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds) {
   check(selectedNodeIds, Array);
   // Limit to 20 selected nodes
   if (selectedNodeIds.length > 20) {
     selectedNodeIds = selectedNodeIds.slice(0, 20);
   }
   let libraryViewPermissions = {};
-  const nodes = [];
+  const nodes: LibraryNode[] = [];
   // Check view permissions of all libraries
   for (let id of selectedNodeIds) {
-    let node = LibraryNodes.findOne(id);
+    let node = await LibraryNodes.findOneAsync(id);
     if (!node) continue;
     nodes.push(node);
-    let libraryId = node.ancestors[0].id;
+    let libraryId = node.root.id;
     if (libraryViewPermissions[id]) {
       continue;
     } else {
@@ -35,7 +35,12 @@ Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
           right: 1,
         }
       });
-      assertViewPermission(library, this.userId);
+      try {
+        await assertViewPermission(library, this.userId);
+      } catch (e) {
+        console.warn(e);
+        return this.error(e as Error);
+      }
       libraryViewPermissions[id] = true;
     }
   }
@@ -48,7 +53,7 @@ Meteor.publish('selectedLibraryNodes', function (selectedNodeIds) {
   })];
 });
 
-Meteor.publish('searchLibraryNodes', function (creatureId, type, searchTerm, limit) {
+Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTerm, limit) {
   if (!type) return [];
 
   let userId = this.userId;
@@ -69,7 +74,7 @@ Meteor.publish('searchLibraryNodes', function (creatureId, type, searchTerm, lim
   }
 
   // Build a filter for nodes in those libraries that match the type
-  let filter = {
+  const filter: Mongo.Selector<LibraryNode> = {
     ...getFilter.descendantsOfAllRoots(libraryIds),
     removed: { $ne: true },
     searchable: true //library nodes must opt-in
@@ -82,7 +87,7 @@ Meteor.publish('searchLibraryNodes', function (creatureId, type, searchTerm, lim
     }];
   }
 
-  let options = undefined;
+  let options: Mongo.Options<LibraryNode> | undefined = undefined;
   if (searchTerm) {
     // Regex search instead of text index
     filter.$and = [{
@@ -114,10 +119,11 @@ Meteor.publish('searchLibraryNodes', function (creatureId, type, searchTerm, lim
   let cursor = LibraryNodes.find(filter, options);
   const libraries = Libraries.find({ _id: { $in: libraryIds } });
 
+  // @ts-expect-error Doing crimes
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
-  let observeHandle = cursor.observeChanges({
-    added: function (id, fields) {
+  const observeHandle = await cursor.observeChangesAsync({
+    added: function (id, fields: Partial<LibraryNode> & { _searchResult?: true }) {
       fields._searchResult = true;
       self.added('libraryNodes', id, fields);
     },

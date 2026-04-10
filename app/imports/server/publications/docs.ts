@@ -1,7 +1,7 @@
-import Docs from '/imports/api/docs/Docs';
+import Docs, { type Doc } from '/imports/api/docs/Docs';
 
 Meteor.publish('docs', function () {
-  const filter = { published: true, removed: { $ne: true } };
+  const filter: Mongo.Selector<Doc> = { published: true, removed: { $ne: true } };
   if (this.userId) {
     const user = Meteor.users.findOne(this.userId, {
       fields: {
@@ -10,7 +10,7 @@ Meteor.publish('docs', function () {
     });
     if (user?.roles?.includes('docsWriter')) {
       delete filter.published;
-      delete filter.removed
+      delete filter.removed;
     }
   }
   return Docs.find(filter);

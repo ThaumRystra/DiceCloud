@@ -38,7 +38,7 @@ Meteor.publish('singleCharacter', async function (creatureId) {
     }
   });
   try {
-    assertViewPermission(permissionCreature, userId);
+    await assertViewPermission(permissionCreature, userId);
   }
   catch (e) {
     console.warn(e);

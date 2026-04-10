@@ -1,17 +1,17 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
+import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
 import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library';
 import escapeRegex from '/imports/api/utility/escapeRegex';
 import getUserLibraryIds from '/imports/api/library/getUserLibraryIds';
 
 // Publish docs the user has already selected so they don't disappear when searching
-Meteor.publish('selectedCreatureTemplates', function (nodeIds) {
+Meteor.publish('selectedCreatureTemplates', async function (nodeIds) {
   // TODO
   return [];
 });
 
-Meteor.publish('creatureTemplates', function (searchTerm, limit) {
+Meteor.publish('creatureTemplates', async function (searchTerm, limit) {
   if (searchTerm) check(searchTerm, String);
   limit = limit || 50;
   check(limit, Number);
@@ -22,7 +22,7 @@ Meteor.publish('creatureTemplates', function (searchTerm, limit) {
   }
 
   // Get all the ids of libraries the user can access
-  const userLibIds = getUserLibraryIds(userId);
+  const userLibIds = await getUserLibraryIds(userId);
   const libraries = Libraries.find({
     $or: [
       { owner: userId },
@@ -34,16 +34,16 @@ Meteor.publish('creatureTemplates', function (searchTerm, limit) {
     sort: { name: 1 }
   });
 
-  const libraryIds = libraries.map(lib => lib._id);
+  const libraryIds = await libraries.mapAsync(lib => lib._id);
 
   // Build a filter for nodes in those libraries
-  const filter = {
+  const filter: Mongo.Selector<LibraryNode> = {
     'root.id': { $in: libraryIds },
     type: 'creature',
     removed: { $ne: true },
   }
 
-  let options = undefined;
+  let options: Mongo.Options<LibraryNode> | undefined = undefined;
   if (searchTerm) {
     if (!filter.$and) filter.$and = [];
     filter.$and.push({
@@ -74,11 +74,12 @@ Meteor.publish('creatureTemplates', function (searchTerm, limit) {
   options.limit = limit;
 
   let self = this;
+  //@ts-expect-error Doing crime
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
   let cursor = LibraryNodes.find(filter, options);
   let observeHandle = cursor.observeChanges({
-    added: function (id, fields) {
+    added: function (id, fields: Partial<LibraryNode> & { _creatureTemplateResult?: true }) {
       fields._creatureTemplateResult = true;
       self.added('libraryNodes', id, fields);
     },

@@ -14,7 +14,7 @@ import ChildSchema, { TreeDoc } from '/imports/api/parenting/ChildSchema';
 // Give the docs a common root, so they can share parenting logic
 export const DOC_ROOT_ID = 'DDDDDDDDDDDDDDDDD'
 
-type Doc = {
+export type Doc = {
   _id: string,
   name: string,
   urlName: string,

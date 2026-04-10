@@ -4,7 +4,7 @@ import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolde
 Meteor.publish('characterList', async function () {
   var userId = this.userId;
   if (!userId) {
-    return [];
+    return this.error(new Meteor.Error('Not logged in', 'You must be logged in to view your character list'));
   }
   const user = await Meteor.users.findOneAsync(userId, {
     fields: { subscribedCharacters: 1 }

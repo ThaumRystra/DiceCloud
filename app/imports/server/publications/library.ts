@@ -61,9 +61,11 @@ const LIBRARY_NODE_TREE_FIELDS = {
 
 export { LIBRARY_NODE_TREE_FIELDS };
 
-Meteor.publish('libraryCollection', function (libraryCollectionId) {
+Meteor.publish('libraryCollection', async function (libraryCollectionId) {
   let userId = this.userId;
-  if (!userId) return [];
+  if (!userId) {
+    return this.error(new Meteor.Error('logged-out', 'You must be logged in to view your library collections'));
+  }
   const libraryCollectionCursor = LibraryCollections.find({
     _id: libraryCollectionId,
     $or: [
@@ -73,7 +75,7 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
       { public: true },
     ]
   });
-  const libraryCollection = libraryCollectionCursor.fetch()[0];
+  const libraryCollection = await libraryCollectionCursor.fetchAsync()[0];
   if (!libraryCollection) return [libraryCollectionCursor];
   const libraryCursor = Libraries.find({
     _id: { $in: libraryCollection.libraries },
@@ -99,14 +101,14 @@ Meteor.publish('libraryCollection', function (libraryCollectionId) {
 Meteor.publish('libraries', async function () {
   let userId = this.userId;
   if (!userId) {
-    return [];
+    return this.error(new Meteor.Error('logged-out', 'You must be logged in to view your libraries'));
   }
   const user = await Meteor.users.findOneAsync(userId, {
     fields: { subscribedLibraries: 1, subscribedLibraryCollections: 1 }
   });
 
   // Get the collections the user is subscribed to
-  const subCollections = user && user.subscribedLibraryCollections || [];
+  const subCollections = user && (user as any).subscribedLibraryCollections || [];
   const libraryCollectionsCursor = LibraryCollections.find({
     $or: [
       { owner: userId },
@@ -120,12 +122,12 @@ Meteor.publish('libraries', async function () {
 
   // Collate all the libraryIds in those collections
   let collectionLibIds = [];
-  libraryCollectionsCursor.forEach(libCollection => {
+  await libraryCollectionsCursor.forEachAsync(libCollection => {
     collectionLibIds = union(collectionLibIds, libCollection.libraries);
   });
 
   // Get the libraries the user is subscribed to directly
-  const subs = user && user.subscribedLibraries || [];
+  const subs = user && (user as any).subscribedLibraries || [];
 
   // Combine all the library Ids
   const libIds = union(collectionLibIds, subs);
@@ -144,7 +146,9 @@ Meteor.publish('libraries', async function () {
 });
 
 Meteor.publish('browseLibraries', function () {
-  if (!this.userId) return [];
+  if (!this.userId) {
+    return this.error(new Meteor.Error('logged-out', 'You must be logged in to browse libraries'));
+  };
   return [
     Libraries.find({
       showInMarket: true,
@@ -171,12 +175,20 @@ Meteor.publish('browseLibraries', function () {
 
 Meteor.publish('library', async function (libraryId) {
   if (!libraryId) return [];
-  libraryIdSchema.validate({ libraryId });
+  try {
+    libraryIdSchema.validate({ libraryId });
+  } catch (e) {
+    console.warn(e);
+    return this.error(e as Error);
+  }
   let userId = this.userId;
   let library = await Libraries.findOneAsync(libraryId);
-  try { assertViewPermission(library, userId) }
+  try {
+    await assertViewPermission(library, userId)
+  }
   catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   return [
     Libraries.find({
@@ -206,20 +218,22 @@ const extraFieldsSchema = new SimpleSchema({
   },
 });
 
-Meteor.publish('libraryNodes', async function (libraryId, extraFields) {
+Meteor.publish('libraryNodes', async function (libraryId: string, extraFields: string[]) {
   if (!libraryId) return [];
   try {
     libraryIdSchema.validate({ libraryId });
     extraFieldsSchema.validate({ extraFields });
   } catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   let userId = this.userId;
   let library = await Libraries.findOneAsync(libraryId);
   try {
     assertViewPermission(library, userId)
   } catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   const fields = { ...LIBRARY_NODE_TREE_FIELDS };
   extraFields?.forEach(field => {
@@ -242,15 +256,18 @@ const nodeIdSchema = new SimpleSchema({
   },
 });
 
-Meteor.publish('libraryNode', function (libraryNodeId) {
+Meteor.publish('libraryNode', async function (libraryNodeId) {
   if (!libraryNodeId) return [];
   nodeIdSchema.validate({ libraryNodeId });
   const userId = this.userId;
   const nodeCursor = LibraryNodes.find({ _id: libraryNodeId });
-  let node = nodeCursor.fetch()[0];
-  try { assertDocViewPermission(node, userId) }
+  let node = await nodeCursor.fetchAsync()[0];
+  try {
+    assertDocViewPermission(node, userId);
+  }
   catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   return [nodeCursor];
 });
@@ -262,7 +279,8 @@ Meteor.publish('softRemovedLibraryNodes', async function (libraryId) {
   let library = await Libraries.findOneAsync(libraryId);
   try { assertViewPermission(library, userId) }
   catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   return [
     LibraryNodes.find({
@@ -280,9 +298,12 @@ Meteor.publish('descendantLibraryNodes', async function (nodeId) {
   let libraryId = node?.root.id;
   if (!libraryId || !node) return [];
   let userId = this.userId;
-  try { assertDocViewPermission(node, userId) }
+  try {
+    assertDocViewPermission(node, userId);
+  }
   catch (e) {
-    return this.error(e);
+    console.warn(e);
+    return this.error(e as Error);
   }
   return [
     LibraryNodes.find({
