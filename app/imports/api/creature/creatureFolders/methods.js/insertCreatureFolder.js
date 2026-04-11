@@ -11,6 +11,7 @@ const insertCreatureFolder = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run() {
+    // if (Meteor.isClient) return;
     // Ensure logged in
     let userId = this.userId;
     if (!userId) {
@@ -22,7 +23,7 @@ const insertCreatureFolder = new ValidatedMethod({
       owner: userId
     }, {
       fields: { order: 1 },
-      sort: { left: -1 }
+      sort: { order: -1 }
     }).countAsync();
     if (existingFolderCount >= 50) {
       throw new Meteor.Error('creatureFolders.methods.insert.denied',
@@ -34,7 +35,7 @@ const insertCreatureFolder = new ValidatedMethod({
       owner: userId
     }, {
       fields: { order: 1 },
-      sort: { left: -1 }
+      sort: { order: -1 }
     });
     if (lastFolder) {
       order = (lastFolder.order || 0) + 1;

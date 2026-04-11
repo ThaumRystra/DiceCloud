@@ -12,38 +12,52 @@
       :dense="dense"
       @creature-selected="id => $emit('creature-selected', id)"
     />
-    <v-slide-x-transition
-      group
-      leave-absolute
+    <v-expansion-panels
+      eager
+      flat
+      multiple
+      variant="accordion"
     >
-      <v-list-group
-        v-for="folder in folders"
-        :key="folder._id"
-        v-model="openFolders[folder._id]"
-        :density="dense ? 'compact' : 'default'"
+      <v-slide-x-transition
+        group
+        leave-absolute
       >
-        <template #activator>
-          <creature-folder-header
-            :open="openFolders[folder._id]"
-            :model="folder"
-            :selection="selection"
-            :dense="dense"
-          />
-        </template>
-        <creature-list
-          :creatures="folder.creatures"
-          :folder-id="folder._id"
-          :selection="selection"
-          :selected-creature="selectedCreature"
-          :dense="dense"
-          @creature-selected="id => $emit('creature-selected', id)"
-        />
-      </v-list-group>
-    </v-slide-x-transition>
+        <v-expansion-panel
+          v-for="folder in folders"
+          :key="folder._id"
+          :density="dense ? 'compact' : 'default'"
+          :value="folder._id"
+        >
+          <v-expansion-panel-title>
+            <template v-slot:default="{ expanded }">
+              <creature-folder-header
+                :open="expanded"
+                :model="folder"
+                :selection="selection"
+                :dense="dense"
+              />
+            </template>
+          </v-expansion-panel-title>
+          <v-expansion-panel-text>
+            <creature-list
+              :creatures="folder.creatures"
+              :folder-id="folder._id"
+              :selection="selection"
+              :selected-creature="selectedCreature"
+              :dense="dense"
+              @creature-selected="id => $emit('creature-selected', id)"
+            />
+          </v-expansion-panel-text>
+        </v-expansion-panel>
+      </v-slide-x-transition>
+    </v-expansion-panels>
   </v-list>
 </template>
 
-<script setup lang="ts">
+<script
+  setup
+  lang="ts"
+>
 import { ref } from 'vue';
 import CreatureFolderHeader from '/imports/client/ui/creature/creatureList/CreatureFolderHeader.vue';
 import CreatureList from '/imports/client/ui/creature/creatureList/CreatureList.vue';

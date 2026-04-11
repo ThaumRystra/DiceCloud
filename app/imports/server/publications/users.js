@@ -3,6 +3,9 @@ import '/imports/api/users/Users';
 import Invites from '/imports/api/users/Invites';
 
 Meteor.publish('user', function () {
+  if (!this.userId) {
+    return [];
+  }
   return [
     Meteor.users.find(this.userId, {
       fields: {
@@ -47,7 +50,7 @@ let userIdsSchema = new SimpleSchema({
     type: String,
     max: 32,
   }
-})
+});
 
 Meteor.publish('userPublicProfiles', function (ids) {
   userIdsSchema.validate({ ids });

@@ -1,50 +1,41 @@
 <template lang="html">
-  <div :style="dense ? undefined : 'min-height: 60px;'">
-    <v-list-item-title class="d-flex align-center">
-      <div
-        v-if="!renaming"
-        class="text-truncate text-no-wrap"
-      >
-        {{ model.name }}
-      </div>
-      <text-field
-        v-if="renaming"
-        ref="name-input"
-        regular
-        hide-details
+  <div :style="{ minHeight: dense? '': '32px' }" class="d-flex align-center flex-grow-1">
+    <div
+      v-if="!renaming"
+      class="text-truncate text-no-wrap"
+    >
+      {{ model.name }}
+    </div>
+    <text-field
+      v-if="renaming"
+      ref="name-input"
+      regular
+      hide-details
+      density="compact"
+      :value="newName"
+      @change="renameFolder"
+      @click.stop=""
+      @input.stop=""
+      @keydown.stop=""
+      @keyup.stop=""
+    />
+    <template v-if="!selection && !dense">
+      <v-spacer />
+      <v-btn
+        v-if="renaming || open"
+        :icon="renaming ? 'mdi-check' : 'mdi-pencil'"
+        variant="plain"
         density="compact"
-        :value="newName"
-        @change="renameFolder"
-        @click.stop=""
-        @input.stop=""
-        @keydown.stop=""
-        @keyup.stop=""
+        @click.stop="renaming = !renaming"
       />
-      <template v-if="!selection && !dense">
-        <v-spacer />
-        <v-btn
-          v-if="renaming || open"
-          icon
-          style="flex-grow: 0"
-          @click.stop="renaming = !renaming"
-        >
-          <v-icon v-if="renaming">
-            mdi-check
-          </v-icon>
-          <v-icon v-else>
-            mdi-pencil
-          </v-icon>
-        </v-btn>
-        <v-btn
-          v-if="open"
-          icon
-          style="flex-grow: 0"
-          @click.stop="removeFolder"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </template>
-    </v-list-item-title>
+      <v-btn
+        v-if="open"
+        icon="mdi-delete"
+        variant="plain"
+        density="compact"
+        @click.stop="removeFolder"
+      />
+    </template>
   </div>
 </template>
 

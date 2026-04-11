@@ -82,7 +82,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
@@ -124,6 +124,11 @@ const { result: folders } = autorun(() => {
     return folder;
   });
 });
+
+watch(() => folders.value,
+  (folders) => {
+    console.log({ folders })
+  })
 
 const { result: CreaturesWithNoParty } = autorun(() => {
   const userId = Meteor.userId();

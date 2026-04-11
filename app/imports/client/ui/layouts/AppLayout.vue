@@ -23,10 +23,11 @@
       <v-spacer />
       <v-fade-transition mode="out-in">
         <div
-          :key="route.meta.title"
+          :key="route.path"
           style="
-        text-overflow: ellipsis;
-        overflow: hidden;"
+            text-overflow: ellipsis;
+            overflow: hidden;
+          "
         >
           <router-view name="toolbarItems" />
         </div>
@@ -37,7 +38,7 @@
         mode="out-in"
       >
         <div
-          :key="route.meta.title"
+          :key="route.path"
           style="width: 100%"
         >
           <router-view name="toolbarExtension" />
