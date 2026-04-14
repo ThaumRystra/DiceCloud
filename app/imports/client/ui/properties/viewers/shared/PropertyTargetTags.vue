@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  model: Record<string, any>;
+}>();
+</script>
+
 <template lang="html">
   <property-field
     v-if="model.targetByTags"
@@ -39,9 +45,3 @@
     </div>
   </property-field>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  model: Record<string, any>;
-}>();
-</script>

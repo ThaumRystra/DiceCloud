@@ -32,7 +32,7 @@ const ArchiveCreatureFiles = await s3FilesStorage.then((storage) => storage.crea
   }
 }));
 
-let archiveSchema = new SimpleSchema({
+const archiveSchema = new SimpleSchema({
   meta: {
     type: Object,
     blackbox: true,

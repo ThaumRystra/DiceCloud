@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps<{ model: Record<string, any> }>();
+
+const operation = computed(() => {
+  switch (props.model.value) {
+    case 0: return 'Immunity';
+    case 0.5: return 'Resistance';
+    case 2: return 'Vulnerability';
+    default: return '';
+  }
+});
+</script>
+
 <template lang="html">
   <div>
     <v-row dense>
@@ -56,21 +71,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = defineProps<{ model: Record<string, any> }>();
-
-const operation = computed(() => {
-  switch (props.model.value) {
-    case 0: return 'Immunity';
-    case 0.5: return 'Resistance';
-    case 2: return 'Vulnerability';
-    default: return '';
-  }
-});
-</script>
 
 <style lang="css" scoped>
 

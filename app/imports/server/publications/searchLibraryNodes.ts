@@ -13,18 +13,18 @@ Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds) {
   if (selectedNodeIds.length > 20) {
     selectedNodeIds = selectedNodeIds.slice(0, 20);
   }
-  let libraryViewPermissions = {};
+  const libraryViewPermissions = {};
   const nodes: LibraryNode[] = [];
   // Check view permissions of all libraries
-  for (let id of selectedNodeIds) {
-    let node = await LibraryNodes.findOneAsync(id);
+  for (const id of selectedNodeIds) {
+    const node = await LibraryNodes.findOneAsync(id);
     if (!node) continue;
     nodes.push(node);
-    let libraryId = node.root.id;
+    const libraryId = node.root.id;
     if (libraryViewPermissions[id]) {
       continue;
     } else {
-      let library = Libraries.findOne(libraryId, {
+      const library = Libraries.findOne(libraryId, {
         fields: {
           owner: 1,
           readers: 1,
@@ -56,7 +56,7 @@ Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds) {
 Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTerm, limit) {
   if (!type) return [];
 
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -115,8 +115,8 @@ Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTer
   }
   options.limit = limit;
 
-  let self = this;
-  let cursor = LibraryNodes.find(filter, options);
+  const self = this;
+  const cursor = LibraryNodes.find(filter, options);
   const libraries = Libraries.find({ _id: { $in: libraryIds } });
 
   // @ts-expect-error Doing crimes

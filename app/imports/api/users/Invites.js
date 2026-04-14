@@ -3,9 +3,9 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
 
-let Invites = new Mongo.Collection('invites');
+const Invites = new Mongo.Collection('invites');
 
-let InviteSchema = new SimpleSchema({
+const InviteSchema = new SimpleSchema({
   inviter: {
     type: String,
     max: 32,
@@ -38,9 +38,9 @@ if (Meteor.isServer) {
 
 async function alignInvitesWithPatreonTier(user) {
   const tier = getUserTier(user);
-  let availableInvites = tier.invites;
-  let currentlyFundedInvites = [];
-  let currenltyUnfundedInvites = [];
+  const availableInvites = tier.invites;
+  const currentlyFundedInvites = [];
+  const currenltyUnfundedInvites = [];
   await Invites.find({
     inviter: user._id
   }).forEachAsync(invite => {
@@ -60,7 +60,7 @@ async function alignInvitesWithPatreonTier(user) {
 
   // Defund or delete excess invites
   while (currentlyFundedInvites.length > availableInvites) {
-    let inviteToDefund = currentlyFundedInvites.pop();
+    const inviteToDefund = currentlyFundedInvites.pop();
     if (inviteToDefund.invitee) {
       await Invites.updateAsync(inviteToDefund._id, { $set: { isFunded: false } });
     } else {
@@ -70,11 +70,11 @@ async function alignInvitesWithPatreonTier(user) {
   // Fund unfunded invites or insert new ones
   while (currentlyFundedInvites.length < availableInvites) {
     if (currenltyUnfundedInvites.length) {
-      let inviteToFund = currenltyUnfundedInvites.pop();
+      const inviteToFund = currenltyUnfundedInvites.pop();
       currentlyFundedInvites.push(inviteToFund);
       await Invites.updateAsync(inviteToFund._id, { $set: { isFunded: true } });
     } else {
-      let inviteId = await Invites.insertAsync({ inviter: user._id, isFunded: true });
+      const inviteId = await Invites.insertAsync({ inviter: user._id, isFunded: true });
       currentlyFundedInvites.push({ _id: inviteId });
     }
   }
@@ -94,7 +94,7 @@ const getInviteToken = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ inviteId }) {
-    let invite = await Invites.findOneAsync(inviteId);
+    const invite = await Invites.findOneAsync(inviteId);
     if (this.userId !== invite.inviter) {
       throw new Meteor.Error('Invites.methods.getToken.denied',
         'You need to be the inviter of the invite to create a token');
@@ -102,7 +102,7 @@ const getInviteToken = new ValidatedMethod({
     if (invite.inviteToken) {
       return invite.inviteToken;
     } else {
-      let inviteToken = Random.id(5);
+      const inviteToken = Random.id(5);
       await Invites.updateAsync(inviteId, { $set: { inviteToken } })
       return inviteToken;
     }
@@ -127,7 +127,7 @@ const acceptInviteToken = new ValidatedMethod({
         'You need to be the logged in to accept a token');
     }
     if (Meteor.isClient) return;
-    let invite = await Invites.findOneAsync({ inviteToken });
+    const invite = await Invites.findOneAsync({ inviteToken });
     if (!invite) {
       throw new Meteor.Error('Invites.methods.acceptToken.notFound',
         'No invite could be found for this link, maybe it has already been claimed');
@@ -170,7 +170,7 @@ const revokeInvite = new ValidatedMethod({
         'You need to be the logged in to revoke a token');
     }
     if (Meteor.isClient) return;
-    let invite = await Invites.findOneAsync(inviteId);
+    const invite = await Invites.findOneAsync(inviteId);
     if (!invite) {
       throw new Meteor.Error('Invites.methods.revokeInvite.notFound',
         'No invite could be found for this id');

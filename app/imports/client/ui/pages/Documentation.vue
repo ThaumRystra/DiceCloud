@@ -1,39 +1,3 @@
-<template>
-  <v-container class="documentation">
-    <v-row justify="center">
-      <v-col
-        cols="12"
-        lg="8"
-      >
-        <v-fade-transition mode="out-in">
-          <v-card
-            v-if="doc"
-            :key="path"
-          >
-            <v-card-text>
-              <markdown-text
-                :markdown="doc"
-                @click="mdClick"
-              />
-            </v-card-text>
-          </v-card>
-          <v-progress-circular
-            v-else-if="!docsReady"
-            indeterminate
-            color="primary"
-            size="32"
-          />
-          <v-card v-else-if="!doc">
-            <v-card-title>
-              Help document not found for {{ title }}
-            </v-card-title>
-          </v-card>
-        </v-fade-transition>
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
 <script setup lang="ts">
 import { computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -87,3 +51,39 @@ function mdClick(e: Event) {
   router.push('/docs/' + path);
 }
 </script>
+
+<template>
+  <v-container class="documentation">
+    <v-row justify="center">
+      <v-col
+        cols="12"
+        lg="8"
+      >
+        <v-fade-transition mode="out-in">
+          <v-card
+            v-if="doc"
+            :key="path"
+          >
+            <v-card-text>
+              <markdown-text
+                :markdown="doc"
+                @click="mdClick"
+              />
+            </v-card-text>
+          </v-card>
+          <v-progress-circular
+            v-else-if="!docsReady"
+            indeterminate
+            color="primary"
+            size="32"
+          />
+          <v-card v-else-if="!doc">
+            <v-card-title>
+              Help document not found for {{ title }}
+            </v-card-title>
+          </v-card>
+        </v-fade-transition>
+      </v-col>
+    </v-row>
+  </v-container>
+</template>

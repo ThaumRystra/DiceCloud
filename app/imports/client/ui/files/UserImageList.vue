@@ -1,6 +1,24 @@
+<script setup lang="ts">
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import prettyBytes from 'pretty-bytes';
+import UserImages from '/imports/api/files/userImages/UserImages';
+import UserImageCard from '/imports/client/ui/files/userImages/UserImageCard.vue';
+
+subscribe('userImages');
+
+const { result: userImages } = autorun(() => {
+  const userId = Meteor.userId();
+  return UserImages.find({ userId }, { sort: { size: -1 } }).map((f: any) => {
+    f.size = prettyBytes(f.size);
+    f.link = UserImages.link(f);
+    return f;
+  });
+});
+</script>
+
 <template>
   <v-row
-    density="compact"
+    class="density"
     @drop.prevent="addDropFile"
     @dragover.prevent="imageDragOver"
   >
@@ -42,8 +60,8 @@
         class="archive-button"
         :color="uploadImageError ? 'error' : undefined"
         :disabled="uploadImageInProgress"
-        @click="$refs.uploadImageInput.click()"
         prepend-icon="mdi-file-upload-outline"
+        @click="$refs.uploadImageInput.click()"
       >
         <template v-if="uploadImageError">
           {{ uploadImageError }}
@@ -53,28 +71,10 @@
         </template>
         <v-progress-linear
           v-if="uploadImageInProgress"
-          :value="imageUploadProgress"
+          :model-value="imageUploadProgress"
           :indeterminate="imageUploadIndeterminate"
         />
       </v-btn>
     </v-col>
   </v-row>
 </template>
-
-<script setup lang="ts">
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import prettyBytes from 'pretty-bytes';
-import UserImages from '/imports/api/files/userImages/UserImages';
-import UserImageCard from '/imports/client/ui/files/userImages/UserImageCard.vue';
-
-subscribe('userImages');
-
-const { result: userImages } = autorun(() => {
-  const userId = Meteor.userId();
-  return UserImages.find({ userId }, { sort: { size: -1 } }).map((f: any) => {
-    f.size = prettyBytes(f.size);
-    f.link = UserImages.link(f);
-    return f;
-  });
-});
-</script>

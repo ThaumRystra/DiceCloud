@@ -1,19 +1,3 @@
-<template lang="html">
-  <svg-icon
-    v-if="model.icon"
-    :shape="model.icon.shape"
-    :color="color"
-    :class="{disabled}"
-  />
-  <v-icon
-    v-else
-    :color="color"
-    :class="{disabled}"
-  >
-    {{ icon }}
-  </v-icon>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { getPropertyIcon } from '/imports/constants/PROPERTIES';
@@ -30,6 +14,22 @@ const props = withDefaults(defineProps<{
 
 const icon = computed(() => getPropertyIcon(props.model?.type));
 </script>
+
+<template lang="html">
+  <svg-icon
+    v-if="model.icon"
+    :shape="model.icon.shape"
+    :color="color"
+    :class="{disabled}"
+  />
+  <v-icon
+    v-else
+    :color="color"
+    :class="{disabled}"
+  >
+    {{ icon }}
+  </v-icon>
+</template>
 
 <style lang="css" scoped>
 .svg-icon.disabled,

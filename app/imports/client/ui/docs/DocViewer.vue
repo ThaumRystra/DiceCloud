@@ -1,3 +1,32 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRouter } from 'vue-router';
+import { find } from 'lodash';
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+import DocCard from '/imports/client/ui/docs/DocCard.vue';
+import DocListItem from '/imports/client/ui/docs/DocListItem.vue';
+
+const props = defineProps<{
+  doc?: object;
+  childDocs: any[];
+  siblingDocs: any[];
+}>();
+
+const router = useRouter();
+
+const siblingHasIcon = computed(() => !!find(props.siblingDocs, doc => (doc).icon));
+
+function mdClick(e: MouseEvent) {
+  const target = (e.target || (e as any).srcElement) as HTMLAnchorElement | null;
+  const href = target && target.href;
+  if (!href) return;
+  const path = href.split('/docs/')[1];
+  if (!path) return;
+  e.preventDefault();
+  router.push('/docs/' + path);
+}
+</script>
+
 <template>
   <v-row
     justify="center"
@@ -94,35 +123,6 @@
     </v-col>
   </v-row>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { find } from 'lodash';
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import DocCard from '/imports/client/ui/docs/DocCard.vue';
-import DocListItem from '/imports/client/ui/docs/DocListItem.vue';
-
-const props = defineProps<{
-  doc?: object;
-  childDocs: any[];
-  siblingDocs: any[];
-}>();
-
-const router = useRouter();
-
-const siblingHasIcon = computed(() => !!find(props.siblingDocs, doc => (doc as any).icon));
-
-function mdClick(e: MouseEvent) {
-  const target = (e.target || (e as any).srcElement) as HTMLAnchorElement | null;
-  const href = target && target.href;
-  if (!href) return;
-  const path = href.split('/docs/')[1];
-  if (!path) return;
-  e.preventDefault();
-  router.push('/docs/' + path);
-}
-</script>
 
 <style lang="css" scoped>
 @media (min-width: 500px) {

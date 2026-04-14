@@ -1,7 +1,7 @@
 export default function spellsWithSubheaders(spells = []){
-  let result = [];
+  const result = [];
   let lastSpell = undefined;
-  let sortedSpells = [...spells].sort((a, b) => a.level - b.level)
+  const sortedSpells = [...spells].sort((a, b) => a.level - b.level)
   sortedSpells.forEach(spell => {
     if (spell.isSubheader) return;
     if (!lastSpell || spell.level > lastSpell.level){

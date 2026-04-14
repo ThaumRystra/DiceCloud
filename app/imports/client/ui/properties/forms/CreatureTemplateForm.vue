@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
+
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+</script>
+
 <template lang="html">
   <div class="creature-template-form">
     <v-row>
@@ -43,14 +54,3 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
-
-withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-</script>

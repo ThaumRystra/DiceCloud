@@ -1,28 +1,3 @@
-<template lang="html">
-  <div>
-    <div class="content">
-      <v-card class="ma-4">
-        <v-card-text>
-          <div class="d-flex flex-column align-center">
-            <upload-btn
-              title="Metadata JSON"
-              @file-update="metadataFileChanged"
-            />
-            <upload-btn
-              title="Sprite JSON"
-              @file-update="fileChanged"
-            />
-            <icon-picker
-              :value="testIcon"
-              @change="testIconChange"
-            />
-          </div>
-        </v-card-text>
-      </v-card>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { importIcons, importIconMetadata } from '/imports/client/ui/icons/importIcons';
@@ -47,6 +22,31 @@ function testIconChange(value: string, ack: Function) {
   }, 1000);
 }
 </script>
+
+<template lang="html">
+  <div>
+    <div class="content">
+      <v-card class="ma-4">
+        <v-card-text>
+          <div class="d-flex flex-column align-center">
+            <upload-btn
+              title="Metadata JSON"
+              @file-update="metadataFileChanged"
+            />
+            <upload-btn
+              title="Sprite JSON"
+              @file-update="fileChanged"
+            />
+            <icon-picker
+              :value="testIcon"
+              @change="testIconChange"
+            />
+          </div>
+        </v-card-text>
+      </v-card>
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
   svg {

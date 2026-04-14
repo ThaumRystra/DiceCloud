@@ -1,65 +1,3 @@
-<template
-  lang="html"
->
-  <VueDraggable
-    v-model="dataItems"
-    :group="'item-list'"
-    :sort="false"
-    ghost-class="item-to-creature-ghost"
-    draggable=".no-real-items"
-    style="position: relative;"
-    @add="dropItem"
-  >
-    <v-list-item
-        v-bind="$attrs"
-        :class="{
-          'text-primary v-list-item--active': isSelected,
-          'item-to-creature-drag-over': dragover,
-        }"
-        :density="dense ? 'compact' : 'default'"
-        v-on="selection ? { click() {$emit('click')} } : {}"
-      >
-      <template #prepend>
-        <v-avatar
-          :color="isSelected ? 'red darken-1' : model.color || 'grey'"
-          :size="dense ? 30 : undefined"
-          class="text-white"
-          style="transition: background 0.3s;"
-        >
-          <v-fade-transition leave-absolute>
-            <v-icon v-if="isSelected">
-              mdi-check
-            </v-icon>
-            <img
-              v-else-if="model.avatarPicture"
-              :src="model.avatarPicture"
-              :alt="model.name"
-            >
-            <template v-else>
-              <span>
-                {{ model.initial }}
-              </span>
-            </template>
-          </v-fade-transition>
-        </v-avatar>
-      </template>
-      <v-list-item-title>
-        {{ model.name }}
-      </v-list-item-title>
-      <v-list-item-subtitle v-if="!dense">
-        {{ model.alignment }} {{ model.gender }} {{ model.race }}
-      </v-list-item-subtitle>
-      <template #append>
-        <shared-icon v-if="!dense" :model="model" />
-        <drag-handle
-          v-if="!selection && !dense"
-          style="height: 100%; width: 40px;"
-        />
-      </template>
-    </v-list-item>
-  </VueDraggable>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
@@ -113,6 +51,71 @@ async function dropItem(event: any) {
   }
 }
 </script>
+
+<template
+  lang="html"
+>
+  <VueDraggable
+    v-model="dataItems"
+    :group="'item-list'"
+    :sort="false"
+    ghost-class="item-to-creature-ghost"
+    draggable=".no-real-items"
+    style="position: relative;"
+    @add="dropItem"
+  >
+    <v-list-item
+      v-bind="$attrs"
+      :class="{
+        'text-primary v-list-item--active': isSelected,
+        'item-to-creature-drag-over': dragover,
+      }"
+      :density="dense ? 'compact' : 'default'"
+      v-on="selection ? { click() {$emit('click')} } : {}"
+    >
+      <template #prepend>
+        <v-avatar
+          :color="isSelected ? 'red darken-1' : model.color || 'grey'"
+          :size="dense ? 30 : undefined"
+          class="text-white"
+          style="transition: background 0.3s;"
+        >
+          <v-fade-transition leave-absolute>
+            <v-icon v-if="isSelected">
+              mdi-check
+            </v-icon>
+            <img
+              v-else-if="model.avatarPicture"
+              :src="model.avatarPicture"
+              :alt="model.name"
+            >
+            <template v-else>
+              <span>
+                {{ model.initial }}
+              </span>
+            </template>
+          </v-fade-transition>
+        </v-avatar>
+      </template>
+      <v-list-item-title>
+        {{ model.name }}
+      </v-list-item-title>
+      <v-list-item-subtitle v-if="!dense">
+        {{ model.alignment }} {{ model.gender }} {{ model.race }}
+      </v-list-item-subtitle>
+      <template #append>
+        <shared-icon
+          v-if="!dense"
+          :model="model"
+        />
+        <drag-handle
+          v-if="!selection && !dense"
+          style="height: 100%; width: 40px;"
+        />
+      </template>
+    </v-list-item>
+  </VueDraggable>
+</template>
 
 <style lang="css">
   .item-to-creature-ghost {

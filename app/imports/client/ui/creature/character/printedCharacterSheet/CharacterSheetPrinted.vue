@@ -1,83 +1,3 @@
-<template>
-  <div class="character-sheet-printed fill-height">
-    <v-fade-transition mode="out-in">
-      <div
-        v-if="!characterReady"
-        key="character-loading"
-        class="fill-height layout justify-center align-center"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="64"
-        />
-      </div>
-      <div v-else-if="!creature">
-        <div class="d-flex flex-column align-center justify-center">
-          <h2 style="margin: 48px 28px 16px">
-            Character not found
-          </h2>
-          <h3>
-            Either this character does not exist, or you don't have permission
-            to view it.
-          </h3>
-        </div>
-      </div>
-      <v-theme-provider
-        v-else
-        light
-      >
-        <div class="page pa-3">
-          <div
-            class="title-block px-3 d-flex align-center"
-            style="page-break-after: avoid;"
-          >
-            <div class="logo-background" />
-            <div class="creature-name mr-3">
-              {{ creature.name }}
-            </div>
-            <div class="text-right flex mr-4">
-              <div v-if="creature.alignment || background">
-                {{ creature.alignment }} {{ background }}
-              </div>
-              <dir v-if="race || creature.gender">
-                {{ creature.gender }} {{ race }}
-              </dir>
-              <div v-if="level && classes && classes.length === 1">
-                Level {{ level }} {{ classes[0].name }}
-              </div>
-              <div v-else-if="level">
-                Level {{ level }} ({{classes.map(c => `${c.name} ${c.level}`).join(', ')}})
-              </div>
-            </div>
-            <qrcode-vue
-              style="height: 100px"
-              render-as="svg"
-              :value="creatureUrl"
-            />
-          </div>
-          <div
-            class="text-right mt-3 mr-4"
-            style="font-size: 8pt; margin-bottom: -4px; page-break-after: avoid;"
-          >
-            {{ creatureUrl }}
-          </div>
-          <printed-stats :creature-id="creatureId" />
-          <printed-inventory
-            :creature-id="creatureId"
-            class="page-break-before"
-          />
-          <printed-spells
-            v-if="!creature.settings.hideSpellsTab"
-            class="page-break-before"
-            :creature-id="creatureId"
-          />
-        </div>
-      </v-theme-provider>
-    </v-fade-transition>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, watch, provide, reactive, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
@@ -219,6 +139,86 @@ onBeforeUnmount(() => {
   nameObserver?.stop();
 });
 </script>
+
+<template>
+  <div class="character-sheet-printed fill-height">
+    <v-fade-transition mode="out-in">
+      <div
+        v-if="!characterReady"
+        key="character-loading"
+        class="fill-height layout justify-center align-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
+        />
+      </div>
+      <div v-else-if="!creature">
+        <div class="d-flex flex-column align-center justify-center">
+          <h2 style="margin: 48px 28px 16px">
+            Character not found
+          </h2>
+          <h3>
+            Either this character does not exist, or you don't have permission
+            to view it.
+          </h3>
+        </div>
+      </div>
+      <v-theme-provider
+        v-else
+        light
+      >
+        <div class="page pa-3">
+          <div
+            class="title-block px-3 d-flex align-center"
+            style="page-break-after: avoid;"
+          >
+            <div class="logo-background" />
+            <div class="creature-name mr-3">
+              {{ creature.name }}
+            </div>
+            <div class="text-right flex mr-4">
+              <div v-if="creature.alignment || background">
+                {{ creature.alignment }} {{ background }}
+              </div>
+              <dir v-if="race || creature.gender">
+                {{ creature.gender }} {{ race }}
+              </dir>
+              <div v-if="level && classes && classes.length === 1">
+                Level {{ level }} {{ classes[0].name }}
+              </div>
+              <div v-else-if="level">
+                Level {{ level }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
+              </div>
+            </div>
+            <qrcode-vue
+              style="height: 100px"
+              render-as="svg"
+              :value="creatureUrl"
+            />
+          </div>
+          <div
+            class="text-right mt-3 mr-4"
+            style="font-size: 8pt; margin-bottom: -4px; page-break-after: avoid;"
+          >
+            {{ creatureUrl }}
+          </div>
+          <printed-stats :creature-id="creatureId" />
+          <printed-inventory
+            :creature-id="creatureId"
+            class="page-break-before"
+          />
+          <printed-spells
+            v-if="!creature.settings.hideSpellsTab"
+            class="page-break-before"
+            :creature-id="creatureId"
+          />
+        </div>
+      </v-theme-provider>
+    </v-fade-transition>
+  </div>
+</template>
 
 <style>
 .character-sheet-printed {

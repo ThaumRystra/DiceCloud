@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
+
+const maintenanceMode = MAINTENANCE_MODE;
+</script>
+
 <template>
   <div
     style="height: 100%;"
@@ -30,9 +36,3 @@
     </h1>
   </div>
 </template>
-
-<script setup lang="ts">
-import MAINTENANCE_MODE from '/imports/constants/MAINTENANCE_MODE';
-
-const maintenanceMode = MAINTENANCE_MODE;
-</script>

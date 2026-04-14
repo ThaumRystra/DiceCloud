@@ -1,3 +1,14 @@
+<script setup lang="ts">
+defineProps<{
+  icon?: string;
+  label?: string;
+  disabled?: boolean;
+}>();
+const emit = defineEmits<{
+  click: [];
+}>();
+</script>
+
 <template>
   <v-btn
     icon
@@ -13,17 +24,6 @@
     </span>
   </v-btn>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  icon?: string;
-  label?: string;
-  disabled?: boolean;
-}>();
-const emit = defineEmits<{
-  click: [];
-}>();
-</script>
 
 <style scoped>
   /*

@@ -1,67 +1,3 @@
-<template>
-  <div
-    class="d-flex align-center justify-center increment-menu"
-  >
-    <v-spacer />
-    <v-btn-toggle
-      :model-value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
-      class="mx-2"
-      @click="editInput?.focus()"
-    >
-      <v-btn
-        :disabled="context.editPermission === false"
-        class="filled"
-        @click="toggleAdd(); $nextTick(() => editInput?.focus())"
-      >
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
-      <v-btn
-        :disabled="context.editPermission === false"
-        class="filled"
-        @click="toggleSubtract(); $nextTick(() => editInput?.focus())"
-      >
-        <v-icon>mdi-minus</v-icon>
-      </v-btn>
-    </v-btn-toggle>
-    <v-text-field
-      ref="editInput"
-      :solo="!flat"
-      :class="flat && 'ma-0 pa-0'"
-      hide-details
-      type="number"
-      style="max-width: 120px;"
-      min="0"
-      :value="editValue"
-      :prepend-inner-icon="operationIcon(operation)"
-      :disabled="context.editPermission === false"
-      @focus="$event.target.select()"
-      @keypress="keypress"
-      @input="input"
-    />
-    <v-btn
-      :small="!flat"
-      :fab="!flat"
-      :text="flat"
-      :icon="flat"
-      class="mx-2 filled"
-      @click="commitEdit"
-    >
-      <v-icon>mdi-check</v-icon>
-    </v-btn>
-    <v-btn
-      :small="!flat"
-      :fab="!flat"
-      :text="flat"
-      :icon="flat"
-      class="filled"
-      @click="cancelEdit"
-    >
-      <v-icon>mdi-close</v-icon>
-    </v-btn>
-    <v-spacer />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, inject, nextTick } from 'vue';
 
@@ -147,6 +83,70 @@ function input(value: string) {
   }
 }
 </script>
+
+<template>
+  <div
+    class="d-flex align-center justify-center increment-menu"
+  >
+    <v-spacer />
+    <v-btn-toggle
+      :model-value="operation === 'add' ? 0: operation === 'subtract' ? 1 : null"
+      class="mx-2"
+      @click="editInput?.focus()"
+    >
+      <v-btn
+        :disabled="context.editPermission === false"
+        class="filled"
+        @click="toggleAdd(); $nextTick(() => editInput?.focus())"
+      >
+        <v-icon>mdi-plus</v-icon>
+      </v-btn>
+      <v-btn
+        :disabled="context.editPermission === false"
+        class="filled"
+        @click="toggleSubtract(); $nextTick(() => editInput?.focus())"
+      >
+        <v-icon>mdi-minus</v-icon>
+      </v-btn>
+    </v-btn-toggle>
+    <v-text-field
+      ref="editInput"
+      :variant="!flat ? 'solo' : undefined"
+      :class="flat && 'ma-0 pa-0'"
+      hide-details
+      type="number"
+      style="max-width: 120px;"
+      min="0"
+      :model-value="editValue"
+      :prepend-inner-icon="operationIcon(operation)"
+      :disabled="context.editPermission === false"
+      @focus="$event.target.select()"
+      @keypress="keypress"
+      @update:model-value="input"
+    />
+    <v-btn
+      :size="!flat ? 'small' : undefined"
+      :fab="!flat"
+      :text="flat"
+      :icon="flat"
+      class="mx-2 filled"
+      @click="commitEdit"
+    >
+      <v-icon>mdi-check</v-icon>
+    </v-btn>
+    <v-btn
+      :size="!flat ? 'small' : undefined"
+      :fab="!flat"
+      :text="flat"
+      :icon="flat"
+      class="filled"
+      @click="cancelEdit"
+    >
+      <v-icon>mdi-close</v-icon>
+    </v-btn>
+    <v-spacer />
+  </div>
+</template>
 
 <style scoped>
 .filled.v-theme--light {

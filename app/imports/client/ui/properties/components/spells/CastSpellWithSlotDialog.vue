@@ -1,164 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        Cast a Spell
-      </v-toolbar-title>
-      <v-spacer />
-      <text-field
-        ref="focusFirst"
-        label="Name"
-        prepend-inner-icon="mdi-magnify"
-        regular
-        hide-details
-        :value="searchValue"
-        :error-messages="searchError"
-        :debounce="200"
-        @change="searchChanged"
-      />
-      <v-menu
-        v-model="filterMenuOpen"
-        left
-        :close-on-content-click="false"
-      >
-        <template #activator="{ props }">
-          <v-btn
-            icon
-            :class="{ 'text-primary': filtersApplied }"
-            v-bind="props"
-          >
-            <v-icon>mdi-filter</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item
-            v-for="filter in booleanFilters"
-            :key="filter.name"
-            style="height: 52px;"
-          >
-            <v-checkbox
-              v-model="filter.enabled"
-              style="flex-grow: 0; margin-right: 8px;"
-            />
-            <v-switch
-              v-model="filter.value"
-              :disabled="!filter.enabled"
-              :label="filter.name"
-            />
-          </v-list-item>
-          <div class="layout">
-            <v-btn
-              variant="text"
-              @click="clearBooleanFilters"
-            >
-              Clear
-            </v-btn>
-            <v-spacer />
-            <v-btn
-              variant="text"
-              class="text-primary"
-              @click="filterMenuOpen = false"
-            >
-              Done
-            </v-btn>
-          </div>
-        </v-list>
-      </v-menu>
-    </template>
-    <split-list-layout>
-      <template #left>
-        <div
-          key="slot-title"
-          class="text-h6 my-3"
-        >
-          Slot
-        </div>
-        <v-list-item
-          key="cantrip-dummy-slot"
-          class="spell-slot-list-tile"
-          :class="{ 'text-primary': selectedSlotId === 'no-slot' }"
-          value="no-slot"
-          :disabled="!canCastSpellWithSlot(selectedSpell, 'no-slot')"
-          @click="selectedSlotId = 'no-slot'"
-        >
-          <v-list-item-title>
-            Cast without spell slot
-          </v-list-item-title>
-        </v-list-item>
-        <v-list-item
-          key="ritual-dummy-slot"
-          class="spell-slot-list-tile"
-          :class="{ 'text-primary': selectedSlotId === 'ritual' }"
-          value="ritual"
-          :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
-          @click="selectedSlotId = 'ritual'"
-        >
-          <v-list-item-title>
-            Cast as ritual
-          </v-list-item-title>
-        </v-list-item>
-        <spell-slot-list-tile
-          v-for="spellSlot in spellSlots"
-          :key="spellSlot._id"
-          :model="spellSlot"
-          :class="{ 'text-primary': selectedSlotId === spellSlot._id }"
-          :value="spellSlot._id"
-          :disabled="!canCastSpellWithSlot(selectedSpell, spellSlot._id, spellSlot)"
-          view-only
-          @click="selectedSlotId = spellSlot._id"
-        />
-      </template>
-      <template #right>
-        <div
-          key="spell-title-right"
-          class="text-h6 my-3"
-        >
-          Spell
-        </div>
-        <template v-for="spell in computedSpells">
-          <v-list-subheader
-            v-if="spell.isSubheader"
-            :key="`${spell.level}-header`"
-            class="item"
-          >
-            {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
-          </v-list-subheader>
-          <spell-list-tile
-            v-else
-            :key="spell._id"
-            hide-handle
-            show-info-button
-            :model="spell"
-            :value="spell._id"
-            :class="{ 'text-primary': selectedSpellId === spell._id }"
-            :disabled="!canCastSpellWithSlot(spell, selectedSlotId, selectedSlot)"
-            @show-info="spellDialog(spell._id)"
-          />
-        </template>
-      </template>
-    </split-list-layout>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        @click="$store.dispatch('popDialogStack')"
-      >
-        Cancel
-      </v-btn>
-      <v-btn
-        variant="text"
-        :disabled="!canCast"
-        class="mx-2 px-4"
-        color="primary"
-        data-id="cast-spell-dialog-btn"
-        @click="cast"
-      >
-        Cast
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, computed, watch, provide, onMounted } from 'vue';
 import { useStore } from 'vuex';
@@ -386,6 +225,167 @@ async function cast() {
   }
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        Cast a Spell
+      </v-toolbar-title>
+      <v-spacer />
+      <text-field
+        ref="focusFirst"
+        label="Name"
+        prepend-inner-icon="mdi-magnify"
+        regular
+        hide-details
+        :value="searchValue"
+        :error-messages="searchError"
+        :debounce="200"
+        @change="searchChanged"
+      />
+      <v-menu
+        v-model="filterMenuOpen"
+        location="left"
+        :close-on-content-click="false"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            icon
+            :class="{ 'text-primary': filtersApplied }"
+            v-bind="props"
+          >
+            <v-icon>mdi-filter</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            v-for="filter in booleanFilters"
+            :key="filter.name"
+            style="height: 52px;"
+          >
+            <v-checkbox
+              v-model="filter.enabled"
+              style="flex-grow: 0; margin-right: 8px;"
+            />
+            <v-switch
+              v-model="filter.value"
+              :disabled="!filter.enabled"
+              :label="filter.name"
+            />
+          </v-list-item>
+          <div class="layout">
+            <v-btn
+              variant="text"
+              @click="clearBooleanFilters"
+            >
+              Clear
+            </v-btn>
+            <v-spacer />
+            <v-btn
+              variant="text"
+              class="text-primary"
+              @click="filterMenuOpen = false"
+            >
+              Done
+            </v-btn>
+          </div>
+        </v-list>
+      </v-menu>
+    </template>
+    <split-list-layout>
+      <template #left>
+        <div
+          key="slot-title"
+          class="text-h6 my-3"
+        >
+          Slot
+        </div>
+        <v-list-item
+          key="cantrip-dummy-slot"
+          class="spell-slot-list-tile"
+          :class="{ 'text-primary': selectedSlotId === 'no-slot' }"
+          value="no-slot"
+          :disabled="!canCastSpellWithSlot(selectedSpell, 'no-slot')"
+          @click="selectedSlotId = 'no-slot'"
+        >
+          <v-list-item-title>
+            Cast without spell slot
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          key="ritual-dummy-slot"
+          class="spell-slot-list-tile"
+          :class="{ 'text-primary': selectedSlotId === 'ritual' }"
+          value="ritual"
+          :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
+          @click="selectedSlotId = 'ritual'"
+        >
+          <v-list-item-title>
+            Cast as ritual
+          </v-list-item-title>
+        </v-list-item>
+        <spell-slot-list-tile
+          v-for="spellSlot in spellSlots"
+          :key="spellSlot._id"
+          :model="spellSlot"
+          :class="{ 'text-primary': selectedSlotId === spellSlot._id }"
+          :value="spellSlot._id"
+          :disabled="!canCastSpellWithSlot(selectedSpell, spellSlot._id, spellSlot)"
+          view-only
+          @click="selectedSlotId = spellSlot._id"
+        />
+      </template>
+      <template #right>
+        <div
+          key="spell-title-right"
+          class="text-h6 my-3"
+        >
+          Spell
+        </div>
+        <template v-for="spell in computedSpells">
+          <v-list-subheader
+            v-if="spell.isSubheader"
+            :key="`${spell.level}-header`"
+            class="item"
+          >
+            {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+          </v-list-subheader>
+          <spell-list-tile
+            v-else
+            :key="spell._id"
+            hide-handle
+            show-info-button
+            :model="spell"
+            :value="spell._id"
+            :class="{ 'text-primary': selectedSpellId === spell._id }"
+            :disabled="!canCastSpellWithSlot(spell, selectedSlotId, selectedSlot)"
+            @show-info="spellDialog(spell._id)"
+          />
+        </template>
+      </template>
+    </split-list-layout>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Cancel
+      </v-btn>
+      <v-btn
+        variant="text"
+        :disabled="!canCast"
+        class="mx-2 px-4"
+        color="primary"
+        data-id="cast-spell-dialog-btn"
+        @click="cast"
+      >
+        Cast
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped>
 .v-list {

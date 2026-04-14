@@ -131,10 +131,10 @@ export function storeLibraryNodeReferences(nodes) {
 export async function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
   depth += 1;
   // New nodes added this function
-  let newNodes = [];
+  const newNodes = [];
 
   // Filter out the reference nodes we replace
-  let resultingNodes = [];
+  const resultingNodes = [];
   for (const node of nodes) {
     // This isn't a reference node, continue as normal
     if (node.type !== 'reference') {
@@ -163,7 +163,7 @@ export async function reifyNodeReferences(nodes, visitedRefs = new Set(), depth 
     }
 
     // Get all the descendants of the referenced node
-    let descendants = await LibraryNodes.find({
+    const descendants = await LibraryNodes.find({
       ...getFilter.descendants(referencedNode),
       removed: { $ne: true },
     }, {

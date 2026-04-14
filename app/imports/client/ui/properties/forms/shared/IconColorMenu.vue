@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+
+defineProps<{
+  model: Record<string, any>;
+}>();
+</script>
+
 <template lang="html">
   <div
     class="d-flex flex-wrap align-start"
@@ -26,15 +35,6 @@
     </outlined-input>
   </div>
 </template>
-
-<script setup lang="ts">
-import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
-import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-
-defineProps<{
-  model: Record<string, any>;
-}>();
-</script>
 
 <style lang="css" scoped>
 </style>

@@ -1,3 +1,47 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites';
+
+const props = defineProps<{
+  inviteId: string;
+}>();
+
+const inviteToken = ref('');
+const error = ref('');
+const loading = ref(false);
+
+const { result: invite } = autorun(() => Invites.findOne(props.inviteId));
+const { result: username } = autorun(() => {
+  if (!invite.value) return undefined;
+  const user = Meteor.users.findOne((invite.value).invitee);
+  return user && user.username;
+});
+
+const inviteLink = computed(() => {
+  const token = inviteToken.value;
+  return token && `https://dicecloud.com/invite/${token}`;
+});
+
+async function getInviteLink() {
+  loading.value = true;
+  try {
+    const result = await getInviteToken.callAsync({ inviteId: props.inviteId });
+    loading.value = false;
+    error.value = '';
+    inviteToken.value = result;
+  } catch (e: any) {
+    loading.value = false;
+    error.value = e.message || e;
+  }
+}
+
+function revokeInviteFn() {
+  revokeInvite.callAsync({ inviteId: props.inviteId });
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -41,50 +85,6 @@
     </div>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Invites, { getInviteToken, revokeInvite } from '/imports/api/users/Invites';
-
-const props = defineProps<{
-  inviteId: string;
-}>();
-
-const inviteToken = ref('');
-const error = ref('');
-const loading = ref(false);
-
-const { result: invite } = autorun(() => Invites.findOne(props.inviteId));
-const { result: username } = autorun(() => {
-  if (!invite.value) return undefined;
-  const user = Meteor.users.findOne((invite.value as any).invitee);
-  return user && user.username;
-});
-
-const inviteLink = computed(() => {
-  const token = inviteToken.value;
-  return token && `https://dicecloud.com/invite/${token}`;
-});
-
-async function getInviteLink() {
-  loading.value = true;
-  try {
-    const result = await getInviteToken.callAsync({ inviteId: props.inviteId });
-    loading.value = false;
-    error.value = '';
-    inviteToken.value = result;
-  } catch (e: any) {
-    loading.value = false;
-    error.value = e.message || e;
-  }
-}
-
-function revokeInviteFn() {
-  revokeInvite.callAsync({ inviteId: props.inviteId });
-}
-</script>
 
 <style lang="css" scoped>
 

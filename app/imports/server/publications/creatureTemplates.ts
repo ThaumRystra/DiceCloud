@@ -16,7 +16,7 @@ Meteor.publish('creatureTemplates', async function (searchTerm, limit) {
   limit = limit || 50;
   check(limit, Number);
 
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -73,12 +73,12 @@ Meteor.publish('creatureTemplates', async function (searchTerm, limit) {
   }
   options.limit = limit;
 
-  let self = this;
+  const self = this;
   //@ts-expect-error Doing crime
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
-  let cursor = LibraryNodes.find(filter, options);
-  let observeHandle = cursor.observeChanges({
+  const cursor = LibraryNodes.find(filter, options);
+  const observeHandle = cursor.observeChanges({
     added: function (id, fields: Partial<LibraryNode> & { _creatureTemplateResult?: true }) {
       fields._creatureTemplateResult = true;
       self.added('libraryNodes', id, fields);

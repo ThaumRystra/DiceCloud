@@ -1,42 +1,3 @@
-<template lang="html">
-  <div
-    class="spells"
-  >
-    <div
-      class="label text-center octagon-border my-2 avoid-page-break-after"
-    >
-      Spells
-    </div>
-    <column-layout
-      v-if="spellsWithoutList && spellsWithoutList.length"
-      wide-columns
-    >
-      <div
-        v-for="spell in spellsWithoutList"
-        :key="spell._id"
-      >
-        <printed-spell :model="spell" />
-      </div>
-    </column-layout>
-    <div
-      v-for="spellList in spellListsWithoutAncestorSpellLists"
-      :key="spellList._id"
-    >
-      <printed-spell-list
-        :model="spellList"
-      />
-      <column-layout wide-columns>
-        <div
-          v-for="spell in spellList.spells"
-          :key="spell._id"
-        >
-          <printed-spell :model="spell" />
-        </div>
-      </column-layout>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -92,6 +53,45 @@ const spellListIds = computed(() =>
   (spellLists.value || []).map((sl: any) => sl._id)
 );
 </script>
+
+<template lang="html">
+  <div
+    class="spells"
+  >
+    <div
+      class="label text-center octagon-border my-2 avoid-page-break-after"
+    >
+      Spells
+    </div>
+    <column-layout
+      v-if="spellsWithoutList && spellsWithoutList.length"
+      wide-columns
+    >
+      <div
+        v-for="spell in spellsWithoutList"
+        :key="spell._id"
+      >
+        <printed-spell :model="spell" />
+      </div>
+    </column-layout>
+    <div
+      v-for="spellList in spellListsWithoutAncestorSpellLists"
+      :key="spellList._id"
+    >
+      <printed-spell-list
+        :model="spellList"
+      />
+      <column-layout wide-columns>
+        <div
+          v-for="spell in spellList.spells"
+          :key="spell._id"
+        >
+          <printed-spell :model="spell" />
+        </div>
+      </column-layout>
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
 

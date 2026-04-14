@@ -1,3 +1,11 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  value?: string;
+}>(), {
+  value: undefined,
+});
+</script>
+
 <template lang="html">
   <div
     v-if="value"
@@ -6,12 +14,4 @@
     <code>{{ value }}</code>
   </div>
 </template>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  value?: string;
-}>(), {
-  value: undefined,
-});
-</script>
 

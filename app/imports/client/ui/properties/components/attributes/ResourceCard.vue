@@ -1,22 +1,3 @@
-<template lang="html">
-  <v-card
-    class="resource-card"
-    :class="hover ? 'elevation-8': ''"
-    :color="model.color"
-    :theme="model.color ? (isDark ? 'dark' : 'light') : undefined"
-  >
-    <resource-card-content
-      :model="model"
-      :hover="hover"
-      @mouseover="hover = true"
-      @mouseleave="hover = false"
-      @click="$emit('click')"
-      @change="e => $emit('change', e)"
-    />
-    <card-highlight :active="hover" />
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
@@ -35,6 +16,25 @@ const isDark = computed(() => {
   return isDarkColor(props.model.color);
 });
 </script>
+
+<template lang="html">
+  <v-card
+    class="resource-card"
+    :class="hover ? 'elevation-8': ''"
+    :color="model.color"
+    :theme="model.color ? (isDark ? 'dark' : 'light') : undefined"
+  >
+    <resource-card-content
+      :model="model"
+      :hover="hover"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+      @click="$emit('click')"
+      @change="e => $emit('change', e)"
+    />
+    <card-highlight :active="hover" />
+  </v-card>
+</template>
 
 <style lang="css">
 .resource-card {

@@ -1,47 +1,3 @@
-<template lang="html">
-  <toolbar-card
-    :color="model.color"
-    :data-id="model._id"
-    @toolbarclick="clickContainer(model._id)"
-  >
-    <template #toolbar>
-      <v-toolbar-title>
-        {{ model.name }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-toolbar-title>
-        <v-icon
-          size="small"
-          style="width: 16px;"
-          class="mr-1"
-        >
-          $vuetify.icons.weight
-        </v-icon>
-        {{ weight }}
-      </v-toolbar-title>
-      <v-toolbar-title
-        class="d-flex align-center"
-        style="flex-grow: 0;"
-      >
-        <v-icon
-          size="small"
-          style="width: 16px;"
-          class="mr-1"
-        >
-          $vuetify.icons.two_coins
-        </v-icon>
-        <coin-value :value="value" />
-      </v-toolbar-title>
-    </template>
-    <v-card-text class="px-0">
-      <item-list
-        :item-ids="itemIds"
-        :parent="model"
-      />
-    </v-card-text>
-  </toolbar-card>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -101,5 +57,49 @@ function clickProperty(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <toolbar-card
+    :color="model.color"
+    :data-id="model._id"
+    @toolbarclick="clickContainer(model._id)"
+  >
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ model.name }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-toolbar-title>
+        <v-icon
+          size="small"
+          style="width: 16px;"
+          class="mr-1"
+        >
+          $vuetify.icons.weight
+        </v-icon>
+        {{ weight }}
+      </v-toolbar-title>
+      <v-toolbar-title
+        class="d-flex align-center"
+        style="flex-grow: 0;"
+      >
+        <v-icon
+          size="small"
+          style="width: 16px;"
+          class="mr-1"
+        >
+          $vuetify.icons.two_coins
+        </v-icon>
+        <coin-value :value="value" />
+      </v-toolbar-title>
+    </template>
+    <v-card-text class="px-0">
+      <item-list
+        :item-ids="itemIds"
+        :parent="model"
+      />
+    </v-card-text>
+  </toolbar-card>
+</template>
 
 <style lang="css" scoped></style>

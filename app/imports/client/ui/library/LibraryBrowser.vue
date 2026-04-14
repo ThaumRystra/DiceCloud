@@ -1,71 +1,3 @@
-<template lang="html">
-  <div
-    class="library-browser"
-    style="
-      background-color: inherit;
-      overflow-y: auto;
-    "
-  >
-    <v-expansion-panels
-      v-model="expandedLibrary"
-      accordian
-      flat
-      multiple
-    >
-      <v-expansion-panel
-        v-for="library in libraries"
-        :key="library._id"
-        :data-id="library._id"
-      >
-        <v-expansion-panel-title>
-          <div class="text-h6">
-            {{ library.name }}
-          </div>
-        </v-expansion-panel-title>
-        <v-expansion-panel-text>
-          <div class="d-flex justify-space-around ma-2">
-            <insert-library-node-button
-              v-if="editPermission(library)"
-              :library-id="library._id"
-              :selected-node-id="selectedNode && selectedNode._id"
-              @selected="e => $emit('selected', e)"
-            />
-            <v-btn
-              color="primary"
-              variant="outlined"
-              size="small"
-              @click="$router.push(`/library/${library._id}`)"
-            >
-              <v-icon>mdi-arrow-right</v-icon>
-            </v-btn>
-          </div>
-          <library-contents-container
-            :library-id="library._id"
-            :organize-mode="organizeMode && editPermission(library)"
-            :edit-mode="editMode"
-            :selected-node="selectedNode"
-            :filter="filter"
-            should-subscribe
-            @selected="e => $emit('selected', e)"
-          />
-        </v-expansion-panel-text>
-      </v-expansion-panel>
-    </v-expansion-panels>
-    <v-btn
-      v-show="noLibrariesExpanded"
-      v-if="editMode"
-      variant="text"
-      color="primary"
-      style="background-color: inherit;"
-      data-id="insert-library-button"
-      @click="insertLibrary"
-    >
-      <v-icon>mdi-plus</v-icon>
-      New library
-    </v-btn>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -140,6 +72,74 @@ function editLibrary(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div
+    class="library-browser"
+    style="
+      background-color: inherit;
+      overflow-y: auto;
+    "
+  >
+    <v-expansion-panels
+      v-model="expandedLibrary"
+      accordian
+      flat
+      multiple
+    >
+      <v-expansion-panel
+        v-for="library in libraries"
+        :key="library._id"
+        :data-id="library._id"
+      >
+        <v-expansion-panel-title>
+          <div class="text-h6">
+            {{ library.name }}
+          </div>
+        </v-expansion-panel-title>
+        <v-expansion-panel-text>
+          <div class="d-flex justify-space-around ma-2">
+            <insert-library-node-button
+              v-if="editPermission(library)"
+              :library-id="library._id"
+              :selected-node-id="selectedNode && selectedNode._id"
+              @selected="e => $emit('selected', e)"
+            />
+            <v-btn
+              color="primary"
+              variant="outlined"
+              size="small"
+              @click="$router.push(`/library/${library._id}`)"
+            >
+              <v-icon>mdi-arrow-right</v-icon>
+            </v-btn>
+          </div>
+          <library-contents-container
+            :library-id="library._id"
+            :organize-mode="organizeMode && editPermission(library)"
+            :edit-mode="editMode"
+            :selected-node="selectedNode"
+            :filter="filter"
+            should-subscribe
+            @selected="e => $emit('selected', e)"
+          />
+        </v-expansion-panel-text>
+      </v-expansion-panel>
+    </v-expansion-panels>
+    <v-btn
+      v-show="noLibrariesExpanded"
+      v-if="editMode"
+      variant="text"
+      color="primary"
+      style="background-color: inherit;"
+      data-id="insert-library-button"
+      @click="insertLibrary"
+    >
+      <v-icon>mdi-plus</v-icon>
+      New library
+    </v-btn>
+  </div>
+</template>
 
 <style lang="css">
 .library-browser .v-expansion-panel-text__wrapper,

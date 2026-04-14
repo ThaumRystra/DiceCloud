@@ -3,8 +3,8 @@ import LibraryNodes from '/imports/api/library/LibraryNodes';
 
 export default function createListOfProperties(filter = {}, getNamesWithValues) {
   filter.removed = { $ne: true };
-  let propertyList = [];
-  let variableNames = new Set();
+  const propertyList = [];
+  const variableNames = new Set();
   function addUniquePropertys(property) {
     if (property.variableName && !variableNames.has(property.variableName)) {
       variableNames.add(property.variableName);
@@ -15,7 +15,7 @@ export default function createListOfProperties(filter = {}, getNamesWithValues) 
       });
     }
   }
-  let options = { sort: { left: 1, variableName: 1 } }
+  const options = { sort: { left: 1, variableName: 1 } }
   CreatureProperties.find(filter, options).forEach(addUniquePropertys);
   LibraryNodes.find(filter, options).forEach(addUniquePropertys);
   if (getNamesWithValues) return propertyList;

@@ -1,41 +1,3 @@
-<template lang="html">
-  <transition-group name="slide">
-    <dialog-base
-      v-show="!value"
-      key="left"
-      class="step-1"
-    >
-      <template #toolbar>
-        <v-toolbar-title>
-          Property Type
-        </v-toolbar-title>
-        <v-spacer />
-        <v-switch
-          :model-value="showPropertyHelp"
-          append-icon="mdi-help"
-          hide-details
-          @change="propertyHelpChanged"
-        />
-      </template>
-      <template #unwrapped-content>
-        <property-selector
-          :no-library-only-props="noLibraryOnlyProps"
-          :parent-type="parentType"
-          @select="type => $emit('input', type)"
-        />
-      </template>
-    </dialog-base>
-    <div
-      v-show="value"
-      key="right"
-      class="step-2"
-      style="height: 100%;"
-    >
-      <slot />
-    </div>
-  </transition-group>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
@@ -71,6 +33,44 @@ async function propertyHelpChanged(value: boolean) {
   }
 }
 </script>
+
+<template lang="html">
+  <transition-group name="slide">
+    <dialog-base
+      v-show="!value"
+      key="left"
+      class="step-1"
+    >
+      <template #toolbar>
+        <v-toolbar-title>
+          Property Type
+        </v-toolbar-title>
+        <v-spacer />
+        <v-switch
+          :model-value="showPropertyHelp"
+          append-icon="mdi-help"
+          hide-details
+          @update:model-value="propertyHelpChanged"
+        />
+      </template>
+      <template #unwrapped-content>
+        <property-selector
+          :no-library-only-props="noLibraryOnlyProps"
+          :parent-type="parentType"
+          @select="type => $emit('input', type)"
+        />
+      </template>
+    </dialog-base>
+    <div
+      v-show="value"
+      key="right"
+      class="step-2"
+      style="height: 100%;"
+    >
+      <slot />
+    </div>
+  </transition-group>
+</template>
 
 <style lang="css" scoped>
 .slide-enter-active,

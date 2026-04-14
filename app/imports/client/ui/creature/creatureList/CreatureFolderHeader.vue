@@ -1,44 +1,3 @@
-<template lang="html">
-  <div :style="{ minHeight: dense? '': '32px' }" class="d-flex align-center flex-grow-1">
-    <div
-      v-if="!renaming"
-      class="text-truncate text-no-wrap"
-    >
-      {{ model.name }}
-    </div>
-    <text-field
-      v-if="renaming"
-      ref="name-input"
-      regular
-      hide-details
-      density="compact"
-      :value="newName"
-      @change="renameFolder"
-      @click.stop=""
-      @input.stop=""
-      @keydown.stop=""
-      @keyup.stop=""
-    />
-    <template v-if="!selection && !dense">
-      <v-spacer />
-      <v-btn
-        v-if="renaming || open"
-        :icon="renaming ? 'mdi-check' : 'mdi-pencil'"
-        variant="plain"
-        density="compact"
-        @click.stop="renaming = !renaming"
-      />
-      <v-btn
-        v-if="open"
-        icon="mdi-delete"
-        variant="plain"
-        density="compact"
-        @click.stop="removeFolder"
-      />
-    </template>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
 import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName';
@@ -87,6 +46,50 @@ async function removeFolder() {
   }
 }
 </script>
+
+<template lang="html">
+  <div
+    :style="{ minHeight: dense? '': '32px' }"
+    class="d-flex align-center flex-grow-1"
+  >
+    <div
+      v-if="!renaming"
+      class="text-truncate text-no-wrap"
+    >
+      {{ model.name }}
+    </div>
+    <text-field
+      v-if="renaming"
+      ref="name-input"
+      regular
+      hide-details
+      density="compact"
+      :value="newName"
+      @change="renameFolder"
+      @click.stop=""
+      @input.stop=""
+      @keydown.stop=""
+      @keyup.stop=""
+    />
+    <template v-if="!selection && !dense">
+      <v-spacer />
+      <v-btn
+        v-if="renaming || open"
+        :icon="renaming ? 'mdi-check' : 'mdi-pencil'"
+        variant="plain"
+        density="compact"
+        @click.stop="renaming = !renaming"
+      />
+      <v-btn
+        v-if="open"
+        icon="mdi-delete"
+        variant="plain"
+        density="compact"
+        @click.stop="removeFolder"
+      />
+    </template>
+  </div>
+</template>
 
 <style lang="css" scoped>
 </style>

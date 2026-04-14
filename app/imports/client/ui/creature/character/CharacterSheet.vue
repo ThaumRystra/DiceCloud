@@ -1,117 +1,3 @@
-<template>
-  <div class="character-sheet fill-height">
-    <v-fade-transition mode="out-in">
-      <div v-if="!creature">
-        <div class="d-flex flex-column align-center justify-center">
-          <h2 style="margin: 48px 28px 16px">
-            Character not found
-          </h2>
-          <h3>
-            Either this character does not exist, or you don't have permission
-            to view it.
-          </h3>
-        </div>
-      </div>
-      <div
-        v-else
-        key="character-tabs"
-        class="card-background fill-height"
-      >
-        <v-window
-          :key="'' +
-            creature.settings.hideSpellsTab +
-            creature.settings.showTreeTab
-            "
-          :model-value="$store.getters.tabById(creatureId)"
-          @update:model-value="e => $store.commit(
-            'setTabForCharacterSheet',
-            { id: creatureId, tab: e }
-          )"
-        >
-          <v-window-item>
-            <stats-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item>
-            <actions-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item v-if="!creature.settings.hideSpellsTab">
-            <spells-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item>
-            <inventory-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item>
-            <features-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item>
-            <character-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item>
-            <build-tab :creature-id="creatureId" />
-          </v-window-item>
-          <v-window-item v-if="creature.settings.showTreeTab">
-            <tree-tab :creature-id="creatureId" />
-          </v-window-item>
-        </v-window>
-      </div>
-    </v-fade-transition>
-    <character-sheet-fab
-      v-if="!embedded && $vuetify.display.xs"
-      direction="top"
-      fixed
-      bottom
-      right
-      class="character-sheet-bottom-fab"
-      :edit-permission="editPermission"
-    />
-    <v-bottom-navigation
-      v-if="!embedded && $vuetify.display.xs && creature && creature.settings"
-      app
-      shift
-      mandatory
-      class="bottom-nav-btns"
-      :value="$store.getters.tabById(creatureId)"
-      @change="e => $store.commit(
-        'setTabForCharacterSheet',
-        { id: creatureId, tab: e }
-      )"
-    >
-      <v-btn>
-        <span>Stats</span>
-        <v-icon>mdi-chart-box</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Actions</span>
-        <v-icon>mdi-lightning-bolt</v-icon>
-      </v-btn>
-      <v-btn v-if="!creature.settings.hideSpellsTab">
-        <span>Spells</span>
-        <v-icon>mdi-fire</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Inventory</span>
-        <v-icon>mdi-cube</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Features</span>
-        <v-icon>mdi-text</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Journal</span>
-        <v-icon>mdi-book-open-variant</v-icon>
-      </v-btn>
-      <v-btn>
-        <span>Build</span>
-        <v-icon>mdi-wrench</v-icon>
-      </v-btn>
-      <v-btn v-if="creature.settings.showTreeTab">
-        <span>Tree</span>
-        <v-icon>mdi-file-tree</v-icon>
-      </v-btn>
-    </v-bottom-navigation>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch, provide, reactive, onMounted, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
@@ -200,6 +86,120 @@ onBeforeUnmount(() => {
   logObserver?.stop();
 });
 </script>
+
+<template>
+  <div class="character-sheet fill-height">
+    <v-fade-transition mode="out-in">
+      <div v-if="!creature">
+        <div class="d-flex flex-column align-center justify-center">
+          <h2 style="margin: 48px 28px 16px">
+            Character not found
+          </h2>
+          <h3>
+            Either this character does not exist, or you don't have permission
+            to view it.
+          </h3>
+        </div>
+      </div>
+      <div
+        v-else
+        key="character-tabs"
+        class="card-background fill-height"
+      >
+        <v-window
+          :key="'' +
+            creature.settings.hideSpellsTab +
+            creature.settings.showTreeTab
+          "
+          :model-value="$store.getters.tabById(creatureId)"
+          @update:model-value="e => $store.commit(
+            'setTabForCharacterSheet',
+            { id: creatureId, tab: e }
+          )"
+        >
+          <v-window-item>
+            <stats-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item>
+            <actions-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item v-if="!creature.settings.hideSpellsTab">
+            <spells-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item>
+            <inventory-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item>
+            <features-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item>
+            <character-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item>
+            <build-tab :creature-id="creatureId" />
+          </v-window-item>
+          <v-window-item v-if="creature.settings.showTreeTab">
+            <tree-tab :creature-id="creatureId" />
+          </v-window-item>
+        </v-window>
+      </div>
+    </v-fade-transition>
+    <character-sheet-fab
+      v-if="!embedded && $vuetify.display.xs"
+      direction="top"
+      fixed
+      bottom
+      right
+      class="character-sheet-bottom-fab"
+      :edit-permission="editPermission"
+    />
+    <v-bottom-navigation
+      v-if="!embedded && $vuetify.display.xs && creature && creature.settings"
+      app
+      shift
+      mandatory
+      class="bottom-nav-btns"
+      :model-value="$store.getters.tabById(creatureId)"
+      @update:model-value="e => $store.commit(
+        'setTabForCharacterSheet',
+        { id: creatureId, tab: e }
+      )"
+    >
+      <v-btn>
+        <span>Stats</span>
+        <v-icon>mdi-chart-box</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Actions</span>
+        <v-icon>mdi-lightning-bolt</v-icon>
+      </v-btn>
+      <v-btn v-if="!creature.settings.hideSpellsTab">
+        <span>Spells</span>
+        <v-icon>mdi-fire</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Inventory</span>
+        <v-icon>mdi-cube</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Features</span>
+        <v-icon>mdi-text</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Journal</span>
+        <v-icon>mdi-book-open-variant</v-icon>
+      </v-btn>
+      <v-btn>
+        <span>Build</span>
+        <v-icon>mdi-wrench</v-icon>
+      </v-btn>
+      <v-btn v-if="creature.settings.showTreeTab">
+        <span>Tree</span>
+        <v-icon>mdi-file-tree</v-icon>
+      </v-btn>
+    </v-bottom-navigation>
+  </div>
+</template>
 
 <style scoped>
 .bottom-nav-btns > .v-btn {

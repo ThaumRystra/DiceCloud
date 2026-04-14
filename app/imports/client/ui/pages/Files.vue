@@ -1,131 +1,3 @@
-<template>
-  <v-container>
-    <v-row
-      justify="center"
-      class="mt-2"
-    >
-      <file-storage-stats />
-    </v-row>
-    <v-row dense>
-      <v-col cols="12">
-        <v-list-subheader> Archived Characters </v-list-subheader>
-      </v-col>
-      
-      <v-col
-        key="upload"
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        xl="2"
-        class="d-flex flex-column justify-center"
-      >
-        <input
-          ref="archiveFileInput"
-          type="file"
-          accept=".json"
-          style="display: none;"
-          @input="inputArchiveFile"
-        >
-        <v-btn
-          variant="outlined"
-          style="height: 100%; width: 100%; min-height: 120px;"
-          class="archive-button"
-          :color="archiveFileError ? 'error' : undefined"
-          :disabled="archiveUploadInProgress"
-          @click="archiveFileInput?.click()"
-          prepend-icon="mdi-file-upload-outline"
-        >
-          <template v-if="archiveFileError">
-            {{ archiveFileError }}
-          </template>
-          <template v-else>
-            Upload archive
-          </template>
-          <v-progress-linear
-            v-if="archiveUploadInProgress"
-            :value="archiveUploadProgress"
-            :indeterminate="archiveUploadIndeterminate"
-          />
-        </v-btn>
-      </v-col>
-      <template v-if="archiveFiles && archiveFiles.length">
-        <v-col
-          v-for="file in archiveFiles"
-          :key="file._id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <archive-file-card :model="file" />
-        </v-col>
-      </template>
-    </v-row>
-    <v-row dense>
-      <v-col cols="12">
-        <v-list-subheader> Images </v-list-subheader>
-      </v-col>
-      <v-col
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        xl="2"
-      >
-        <image-upload-input
-          style="height: 100%; width: 100%; min-height: 120px;"
-        />
-      </v-col>
-      <template v-if="imageFiles && imageFiles.length">
-        <v-col
-          v-for="file in imageFiles"
-          :key="file._id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <user-image-card :model="file" />
-        </v-col>
-      </template>
-    </v-row>
-      <!--
-    <v-row dense>
-      <v-col cols="12">
-        <v-list-subheader> Images </v-list-subheader>
-      </v-col>
-      <template v-if="userImages && userImages.length">
-        <v-col
-          v-for="file in userImages"
-          :key="file._id"
-          cols="12"
-          sm="6"
-          md="4"
-          lg="3"
-          xl="2"
-        >
-          <user-image-card :model="file" />
-        </v-col>
-      </template>
-      <v-col
-        key="image-upload"
-        cols="12"
-        sm="6"
-        md="4"
-        lg="3"
-        xl="2"
-        class="d-flex flex-column justify-center"
-      >
-        <image-upload-input />
-      </v-col>
-    </v-row>
-    -->
-  </v-container>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
@@ -271,6 +143,134 @@ function inputArchiveFile() {
   fr.readAsText(file);
 }
 </script>
+
+<template>
+  <v-container>
+    <v-row
+      justify="center"
+      class="mt-2"
+    >
+      <file-storage-stats />
+    </v-row>
+    <v-row dense>
+      <v-col cols="12">
+        <v-list-subheader> Archived Characters </v-list-subheader>
+      </v-col>
+      
+      <v-col
+        key="upload"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+        class="d-flex flex-column justify-center"
+      >
+        <input
+          ref="archiveFileInput"
+          type="file"
+          accept=".json"
+          style="display: none;"
+          @input="inputArchiveFile"
+        >
+        <v-btn
+          variant="outlined"
+          style="height: 100%; width: 100%; min-height: 120px;"
+          class="archive-button"
+          :color="archiveFileError ? 'error' : undefined"
+          :disabled="archiveUploadInProgress"
+          prepend-icon="mdi-file-upload-outline"
+          @click="archiveFileInput?.click()"
+        >
+          <template v-if="archiveFileError">
+            {{ archiveFileError }}
+          </template>
+          <template v-else>
+            Upload archive
+          </template>
+          <v-progress-linear
+            v-if="archiveUploadInProgress"
+            :model-value="archiveUploadProgress"
+            :indeterminate="archiveUploadIndeterminate"
+          />
+        </v-btn>
+      </v-col>
+      <template v-if="archiveFiles && archiveFiles.length">
+        <v-col
+          v-for="file in archiveFiles"
+          :key="file._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+        >
+          <archive-file-card :model="file" />
+        </v-col>
+      </template>
+    </v-row>
+    <v-row dense>
+      <v-col cols="12">
+        <v-list-subheader> Images </v-list-subheader>
+      </v-col>
+      <v-col
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+      >
+        <image-upload-input
+          style="height: 100%; width: 100%; min-height: 120px;"
+        />
+      </v-col>
+      <template v-if="imageFiles && imageFiles.length">
+        <v-col
+          v-for="file in imageFiles"
+          :key="file._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+        >
+          <user-image-card :model="file" />
+        </v-col>
+      </template>
+    </v-row>
+    <!--
+    <v-row dense>
+      <v-col cols="12">
+        <v-list-subheader> Images </v-list-subheader>
+      </v-col>
+      <template v-if="userImages && userImages.length">
+        <v-col
+          v-for="file in userImages"
+          :key="file._id"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="3"
+          xl="2"
+        >
+          <user-image-card :model="file" />
+        </v-col>
+      </template>
+      <v-col
+        key="image-upload"
+        cols="12"
+        sm="6"
+        md="4"
+        lg="3"
+        xl="2"
+        class="d-flex flex-column justify-center"
+      >
+        <image-upload-input />
+      </v-col>
+    </v-row>
+    -->
+  </v-container>
+</template>
 
 <style>
   .v-btn.archive-button > .v-btn__content {

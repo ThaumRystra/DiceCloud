@@ -6,7 +6,7 @@ export default function embedInlineCalculations(inlineCalcObj) {
   if (!string || !calculations) return;
   let index = 0;
   inlineCalcObj.value = string.replace(INLINE_CALCULATION_REGEX, substring => {
-    let calc = calculations[index++];
+    const calc = calculations[index++];
     return (calc && 'value' in calc) ? calc.value : substring;
   });
 }

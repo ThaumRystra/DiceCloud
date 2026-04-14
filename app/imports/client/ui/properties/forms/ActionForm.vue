@@ -1,3 +1,48 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
+import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const actionTypes = [
+  { text: 'Action', value: 'action' },
+  { text: 'Bonus action', value: 'bonus' },
+  { text: 'Attack action', value: 'attack', help: 'Attack actions replace a single attack when you choose to use your Action to attack' },
+  { text: 'Reaction', value: 'reaction' },
+  { text: 'Free action', value: 'free', help: 'You can take one free action on your turn without using an action or bonus action' },
+  { text: 'Long action', value: 'long', help: 'Long actions take longer than one turn to complete' },
+  { text: 'Event', value: 'event', help: 'Events are actions that happen to the character like rests or dawn' },
+];
+
+const actionTypeHints: Record<string, string | undefined> = {};
+actionTypes.forEach(type => {
+  actionTypeHints[type.value] = (type as any).help;
+});
+
+const targetOptions = [
+  { text: 'Self', value: 'self' },
+  { text: 'Single target', value: 'singleTarget' },
+  { text: 'Multiple targets', value: 'multipleTargets' },
+];
+
+const attackSwitch = ref(false);
+
+const isAttack = computed(() =>
+  attackSwitch.value || !!props.model.attackRoll?.calculation
+);
+</script>
+
 <template lang="html">
   <div class="action-form">
     <v-row dense>
@@ -11,7 +56,7 @@
             class="ml-4"
             label="Attack roll"
             :value="attackSwitch"
-            @change="e => attackSwitch = e"
+            @update:model-value="e => attackSwitch = e"
           />
           <computed-field
             v-else
@@ -151,51 +196,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import ResourcesForm from '/imports/client/ui/properties/forms/ResourcesForm.vue';
-import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const actionTypes = [
-  { text: 'Action', value: 'action' },
-  { text: 'Bonus action', value: 'bonus' },
-  { text: 'Attack action', value: 'attack', help: 'Attack actions replace a single attack when you choose to use your Action to attack' },
-  { text: 'Reaction', value: 'reaction' },
-  { text: 'Free action', value: 'free', help: 'You can take one free action on your turn without using an action or bonus action' },
-  { text: 'Long action', value: 'long', help: 'Long actions take longer than one turn to complete' },
-  { text: 'Event', value: 'event', help: 'Events are actions that happen to the character like rests or dawn' },
-];
-
-const actionTypeHints: Record<string, string | undefined> = {};
-actionTypes.forEach(type => {
-  actionTypeHints[type.value] = (type as any).help;
-});
-
-const targetOptions = [
-  { text: 'Self', value: 'self' },
-  { text: 'Single target', value: 'singleTarget' },
-  { text: 'Multiple targets', value: 'multipleTargets' },
-];
-
-const attackSwitch = ref(false);
-
-const isAttack = computed(() =>
-  attackSwitch.value || !!props.model.attackRoll?.calculation
-);
-</script>
 
 <style lang="css" scoped>
   .no-flex {

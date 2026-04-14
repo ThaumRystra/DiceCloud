@@ -1,58 +1,3 @@
-<template lang="html">
-  <div
-    class="tree-tab pa-4 layout column align-center"
-    style="height: calc(100vh - 96px); display: flex;"
-  >
-    <v-card
-      style="height: 100%; width: 100%; max-width: 1800px;"
-      data-id="creature-tree-card"
-    >
-      <tree-detail-layout>
-        <template #tree>
-          <v-toolbar
-            flat
-            dark
-            style="flex-grow: 0;"
-          >
-            <tree-search-input
-              ref="searchBox"
-              v-model="filter"
-              class="mx-4"
-            />
-            <v-spacer />
-            <v-switch
-              v-if="context.editPermission !== false"
-              v-model="organize"
-              label="Organize"
-              class="mx-3"
-              :disabled="organizeDisabled"
-              style="flex-grow: 0; height: 32px;"
-            />
-          </v-toolbar>
-          <creature-properties-tree
-            class="pt-2 flex"
-            style="overflow-y: auto;"
-            :root="{ collection: 'creatures', id: creatureId }"
-            :organize="organize"
-            :selected-node="selectedNode"
-            :filter="filter"
-            @selected="clickNode"
-          />
-        </template>
-        <template #detail>
-          <creature-property-dialog
-            embedded
-            :_id="selectedNodeId"
-            @removed="selectedNodeId = undefined"
-            @duplicated="id => selectedNodeId = id"
-            @select-sub-property="clickNode"
-          />
-        </template>
-      </tree-detail-layout>
-    </v-card>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -121,5 +66,60 @@ function editCreatureProperty() {
   });
 }
 </script>
+
+<template lang="html">
+  <div
+    class="tree-tab pa-4 layout column align-center"
+    style="height: calc(100vh - 96px); display: flex;"
+  >
+    <v-card
+      style="height: 100%; width: 100%; max-width: 1800px;"
+      data-id="creature-tree-card"
+    >
+      <tree-detail-layout>
+        <template #tree>
+          <v-toolbar
+            flat
+            dark
+            style="flex-grow: 0;"
+          >
+            <tree-search-input
+              ref="searchBox"
+              v-model="filter"
+              class="mx-4"
+            />
+            <v-spacer />
+            <v-switch
+              v-if="context.editPermission !== false"
+              v-model="organize"
+              label="Organize"
+              class="mx-3"
+              :disabled="organizeDisabled"
+              style="flex-grow: 0; height: 32px;"
+            />
+          </v-toolbar>
+          <creature-properties-tree
+            class="pt-2 flex"
+            style="overflow-y: auto;"
+            :root="{ collection: 'creatures', id: creatureId }"
+            :organize="organize"
+            :selected-node="selectedNode"
+            :filter="filter"
+            @selected="clickNode"
+          />
+        </template>
+        <template #detail>
+          <creature-property-dialog
+            embedded
+            :_id="selectedNodeId"
+            @removed="selectedNodeId = undefined"
+            @duplicated="id => selectedNodeId = id"
+            @select-sub-property="clickNode"
+          />
+        </template>
+      </tree-detail-layout>
+    </v-card>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

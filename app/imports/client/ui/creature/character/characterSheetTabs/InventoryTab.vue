@@ -1,108 +1,3 @@
-<template lang="html">
-  <div class="inventory">
-    <column-layout wide-columns>
-      <folder-group-card
-        v-for="folder in startFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-      <div>
-        <v-card>
-          <v-list>
-            <v-list-item>
-              <template #prepend>
-                <v-icon>$vuetify.icons.injustice</v-icon>
-              </template>
-              <v-list-item-title>
-                Weight Carried
-              </v-list-item-title>
-              <template #append>
-                <v-list-item-title>
-                  {{ weightCarried }} lb
-                </v-list-item-title>
-              </template>
-            </v-list-item>
-            <v-list-item>
-              <template #prepend>
-                <v-icon>$vuetify.icons.cash</v-icon>
-              </template>
-              <v-list-item-title>
-                Net worth
-              </v-list-item-title>
-              <template #append>
-                <v-list-item-title>
-                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value || 0" />
-                </v-list-item-title>
-              </template>
-            </v-list-item>
-            <v-list-item v-if="variables && variables.itemsAttuned && variables.itemsAttuned.value">
-              <template #prepend>
-                <v-icon>$vuetify.icons.spell</v-icon>
-              </template>
-              <v-list-item-title>
-                Items attuned
-              </v-list-item-title>
-              <template #append>
-                <v-list-item-title>
-                  {{ variables.itemsAttuned.value }}
-                </v-list-item-title>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </div>
-      <div>
-        <toolbar-card transparent-toolbar>
-          <template #toolbar>
-            <v-toolbar-title>
-              Equipped
-            </v-toolbar-title>
-          </template>
-          <v-card-text class="px-0">
-            <item-list
-              equipment
-              :item-ids="equippedItemIds"
-              :parent="equipmentParent"
-            />
-          </v-card-text>
-        </toolbar-card>
-      </div>
-      <div>
-        <toolbar-card transparent-toolbar>
-          <template #toolbar>
-            <v-toolbar-title>
-              Carried
-            </v-toolbar-title>
-          </template>
-          <v-card-text class="px-0">
-            <item-list
-              :item-ids="carriedItemIds"
-              :parent="carriedParent"
-            />
-          </v-card-text>
-        </toolbar-card>
-      </div>
-      <div
-        v-for="container in containersWithoutAncestorContainers"
-        :key="container._id"
-      >
-        <container-card :model="container" />
-      </div>
-      <folder-group-card
-        v-for="folder in endFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-    </column-layout>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -265,5 +160,110 @@ function softRemove(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="inventory">
+    <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+      <div>
+        <v-card>
+          <v-list>
+            <v-list-item>
+              <template #prepend>
+                <v-icon>$vuetify.icons.injustice</v-icon>
+              </template>
+              <v-list-item-title>
+                Weight Carried
+              </v-list-item-title>
+              <template #append>
+                <v-list-item-title>
+                  {{ weightCarried }} lb
+                </v-list-item-title>
+              </template>
+            </v-list-item>
+            <v-list-item>
+              <template #prepend>
+                <v-icon>$vuetify.icons.cash</v-icon>
+              </template>
+              <v-list-item-title>
+                Net worth
+              </v-list-item-title>
+              <template #append>
+                <v-list-item-title>
+                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value || 0" />
+                </v-list-item-title>
+              </template>
+            </v-list-item>
+            <v-list-item v-if="variables && variables.itemsAttuned && variables.itemsAttuned.value">
+              <template #prepend>
+                <v-icon>$vuetify.icons.spell</v-icon>
+              </template>
+              <v-list-item-title>
+                Items attuned
+              </v-list-item-title>
+              <template #append>
+                <v-list-item-title>
+                  {{ variables.itemsAttuned.value }}
+                </v-list-item-title>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </div>
+      <div>
+        <toolbar-card transparent-toolbar>
+          <template #toolbar>
+            <v-toolbar-title>
+              Equipped
+            </v-toolbar-title>
+          </template>
+          <v-card-text class="px-0">
+            <item-list
+              equipment
+              :item-ids="equippedItemIds"
+              :parent="equipmentParent"
+            />
+          </v-card-text>
+        </toolbar-card>
+      </div>
+      <div>
+        <toolbar-card transparent-toolbar>
+          <template #toolbar>
+            <v-toolbar-title>
+              Carried
+            </v-toolbar-title>
+          </template>
+          <v-card-text class="px-0">
+            <item-list
+              :item-ids="carriedItemIds"
+              :parent="carriedParent"
+            />
+          </v-card-text>
+        </toolbar-card>
+      </div>
+      <div
+        v-for="container in containersWithoutAncestorContainers"
+        :key="container._id"
+      >
+        <container-card :model="container" />
+      </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+    </column-layout>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

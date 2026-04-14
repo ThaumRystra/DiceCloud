@@ -3,7 +3,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
 
-let schema = new SimpleSchema({
+const schema = new SimpleSchema({
   creatureId: {
     type: String,
     max: 32,
@@ -12,7 +12,7 @@ let schema = new SimpleSchema({
 
 Meteor.publish('experiences', async function (creatureId) {
   schema.validate({ creatureId });
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return this.error(new Meteor.Error('logged-out', 'You must be logged in to get a creature\'s experiences'));
   }

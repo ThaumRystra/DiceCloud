@@ -1,46 +1,3 @@
-<template>
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        Import character
-      </v-toolbar-title>
-    </template>
-    <div>
-      <h2 class="mb-4">
-        Import a character from another instance of DiceCloud
-      </h2>
-      <p>
-        The character needs to have their sharing permission set to "anyone can view"
-      </p>
-      <text-field
-        :value="currentUrl"
-        :error-messages="importError"
-        @change="setUrl"
-      />
-      <div class="d-flex justify-center">
-        <v-slide-x-transition>
-          <v-btn
-            v-show="characterData"
-            :loading="loadingImportCharacter"
-            color="primary"
-            @click="importCharacterData"
-          >
-            Import
-          </v-btn>
-        </v-slide-x-transition>
-      </div>
-    </div>
-    <template #actions>
-      <v-btn
-        variant="text"
-        @click="$emit('pop')"
-      >
-        Cancel
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
@@ -106,6 +63,49 @@ async function importCharacterData() {
   }
 }
 </script>
+
+<template>
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        Import character
+      </v-toolbar-title>
+    </template>
+    <div>
+      <h2 class="mb-4">
+        Import a character from another instance of DiceCloud
+      </h2>
+      <p>
+        The character needs to have their sharing permission set to "anyone can view"
+      </p>
+      <text-field
+        :value="currentUrl"
+        :error-messages="importError"
+        @change="setUrl"
+      />
+      <div class="d-flex justify-center">
+        <v-slide-x-transition>
+          <v-btn
+            v-show="characterData"
+            :loading="loadingImportCharacter"
+            color="primary"
+            @click="importCharacterData"
+          >
+            Import
+          </v-btn>
+        </v-slide-x-transition>
+      </div>
+    </div>
+    <template #actions>
+      <v-btn
+        variant="text"
+        @click="$emit('pop')"
+      >
+        Cancel
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style scoped>
 

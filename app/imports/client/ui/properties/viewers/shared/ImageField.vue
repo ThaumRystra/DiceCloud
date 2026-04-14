@@ -1,32 +1,3 @@
-<template lang="html">
-  <v-col
-    class="mb-3"
-    v-bind="cols"
-  >
-    <fieldset
-      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
-      class="d-flex rounded v-sheet--outlined pt-4 layout column align-center justify-center fill-height"
-      style="overflow: hidden"
-      @click="$emit('click', $event)"
-    >
-      <legend
-        v-if="name"
-        class="text-caption px-1 name"
-        style="line-height: 0;"
-      >
-        {{ name }}
-      </legend>
-
-      <img
-        :src="href"
-        class="image"
-        :data-id="`image-${href}`"
-        @click="previewImage"
-      >
-    </fieldset>
-  </v-col>
-</template>
-
 <script setup lang="ts">
 import { inject } from 'vue';
 import { useStore } from 'vuex';
@@ -58,6 +29,35 @@ function previewImage() {
   });
 }
 </script>
+
+<template lang="html">
+  <v-col
+    class="mb-3"
+    v-bind="cols"
+  >
+    <fieldset
+      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
+      class="d-flex rounded v-sheet--outlined pt-4 layout column align-center justify-center fill-height"
+      style="overflow: hidden"
+      @click="$emit('click', $event)"
+    >
+      <legend
+        v-if="name"
+        class="text-caption px-1 name"
+        style="line-height: 0;"
+      >
+        {{ name }}
+      </legend>
+
+      <img
+        :src="href"
+        class="image"
+        :data-id="`image-${href}`"
+        @click="previewImage"
+      >
+    </fieldset>
+  </v-col>
+</template>
 
 <style lang="css" scoped>
 .image {

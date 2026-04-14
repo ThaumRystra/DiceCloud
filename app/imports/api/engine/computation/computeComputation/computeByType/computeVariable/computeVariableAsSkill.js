@@ -2,7 +2,7 @@ import aggregate from './aggregate/index';
 
 export default function computeVariableAsSkill(computation, node, prop) {
   // Skills are based on some ability Modifier
-  let ability = computation.scope[prop.ability];
+  const ability = computation.scope[prop.ability];
   prop.abilityMod = ability?.modifier || 0;
 
   // Inherit the ability's skill effects and proficiencies if skill is not a save
@@ -108,7 +108,7 @@ function aggregateAbilityEffects({ computation, skillNode, abilityNode }) {
         }
       }
       // Apply the aggregations
-      let arg = { node: skillNode, linkedNode, link };
+      const arg = { node: skillNode, linkedNode, link };
       aggregate.effect(arg);
       aggregate.proficiency(arg);
     },

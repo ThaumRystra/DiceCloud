@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  creature: Record<string, any>;
+}>();
+
+const store = useStore(key);
+const hover = ref(false);
+
+function showCharacterForm() {
+  store.commit('pushDialogStack', {
+    component: 'creature-form-dialog',
+    elementId: 'creature-summary',
+    data: { _id: props.creature._id },
+  });
+}
+</script>
+
 <template>
   <v-card
     hover
@@ -20,27 +42,5 @@
     <card-highlight :active="hover" />
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  creature: Record<string, any>;
-}>();
-
-const store = useStore(key);
-const hover = ref(false);
-
-function showCharacterForm() {
-  store.commit('pushDialogStack', {
-    component: 'creature-form-dialog',
-    elementId: 'creature-summary',
-    data: { _id: props.creature._id },
-  });
-}
-</script>
 
 <style></style>

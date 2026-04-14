@@ -12,13 +12,13 @@ const updateCreatureFolderName = new ValidatedMethod({
   },
   async run({ _id, name }) {
     // Ensure logged in
-    let userId = this.userId;
+    const userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('creatureFolders.methods.updateName.denied',
         'You need to be logged in to update a folder');
     }
     // Check that this folder is owned by the user
-    let existingFolder = await CreatureFolders.findOneAsync(_id);
+    const existingFolder = await CreatureFolders.findOneAsync(_id);
     if (existingFolder.owner !== userId) {
       throw new Meteor.Error('creatureFolders.methods.updateName.denied',
         'This folder does not belong to you');

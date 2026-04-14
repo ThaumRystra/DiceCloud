@@ -1,52 +1,3 @@
-<template lang="html">
-  <div
-    class="breadcrumbs layout align-center wrap"
-    :class="{ 'no-icons': noIcons }"
-  >
-    <span v-if="noLinks || embedded || collection !== 'creatureProperties'">
-      <v-icon v-if="collection === 'creatureProperties'">
-        mdi-account
-      </v-icon>
-      <v-icon v-else-if="collection === 'libraryNodes'">
-        mdi-book-open-blank-variant
-      </v-icon>
-    </span>
-    <a
-      v-else
-      data-id="breadcrumb-root"
-      @click="clickRootCreature"
-    >
-      <v-icon color="accent">
-        mdi-account
-      </v-icon>
-    </a>
-    <template
-      v-for="(prop, index) in props"
-      :key="index"
-    >
-      <v-icon>
-        mdi-chevron-right
-      </v-icon>
-      <span v-if="noLinks">
-        <tree-node-view
-          :model="prop"
-          class="breadcrumb-tree-node-view"
-        />
-      </span>
-      <a
-        v-else
-        :data-id="`breadcrumb-${prop._id}`"
-        @click="click(prop._id)"
-      >
-        <tree-node-view
-          :model="prop"
-          class="breadcrumb-tree-node-view"
-        />
-      </a>
-    </template>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -131,6 +82,55 @@ function clickRootCreature() {
   }
 }
 </script>
+
+<template lang="html">
+  <div
+    class="breadcrumbs layout align-center wrap"
+    :class="{ 'no-icons': noIcons }"
+  >
+    <span v-if="noLinks || embedded || collection !== 'creatureProperties'">
+      <v-icon v-if="collection === 'creatureProperties'">
+        mdi-account
+      </v-icon>
+      <v-icon v-else-if="collection === 'libraryNodes'">
+        mdi-book-open-blank-variant
+      </v-icon>
+    </span>
+    <a
+      v-else
+      data-id="breadcrumb-root"
+      @click="clickRootCreature"
+    >
+      <v-icon color="accent">
+        mdi-account
+      </v-icon>
+    </a>
+    <template
+      v-for="(prop, index) in props"
+      :key="index"
+    >
+      <v-icon>
+        mdi-chevron-right
+      </v-icon>
+      <span v-if="noLinks">
+        <tree-node-view
+          :model="prop"
+          class="breadcrumb-tree-node-view"
+        />
+      </span>
+      <a
+        v-else
+        :data-id="`breadcrumb-${prop._id}`"
+        @click="click(prop._id)"
+      >
+        <tree-node-view
+          :model="prop"
+          class="breadcrumb-tree-node-view"
+        />
+      </a>
+    </template>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .breadcrumbs {

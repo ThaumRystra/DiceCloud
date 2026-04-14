@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import ComputedField from '/imports/client/ui/properties/forms/shared/ComputedField.vue';
+import InlineComputationField from '/imports/client/ui/properties/forms/shared/InlineComputationField.vue';
+import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+
+const props = defineProps<{
+  model?: Record<string, any>;
+  errors?: Record<string, any>;
+  startAsMilestone?: boolean;
+}>();
+
+const emit = defineEmits<{
+  (e: 'change', arg: { path: string[]; value: any; ack?: any }): void;
+}>();
+
+const milestone = ref(props.startAsMilestone ?? false);
+
+function change(path: string | string[], value: any, ack?: any) {
+  if (!Array.isArray(path)) path = [path];
+  emit('change', { path, value, ack });
+}
+
+function makeMilestone(val: boolean, ack?: any) {
+  milestone.value = val;
+  if (val) {
+    change('xp', undefined);
+    change('levels', 1, ack);
+  } else {
+    change('levels', undefined, ack);
+  }
+}
+</script>
+
 <template lang="html">
   <div class="experience-form">
     <div class="d-flex flex-column align-center">
@@ -36,40 +70,6 @@
     />
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import ComputedField from '/imports/client/ui/properties/forms/shared/ComputedField.vue';
-import InlineComputationField from '/imports/client/ui/properties/forms/shared/InlineComputationField.vue';
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-
-const props = defineProps<{
-  model?: Record<string, any>;
-  errors?: Record<string, any>;
-  startAsMilestone?: boolean;
-}>();
-
-const emit = defineEmits<{
-  (e: 'change', arg: { path: string[]; value: any; ack?: any }): void;
-}>();
-
-const milestone = ref(props.startAsMilestone ?? false);
-
-function change(path: string | string[], value: any, ack?: any) {
-  if (!Array.isArray(path)) path = [path];
-  emit('change', { path, value, ack });
-}
-
-function makeMilestone(val: boolean, ack?: any) {
-  milestone.value = val;
-  if (val) {
-    change('xp', undefined);
-    change('levels', 1, ack);
-  } else {
-    change('levels', undefined, ack);
-  }
-}
-</script>
 
 <style lang="css" scoped>
 </style>

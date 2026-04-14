@@ -1,35 +1,3 @@
-<template>
-  <div class="build-tab">
-    <column-layout wide-columns>
-      <folder-group-card
-        v-for="folder in startFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-      <div v-if="creature">
-        <creature-summary :creature="creature" />
-      </div>
-      <div
-        v-for="note in notes"
-        :key="note._id"
-      >
-        <note-card :model="note" />
-      </div>
-      <folder-group-card
-        v-for="folder in endFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-    </column-layout>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
@@ -127,5 +95,37 @@ function softRemove(_id: string) {
   });
 }
 </script>
+
+<template>
+  <div class="build-tab">
+    <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+      <div v-if="creature">
+        <creature-summary :creature="creature" />
+      </div>
+      <div
+        v-for="note in notes"
+        :key="note._id"
+      >
+        <note-card :model="note" />
+      </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+    </column-layout>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

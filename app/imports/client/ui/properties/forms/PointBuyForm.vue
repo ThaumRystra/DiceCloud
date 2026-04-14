@@ -1,3 +1,46 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { PointBuySchema } from '/imports/api/properties/PointBuys';
+import PointBuySpendForm from '/imports/client/ui/properties/forms/PointBuySpendForm.vue';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change', 'push']);
+
+const context = inject<any>('context', {});
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const addRowLoading = ref(false);
+
+const rowsFull = computed(() => {
+  if (!props.model.values) return false;
+  const maxCount = PointBuySchema.get('values', 'maxCount');
+  return props.model.values.length >= maxCount;
+});
+
+function addRow() {
+  addRowLoading.value = true;
+  emit('push', {
+    path: ['values'],
+    value: {
+      _id: Random.id(),
+    },
+    ack() {
+      addRowLoading.value = false;
+    },
+  });
+}
+</script>
+
 <template lang="html">
   <div class="point-buy-form">
     <point-buy-spend-form 
@@ -73,7 +116,7 @@
           <v-row
             v-for="(row, i) in model.values"
             :key="row._id"
-            density="compact"
+            class="density"
           >
             <v-divider
               v-if="i"
@@ -144,9 +187,8 @@
           </v-row>
           <v-row
             key="addButton"
-            density="compact"
             justify="end"
-            class="mb-4"
+            class="mb-4 density"
           >
             <v-col
               cols="1"
@@ -171,46 +213,3 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import { PointBuySchema } from '/imports/api/properties/PointBuys';
-import PointBuySpendForm from '/imports/client/ui/properties/forms/PointBuySpendForm.vue';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-
-const emit = defineEmits(['change', 'push']);
-
-const context = inject<any>('context', {});
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const addRowLoading = ref(false);
-
-const rowsFull = computed(() => {
-  if (!props.model.values) return false;
-  const maxCount = PointBuySchema.get('values', 'maxCount');
-  return props.model.values.length >= maxCount;
-});
-
-function addRow() {
-  addRowLoading.value = true;
-  emit('push', {
-    path: ['values'],
-    value: {
-      _id: Random.id(),
-    },
-    ack() {
-      addRowLoading.value = false;
-    },
-  });
-}
-</script>

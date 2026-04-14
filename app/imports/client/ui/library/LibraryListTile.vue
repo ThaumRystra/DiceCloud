@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
+
+defineProps<{
+  model: Record<string, any>;
+  selection?: boolean;
+  singleSelect?: boolean;
+  isSelected?: boolean;
+  selectedByCollection?: boolean;
+  disabled?: boolean;
+  to: Record<string, any>;
+}>();
+</script>
+
 <template
   lang="html"
 >
@@ -14,12 +28,15 @@
       <v-checkbox
         :disabled="disabled"
         :model-value="disabled || isSelected"
-        :off-icon="selectedByCollection ? 'mdi-checkbox-intermediate' : undefined"
-        @change="e => $emit('select', e)"
+        :false-icon="selectedByCollection ? 'mdi-checkbox-intermediate' : undefined"
+        @update:model-value="e => $emit('select', e)"
         @click.stop
       />
     </template>
-    <template v-else #prepend>
+    <template
+      v-else
+      #prepend
+    >
       <shared-icon :model="model" />
     </template>
     <v-list-item-title>
@@ -27,17 +44,3 @@
     </v-list-item-title>
   </v-list-item>
 </template>
-
-<script setup lang="ts">
-import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
-
-defineProps<{
-  model: Record<string, any>;
-  selection?: boolean;
-  singleSelect?: boolean;
-  isSelected?: boolean;
-  selectedByCollection?: boolean;
-  disabled?: boolean;
-  to: Record<string, any>;
-}>();
-</script>

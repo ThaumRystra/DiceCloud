@@ -1,7 +1,102 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
+import numberToSignedString from '../../../../api/utility/numberToSignedString';
+import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
+import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import sortEffects from '/imports/client/ui/utility/sortEffects';
+import doActionFn from '/imports/client/ui/creature/actions/doAction';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+const store = useStore(key);
+
+const attributeTypes: Record<string, string> = {
+  ability: 'Ability score',
+  stat: 'Stat',
+  modifier: 'Modifier',
+  hitDice: 'Hit dice',
+  healthBar: 'Health bar',
+  resource: 'Resource',
+  spellSlot: 'Spell slot',
+  utility: 'Utility',
+};
+
+const proficiencyText: Record<number, string> = {
+  0: 'Not proficient',
+  1: 'Proficient',
+  0.49: 'Half proficiency bonus rounded down',
+  0.5: 'Half proficiency bonus rounded up',
+  2: 'Double proficiency bonus',
+};
+
+const damagePropertyLoading = ref(false);
+
+const reset = computed(() => {
+  const r = props.model.reset;
+  if (r === 'shortRest') return 'Reset on a short rest';
+  if (r === 'longRest') return 'Reset on a long rest';
+  return undefined;
+});
+
+const proficiencyIcon = computed(() => getProficiencyIcon(props.model.proficiency));
+
+const fallbackValue = computed(() =>
+  props.model.baseValue?.value ?? props.model.baseValue?.calculation
+);
+
+const { result: effects } = autorun(() => {
+  if (!props.model.effectIds) return [];
+  const effectList = CreatureProperties.find({ _id: { $in: props.model.effectIds } }).fetch();
+  return sortEffects(effectList);
+});
+
+function clickEffect(id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${id}`,
+    data: { _id: id },
+  });
+}
+
+async function damageProperty({ type, value }: { type: string; value: number }) {
+  const model = props.model;
+  damagePropertyLoading.value = true;
+  try {
+    await doActionFn({
+      creatureId: model.root.id,
+      $store: store,
+      elementId: `${model._id}-increment`,
+      task: {
+        subtaskFn: 'damageProp',
+        targetIds: [model.root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
+        },
+      },
+    });
+  } catch (error: any) {
+    snackbar({ text: error.reason || error.message || error.toString() });
+    console.error(error);
+  } finally {
+    damagePropertyLoading.value = false;
+  }
+}
+</script>
+
 <template lang="html">
   <div class="attribute-viewer">
     <v-row
-      density="compact"
+      class="density"
       align="stretch"
       justify="center"
       justify-sm="start"
@@ -137,101 +232,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
-import numberToSignedString from '../../../../api/utility/numberToSignedString';
-import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
-import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import sortEffects from '/imports/client/ui/utility/sortEffects';
-import doActionFn from '/imports/client/ui/creature/actions/doAction';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{ model: Record<string, any> }>();
-const context = inject<any>('context', {});
-const store = useStore(key);
-
-const attributeTypes: Record<string, string> = {
-  ability: 'Ability score',
-  stat: 'Stat',
-  modifier: 'Modifier',
-  hitDice: 'Hit dice',
-  healthBar: 'Health bar',
-  resource: 'Resource',
-  spellSlot: 'Spell slot',
-  utility: 'Utility',
-};
-
-const proficiencyText: Record<number, string> = {
-  0: 'Not proficient',
-  1: 'Proficient',
-  0.49: 'Half proficiency bonus rounded down',
-  0.5: 'Half proficiency bonus rounded up',
-  2: 'Double proficiency bonus',
-};
-
-const damagePropertyLoading = ref(false);
-
-const reset = computed(() => {
-  const r = props.model.reset;
-  if (r === 'shortRest') return 'Reset on a short rest';
-  if (r === 'longRest') return 'Reset on a long rest';
-  return undefined;
-});
-
-const proficiencyIcon = computed(() => getProficiencyIcon(props.model.proficiency));
-
-const fallbackValue = computed(() =>
-  props.model.baseValue?.value ?? props.model.baseValue?.calculation
-);
-
-const { result: effects } = autorun(() => {
-  if (!props.model.effectIds) return [];
-  const effectList = CreatureProperties.find({ _id: { $in: props.model.effectIds } }).fetch();
-  return sortEffects(effectList);
-});
-
-function clickEffect(id: string) {
-  store.commit('pushDialogStack', {
-    component: 'creature-property-dialog',
-    elementId: `${id}`,
-    data: { _id: id },
-  });
-}
-
-async function damageProperty({ type, value }: { type: string; value: number }) {
-  const model = props.model;
-  damagePropertyLoading.value = true;
-  try {
-    await doActionFn({
-      creatureId: model.root.id,
-      $store: store,
-      elementId: `${model._id}-increment`,
-      task: {
-        subtaskFn: 'damageProp',
-        targetIds: [model.root.id],
-        params: {
-          title: getPropertyTitle(model),
-          operation: type,
-          value,
-          targetProp: model,
-        },
-      },
-    });
-  } catch (error: any) {
-    snackbar({ text: error.reason || error.message || error.toString() });
-    console.error(error);
-  } finally {
-    damagePropertyLoading.value = false;
-  }
-}
-</script>
 
 <style lang="css" scoped>
 .ability-value {

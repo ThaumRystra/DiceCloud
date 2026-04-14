@@ -1,12 +1,3 @@
-<template lang="html">
-  <img
-    class="preview-image v-sheet v-card elevation-6"
-    :class="themeClasses"
-    :src="href"
-    @click="back"
-  >
-</template>
-
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -28,6 +19,15 @@ function back() {
   store.dispatch('popDialogStack');
 }
 </script>
+
+<template lang="html">
+  <img
+    class="preview-image v-sheet v-card elevation-6"
+    :class="themeClasses"
+    :src="href"
+    @click="back"
+  >
+</template>
 
 <style lang="css" scoped>
 .preview-image {

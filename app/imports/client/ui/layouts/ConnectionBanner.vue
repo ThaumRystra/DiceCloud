@@ -1,16 +1,3 @@
-<template>
-  <v-banner
-    v-if="!connected"
-    sticky
-    lines="one"
-    :icon="icon"
-    :color="color"
-    style="top: 96px;"
-  >
-    {{ status }}
-  </v-banner>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -40,3 +27,16 @@ const color = computed(() => {
   }
 });
 </script>
+
+<template>
+  <v-banner
+    v-if="!connected"
+    sticky
+    lines="one"
+    :icon="icon"
+    :color="color"
+    style="top: 96px;"
+  >
+    {{ status }}
+  </v-banner>
+</template>

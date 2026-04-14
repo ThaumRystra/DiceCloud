@@ -1,24 +1,3 @@
-<template lang="html">
-  <div class="computed-field">
-    <text-field
-      :value="model.calculation"
-      v-bind="$attrs"
-      @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
-    >
-      <template
-        v-if="showValue"
-        #value
-      >
-        {{ displayedValue }}
-      </template>
-      <template #prepend>
-        <slot name="prepend" />
-      </template>
-    </text-field>
-    <calculation-error-list :errors="errorList" />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -55,6 +34,27 @@ const errorList = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="computed-field">
+    <text-field
+      :value="model.calculation"
+      v-bind="$attrs"
+      @change="(value, ack) => $emit('change', {path: ['calculation'], value, ack})"
+    >
+      <template
+        v-if="showValue"
+        #value
+      >
+        {{ displayedValue }}
+      </template>
+      <template #prepend>
+        <slot name="prepend" />
+      </template>
+    </text-field>
+    <calculation-error-list :errors="errorList" />
+  </div>
+</template>
 
 <style lang="css" scoped>
 </style>

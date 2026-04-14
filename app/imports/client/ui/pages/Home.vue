@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+
+const { result: signedIn } = autorun(() => !!Meteor.userId());
+
+const cols = {
+  cols: 12,
+  sm: 6,
+  md: 4,
+  lg: 3,
+  xl: 2,
+};
+
+const highlightCards = [
+  { text: 'Automated actions', img: 'actions.webp' },
+  { text: 'Auditable stats', img: 'auditable.webp' },
+  { text: 'Dice rolling', img: 'automated-dice-rolls.webp' },
+  { text: 'Hackable character builder', img: 'build-system.webp' },
+  { text: 'Drag and drop inventory manager', img: 'inventory.webp' },
+  { text: 'Custom libraries of content', img: 'libraries-of-content.webp' },
+  { text: 'Discord webhooks', img: 'send-to-discord.webp' },
+  { text: 'Printed character sheets', img: 'printing.webp' },
+];
+</script>
+
 <template>
   <div
     class="home content layout column justify-space-between"
@@ -18,7 +43,7 @@
           <h1 class="text-h4 mb-4">
             Free, Auditable, real-time character tracking for 5th edition
           </h1>
-          <h4 class="subheading">
+          <h4 class="text-subtitle-1">
             Spend less time shuffling paper, and more time playing the game
           </h4>
         </v-col>
@@ -168,7 +193,7 @@
         >
           {{ btn.name }}
           <v-icon
-            right
+            end
           >
             mdi-open-in-new
           </v-icon>
@@ -177,31 +202,6 @@
     </section>
   </div>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-
-const { result: signedIn } = autorun(() => !!Meteor.userId());
-
-const cols = {
-  cols: 12,
-  sm: 6,
-  md: 4,
-  lg: 3,
-  xl: 2,
-};
-
-const highlightCards = [
-  { text: 'Automated actions', img: 'actions.webp' },
-  { text: 'Auditable stats', img: 'auditable.webp' },
-  { text: 'Dice rolling', img: 'automated-dice-rolls.webp' },
-  { text: 'Hackable character builder', img: 'build-system.webp' },
-  { text: 'Drag and drop inventory manager', img: 'inventory.webp' },
-  { text: 'Custom libraries of content', img: 'libraries-of-content.webp' },
-  { text: 'Discord webhooks', img: 'send-to-discord.webp' },
-  { text: 'Printed character sheets', img: 'printing.webp' },
-];
-</script>
 
 <style scoped>
 .selling-points>* {

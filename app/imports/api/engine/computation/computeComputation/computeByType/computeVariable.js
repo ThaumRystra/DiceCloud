@@ -37,7 +37,7 @@ function aggregateLinks(computation, node) {
         && computation.propsById[linkedNode.data.tableId]?.inactive
       ) return;
       // Apply all the aggregations
-      let arg = { node, linkedNode, link, computation };
+      const arg = { node, linkedNode, link, computation };
       aggregate.classLevel(arg);
       aggregate.damageMultiplier(arg);
       aggregate.definition(arg);

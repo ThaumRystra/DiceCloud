@@ -1,28 +1,3 @@
-<template lang="html">
-  <div
-    v-if="computedErrors.length"
-    class="error-list"
-  >
-    <v-slide-x-transition
-      group
-      hide-on-leave
-    >
-      <v-alert
-        v-for="error in computedErrors"
-        :key="error.message"
-        :value="true"
-        :icon="errorIcon(error.type)"
-        :color="errorColor(error.type)"
-        class="mb-2"
-        density="compact"
-        variant="text"
-      >
-        <pre>{{ error.message }}</pre>
-      </v-alert>
-    </v-slide-x-transition>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -68,6 +43,31 @@ function errorColor(type: string) {
   }
 }
 </script>
+
+<template lang="html">
+  <div
+    v-if="computedErrors.length"
+    class="error-list"
+  >
+    <v-slide-x-transition
+      group
+      hide-on-leave
+    >
+      <v-alert
+        v-for="error in computedErrors"
+        :key="error.message"
+        :value="true"
+        :icon="errorIcon(error.type)"
+        :color="errorColor(error.type)"
+        class="mb-2"
+        density="compact"
+        variant="text"
+      >
+        <pre>{{ error.message }}</pre>
+      </v-alert>
+    </v-slide-x-transition>
+  </div>
+</template>
 
 <style lang="css">
 .error-list .v-alert__content{

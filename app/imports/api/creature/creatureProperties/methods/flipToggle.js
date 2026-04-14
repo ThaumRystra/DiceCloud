@@ -16,7 +16,7 @@ const flipToggle = new ValidatedMethod({
   },
   async run({ _id }) {
     // Permission
-    let property = await CreatureProperties.findOneAsync(_id, {
+    const property = await CreatureProperties.findOneAsync(_id, {
       fields: { type: 1, root: 1, enabled: 1, disabled: 1 }
     });
     if (property.type !== 'toggle') {
@@ -27,7 +27,7 @@ const flipToggle = new ValidatedMethod({
       throw new Meteor.Error('Computed toggle',
         'Can\'t flip a toggle that is computed')
     }
-    let rootCreature = getRootCreatureAncestor(property);
+    const rootCreature = getRootCreatureAncestor(property);
     await assertEditPermission(rootCreature, this.userId);
 
     // Invert the current value, disabled is the canonical store of value

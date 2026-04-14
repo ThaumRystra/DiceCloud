@@ -1,58 +1,3 @@
-<template>
-  <div>
-    <div
-      class="attribute"
-      :data-id="dataId"
-    >
-      <ability-list-tile
-        v-if="model.attributeType === 'ability'"
-        :model="model"
-        @click="$emit('click')"
-      />
-      <hit-dice-list-tile
-        v-else-if="model.attributeType === 'hitDice'"
-        :model="model"
-        @click="$emit('click')"
-        @change="damageProperty"
-      />
-      <health-bar
-        v-else-if="model.attributeType === 'healthBar'"
-        :model="model"
-        @change="damageProperty"
-        @click="$emit('click')"
-      />
-      <spell-slot-list-tile
-        v-else-if="model.attributeType === 'spellSlot'"
-        :model="model"
-        @click="$emit('click')"
-      />
-      <resource-card-content
-        v-else-if="model.attributeType === 'resource'"
-        :model="model"
-        @click="$emit('click')"
-        @change="damageProperty"
-        @mouseover="hover = true"
-        @mouseleave="hover = false"
-      />
-      <attribute-card-content
-        v-else-if="model.attributeType !== 'utility'"
-        class="pointer"
-        :model="model"
-        @click="$emit('click')"
-        @mouseover="hover = true"
-        @mouseleave="hover = false"
-      />
-      <card-highlight :active="hover" />
-    </div>
-    <folder-group-children
-      :model="model"
-      @click-property="e => $emit('click-property', e)"
-      @sub-click="e => $emit('sub-click', e)"
-      @remove="e => $emit('remove', e)"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -107,6 +52,61 @@ async function damageProperty({ value, type, ack }: { value: any; type: string; 
   }
 }
 </script>
+
+<template>
+  <div>
+    <div
+      class="attribute"
+      :data-id="dataId"
+    >
+      <ability-list-tile
+        v-if="model.attributeType === 'ability'"
+        :model="model"
+        @click="$emit('click')"
+      />
+      <hit-dice-list-tile
+        v-else-if="model.attributeType === 'hitDice'"
+        :model="model"
+        @click="$emit('click')"
+        @change="damageProperty"
+      />
+      <health-bar
+        v-else-if="model.attributeType === 'healthBar'"
+        :model="model"
+        @change="damageProperty"
+        @click="$emit('click')"
+      />
+      <spell-slot-list-tile
+        v-else-if="model.attributeType === 'spellSlot'"
+        :model="model"
+        @click="$emit('click')"
+      />
+      <resource-card-content
+        v-else-if="model.attributeType === 'resource'"
+        :model="model"
+        @click="$emit('click')"
+        @change="damageProperty"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
+      />
+      <attribute-card-content
+        v-else-if="model.attributeType !== 'utility'"
+        class="pointer"
+        :model="model"
+        @click="$emit('click')"
+        @mouseover="hover = true"
+        @mouseleave="hover = false"
+      />
+      <card-highlight :active="hover" />
+    </div>
+    <folder-group-children
+      :model="model"
+      @click-property="e => $emit('click-property', e)"
+      @sub-click="e => $emit('sub-click', e)"
+      @remove="e => $emit('remove', e)"
+    />
+  </div>
+</template>
 
 <style lang="css" scoped>
 .attribute {

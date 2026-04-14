@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import UserImages from '/imports/api/files/userImages/UserImages';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
+import prettyBytes from 'pretty-bytes';
+import { thumbHashToDataURL } from 'thumbhash';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  href?: string;
+}>();
+
+const store = useStore(key);
+const tab = ref(0);
+const progress = ref(0);
+const inputHref = ref(props.href);
+
+subscribe('userImages');
+
+const { result: userImages } = autorun(() => {
+  const userId = Meteor.userId();
+  return UserImages.find(
+    { userId },
+    { sort: { 'meta.createdAt': -1, name: 1, size: -1 } }
+  ).map((f: any) => {
+    f.size = prettyBytes(f.size);
+    f.link = UserImages.link(f);
+    if (f.meta?.thumbHash) {
+      f.thumbHashDataUrl = thumbHashToDataURL(f.meta.thumbHash);
+    }
+    return f;
+  });
+});
+
+function previewImage(file: any) {
+  store.commit('pushDialogStack', {
+    component: 'image-preview-dialog',
+    elementId: file._id,
+    data: { href: file.link },
+  });
+}
+
+function selectUserImage(href: string) {
+  store.dispatch('popDialogStack', href);
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -77,8 +127,8 @@
         color="accent"
         variant="outlined"
         :disabled="!inputHref"
-        @click="selectUserImage(inputHref)"
         prepend-icon="mdi-check"
+        @click="selectUserImage(inputHref)"
       >
         Save
       </v-btn>
@@ -92,56 +142,6 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import UserImages from '/imports/api/files/userImages/UserImages';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
-import prettyBytes from 'pretty-bytes';
-import { thumbHashToDataURL } from 'thumbhash';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  href?: string;
-}>();
-
-const store = useStore(key);
-const tab = ref(0);
-const progress = ref(0);
-const inputHref = ref(props.href);
-
-subscribe('userImages');
-
-const { result: userImages } = autorun(() => {
-  const userId = Meteor.userId();
-  return UserImages.find(
-    { userId },
-    { sort: { 'meta.createdAt': -1, name: 1, size: -1 } }
-  ).map((f: any) => {
-    f.size = prettyBytes(f.size);
-    f.link = UserImages.link(f);
-    if (f.meta?.thumbHash) {
-      f.thumbHashDataUrl = thumbHashToDataURL(f.meta.thumbHash);
-    }
-    return f;
-  });
-});
-
-function previewImage(file: any) {
-  store.commit('pushDialogStack', {
-    component: 'image-preview-dialog',
-    elementId: file._id,
-    data: { href: file.link },
-  });
-}
-
-function selectUserImage(href: string) {
-  store.dispatch('popDialogStack', href);
-}
-</script>
 
 <style lang="css" scoped>
 .user-image-list > * {

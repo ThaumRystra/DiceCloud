@@ -1,105 +1,3 @@
-<template lang="html">
-  <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
-  >
-    <template #activator="{ on, attrs }">
-      <v-btn
-        v-bind="attrs"
-        icon
-        v-on="on"
-      >
-        <v-badge
-          :content="numFilters"
-          :value="numFilters"
-          color="primary"
-          overlap
-        >
-          <v-icon>mdi-magnify</v-icon>
-        </v-badge>
-      </v-btn>
-    </template>
-
-    <v-card>
-      <v-card-title>
-        Search
-      </v-card-title>
-      <v-card-text>
-        <v-select
-          v-model="typeFilterInput"
-          variant="outlined"
-          label="Type"
-          :items="filterOptions"
-          multiple
-          clearable
-          small-chips
-          deletable-chips
-        />
-        <v-slide-x-transition group>
-          <div
-            v-for="(fieldFilter, index) in fieldFilters"
-            :key="index"
-            class="d-flex"
-          >
-            <v-text-field
-              v-model="fieldFilter.field"
-              class="text--mono"
-              label="Field"
-              variant="outlined"
-            />
-            <v-text-field
-              v-model="fieldFilter.value"
-              label="Text"
-              class="ml-2"
-              variant="outlined"
-            />
-            <v-btn
-              v-if="fieldFilters.length > 1"
-              icon
-              @click="fieldFilters.splice(index, 1)"
-            >
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </div>
-        </v-slide-x-transition>
-        <div
-          v-if="fieldFilters.length < 5"
-          class="d-flex"
-        >
-          <v-spacer />
-          <v-btn
-            icon
-            @click="fieldFilters.push({name: '', value: undefined})"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </div>
-        <v-card-actions>
-          <v-btn
-            variant="text"
-            @click="
-              fieldFilters = [{field: 'name', value: undefined}];
-              typeFilterInput = [];
-              menu = false;
-            "
-            prepend-icon="mdi-close"
-          >
-            Clear
-          </v-btn>
-          <v-spacer />
-          <v-btn
-            variant="text"
-            color="primary"
-            @click="menu = false"
-          >
-            Find
-          </v-btn>
-        </v-card-actions>
-      </v-card-text>
-    </v-card>
-  </v-menu>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -179,6 +77,108 @@ watch(menu, (val) => {
   }
 });
 </script>
+
+<template lang="html">
+  <v-menu
+    v-model="menu"
+    :close-on-content-click="false"
+  >
+    <template #activator="{ props }">
+      <v-btn
+       
+        icon
+        v-bind="props"
+      >
+        <v-badge
+          :content="numFilters"
+          :model-value="numFilters"
+          color="primary"
+          overlap
+        >
+          <v-icon>mdi-magnify</v-icon>
+        </v-badge>
+      </v-btn>
+    </template>
+
+    <v-card>
+      <v-card-title>
+        Search
+      </v-card-title>
+      <v-card-text>
+        <v-select
+          v-model="typeFilterInput"
+          variant="outlined"
+          label="Type"
+          :items="filterOptions"
+          multiple
+          clearable
+          small-chips
+          closable-chips
+        />
+        <v-slide-x-transition group>
+          <div
+            v-for="(fieldFilter, index) in fieldFilters"
+            :key="index"
+            class="d-flex"
+          >
+            <v-text-field
+              v-model="fieldFilter.field"
+              class="text--mono"
+              label="Field"
+              variant="outlined"
+            />
+            <v-text-field
+              v-model="fieldFilter.value"
+              label="Text"
+              class="ml-2"
+              variant="outlined"
+            />
+            <v-btn
+              v-if="fieldFilters.length > 1"
+              icon
+              @click="fieldFilters.splice(index, 1)"
+            >
+              <v-icon>mdi-close</v-icon>
+            </v-btn>
+          </div>
+        </v-slide-x-transition>
+        <div
+          v-if="fieldFilters.length < 5"
+          class="d-flex"
+        >
+          <v-spacer />
+          <v-btn
+            icon
+            @click="fieldFilters.push({name: '', value: undefined})"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </div>
+        <v-card-actions>
+          <v-btn
+            variant="text"
+            prepend-icon="mdi-close"
+            @click="
+              fieldFilters = [{field: 'name', value: undefined}];
+              typeFilterInput = [];
+              menu = false;
+            "
+          >
+            Clear
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            color="primary"
+            @click="menu = false"
+          >
+            Find
+          </v-btn>
+        </v-card-actions>
+      </v-card-text>
+    </v-card>
+  </v-menu>
+</template>
 
 <style lang="css" scoped>
 </style>

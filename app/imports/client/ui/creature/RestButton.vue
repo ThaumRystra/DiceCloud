@@ -1,17 +1,3 @@
-<template lang="html">
-  <v-btn
-    :loading="loading"
-    :disabled="context.editPermission === false"
-    variant="outlined"
-    :data-id="`rest-btn-${type}`"
-    style="width: 160px;"
-    @click="rest"
-    :prepend-icon="type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed'"
-  >
-    {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -47,3 +33,17 @@ async function rest() {
   }
 }
 </script>
+
+<template lang="html">
+  <v-btn
+    :loading="loading"
+    :disabled="context.editPermission === false"
+    variant="outlined"
+    :data-id="`rest-btn-${type}`"
+    style="width: 160px;"
+    :prepend-icon="type === 'shortRest' ? 'mdi-music-rest-quarter' : 'mdi-bed'"
+    @click="rest"
+  >
+    {{ type === 'shortRest' ? 'Short Rest' : 'Long Rest' }}
+  </v-btn>
+</template>

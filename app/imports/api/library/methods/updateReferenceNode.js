@@ -22,8 +22,8 @@ const updateReferenceNode = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id }) {
-    let userId = this.userId;
-    let node = await LibraryNodes.findOneAsync(_id);
+    const userId = this.userId;
+    const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, userId);
     await updateReferenceNodeWork(node, userId);
   },

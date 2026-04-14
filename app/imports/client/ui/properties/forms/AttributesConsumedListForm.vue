@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import AttributeConsumedForm from '/imports/client/ui/properties/forms/AttributeConsumedForm.vue';
+
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change', 'pull']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+</script>
+
 <template lang="html">
   <div class="mt-4">
     <v-slide-x-transition group>
@@ -27,19 +43,3 @@
     </v-slide-x-transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import AttributeConsumedForm from '/imports/client/ui/properties/forms/AttributeConsumedForm.vue';
-
-withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change', 'pull']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-</script>

@@ -1,42 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="item"
-    v-on="hasClickListener ? {click} : {}"
-  >
-    <template #prepend>
-      <property-icon
-        class="mr-2"
-        :model="model"
-        :color="model.color"
-      />
-    </template>
-    <v-list-item-title>
-      {{ title }}
-    </v-list-item-title>
-    <template #append>
-      <v-icon
-        v-if="model.attuned"
-        style="min-width: 40px;"
-      >$vuetify.icons.spell</v-icon>
-      <increment-button
-        v-if="context.creatureId && model.showIncrement"
-        icon
-        color="primary"
-        :disabled="context.editPermission === false"
-        :value="model.quantity"
-        :loading="incrementLoading"
-        style="min-width: 40px;"
-        @change="changeQuantity"
-      />
-      <drag-handle 
-        :disabled="context.editPermission === false"
-        class="drag-handle"
-        style="height: 100%; width: 40px; cursor: move;"
-      />
-    </template>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, useAttrs, inject } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -104,6 +65,47 @@ async function changeQuantity({ type, value }: { type: string; value: any }) {
   incrementLoading.value = false;
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="item"
+    v-on="hasClickListener ? {click} : {}"
+  >
+    <template #prepend>
+      <property-icon
+        class="mr-2"
+        :model="model"
+        :color="model.color"
+      />
+    </template>
+    <v-list-item-title>
+      {{ title }}
+    </v-list-item-title>
+    <template #append>
+      <v-icon
+        v-if="model.attuned"
+        style="min-width: 40px;"
+      >
+        $vuetify.icons.spell
+      </v-icon>
+      <increment-button
+        v-if="context.creatureId && model.showIncrement"
+        icon
+        color="primary"
+        :disabled="context.editPermission === false"
+        :value="model.quantity"
+        :loading="incrementLoading"
+        style="min-width: 40px;"
+        @change="changeQuantity"
+      />
+      <drag-handle 
+        :disabled="context.editPermission === false"
+        class="drag-handle"
+        style="height: 100%; width: 40px; cursor: move;"
+      />
+    </template>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
 .item-avatar {

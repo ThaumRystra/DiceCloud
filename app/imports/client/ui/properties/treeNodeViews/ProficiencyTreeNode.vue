@@ -1,23 +1,3 @@
-<template lang="html">
-  <div class="d-flex align-center justify-start">
-    <proficiency-icon
-      v-if="!hideIcon"
-      class="mr-2"
-      :class="selected && 'text-primary'"
-      :color="model.color"
-      :value="model.value"
-    />
-    <div class="text-no-wrap text-truncate">
-      <template v-if="!model.name && model.stats && model.stats.length">
-        {{ model.stats.join(', ') }}
-      </template>
-      <template v-else>
-        {{ title }}
-      </template>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -42,3 +22,23 @@ const title = computed(() => {
   return prop && prop.name;
 });
 </script>
+
+<template lang="html">
+  <div class="d-flex align-center justify-start">
+    <proficiency-icon
+      v-if="!hideIcon"
+      class="mr-2"
+      :class="selected && 'text-primary'"
+      :color="model.color"
+      :value="model.value"
+    />
+    <div class="text-no-wrap text-truncate">
+      <template v-if="!model.name && model.stats && model.stats.length">
+        {{ model.stats.join(', ') }}
+      </template>
+      <template v-else>
+        {{ title }}
+      </template>
+    </div>
+  </div>
+</template>

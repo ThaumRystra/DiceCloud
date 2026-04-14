@@ -1,61 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="ability-list-tile pl-0"
-    v-on="hasClickListener ? { click } : {}"
-  >
-    <template #prepend>
-      <v-btn
-        class="mr-4 py-2"
-        variant="text"
-        height="82"
-        :data-id="`check-btn-${model._id}`"
-        :loading="checkLoading"
-        :disabled="!context.editPermission"
-        @click.stop="check"
-      >
-        <div>
-          <div class="text-h4 mod">
-            <template v-if="swapScoresAndMods">
-              <span :class="{ 'text-primary': model.total !== model.value }">
-                {{ model.value }}
-              </span>
-            </template>
-            <template v-else>
-              {{ numberToSignedString(model.modifier) }}
-            </template>
-          </div>
-          <div class="text-h6 value">
-            <template v-if="swapScoresAndMods">
-              {{ numberToSignedString(model.modifier) }}
-            </template>
-            <template v-else>
-              <span :class="{ 'text-primary': model.total !== model.value }">
-                {{ model.value }}
-              </span>
-            </template>
-          </div>
-        </div>
-      </v-btn>
-    </template>
-
-    <v-list-item-title>
-      {{ model.name }}
-      <v-icon
-        v-if="model.advantage > 0"
-        right
-      >
-        mdi-chevron-double-up
-      </v-icon>
-      <v-icon
-        v-if="model.advantage < 0"
-        right
-      >
-        mdi-chevron-double-down
-      </v-icon>
-    </v-list-item-title>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, useAttrs, inject } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -111,6 +53,64 @@ async function check() {
   }
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="ability-list-tile pl-0"
+    v-on="hasClickListener ? { click } : {}"
+  >
+    <template #prepend>
+      <v-btn
+        class="mr-4 py-2"
+        variant="text"
+        height="82"
+        :data-id="`check-btn-${model._id}`"
+        :loading="checkLoading"
+        :disabled="!context.editPermission"
+        @click.stop="check"
+      >
+        <div>
+          <div class="text-h4 mod">
+            <template v-if="swapScoresAndMods">
+              <span :class="{ 'text-primary': model.total !== model.value }">
+                {{ model.value }}
+              </span>
+            </template>
+            <template v-else>
+              {{ numberToSignedString(model.modifier) }}
+            </template>
+          </div>
+          <div class="text-h6 value">
+            <template v-if="swapScoresAndMods">
+              {{ numberToSignedString(model.modifier) }}
+            </template>
+            <template v-else>
+              <span :class="{ 'text-primary': model.total !== model.value }">
+                {{ model.value }}
+              </span>
+            </template>
+          </div>
+        </div>
+      </v-btn>
+    </template>
+
+    <v-list-item-title>
+      {{ model.name }}
+      <v-icon
+        v-if="model.advantage > 0"
+        end
+      >
+        mdi-chevron-double-up
+      </v-icon>
+      <v-icon
+        v-if="model.advantage < 0"
+        end
+      >
+        mdi-chevron-double-down
+      </v-icon>
+    </v-list-item-title>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
 .ability-list-tile {

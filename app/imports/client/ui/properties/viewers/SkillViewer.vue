@@ -1,117 +1,3 @@
-<template lang="html">
-  <div class="skill-viewer">
-    <v-row
-      density="compact"
-      justify="center"
-      justify-sm="start"
-    >
-      <property-field
-        v-if="model.value !== undefined"
-        center
-        large
-        name="Roll bonus"
-        :value="isFinite(model.value) ?
-          numberToSignedString(model.value) :
-          model.value"
-      />
-      <property-field
-        v-if="model.proficiency !== undefined"
-        name="Proficiency"
-      >
-        <v-icon
-          style="height: 12px"
-          class="ml-1 mr-2"
-        >
-          {{ icon }}
-        </v-icon>
-        <div>
-          {{ proficiencyText[model.proficiency] }}
-        </div>
-      </property-field>
-      <property-field
-        name="Variable Name"
-        mono
-        :value="model.variableName"
-      />
-      <property-field
-        name="Ability"
-        mono
-        :value="model.ability"
-      />
-      <property-field
-        name="Skill type"
-        :value="skillTypes[model.skillType]"
-      />
-      <property-field
-        v-if="'passiveBonus' in model"
-        name="Passive score"
-        :value="passiveScore"
-      />
-      <property-field
-        v-if="model.overridden"
-        :cols="{ cols: 6, md: 12 }"
-        name="Overridden"
-        value="Overriden by another property with the same variable name"
-      />
-      <property-target-tags :model="model" />
-    </v-row>
-    <v-row dense>
-      <property-description
-        name="description"
-        :model="model.description"
-      />
-    </v-row>
-    <v-row
-      v-if="ability || (effects && effects.length)"
-      density="compact"
-    >
-      <property-field
-        :cols="{ col: 12 }"
-        name="Effects"
-      >
-        <v-list style="width: 100%">
-          <attribute-effect
-            v-if="ability"
-            :key="ability._id"
-            :model="ability"
-            :attribute="model"
-            :data-id="ability._id"
-            @click="clickEffect(ability._id)"
-          />
-          <attribute-effect
-            v-for="effect in effects"
-            :key="effect._id"
-            :model="effect"
-            :attribute="model"
-            :data-id="effect._id"
-            @click="clickEffect(effect._id)"
-          />
-        </v-list>
-      </property-field>
-    </v-row>
-    <v-row
-      v-if="proficiencies.length"
-      density="compact"
-    >
-      <property-field
-        :cols="{ col: 12 }"
-        name="Proficiencies"
-      >
-        <v-list style="width: 100%">
-          <skill-proficiency
-            v-for="proficiency in proficiencies"
-            :key="proficiency._id"
-            :model="proficiency"
-            :proficiency-bonus="proficiencyBonus"
-            :data-id="proficiency._id"
-            @click="clickEffect(proficiency._id)"
-          />
-        </v-list>
-      </property-field>
-    </v-row>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -211,5 +97,119 @@ function clickEffect(id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="skill-viewer">
+    <v-row
+      class="density"
+      justify="center"
+      justify-sm="start"
+    >
+      <property-field
+        v-if="model.value !== undefined"
+        center
+        large
+        name="Roll bonus"
+        :value="isFinite(model.value) ?
+          numberToSignedString(model.value) :
+          model.value"
+      />
+      <property-field
+        v-if="model.proficiency !== undefined"
+        name="Proficiency"
+      >
+        <v-icon
+          style="height: 12px"
+          class="ml-1 mr-2"
+        >
+          {{ icon }}
+        </v-icon>
+        <div>
+          {{ proficiencyText[model.proficiency] }}
+        </div>
+      </property-field>
+      <property-field
+        name="Variable Name"
+        mono
+        :value="model.variableName"
+      />
+      <property-field
+        name="Ability"
+        mono
+        :value="model.ability"
+      />
+      <property-field
+        name="Skill type"
+        :value="skillTypes[model.skillType]"
+      />
+      <property-field
+        v-if="'passiveBonus' in model"
+        name="Passive score"
+        :value="passiveScore"
+      />
+      <property-field
+        v-if="model.overridden"
+        :cols="{ cols: 6, md: 12 }"
+        name="Overridden"
+        value="Overriden by another property with the same variable name"
+      />
+      <property-target-tags :model="model" />
+    </v-row>
+    <v-row dense>
+      <property-description
+        name="description"
+        :model="model.description"
+      />
+    </v-row>
+    <v-row
+      v-if="ability || (effects && effects.length)"
+      class="density"
+    >
+      <property-field
+        :cols="{ col: 12 }"
+        name="Effects"
+      >
+        <v-list style="width: 100%">
+          <attribute-effect
+            v-if="ability"
+            :key="ability._id"
+            :model="ability"
+            :attribute="model"
+            :data-id="ability._id"
+            @click="clickEffect(ability._id)"
+          />
+          <attribute-effect
+            v-for="effect in effects"
+            :key="effect._id"
+            :model="effect"
+            :attribute="model"
+            :data-id="effect._id"
+            @click="clickEffect(effect._id)"
+          />
+        </v-list>
+      </property-field>
+    </v-row>
+    <v-row
+      v-if="proficiencies.length"
+      class="density"
+    >
+      <property-field
+        :cols="{ col: 12 }"
+        name="Proficiencies"
+      >
+        <v-list style="width: 100%">
+          <skill-proficiency
+            v-for="proficiency in proficiencies"
+            :key="proficiency._id"
+            :model="proficiency"
+            :proficiency-bonus="proficiencyBonus"
+            :data-id="proficiency._id"
+            @click="clickEffect(proficiency._id)"
+          />
+        </v-list>
+      </property-field>
+    </v-row>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

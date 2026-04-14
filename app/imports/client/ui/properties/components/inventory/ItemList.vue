@@ -1,32 +1,3 @@
-<template lang="html">
-  <v-list
-    density="compact"
-    class="item-list"
-  >
-    <VueDraggable
-      v-model="dataItems"
-      style="min-height: 24px;"
-      :disabled="context.editPermission === false"
-      :group="`item-list`"
-      ghost-class="ghost"
-      draggable=".item"
-      handle=".handle"
-      :revert-on-spill="true"
-      @update="change"
-      @add="change"
-    >
-      <item-list-tile
-        v-for="itemId in dataItems"
-        :key="itemId"
-        class="item"
-        :data-id="itemId"
-        :item-id="itemId"
-        @click="clickProperty(itemId)"
-      />
-    </VueDraggable>
-  </v-list>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, onMounted, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -117,6 +88,35 @@ async function change(event: any) {
   }
 }
 </script>
+
+<template lang="html">
+  <v-list
+    density="compact"
+    class="item-list"
+  >
+    <VueDraggable
+      v-model="dataItems"
+      style="min-height: 24px;"
+      :disabled="context.editPermission === false"
+      :group="`item-list`"
+      ghost-class="ghost"
+      draggable=".item"
+      handle=".handle"
+      :revert-on-spill="true"
+      @update="change"
+      @add="change"
+    >
+      <item-list-tile
+        v-for="itemId in dataItems"
+        :key="itemId"
+        class="item"
+        :data-id="itemId"
+        :item-id="itemId"
+        @click="clickProperty(itemId)"
+      />
+    </VueDraggable>
+  </v-list>
+</template>
 
 <style lang="css" scoped>
 .ghost {

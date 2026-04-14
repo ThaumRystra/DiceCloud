@@ -1,60 +1,3 @@
-<template>
-  <div class="dialog-stack">
-    <transition name="backdrop-fade">
-      <div
-        v-if="dialogs.length"
-        class="backdrop"
-        @click="backdropClicked"
-      />
-    </transition>
-    <transition-group
-      name="dialog-list"
-      class="dialog-transition-group"
-      :class="{ shake }"
-      tag="div"
-      @enter="enter"
-      @leave="leave"
-    >
-      <template v-for="(dialog, index) in dialogs">
-        <component
-          :is="dialog.component"
-          v-if="isUnsizedDialog(dialog.component)"
-          :key="dialog._id + '-unsized'"
-          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
-          v-bind="dialog.data"
-          class="unsized-dialog dialog-component"
-          :data-element-id="dialog.elementId"
-          :data-id="dialog._id"
-          :data-index="index"
-          :style="getDialogStyle(index)"
-          :elevation="6"
-          @pop="popDialogStack($event)"
-        />
-        <v-card
-          v-else
-          :key="dialog._id"
-          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
-          class="dialog"
-          :data-element-id="dialog.elementId"
-          :data-id="dialog._id"
-          :data-index="index"
-          :style="getDialogStyle(index)"
-          :elevation="6"
-        >
-          <transition name="slide">
-            <component
-              :is="dialog.component"
-              v-bind="dialog.data"
-              class="sized-dialog dialog-component"
-              @pop="popDialogStack($event)"
-            />
-          </transition>
-        </v-card>
-      </template>
-    </transition-group>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -247,6 +190,63 @@ async function leave(target: Element, done: () => void) {
   done();
 }
 </script>
+
+<template>
+  <div class="dialog-stack">
+    <transition name="backdrop-fade">
+      <div
+        v-if="dialogs.length"
+        class="backdrop"
+        @click="backdropClicked"
+      />
+    </transition>
+    <transition-group
+      name="dialog-list"
+      class="dialog-transition-group"
+      :class="{ shake }"
+      tag="div"
+      @enter="enter"
+      @leave="leave"
+    >
+      <template v-for="(dialog, index) in dialogs">
+        <component
+          :is="dialog.component"
+          v-if="isUnsizedDialog(dialog.component)"
+          :key="dialog._id + '-unsized'"
+          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
+          v-bind="dialog.data"
+          class="unsized-dialog dialog-component"
+          :data-element-id="dialog.elementId"
+          :data-id="dialog._id"
+          :data-index="index"
+          :style="getDialogStyle(index)"
+          :elevation="6"
+          @pop="popDialogStack($event)"
+        />
+        <v-card
+          v-else
+          :key="dialog._id"
+          :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
+          class="dialog"
+          :data-element-id="dialog.elementId"
+          :data-id="dialog._id"
+          :data-index="index"
+          :style="getDialogStyle(index)"
+          :elevation="6"
+        >
+          <transition name="slide">
+            <component
+              :is="dialog.component"
+              v-bind="dialog.data"
+              class="sized-dialog dialog-component"
+              @pop="popDialogStack($event)"
+            />
+          </transition>
+        </v-card>
+      </template>
+    </transition-group>
+  </div>
+</template>
 
 <style scoped>
 .backdrop {

@@ -1,28 +1,3 @@
-<template lang="html">
-  <div
-    class="bar"
-    @click="e => $emit('click', e)"
-  >
-    <div
-      style="width: 100%; position: relative; transition: background-color 0.5s ease;"
-      :style="{
-        backgroundColor: barBackgroundColor,
-        height: `${height}px`,
-      }"
-    >
-      <div
-        class="filler"
-        style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
-        :style="{
-          backgroundColor: barColor,
-          transform: `scaleX(${fillFraction})`,
-        }"
-      />
-      <slot />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useTheme } from 'vuetify';
@@ -65,3 +40,28 @@ const barBackgroundColor = computed(() =>
   chroma(barColor.value).darken(1.5).desaturate(1.5).hex()
 );
 </script>
+
+<template lang="html">
+  <div
+    class="bar"
+    @click="e => $emit('click', e)"
+  >
+    <div
+      style="width: 100%; position: relative; transition: background-color 0.5s ease;"
+      :style="{
+        backgroundColor: barBackgroundColor,
+        height: `${height}px`,
+      }"
+    >
+      <div
+        class="filler"
+        style="height: 100%; transform-origin: left; transition: all 0.5s ease;"
+        :style="{
+          backgroundColor: barColor,
+          transform: `scaleX(${fillFraction})`,
+        }"
+      />
+      <slot />
+    </div>
+  </div>
+</template>

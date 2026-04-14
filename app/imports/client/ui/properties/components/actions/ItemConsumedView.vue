@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import SelectItemToConsume from '/imports/client/ui/properties/components/actions/SelectItemToConsume.vue';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  action: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
+
+const context = inject('context', {});
+const theme = inject('theme', { isDark: false });
+
+const quantity = computed(() => props.model.quantity?.value || 0);
+const insufficient = computed(() => quantity.value > props.model.available);
+</script>
+
 <template lang="html">
   <div
     :class="{
@@ -83,24 +101,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import SelectItemToConsume from '/imports/client/ui/properties/components/actions/SelectItemToConsume.vue';
-
-const props = withDefaults(defineProps<{
-  model?: Record<string, any>;
-  action: Record<string, any>;
-}>(), {
-  model: () => ({}),
-});
-
-const context = inject('context', {});
-const theme = inject('theme', { isDark: false });
-
-const quantity = computed(() => props.model.quantity?.value || 0);
-const insufficient = computed(() => quantity.value > props.model.available);
-</script>
 
 <style lang="css" scoped>
 .clickable {

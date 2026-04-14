@@ -1,37 +1,3 @@
-<template>
-  <v-fade-transition
-    group
-    leave-absolute
-    hide-on-leave
-    class="column-layout wide-columns"
-  >
-    <div
-      v-for="pointBuy in pointBuys"
-      :key="pointBuy._id"
-      style="transition: all 0.3s !important"
-    >
-      <point-buy-card
-        :model="pointBuy"
-        hover
-        @ignore="ignoreProp(pointBuy._id)"
-        @click="editPointBuy(pointBuy._id)"
-      />
-    </div>
-    <div
-      v-for="slot in slots"
-      :key="slot._id"
-      style="transition: all 0.3s !important"
-    >
-      <slot-card
-        :model="slot"
-        hover
-        @ignore="ignoreProp(slot._id)"
-        @click="fillSlot(slot._id)"
-      />
-    </div>
-  </v-fade-transition>
-</template>
-
 <script setup lang="ts">
 import { inject } from 'vue';
 import { useStore } from 'vuex';
@@ -97,5 +63,39 @@ function editPointBuy(_id: string) {
   });
 }
 </script>
+
+<template>
+  <v-fade-transition
+    group
+    leave-absolute
+    hide-on-leave
+    class="column-layout wide-columns"
+  >
+    <div
+      v-for="pointBuy in pointBuys"
+      :key="pointBuy._id"
+      style="transition: all 0.3s !important"
+    >
+      <point-buy-card
+        :model="pointBuy"
+        hover
+        @ignore="ignoreProp(pointBuy._id)"
+        @click="editPointBuy(pointBuy._id)"
+      />
+    </div>
+    <div
+      v-for="slot in slots"
+      :key="slot._id"
+      style="transition: all 0.3s !important"
+    >
+      <slot-card
+        :model="slot"
+        hover
+        @ignore="ignoreProp(slot._id)"
+        @click="fillSlot(slot._id)"
+      />
+    </div>
+  </v-fade-transition>
+</template>
 
 <style></style>

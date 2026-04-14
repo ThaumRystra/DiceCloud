@@ -18,9 +18,9 @@ import { getFilter } from '/imports/api/parenting/parentingFunctions';
  *
  * Permissions to library nodes are controlled by the libraries they belong to.
  */
-let Libraries = new Mongo.Collection('libraries');
+const Libraries = new Mongo.Collection('libraries');
 
-let LibrarySchema = new SimpleSchema({
+const LibrarySchema = new SimpleSchema({
   name: {
     type: String,
     max: STORAGE_LIMITS.name,
@@ -57,7 +57,7 @@ const insertLibrary = new ValidatedMethod({
       throw new Meteor.Error('Libraries.methods.insert.denied',
         'You need to be logged in to insert a library');
     }
-    let tier = getUserTier(this.userId);
+    const tier = getUserTier(this.userId);
     if (!tier.paidBenefits) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         `The ${tier.name} tier does not allow you to insert a library`);
@@ -84,7 +84,7 @@ const updateLibraryName = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, name }) {
-    let library = await Libraries.findOneAsync(_id);
+    const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { name } });
   },
@@ -107,7 +107,7 @@ const updateLibraryDescription = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, description }) {
-    let library = await Libraries.findOneAsync(_id);
+    const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { description } });
   },
@@ -130,7 +130,7 @@ const updateLibraryShowInMarket = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, value }) {
-    let library = await Libraries.findOneAsync(_id);
+    const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { showInMarket: value } });
   },
@@ -150,7 +150,7 @@ const removeLibrary = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id }) {
-    let library = await Libraries.findOneAsync(_id);
+    const library = await Libraries.findOneAsync(_id);
     assertOwnership(library, this.userId);
     this.unblock();
     await removeLibaryWork(_id)

@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
+import { useStore } from 'vuex';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
+import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  model: Record<string, any>;
+  open?: boolean;
+  selection?: boolean;
+  singleSelect?: boolean;
+  dense?: boolean;
+  isSelected?: boolean;
+  disabled?: boolean;
+}>();
+
+const store = useStore(key);
+
+const { result: canEdit } = autorun(() => {
+  try {
+    assertDocEditPermission(props.model, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+function editLibraryCollection() {
+  store.commit('pushDialogStack', {
+    data: { _id: props.model._id },
+    component: 'library-collection-edit-dialog',
+    elementId: `library-collection-${props.model._id}`,
+  });
+}
+</script>
+
 <template lang="html">
   <v-list-item
     style="min-height: 60px; min-width: 0;"
@@ -11,7 +49,7 @@
       <v-checkbox
         :disabled="disabled"
         :model-value="disabled || isSelected"
-        @change="e => $emit('select', e)"
+        @update:model-value="e => $emit('select', e)"
         @click.stop
       />
     </template>
@@ -54,43 +92,5 @@
     </v-list-item-title>
   </v-list-item>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import { Meteor } from 'meteor/meteor';
-import { useStore } from 'vuex';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
-import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  model: Record<string, any>;
-  open?: boolean;
-  selection?: boolean;
-  singleSelect?: boolean;
-  dense?: boolean;
-  isSelected?: boolean;
-  disabled?: boolean;
-}>();
-
-const store = useStore(key);
-
-const { result: canEdit } = autorun(() => {
-  try {
-    assertDocEditPermission(props.model, Meteor.userId());
-    return true;
-  } catch (e) {
-    return false;
-  }
-});
-
-function editLibraryCollection() {
-  store.commit('pushDialogStack', {
-    data: { _id: props.model._id },
-    component: 'library-collection-edit-dialog',
-    elementId: `library-collection-${props.model._id}`,
-  });
-}
-</script>
 
 <style lang="css" scoped></style>

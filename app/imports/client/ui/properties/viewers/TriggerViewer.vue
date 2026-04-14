@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import { timingOptions, eventOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers';
+
+const props = defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+
+const timingText = computed(() => {
+  if (!props.model.timing) return undefined;
+  return timingOptions[props.model.timing];
+});
+
+const actionPropertyText = computed(() => {
+  if (!props.model.actionPropertyType) return undefined;
+  return actionPropertyTypeOptions[props.model.actionPropertyType];
+});
+
+const eventText = computed(() => {
+  if (!props.model.event) return undefined;
+  return eventOptions[props.model.event];
+});
+</script>
+
 <template lang="html">
   <div class="trigger-viewer">
     <v-row dense>
@@ -38,26 +61,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import { timingOptions, eventOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers';
-
-const props = defineProps<{ model: Record<string, any> }>();
-const context = inject<any>('context', {});
-
-const timingText = computed(() => {
-  if (!props.model.timing) return undefined;
-  return timingOptions[props.model.timing];
-});
-
-const actionPropertyText = computed(() => {
-  if (!props.model.actionPropertyType) return undefined;
-  return actionPropertyTypeOptions[props.model.actionPropertyType];
-});
-
-const eventText = computed(() => {
-  if (!props.model.event) return undefined;
-  return eventOptions[props.model.event];
-});
-</script>

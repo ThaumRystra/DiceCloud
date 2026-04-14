@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const radioSelection = computed(() => {
+  if (props.model.disabled) return 'disabled';
+  if (props.model.enabled) return 'enabled';
+  return 'calculated';
+});
+
+function radioChange(value: string, ack?: Function) {
+  if (value === 'enabled') {
+    emit('change', { path: ['enabled'], value: true, ack });
+    emit('change', { path: ['disabled'], value: false, ack });
+  } else if (value === 'disabled') {
+    emit('change', { path: ['disabled'], value: true, ack });
+    emit('change', { path: ['enabled'], value: false, ack });
+  } else if (value === 'calculated') {
+    emit('change', { path: ['disabled'], value: false, ack });
+    emit('change', { path: ['enabled'], value: false, ack });
+  }
+}
+</script>
+
 <template lang="html">
   <div class="toggle-form">
     <v-row dense>
@@ -89,44 +127,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-
-const emit = defineEmits(['change']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const radioSelection = computed(() => {
-  if (props.model.disabled) return 'disabled';
-  if (props.model.enabled) return 'enabled';
-  return 'calculated';
-});
-
-function radioChange(value: string, ack?: Function) {
-  if (value === 'enabled') {
-    emit('change', { path: ['enabled'], value: true, ack });
-    emit('change', { path: ['disabled'], value: false, ack });
-  } else if (value === 'disabled') {
-    emit('change', { path: ['disabled'], value: true, ack });
-    emit('change', { path: ['enabled'], value: false, ack });
-  } else if (value === 'calculated') {
-    emit('change', { path: ['disabled'], value: false, ack });
-    emit('change', { path: ['enabled'], value: false, ack });
-  }
-}
-</script>
 
 <style lang="css" scoped>
 

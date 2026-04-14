@@ -4,7 +4,7 @@ import { get } from 'lodash';
 
 describe('apply function to key', function () {
   it('uses a basic key correctly', function () {
-    let obj = getStartingObject();
+    const obj = getStartingObject();
     applyFnToKey(obj, 'fox.name', (doc, key) => {
       assert.equal(obj, doc);
       assert.equal(key, 'fox.name');
@@ -12,8 +12,8 @@ describe('apply function to key', function () {
     });
   });
   it('uses a single nested key correctly', function () {
-    let obj = getStartingObject();
-    let foxSounds = [];
+    const obj = getStartingObject();
+    const foxSounds = [];
     applyFnToKey(obj, 'fox.sound.$', (doc, key) => {
       foxSounds.push(get(doc, key));
     });
@@ -22,8 +22,8 @@ describe('apply function to key', function () {
     assert.include(foxSounds, 'kek');
   });
   it('uses a double nested key correctly', function () {
-    let obj = getStartingObject();
-    let birdSounds = [];
+    const obj = getStartingObject();
+    const birdSounds = [];
     applyFnToKey(obj, 'birds.$.sound.$', (doc, key) => {
       birdSounds.push(get(doc, key));
     });

@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { inject } from 'vue';
+
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+withDefaults(defineProps<{
+  name?: string;
+}>(), {
+  name: undefined,
+});
+</script>
+
 <template>
   <fieldset
     :class="theme.isDark? 'v-theme--dark' :'v-theme--light'"
@@ -17,18 +29,6 @@
     <slot style="margin-top: -10px;" />
   </fieldset>
 </template>
-
-<script setup lang="ts">
-import { inject } from 'vue';
-
-const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
-
-withDefaults(defineProps<{
-  name?: string;
-}>(), {
-  name: undefined,
-});
-</script>
 
 <style lang="css" scoped>
 .outlined-input{

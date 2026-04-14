@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
+
+const props = defineProps<{
+  value: number;
+}>();
+
+const emit = defineEmits<{
+  continue: [];
+  input: [value: number];
+}>();
+
+function emitInput(e: number) {
+  emit('input', e || 0);
+}
+</script>
+
 <template>
   <div class="d-flex flex-column justify-center align-center">
     <v-btn-toggle
@@ -35,20 +52,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
-
-const props = defineProps<{
-  value: number;
-}>();
-
-const emit = defineEmits<{
-  continue: [];
-  input: [value: number];
-}>();
-
-function emitInput(e: number) {
-  emit('input', e || 0);
-}
-</script>

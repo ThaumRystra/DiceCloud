@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { ConstantSchema } from '/imports/api/properties/Constants';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+// We can't rely on autoValue running in every form, so recalculate errors
+const clientErrors = computed(() => {
+  const cleanModel = ConstantSchema.clean(props.model);
+  return cleanModel.errors;
+});
+</script>
+
 <template lang="html">
   <div>
     <v-row dense>
@@ -30,31 +55,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { ConstantSchema } from '/imports/api/properties/Constants';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-
-const emit = defineEmits(['change']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-// We can't rely on autoValue running in every form, so recalculate errors
-const clientErrors = computed(() => {
-  const cleanModel = ConstantSchema.clean(props.model);
-  return cleanModel.errors;
-});
-</script>
 
 <style lang="css" scoped>
 </style>

@@ -1,69 +1,3 @@
-<template>
-  <div
-    class="card-background"
-    style="height: 100%"
-  >
-    <v-container>
-      <v-row justify="center">
-        <v-col
-          cols="12"
-          xl="8"
-        >
-          <v-card :class="{ 'mb-4': libraryCollections && libraryCollections.length }">
-            <v-fade-transition
-              hide-on-leave
-              leave-absolute
-            >
-              <v-row
-                v-if="!librariesReady"
-                align="center"
-                justify="center"
-                class="pa-4"
-              >
-                <v-progress-circular
-                  indeterminate
-                  color="primary"
-                  size="32"
-                />
-              </v-row>
-              <library-list v-else />
-            </v-fade-transition>
-          </v-card>
-          <div class="d-flex flex-wrap justify-end mt-2">
-            <v-btn
-              variant="text"
-              to="/community-libraries"
-            >
-              Browse community libraries
-            </v-btn>
-            <v-btn
-              v-if="paidBenefits"
-              variant="text"
-              data-id="insert-library-collection-button"
-              color="accent"
-              :loading="loadingInsertLibraryCollection"
-              @click="insertLibraryCollectionAction"
-            >
-              Add Collection
-            </v-btn>
-          </div>
-          <v-btn
-            color="accent"
-            fixed
-            bottom
-            right
-            data-id="insert-library-button"
-            :disabled="!paidBenefits"
-            @click="insertLibraryAction"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -182,3 +116,69 @@ function insertLibraryCollectionAction() {
   });
 }
 </script>
+
+<template>
+  <div
+    class="card-background"
+    style="height: 100%"
+  >
+    <v-container>
+      <v-row justify="center">
+        <v-col
+          cols="12"
+          xl="8"
+        >
+          <v-card :class="{ 'mb-4': libraryCollections && libraryCollections.length }">
+            <v-fade-transition
+              hide-on-leave
+              leave-absolute
+            >
+              <v-row
+                v-if="!librariesReady"
+                align="center"
+                justify="center"
+                class="pa-4"
+              >
+                <v-progress-circular
+                  indeterminate
+                  color="primary"
+                  size="32"
+                />
+              </v-row>
+              <library-list v-else />
+            </v-fade-transition>
+          </v-card>
+          <div class="d-flex flex-wrap justify-end mt-2">
+            <v-btn
+              variant="text"
+              to="/community-libraries"
+            >
+              Browse community libraries
+            </v-btn>
+            <v-btn
+              v-if="paidBenefits"
+              variant="text"
+              data-id="insert-library-collection-button"
+              color="accent"
+              :loading="loadingInsertLibraryCollection"
+              @click="insertLibraryCollectionAction"
+            >
+              Add Collection
+            </v-btn>
+          </div>
+          <v-btn
+            color="accent"
+            fixed
+            location="bottom right"
+            
+            data-id="insert-library-button"
+            :disabled="!paidBenefits"
+            @click="insertLibraryAction"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>

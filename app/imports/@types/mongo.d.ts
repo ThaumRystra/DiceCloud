@@ -57,7 +57,7 @@ declare namespace Mongo {
         // Add Collection2 options
         selector?: Record<string, any>;
         getAutoValues?: boolean;
-      } | undefined,
+      }  ,
       callback?: Function
     ): Promise<number>
   }

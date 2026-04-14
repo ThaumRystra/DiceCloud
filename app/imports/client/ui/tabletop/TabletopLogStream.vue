@@ -1,18 +1,3 @@
-<template lang="html">
-  <div
-    class="d-flex flex-column-reverse"
-    style="overflow: auto;"
-  >
-    <tabletop-log-stream-entry
-      v-for="log in logs"
-      :key="log._id"
-      class="stream-entry"
-      :class="{ 'hidden': hideAction(log.actionId) }"
-      :model="log"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -42,6 +27,21 @@ const { result: logs } = autorun(() => {
   return CreatureLogs.find(filter, { sort: { date: -1 }, limit: 100 });
 });
 </script>
+
+<template lang="html">
+  <div
+    class="d-flex flex-column-reverse"
+    style="overflow: auto;"
+  >
+    <tabletop-log-stream-entry
+      v-for="log in logs"
+      :key="log._id"
+      class="stream-entry"
+      :class="{ 'hidden': hideAction(log.actionId) }"
+      :model="log"
+    />
+  </div>
+</template>
 
 <style lang="css" scoped>
 .stream-entry {

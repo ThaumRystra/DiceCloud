@@ -1,34 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="effect-viewer layout align-center"
-    density="compact"
-    v-on="!hideBreadcrumbs ? {click} : {}"
-  >
-    <div class="effect-icon">
-      <v-tooltip location="bottom">
-        <template #activator="{ props }">
-          <v-icon
-            class="mx-2"
-            style="cursor: default;"
-            v-bind="props"
-          >
-            {{ effectIcon }}
-          </v-icon>
-        </template>
-        <span>{{ operation }}</span>
-      </v-tooltip>
-    </div>
-    <v-list-item-title>
-      <span
-          class="effect-value mr-2"
-        >
-          {{ displayedValue }}
-        </span>
-      {{ displayedText }}
-    </v-list-item-title>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { computed, useAttrs } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -127,6 +96,37 @@ function click(e: Event) {
   emit('click', e);
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="effect-viewer layout align-center"
+    density="compact"
+    v-on="!hideBreadcrumbs ? {click} : {}"
+  >
+    <div class="effect-icon">
+      <v-tooltip location="bottom">
+        <template #activator="{ props }">
+          <v-icon
+            class="mx-2"
+            style="cursor: default;"
+            v-bind="props"
+          >
+            {{ effectIcon }}
+          </v-icon>
+        </template>
+        <span>{{ operation }}</span>
+      </v-tooltip>
+    </div>
+    <v-list-item-title>
+      <span
+        class="effect-value mr-2"
+      >
+        {{ displayedValue }}
+      </span>
+      {{ displayedText }}
+    </v-list-item-title>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
   .icon, .effect-icon {

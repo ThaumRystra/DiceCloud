@@ -1,3 +1,36 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
+
+const linkPatreonError = ref('');
+
+const { result: tier } = autorun(() => {
+  const user = Meteor.user();
+  if (!user) return TIERS[0];
+  return getUserTier(user);
+});
+
+const { result: user } = autorun(() => Meteor.user());
+
+async function linkWithPatreonFn() {
+  linkPatreonError.value = '';
+  linkWithPatreon(async (error: any) => {
+    if (error) {
+      linkPatreonError.value = error;
+    } else {
+      try {
+        await Meteor.callAsync('updateMyPatreonDetails');
+      } catch (e: any) {
+        linkPatreonError.value = e;
+      }
+    }
+  });
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <div
@@ -43,36 +76,3 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
-
-const linkPatreonError = ref('');
-
-const { result: tier } = autorun(() => {
-  const user = Meteor.user();
-  if (!user) return TIERS[0];
-  return getUserTier(user);
-});
-
-const { result: user } = autorun(() => Meteor.user());
-
-async function linkWithPatreonFn() {
-  linkPatreonError.value = '';
-  linkWithPatreon(async (error: any) => {
-    if (error) {
-      linkPatreonError.value = error;
-    } else {
-      try {
-        await Meteor.callAsync('updateMyPatreonDetails');
-      } catch (e: any) {
-        linkPatreonError.value = e;
-      }
-    }
-  });
-}
-</script>

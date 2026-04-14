@@ -1,48 +1,3 @@
-<template lang="html">
-  <div class="buff-form">
-    <smart-select
-      label="Branch Type"
-      :items="typeOptions"
-      :hint="typeHint"
-      :value="model.branchType"
-      :error-messages="errors.branchType"
-      :menu-props="{auto: true, lazy: true}"
-      @change="change('branchType', ...arguments)"
-    />
-    <v-expand-transition>
-      <computed-field
-        v-if="model.branchType === 'if'"
-        label="Condition"
-        hint="If this resolved to a true value, the child properties will be applied"
-        :model="model.condition"
-        :error-messages="errors.condition"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['condition', ...path], value, ack})"
-      />
-      <computed-field
-        v-else-if="model.branchType === 'index'"
-        label="Index"
-        hint="Which child to apply. An index of 2 will choose the 2nd child."
-        :model="model.condition"
-        :error-messages="errors.condition"
-        @change="({path, value, ack}) =>
-          $emit('change', {path: ['condition', ...path], value, ack})"
-      />
-    </v-expand-transition>
-    <form-sections type="branch">
-      <form-section name="Log">
-        <smart-switch
-          label="Don't show in log"
-          :value="model.silent"
-          :error-messages="errors.silent"
-          @change="change('silent', ...arguments)"
-        />
-      </form-section>
-      <slot />
-    </form-sections>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -89,6 +44,51 @@ const typeHint = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="buff-form">
+    <smart-select
+      label="Branch Type"
+      :items="typeOptions"
+      :hint="typeHint"
+      :value="model.branchType"
+      :error-messages="errors.branchType"
+      :menu-props="{auto: true, lazy: true}"
+      @change="change('branchType', ...arguments)"
+    />
+    <v-expand-transition>
+      <computed-field
+        v-if="model.branchType === 'if'"
+        label="Condition"
+        hint="If this resolved to a true value, the child properties will be applied"
+        :model="model.condition"
+        :error-messages="errors.condition"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['condition', ...path], value, ack})"
+      />
+      <computed-field
+        v-else-if="model.branchType === 'index'"
+        label="Index"
+        hint="Which child to apply. An index of 2 will choose the 2nd child."
+        :model="model.condition"
+        :error-messages="errors.condition"
+        @change="({path, value, ack}) =>
+          $emit('change', {path: ['condition', ...path], value, ack})"
+      />
+    </v-expand-transition>
+    <form-sections type="branch">
+      <form-section name="Log">
+        <smart-switch
+          label="Don't show in log"
+          :value="model.silent"
+          :error-messages="errors.silent"
+          @change="change('silent', ...arguments)"
+        />
+      </form-section>
+      <slot />
+    </form-sections>
+  </div>
+</template>
 
 <style lang="css" scoped>
 

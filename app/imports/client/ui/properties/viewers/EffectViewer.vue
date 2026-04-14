@@ -1,50 +1,3 @@
-<template lang="html">
-  <div class="effect-viewer">
-    <v-row dense>
-      <property-field name="Operation">
-        <div
-          class="layout"
-          style="overflow: hidden;"
-        >
-          <v-icon class="mr-2">
-            {{ effectIcon }}
-          </v-icon>
-          {{ operation }}
-        </div>
-      </property-field>
-      <property-field
-        v-if="model.operation !== 'conditional'"
-        name="Amount"
-        :value="displayedValue || ' '"
-      />
-      <property-target-tags
-        v-if="model.targetByTags"
-        :model="model"
-      />
-      <property-field
-        v-else
-        name="Stats"
-      >
-        <div class="d-flex flex-wrap">
-          <v-chip
-            v-for="(stat, index) in model.stats"
-            :key="index"
-            class="ma-1"
-          >
-            {{ stat }}
-          </v-chip>
-        </div>
-      </property-field>
-      <property-field
-        v-if="model.operation === 'conditional'"
-        name="Text"
-        :cols="{cols: 12}"
-        :value="model.text || ' '"
-      />
-    </v-row>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
@@ -97,6 +50,53 @@ const displayedValue = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="effect-viewer">
+    <v-row dense>
+      <property-field name="Operation">
+        <div
+          class="layout"
+          style="overflow: hidden;"
+        >
+          <v-icon class="mr-2">
+            {{ effectIcon }}
+          </v-icon>
+          {{ operation }}
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.operation !== 'conditional'"
+        name="Amount"
+        :value="displayedValue || ' '"
+      />
+      <property-target-tags
+        v-if="model.targetByTags"
+        :model="model"
+      />
+      <property-field
+        v-else
+        name="Stats"
+      >
+        <div class="d-flex flex-wrap">
+          <v-chip
+            v-for="(stat, index) in model.stats"
+            :key="index"
+            class="ma-1"
+          >
+            {{ stat }}
+          </v-chip>
+        </div>
+      </property-field>
+      <property-field
+        v-if="model.operation === 'conditional'"
+        name="Text"
+        :cols="{cols: 12}"
+        :value="model.text || ' '"
+      />
+    </v-row>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .icon {

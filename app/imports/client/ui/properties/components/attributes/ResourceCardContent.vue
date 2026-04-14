@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { ref, computed, watch, inject } from 'vue';
+
+const props = defineProps<{
+  model: Record<string, any>;
+  hover?: boolean;
+}>();
+
+const emit = defineEmits(['click', 'change']);
+const context = inject('context', {});
+
+const optimisticIncrement = ref(0);
+
+const optimisticValue = computed(() => props.model?.value + optimisticIncrement.value);
+
+watch(() => props.model.value, () => {
+  optimisticIncrement.value = 0;
+});
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+function increment(value: number, ack?: Function) {
+  emit('change', { type: 'increment', value, ack });
+}
+</script>
+
 <template>
   <div class="d-flex">
     <div class="buttons layout column justify-center pl-3">
@@ -43,34 +71,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, watch, inject } from 'vue';
-
-const props = defineProps<{
-  model: Record<string, any>;
-  hover?: boolean;
-}>();
-
-const emit = defineEmits(['click', 'change']);
-const context = inject('context', {});
-
-const optimisticIncrement = ref(0);
-
-const optimisticValue = computed(() => props.model?.value + optimisticIncrement.value);
-
-watch(() => props.model.value, () => {
-  optimisticIncrement.value = 0;
-});
-
-function click(e: Event) {
-  emit('click', e);
-}
-
-function increment(value: number, ack?: Function) {
-  emit('change', { type: 'increment', value, ack });
-}
-</script>
 
 <style lang="css" scoped>
 .buttons,

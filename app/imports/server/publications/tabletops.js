@@ -80,7 +80,7 @@ Meteor.publish('tabletop', async function (tabletopId) {
   if (!userId) {
     return [];
   }
-  let tabletopCursor = Tabletops.find({
+  const tabletopCursor = Tabletops.find({
     _id: tabletopId,
     $or: [
       { owner: userId },
@@ -89,7 +89,7 @@ Meteor.publish('tabletop', async function (tabletopId) {
       { spectators: userId },
     ]
   });
-  let tabletop = tabletopCursor.fetch()[0];
+  const tabletop = tabletopCursor.fetch()[0];
   if (!tabletop) {
     return [];
   }
@@ -97,7 +97,7 @@ Meteor.publish('tabletop', async function (tabletopId) {
   // Warning, this leaks data to users of the same tabletop who may not have
   // read permission of this specific creature, so publish as few fields as
   // possible
-  let creatureSummariesCursor = Creatures.find({
+  const creatureSummariesCursor = Creatures.find({
     tabletopId,
   }, {
     fields: {

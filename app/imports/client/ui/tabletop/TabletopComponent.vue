@@ -1,114 +1,3 @@
-<template lang="html">
-  <div
-    class="tabletop layout column"
-    style="height: 100%;"
-  >
-    <v-container fluid>
-      <v-row
-        density="compact"
-        class="initiative-row flex-grow-0 overflow-x-auto"
-        style="flex-wrap: nowrap; padding-bottom: 64px; min-width: 200px;"
-        @wheel="transformScroll($event)"
-      >
-        <v-btn
-          icon
-          @click="toggleDrawer"
-        >
-          <v-icon> mdi-menu </v-icon>
-        </v-btn>
-        <tabletop-creature-card
-          v-for="creature in creatures"
-          :key="creature._id"
-          :model="creature"
-          :active="activeCreatureId === creature._id"
-          :targeted="targets.includes(creature._id)"
-          :show-target-btn="targets.includes(creature._id) || moreTargets"
-          v-on="(!activeActionId || (targets.includes(creature._id) || moreTargets)) ? {
-            click: () => {
-              if (activeActionId) {
-                if (targets.includes(creature._id)) {
-                  untarget(creature._id)
-                } else {
-                  if (moreTargets) targets.push(creature._id);
-                }
-              } else {
-                activeCreatureId = creature._id;
-                targets = [];
-                activeActionId = undefined;
-              }
-            }
-          } : {}"
-          @target="targets.push(creature._id)"
-          @untarget="untarget(creature._id)"
-        />
-        <div class="d-flex flex-column ma-1 flex-grow-0 flex-shrink-0">
-          <v-btn
-            data-id="select-creatures"
-            class="mb-2"
-            @click="addCreature"
-            prepend-icon="mdi-plus"
-          >
-            Add Character
-          </v-btn>
-          <v-btn
-            data-id="creatures-from-library"
-            @click="addCreatureFromLibrary"
-            prepend-icon="mdi-plus"
-          >
-            Add Creature
-          </v-btn>
-        </div>
-      </v-row>
-      <div
-        class="d-flex align-stretch"
-        style="max-height: calc(100vh - 364px); margin-top: -24px;"
-      >
-        <v-spacer />
-        <tabletop-log-stream
-          :tabletop-id="$route.params.id"
-          class="pl-4"
-          style="overflow: auto; max-width: 500px;"
-        />
-      </div>
-    </v-container>
-    <v-footer
-      class="pa-0"
-      style="
-        background: none; 
-        box-shadow: none;
-        position: absolute;
-        left: 0; 
-        bottom:0;
-        right: 0;
-        overflow-x: auto;
-      "
-      @wheel="transformScroll($event)"
-    >
-      <v-slide-y-reverse-transition mode="out-in">
-        <selected-creature-bar
-          :key="activeCreatureId"
-          ref="selectedCreatureBar"
-          :creature-id="activeCreatureId"
-          :targets="targets"
-          @active-action-change="activeActionId = $event"
-          @remove="removeCreature(activeCreatureId)"
-        />
-      </v-slide-y-reverse-transition>
-    </v-footer>
-    <tabletop-map
-      class="play-area"
-      style="
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        z-index: -50;
-      "
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, provide, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -281,6 +170,116 @@ async function removeCreature(creatureId: string) {
   }
 }
 </script>
+
+<template lang="html">
+  <div
+    class="tabletop layout column"
+    style="height: 100%;"
+  >
+    <v-container fluid>
+      <v-row
+        class="initiative-row flex-grow-0 overflow-x-auto density"
+        style="flex-wrap: nowrap; padding-bottom: 64px; min-width: 200px;"
+        @wheel="transformScroll($event)"
+      >
+        <v-btn
+          icon
+          @click="toggleDrawer"
+        >
+          <v-icon> mdi-menu </v-icon>
+        </v-btn>
+        <tabletop-creature-card
+          v-for="creature in creatures"
+          :key="creature._id"
+          :model="creature"
+          :active="activeCreatureId === creature._id"
+          :targeted="targets.includes(creature._id)"
+          :show-target-btn="targets.includes(creature._id) || moreTargets"
+          v-on="(!activeActionId || (targets.includes(creature._id) || moreTargets)) ? {
+            click: () => {
+              if (activeActionId) {
+                if (targets.includes(creature._id)) {
+                  untarget(creature._id)
+                } else {
+                  if (moreTargets) targets.push(creature._id);
+                }
+              } else {
+                activeCreatureId = creature._id;
+                targets = [];
+                activeActionId = undefined;
+              }
+            }
+          } : {}"
+          @target="targets.push(creature._id)"
+          @untarget="untarget(creature._id)"
+        />
+        <div class="d-flex flex-column ma-1 flex-grow-0 flex-shrink-0">
+          <v-btn
+            data-id="select-creatures"
+            class="mb-2"
+            prepend-icon="mdi-plus"
+            @click="addCreature"
+          >
+            Add Character
+          </v-btn>
+          <v-btn
+            data-id="creatures-from-library"
+            prepend-icon="mdi-plus"
+            @click="addCreatureFromLibrary"
+          >
+            Add Creature
+          </v-btn>
+        </div>
+      </v-row>
+      <div
+        class="d-flex align-stretch"
+        style="max-height: calc(100vh - 364px); margin-top: -24px;"
+      >
+        <v-spacer />
+        <tabletop-log-stream
+          :tabletop-id="$route.params.id"
+          class="pl-4"
+          style="overflow: auto; max-width: 500px;"
+        />
+      </div>
+    </v-container>
+    <v-footer
+      class="pa-0"
+      style="
+        background: none; 
+        box-shadow: none;
+        position: absolute;
+        left: 0; 
+        bottom:0;
+        right: 0;
+        overflow-x: auto;
+      "
+      @wheel="transformScroll($event)"
+    >
+      <v-slide-y-reverse-transition mode="out-in">
+        <selected-creature-bar
+          :key="activeCreatureId"
+          ref="selectedCreatureBar"
+          :creature-id="activeCreatureId"
+          :targets="targets"
+          @active-action-change="activeActionId = $event"
+          @remove="removeCreature(activeCreatureId)"
+        />
+      </v-slide-y-reverse-transition>
+    </v-footer>
+    <tabletop-map
+      class="play-area"
+      style="
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -50;
+      "
+    />
+  </div>
+</template>
 
 <style lang="css" scoped>
 .initiative-row > .v-card {

@@ -19,22 +19,22 @@ const selectAmmoItem = new ValidatedMethod({
   },
   async run({ actionId, itemId, itemConsumedIndex }) {
     // Permissions
-    let action = await CreatureProperties.findOneAsync(actionId);
-    let rootCreature = getRootCreatureAncestor(action);
+    const action = await CreatureProperties.findOneAsync(actionId);
+    const rootCreature = getRootCreatureAncestor(action);
     await assertEditPermission(rootCreature, this.userId);
 
     // Check that this index has a document to edit
-    let itemConsumed = action.resources.itemsConsumed[itemConsumedIndex];
+    const itemConsumed = action.resources.itemsConsumed[itemConsumedIndex];
     if (!itemConsumed) {
       throw new Meteor.Error('Resouce not found',
         'Could not set ammo, because the ammo document was not found');
     }
-    let itemToLink = await CreatureProperties.findOneAsync(itemId);
+    const itemToLink = await CreatureProperties.findOneAsync(itemId);
     if (!itemToLink) {
       throw new Meteor.Error('Item not found',
         'Could not set ammo: the item was not found');
     }
-    let path = `resources.itemsConsumed.${itemConsumedIndex}.itemId`;
+    const path = `resources.itemsConsumed.${itemConsumedIndex}.itemId`;
     await CreatureProperties.updateAsync(actionId, {
       $set: { [path]: itemId, dirty: true }
     }, {

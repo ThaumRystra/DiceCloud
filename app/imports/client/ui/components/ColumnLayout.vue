@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  wideColumns?: boolean;
+}>();
+</script>
+
 <template
   lang="html"
 >
@@ -8,12 +14,6 @@
     <slot />
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  wideColumns?: boolean;
-}>();
-</script>
 
 <style lang="css">
 .column-layout {

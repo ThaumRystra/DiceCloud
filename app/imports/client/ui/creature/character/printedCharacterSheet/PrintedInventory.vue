@@ -1,72 +1,3 @@
-<template lang="html">
-  <div class="inventory">
-    <div class="double-border my-2">
-      <div class="label text-center">
-        Inventory
-      </div>
-      <div class="d-flex inventory-stat">
-        <v-icon>$vuetify.icons.injustice</v-icon>
-        Weight Carried:
-        {{ weightCarried }} lb
-      </div>
-      <div class="d-flex inventory-stat">
-        <v-icon>$vuetify.icons.cash</v-icon>
-        Net worth:
-        <coin-value
-          class="ml-2"
-          :value="variables && variables.valueTotal && variables.valueTotal.value || 0"
-        />
-      </div>
-      <div
-        v-if="variables.itemsAttuned && variables.itemsAttuned.value"
-        class="d-flex inventory-stat"
-      >
-        <v-icon>$vuetify.icons.spell</v-icon>
-        Items attuned:
-        {{ variables.itemsAttuned && variables.itemsAttuned.value }}
-      </div>
-    </div>
-    <div class="double-border my-2">
-      <div class="label text-center">
-        Equipped
-      </div>
-      <column-layout wide-columns>
-        <printed-item
-          v-for="item in equippedItems"
-          :key="item._id"
-          :model="item"
-        />
-      </column-layout>
-    </div>
-    <div class="double-border my-2">
-      <div class="label text-center">
-        Carried
-      </div>
-      <column-layout wide-columns>
-        <printed-item
-          v-for="item in carriedItems"
-          :key="item._id"
-          :model="item"
-        />
-      </column-layout>
-    </div>
-    <div
-      v-for="container in containersWithoutAncestorContainers"
-      :key="container._id"
-      class="double-border my-2"
-    >
-      <printed-container :model="container" />
-      <column-layout wide-columns>
-        <printed-item
-          v-for="item in container.items"
-          :key="item._id"
-          :model="item"
-        />
-      </column-layout>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -172,6 +103,75 @@ function clickProperty(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="inventory">
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Inventory
+      </div>
+      <div class="d-flex inventory-stat">
+        <v-icon>$vuetify.icons.injustice</v-icon>
+        Weight Carried:
+        {{ weightCarried }} lb
+      </div>
+      <div class="d-flex inventory-stat">
+        <v-icon>$vuetify.icons.cash</v-icon>
+        Net worth:
+        <coin-value
+          class="ml-2"
+          :value="variables && variables.valueTotal && variables.valueTotal.value || 0"
+        />
+      </div>
+      <div
+        v-if="variables.itemsAttuned && variables.itemsAttuned.value"
+        class="d-flex inventory-stat"
+      >
+        <v-icon>$vuetify.icons.spell</v-icon>
+        Items attuned:
+        {{ variables.itemsAttuned && variables.itemsAttuned.value }}
+      </div>
+    </div>
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Equipped
+      </div>
+      <column-layout wide-columns>
+        <printed-item
+          v-for="item in equippedItems"
+          :key="item._id"
+          :model="item"
+        />
+      </column-layout>
+    </div>
+    <div class="double-border my-2">
+      <div class="label text-center">
+        Carried
+      </div>
+      <column-layout wide-columns>
+        <printed-item
+          v-for="item in carriedItems"
+          :key="item._id"
+          :model="item"
+        />
+      </column-layout>
+    </div>
+    <div
+      v-for="container in containersWithoutAncestorContainers"
+      :key="container._id"
+      class="double-border my-2"
+    >
+      <printed-container :model="container" />
+      <column-layout wide-columns>
+        <printed-item
+          v-for="item in container.items"
+          :key="item._id"
+          :model="item"
+        />
+      </column-layout>
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .label {

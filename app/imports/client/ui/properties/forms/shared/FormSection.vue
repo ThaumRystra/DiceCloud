@@ -1,3 +1,18 @@
+<script lang="ts">
+import FormSections from '/imports/client/ui/properties/forms/shared/FormSections.vue';
+export { FormSections };
+</script>
+
+<script setup lang="ts">
+withDefaults(defineProps<{
+  name?: string;
+  standalone?: boolean;
+}>(), {
+  name: '',
+  standalone: false,
+});
+</script>
+
 <template lang="html">
   <form-sections v-if="standalone">
     <v-expansion-panel>
@@ -18,18 +33,3 @@
     </v-expansion-panel-text>
   </v-expansion-panel>
 </template>
-
-<script lang="ts">
-import FormSections from '/imports/client/ui/properties/forms/shared/FormSections.vue';
-export { FormSections };
-</script>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  name?: string;
-  standalone?: boolean;
-}>(), {
-  name: '',
-  standalone: false,
-});
-</script>

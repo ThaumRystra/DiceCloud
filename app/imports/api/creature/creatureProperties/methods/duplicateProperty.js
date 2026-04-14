@@ -32,7 +32,7 @@ const duplicateProperty = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id }) {
-    let property = await CreatureProperties.findOneAsync(_id);
+    const property = await CreatureProperties.findOneAsync(_id);
     if (!property) throw new Meteor.Error('not-found', 'The source property was not found');
 
     const creature = getRootCreatureAncestor(property);

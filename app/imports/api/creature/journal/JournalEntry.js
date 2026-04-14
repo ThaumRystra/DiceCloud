@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
-let ExperienceSchema = new SimpleSchema({
+const ExperienceSchema = new SimpleSchema({
   title: {
     type: String,
     optional: true,

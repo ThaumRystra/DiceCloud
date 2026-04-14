@@ -1,20 +1,3 @@
-<template lang="html">
-  <v-tooltip
-    v-if="accessRights === 'reader' || accessRights === 'writer' || accessRights === 'public'"
-    bottom
-  >
-    <template #activator="{ props }">
-      <v-icon
-        style="opacity: 0.4"
-        v-bind="props"
-      >
-        {{ accessIcon }}
-      </v-icon>
-    </template>
-    <span>{{ accessText }}</span>
-  </v-tooltip>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -55,6 +38,23 @@ const accessText = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <v-tooltip
+    v-if="accessRights === 'reader' || accessRights === 'writer' || accessRights === 'public'"
+    location="bottom"
+  >
+    <template #activator="{ props }">
+      <v-icon
+        style="opacity: 0.4"
+        v-bind="props"
+      >
+        {{ accessIcon }}
+      </v-icon>
+    </template>
+    <span>{{ accessText }}</span>
+  </v-tooltip>
+</template>
 
 <style lang="css" scoped>
 </style>

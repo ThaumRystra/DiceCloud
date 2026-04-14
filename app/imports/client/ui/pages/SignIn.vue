@@ -1,3 +1,59 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+
+const router = useRouter();
+const route = useRoute();
+
+const form = ref<any>(null);
+const valid = ref(true);
+const name = ref('');
+const nameRules = [
+  (v: string) => !!v || 'Name is required',
+];
+const password = ref('');
+const passwordRules = [
+  (v: string) => !!v || 'Password is required',
+];
+const error = ref('');
+const googleError = ref('');
+const patreonError = ref('');
+
+async function submit() {
+  const { valid: isValid } = await form.value?.validate() ?? { valid: false };
+  if (!isValid) return;
+  Meteor.loginWithPassword(name.value, password.value, (err: any) => {
+    if (err) {
+      error.value = err.reason;
+    } else {
+      router.push((route.query.redirect as string) || 'characterList');
+    }
+  });
+}
+
+function googleLogin() {
+  Meteor.loginWithGoogle((err: any) => {
+    if (err) {
+      console.error(err);
+      googleError.value = err.message;
+    } else {
+      router.push((route.query.redirect as string) || 'characterList');
+    }
+  });
+}
+
+function patreonLogin() {
+  Meteor.loginWithPatreon((err: any) => {
+    if (err) {
+      console.error(err);
+      patreonError.value = err.message;
+    } else {
+      router.push((route.query.redirect as string) || 'characterList');
+    }
+  });
+}
+</script>
+
 <template>
   <div>
     <v-form
@@ -97,59 +153,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-
-const router = useRouter();
-const route = useRoute();
-
-const form = ref<any>(null);
-const valid = ref(true);
-const name = ref('');
-const nameRules = [
-  (v: string) => !!v || 'Name is required',
-];
-const password = ref('');
-const passwordRules = [
-  (v: string) => !!v || 'Password is required',
-];
-const error = ref('');
-const googleError = ref('');
-const patreonError = ref('');
-
-async function submit() {
-  const { valid: isValid } = await form.value?.validate() ?? { valid: false };
-  if (!isValid) return;
-  Meteor.loginWithPassword(name.value, password.value, (err: any) => {
-    if (err) {
-      error.value = err.reason;
-    } else {
-      router.push((route.query.redirect as string) || 'characterList');
-    }
-  });
-}
-
-function googleLogin() {
-  Meteor.loginWithGoogle((err: any) => {
-    if (err) {
-      console.error(err);
-      googleError.value = err.message;
-    } else {
-      router.push((route.query.redirect as string) || 'characterList');
-    }
-  });
-}
-
-function patreonLogin() {
-  Meteor.loginWithPatreon((err: any) => {
-    if (err) {
-      console.error(err);
-      patreonError.value = err.message;
-    } else {
-      router.push((route.query.redirect as string) || 'characterList');
-    }
-  });
-}
-</script>

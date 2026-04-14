@@ -1,33 +1,3 @@
-<template lang="html">
-  <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
-    lazy
-    transition="scale-transition"
-    full-width
-    min-width="290px"
-  >
-    <template #activator="{ props }">
-      <v-text-field
-        :value="formattedSafeValue"
-        v-bind="{...$attrs, ...props}"
-        prepend-icon="mdi-calendar"
-        readonly
-        :loading="loading"
-        :error-messages="errors"
-        :disabled="isDisabled"
-        variant="outlined"
-        @focus="focused = true"
-        @blur="focused = false"
-      />
-    </template>
-    <v-date-picker
-      :value="formattedSafeValue"
-      @input="dateInput"
-    />
-  </v-menu>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, useAttrs } from 'vue';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
@@ -63,6 +33,36 @@ function dateInput(e: unknown) {
   input(e);
 }
 </script>
+
+<template lang="html">
+  <v-menu
+    v-model="menu"
+    :close-on-content-click="false"
+    lazy
+    transition="scale-transition"
+    full-width
+    min-width="290px"
+  >
+    <template #activator="{ props }">
+      <v-text-field
+        :model-value="formattedSafeValue"
+        v-bind="{...$attrs, ...props}"
+        prepend-icon="mdi-calendar"
+        readonly
+        :loading="loading"
+        :error-messages="errors"
+        :disabled="isDisabled"
+        variant="outlined"
+        @focus="focused = true"
+        @blur="focused = false"
+      />
+    </template>
+    <v-date-picker
+      :value="formattedSafeValue"
+      @input="dateInput"
+    />
+  </v-menu>
+</template>
 
 <style lang="css" scoped>
 

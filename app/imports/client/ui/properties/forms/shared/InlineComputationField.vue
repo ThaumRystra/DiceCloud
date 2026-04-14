@@ -1,3 +1,11 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model?: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
+</script>
+
 <template lang="html">
   <div class="inline-computation-field">
     <text-area
@@ -31,14 +39,6 @@
     </template>
   </div>
 </template>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  model?: Record<string, any>;
-}>(), {
-  model: () => ({}),
-});
-</script>
 
 <style lang="css" scoped>
 </style>

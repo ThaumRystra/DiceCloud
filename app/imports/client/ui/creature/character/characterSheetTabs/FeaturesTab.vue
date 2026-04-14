@@ -1,36 +1,3 @@
-<template lang="html">
-  <div class="features">
-    <column-layout wide-columns>
-      <folder-group-card
-        v-for="folder in startFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-      <div
-        v-for="feature in features"
-        :key="feature._id"
-      >
-        <feature-card
-          :model="feature"
-          :data-id="feature._id"
-          @click="featureClicked(feature)"
-        />
-      </div>
-      <folder-group-card
-        v-for="folder in endFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-    </column-layout>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
@@ -123,5 +90,38 @@ function featureClicked({ _id }: { _id: string }) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="features">
+    <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+      <div
+        v-for="feature in features"
+        :key="feature._id"
+      >
+        <feature-card
+          :model="feature"
+          :data-id="feature._id"
+          @click="featureClicked(feature)"
+        />
+      </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+    </column-layout>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

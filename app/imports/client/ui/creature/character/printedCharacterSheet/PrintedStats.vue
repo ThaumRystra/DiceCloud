@@ -1,3 +1,135 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
+import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import numberToSignedString from '../../../../../api/utility/numberToSignedString';
+import PrintedSkill from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
+import PrintedDamageMultipliers from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
+import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
+import { uniqBy } from 'lodash';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
+
+const props = defineProps<{ creatureId: string }>();
+
+function getProperties(creature: any, filter: any, options: any = { sort: { left: 1 } }) {
+  if (!creature) return [];
+  if (creature.settings.hideUnusedStats) {
+    filter.hide = { $ne: true };
+  }
+  filter['root.id'] = creature._id;
+  filter.removed = { $ne: true };
+  filter.inactive = { $ne: true };
+  filter.overridden = { $ne: true };
+  filter.$nor = [
+    { hideWhenTotalZero: true, total: 0 },
+    { hideWhenValueZero: true, value: 0 },
+  ];
+  return CreatureProperties.find(filter, options).fetch();
+}
+
+function getAttributeOfType(creature: any, type: string) {
+  return getProperties(creature, { type: 'attribute', attributeType: type });
+}
+
+function getSkillOfType(creature: any, type: string) {
+  return getProperties(creature, { type: 'skill', skillType: type });
+}
+
+const { result: creature } = autorun(() =>
+  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
+);
+
+const { result: abilities } = autorun(() => getAttributeOfType(creature.value, 'ability'));
+const { result: stats } = autorun(() => getAttributeOfType(creature.value, 'stat'));
+
+const { result: toggles } = autorun(() =>
+  CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'toggle',
+    removed: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+    showUI: true,
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const { result: healthBars } = autorun(() => getAttributeOfType(creature.value, 'healthBar'));
+const { result: modifiers } = autorun(() => getAttributeOfType(creature.value, 'modifier'));
+const { result: resources } = autorun(() => getAttributeOfType(creature.value, 'resource'));
+const { result: spellSlots } = autorun(() => getAttributeOfType(creature.value, 'spellSlot'));
+
+const { result: hasSpells } = autorun(() => {
+  if (!creature.value) return 0;
+  const filter: any = { type: 'spell' };
+  if (creature.value.settings.hideUnusedStats) filter.hide = { $ne: true };
+  filter['root.id'] = creature.value._id;
+  filter.removed = { $ne: true };
+  filter.inactive = { $ne: true };
+  filter.overridden = { $ne: true };
+  filter.$nor = [
+    { hideWhenTotalZero: true, total: 0 },
+    { hideWhenValueZero: true, value: 0 },
+  ];
+  return CreatureProperties.find(filter).count();
+});
+
+const { result: hitDice } = autorun(() => getAttributeOfType(creature.value, 'hitDice'));
+const { result: checks } = autorun(() => getSkillOfType(creature.value, 'check'));
+const { result: savingThrows } = autorun(() => getSkillOfType(creature.value, 'save'));
+
+const saveConditionals = computed(() => {
+  const conditionals: any[] = [];
+  savingThrows.value?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const { result: skills } = autorun(() => getSkillOfType(creature.value, 'skill'));
+
+const skillConditionals = computed(() => {
+  const conditionals: any[] = [];
+  skills.value?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const { result: tools } = autorun(() => getSkillOfType(creature.value, 'tool'));
+const { result: weapons } = autorun(() => getSkillOfType(creature.value, 'weapon'));
+const { result: armors } = autorun(() => getSkillOfType(creature.value, 'armor'));
+const { result: languages } = autorun(() => getSkillOfType(creature.value, 'language'));
+
+const { result: actions } = autorun(() =>
+  getProperties(creature.value, { type: 'action' }, { sort: { actionType: 1, order: 1 } })
+);
+const { result: appliedBuffs } = autorun(() =>
+  getProperties(creature.value, { type: 'buff' })
+);
+const { result: multipliers } = autorun(() =>
+  getProperties(creature.value, { type: 'damageMultiplier' }, { sort: { value: 1, order: 1 } })
+);
+const { result: features } = autorun(() =>
+  getProperties(creature.value, { type: 'feature' })
+);
+
+const { result: notes } = autorun(() => {
+  const allNoteIds = getProperties(creature.value, { type: 'note' }).map((note: any) => note._id);
+  return getProperties(creature.value, {
+    type: 'note',
+    summary: { $exists: true },
+    'ancestor.id': { $nin: allNoteIds },
+  });
+});
+</script>
+
 <template lang="html">
   <div class="stats">
     <div
@@ -349,138 +481,6 @@
     </column-layout>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import PrintedAction from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedAction.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import numberToSignedString from '../../../../../api/utility/numberToSignedString';
-import PrintedSkill from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSkill.vue';
-import PrintedDamageMultipliers from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedDamageMultipliers.vue';
-import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import { uniqBy } from 'lodash';
-import { getFilter } from '/imports/api/parenting/parentingFunctions';
-
-const props = defineProps<{ creatureId: string }>();
-
-function getProperties(creature: any, filter: any, options: any = { sort: { left: 1 } }) {
-  if (!creature) return [];
-  if (creature.settings.hideUnusedStats) {
-    filter.hide = { $ne: true };
-  }
-  filter['root.id'] = creature._id;
-  filter.removed = { $ne: true };
-  filter.inactive = { $ne: true };
-  filter.overridden = { $ne: true };
-  filter.$nor = [
-    { hideWhenTotalZero: true, total: 0 },
-    { hideWhenValueZero: true, value: 0 },
-  ];
-  return CreatureProperties.find(filter, options).fetch();
-}
-
-function getAttributeOfType(creature: any, type: string) {
-  return getProperties(creature, { type: 'attribute', attributeType: type });
-}
-
-function getSkillOfType(creature: any, type: string) {
-  return getProperties(creature, { type: 'skill', skillType: type });
-}
-
-const { result: creature } = autorun(() =>
-  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
-);
-
-const { result: abilities } = autorun(() => getAttributeOfType(creature.value, 'ability'));
-const { result: stats } = autorun(() => getAttributeOfType(creature.value, 'stat'));
-
-const { result: toggles } = autorun(() =>
-  CreatureProperties.find({
-    ...getFilter.descendantsOfRoot(props.creatureId),
-    type: 'toggle',
-    removed: { $ne: true },
-    deactivatedByAncestor: { $ne: true },
-    deactivatedByToggle: { $ne: true },
-    showUI: true,
-  }, { sort: { left: 1 } }).fetch()
-);
-
-const { result: healthBars } = autorun(() => getAttributeOfType(creature.value, 'healthBar'));
-const { result: modifiers } = autorun(() => getAttributeOfType(creature.value, 'modifier'));
-const { result: resources } = autorun(() => getAttributeOfType(creature.value, 'resource'));
-const { result: spellSlots } = autorun(() => getAttributeOfType(creature.value, 'spellSlot'));
-
-const { result: hasSpells } = autorun(() => {
-  if (!creature.value) return 0;
-  const filter: any = { type: 'spell' };
-  if (creature.value.settings.hideUnusedStats) filter.hide = { $ne: true };
-  filter['root.id'] = creature.value._id;
-  filter.removed = { $ne: true };
-  filter.inactive = { $ne: true };
-  filter.overridden = { $ne: true };
-  filter.$nor = [
-    { hideWhenTotalZero: true, total: 0 },
-    { hideWhenValueZero: true, value: 0 },
-  ];
-  return CreatureProperties.find(filter).count();
-});
-
-const { result: hitDice } = autorun(() => getAttributeOfType(creature.value, 'hitDice'));
-const { result: checks } = autorun(() => getSkillOfType(creature.value, 'check'));
-const { result: savingThrows } = autorun(() => getSkillOfType(creature.value, 'save'));
-
-const saveConditionals = computed(() => {
-  const conditionals: any[] = [];
-  savingThrows.value?.forEach((prop: any) => {
-    prop?.effects?.forEach((effect: any) => {
-      if (effect.operation === 'conditional') conditionals.push(effect);
-    });
-  });
-  return uniqBy(conditionals, '_id');
-});
-
-const { result: skills } = autorun(() => getSkillOfType(creature.value, 'skill'));
-
-const skillConditionals = computed(() => {
-  const conditionals: any[] = [];
-  skills.value?.forEach((prop: any) => {
-    prop?.effects?.forEach((effect: any) => {
-      if (effect.operation === 'conditional') conditionals.push(effect);
-    });
-  });
-  return uniqBy(conditionals, '_id');
-});
-
-const { result: tools } = autorun(() => getSkillOfType(creature.value, 'tool'));
-const { result: weapons } = autorun(() => getSkillOfType(creature.value, 'weapon'));
-const { result: armors } = autorun(() => getSkillOfType(creature.value, 'armor'));
-const { result: languages } = autorun(() => getSkillOfType(creature.value, 'language'));
-
-const { result: actions } = autorun(() =>
-  getProperties(creature.value, { type: 'action' }, { sort: { actionType: 1, order: 1 } })
-);
-const { result: appliedBuffs } = autorun(() =>
-  getProperties(creature.value, { type: 'buff' })
-);
-const { result: multipliers } = autorun(() =>
-  getProperties(creature.value, { type: 'damageMultiplier' }, { sort: { value: 1, order: 1 } })
-);
-const { result: features } = autorun(() =>
-  getProperties(creature.value, { type: 'feature' })
-);
-
-const { result: notes } = autorun(() => {
-  const allNoteIds = getProperties(creature.value, { type: 'note' }).map((note: any) => note._id);
-  return getProperties(creature.value, {
-    type: 'note',
-    summary: { $exists: true },
-    'ancestor.id': { $nin: allNoteIds },
-  });
-});
-</script>
 
 <style lang="css" scoped>
 .shield-border {

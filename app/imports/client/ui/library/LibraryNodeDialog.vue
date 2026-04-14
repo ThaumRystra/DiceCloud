@@ -1,103 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #replace-toolbar="{ flat }">
-      <property-toolbar
-        :model="model"
-        :editing="editing"
-        :flat="flat"
-        :embedded="embedded"
-        @duplicate="duplicate"
-        @move="move"
-        @copy="copy"
-        @remove="remove"
-        @make-reference="makeReference"
-        @toggle-editing="editing = !editing"
-        @color-changed="value => change({ path: ['color'], value })"
-      />
-    </template>
-    <v-fade-transition>
-      <div
-        v-if="model"
-        class="d-flex mb-4"
-      >
-        <breadcrumbs
-          :model="model"
-          :editing="editing"
-          :embedded="embedded"
-          collection="libraryNodes"
-          @select-sub-property="selectSubProperty"
-        />
-        <v-spacer />
-        <v-chip disabled>
-          {{ typeName }}
-        </v-chip>
-      </div>
-    </v-fade-transition>
-    <v-fade-transition mode="out-in">
-      <div v-if="!_id" />
-      <div
-        v-else-if="!ready"
-        class="fill-height layout justify-center align-center"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="64"
-        />
-      </div>
-      <property-form
-        v-else-if="model && editing"
-        :key="_id + '-editing'"
-        class="library-node-form"
-        collection="libraryNodes"
-        :model="model"
-        :embedded="embedded"
-        @change="change"
-        @push="push"
-        @pull="pull"
-        @add-child="addLibraryNode"
-        @select-sub-property="selectSubProperty"
-      />
-      <property-viewer
-        v-else-if="model + '-viewing'"
-        :key="_id"
-        :model="model"
-        collection="libraryNodes"
-        @select-sub-property="selectSubProperty"
-      />
-    </v-fade-transition>
-    <template
-      v-if="!embedded"
-      #actions
-    >
-      <div class="d-flex justify-end">
-        <template v-if="selection">
-          <v-btn
-            variant="text"
-            @click="store.dispatch('popDialogStack', false)"
-          >
-            Cancel
-          </v-btn>
-          <v-spacer />
-          <v-btn
-            variant="text"
-            @click="store.dispatch('popDialogStack', true)"
-          >
-            Select
-          </v-btn>
-        </template>
-        <v-btn
-          v-else
-          variant="text"
-          @click="store.dispatch('popDialogStack')"
-        >
-          Done
-        </v-btn>
-      </div>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, reactive, computed, watch, nextTick, provide } from 'vue';
 import { useStore } from 'vuex';
@@ -363,5 +263,105 @@ function remove() {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #replace-toolbar="{ flat }">
+      <property-toolbar
+        :model="model"
+        :editing="editing"
+        :flat="flat"
+        :embedded="embedded"
+        @duplicate="duplicate"
+        @move="move"
+        @copy="copy"
+        @remove="remove"
+        @make-reference="makeReference"
+        @toggle-editing="editing = !editing"
+        @color-changed="value => change({ path: ['color'], value })"
+      />
+    </template>
+    <v-fade-transition>
+      <div
+        v-if="model"
+        class="d-flex mb-4"
+      >
+        <breadcrumbs
+          :model="model"
+          :editing="editing"
+          :embedded="embedded"
+          collection="libraryNodes"
+          @select-sub-property="selectSubProperty"
+        />
+        <v-spacer />
+        <v-chip disabled>
+          {{ typeName }}
+        </v-chip>
+      </div>
+    </v-fade-transition>
+    <v-fade-transition mode="out-in">
+      <div v-if="!_id" />
+      <div
+        v-else-if="!ready"
+        class="fill-height layout justify-center align-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
+        />
+      </div>
+      <property-form
+        v-else-if="model && editing"
+        :key="_id + '-editing'"
+        class="library-node-form"
+        collection="libraryNodes"
+        :model="model"
+        :embedded="embedded"
+        @change="change"
+        @push="push"
+        @pull="pull"
+        @add-child="addLibraryNode"
+        @select-sub-property="selectSubProperty"
+      />
+      <property-viewer
+        v-else-if="model + '-viewing'"
+        :key="_id"
+        :model="model"
+        collection="libraryNodes"
+        @select-sub-property="selectSubProperty"
+      />
+    </v-fade-transition>
+    <template
+      v-if="!embedded"
+      #actions
+    >
+      <div class="d-flex justify-end">
+        <template v-if="selection">
+          <v-btn
+            variant="text"
+            @click="store.dispatch('popDialogStack', false)"
+          >
+            Cancel
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            @click="store.dispatch('popDialogStack', true)"
+          >
+            Select
+          </v-btn>
+        </template>
+        <v-btn
+          v-else
+          variant="text"
+          @click="store.dispatch('popDialogStack')"
+        >
+          Done
+        </v-btn>
+      </div>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

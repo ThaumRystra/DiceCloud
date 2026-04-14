@@ -1,102 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        {{ model && model.name }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn
-        icon
-        data-id="share-library-button"
-        :disabled="!isOwner"
-        @click="share"
-      >
-        <v-icon>mdi-share-variant</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        data-id="delete-library-button"
-        :disabled="!isOwner"
-        @click="remove"
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-    </template>
-    <template v-if="model">
-      <v-list-item
-        v-if="!isOwner && ownerName"
-        class="px-0"
-        lines="two"
-      >
-        <template #prepend>
-          <v-icon>
-            mdi-account
-          </v-icon>
-        </template>
-        <v-list-item-title>
-          {{ ownerName }}
-        </v-list-item-title>
-        <v-list-item-subtitle>
-          Library owner
-        </v-list-item-subtitle>
-      </v-list-item>
-      <text-field
-        label="name"
-        :value="model.name"
-        @change="updateName"
-      />
-      <text-area
-        label="Description"
-        :value="model.description"
-        @change="updateDescription"
-      />
-      <smart-switch
-        :value="model.showInMarket"
-        :disabled="!isOwner"
-        label="Show in community library browser"
-        @change="updateShowInMarket"
-      />
-    </template>
-    <template v-if="removedDocs.length">
-      <h3>Recently Deleted Properties</h3>
-      <v-list>
-        <v-list-item
-          v-for="model in removedDocs"
-          :key="model._id"
-        >
-          <v-list-item-title>
-            <tree-node-view :model="model" />
-          </v-list-item-title>
-          <template #append>
-            <v-btn
-              color="accent"
-              variant="text"
-              @click="restore(model._id)"
-            >
-              Restore
-            </v-btn>
-          </template>
-        </v-list-item>
-      </v-list>
-    </template>
-    <v-progress-circular
-      v-if="!softRemovedReady"
-      indeterminate
-      color="primary"
-    />
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        data-id="delete-library-button"
-        @click="$store.dispatch('popDialogStack')"
-      >
-        Done
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
@@ -195,5 +96,104 @@ function restore(_id: string) {
   restoreLibraryNode.callAsync({ _id });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ model && model.name }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-btn
+        icon
+        data-id="share-library-button"
+        :disabled="!isOwner"
+        @click="share"
+      >
+        <v-icon>mdi-share-variant</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        data-id="delete-library-button"
+        :disabled="!isOwner"
+        @click="remove"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+    </template>
+    <template v-if="model">
+      <v-list-item
+        v-if="!isOwner && ownerName"
+        class="px-0"
+        lines="two"
+      >
+        <template #prepend>
+          <v-icon>
+            mdi-account
+          </v-icon>
+        </template>
+        <v-list-item-title>
+          {{ ownerName }}
+        </v-list-item-title>
+        <v-list-item-subtitle>
+          Library owner
+        </v-list-item-subtitle>
+      </v-list-item>
+      <text-field
+        label="name"
+        :value="model.name"
+        @change="updateName"
+      />
+      <text-area
+        label="Description"
+        :value="model.description"
+        @change="updateDescription"
+      />
+      <smart-switch
+        :value="model.showInMarket"
+        :disabled="!isOwner"
+        label="Show in community library browser"
+        @change="updateShowInMarket"
+      />
+    </template>
+    <template v-if="removedDocs.length">
+      <h3>Recently Deleted Properties</h3>
+      <v-list>
+        <v-list-item
+          v-for="model in removedDocs"
+          :key="model._id"
+        >
+          <v-list-item-title>
+            <tree-node-view :model="model" />
+          </v-list-item-title>
+          <template #append>
+            <v-btn
+              color="accent"
+              variant="text"
+              @click="restore(model._id)"
+            >
+              Restore
+            </v-btn>
+          </template>
+        </v-list-item>
+      </v-list>
+    </template>
+    <v-progress-circular
+      v-if="!softRemovedReady"
+      indeterminate
+      color="primary"
+    />
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        data-id="delete-library-button"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

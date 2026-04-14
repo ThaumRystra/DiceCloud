@@ -1,17 +1,3 @@
-<template>
-  <div
-    class="d-flex flex-column justify-center align-center"
-    @click="rollDice"
-  >
-    <p
-      v-for="(die, index) in dice"
-      :key="index"
-    >
-      {{ die.number }}d{{ die.diceSize }}
-    </p>
-  </div>
-</template>
-
 <script setup lang="ts">
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
 
@@ -33,3 +19,17 @@ function emitInput(e: any) {
   emit('input', e || 0);
 }
 </script>
+
+<template>
+  <div
+    class="d-flex flex-column justify-center align-center"
+    @click="rollDice"
+  >
+    <p
+      v-for="(die, index) in dice"
+      :key="index"
+    >
+      {{ die.number }}d{{ die.diceSize }}
+    </p>
+  </div>
+</template>

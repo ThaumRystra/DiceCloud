@@ -1,12 +1,3 @@
-<template lang="html">
-  <!-- eslint-disable vue/no-v-html -->
-  <div
-    class="markdown"
-    @click="e => $emit('click', e)"
-    v-html="compiledMarkdown"
-  />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { marked } from 'marked';
@@ -25,3 +16,12 @@ const compiledMarkdown = computed(() => {
   return DOMPurify.sanitize(marked(props.markdown) as string);
 });
 </script>
+
+<template lang="html">
+  <!-- eslint-disable vue/no-v-html -->
+  <div
+    class="markdown"
+    @click="e => $emit('click', e)"
+    v-html="compiledMarkdown"
+  />
+</template>

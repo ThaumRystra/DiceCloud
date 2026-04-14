@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import TabletopLogContent from '/imports/client/ui/log/TabletopLogContent.vue';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+
+const props = defineProps<{
+  model: object;
+  showName?: boolean;
+}>();
+
+const showSilenced = ref(false);
+
+const { result: creature } = autorun(() => {
+  return Creatures.findOne((props.model as any).creatureId);
+});
+</script>
+
 <template lang="html">
   <v-card
     class="ma-2 log-entry"
@@ -37,21 +55,3 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import TabletopLogContent from '/imports/client/ui/log/TabletopLogContent.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-
-const props = defineProps<{
-  model: object;
-  showName?: boolean;
-}>();
-
-const showSilenced = ref(false);
-
-const { result: creature } = autorun(() => {
-  return Creatures.findOne((props.model as any).creatureId);
-});
-</script>

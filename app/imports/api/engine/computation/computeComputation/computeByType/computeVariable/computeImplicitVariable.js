@@ -30,7 +30,7 @@ export default function computeImplicitVariable(node) {
   }
 
   // denormalise class level aggregator
-  let classLevelAgg = node.data.classLevelAggregator;
+  const classLevelAgg = node.data.classLevelAggregator;
   if (classLevelAgg) {
     prop.level = classLevelAgg.level;
   }

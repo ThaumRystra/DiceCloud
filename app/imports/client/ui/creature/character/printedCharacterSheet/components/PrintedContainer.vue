@@ -1,3 +1,23 @@
+<script setup lang="ts">
+import { computed, useAttrs, inject } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import CoinValue from '/imports/client/ui/components/CoinValue.vue';
+import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
+
+const props = defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+  preparingSpells?: boolean;
+}>();
+
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const hasClickListener = computed(() => !!(attrs as any).onClick);
+</script>
+
 <template>
   <div class="inventory-container">
     <div class="d-flex justify-center">
@@ -84,26 +104,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, useAttrs, inject } from 'vue';
-import PROPERTIES from '/imports/constants/PROPERTIES';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-
-const props = defineProps<{
-  model?: Record<string, any>;
-  selected?: boolean;
-  hideIcon?: boolean;
-  preparingSpells?: boolean;
-}>();
-
-const context = inject('context', {} as any);
-const attrs = useAttrs();
-
-const hasClickListener = computed(() => !!(attrs as any).onClick);
-</script>
 
 <style lang="css" scoped>
 .item-avatar {

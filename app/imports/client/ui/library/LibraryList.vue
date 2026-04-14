@@ -1,63 +1,3 @@
-<template>
-  <v-list
-    expand
-    class="library-list"
-  >
-    <library-list-tile
-      v-for="library in librariesWithoutCollection"
-      :key="library._id"
-      :model="library"
-      :to="{ name: 'singleLibrary', params: { id: library._id } }"
-      :selection="selection"
-      :single-select="singleSelect"
-      :is-selected="librariesSelected && librariesSelected.includes(library._id)"
-      :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
-      :disabled="disabled"
-      @select="val => $emit('select-library', library._id, val)"
-    />
-    <v-list-group
-      v-for="libraryCollection in libraryCollections"
-      :key="libraryCollection._id"
-      v-model="openCollections[libraryCollection._id]"
-      group="library-collection"
-      :data-id="`library-collection-${libraryCollection._id}`"
-    >
-      <template #activator>
-        <library-collection-header
-          :open="!!openCollections[libraryCollection._id]"
-          :model="libraryCollection"
-          :selection="selection"
-          :single-select="singleSelect"
-          :is-selected="libraryCollectionsSelected && libraryCollectionsSelected.includes(libraryCollection._id)"
-          :disabled="disabled"
-          @select="val => $emit('select-library-collection', libraryCollection._id, val)"
-        />
-      </template>
-      <library-list-tile
-        v-for="library in libraryCollection.libraryDocuments"
-        :key="library._id"
-        :model="library"
-        :to="{ name: 'singleLibrary', params: { id: library._id } }"
-        :selection="selection"
-        :single-select="singleSelect"
-        :is-selected="librariesSelected && librariesSelected.includes(library._id)"
-        :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
-        :disabled="disabled"
-        class="ml-4"
-        @select="val => $emit('select-library', library._id, val)"
-      />
-    </v-list-group>
-    <v-list-item v-if="!librariesReady">
-      <v-spacer />
-      <v-progress-circular
-        indeterminate
-        color="primary"
-      />
-      <v-spacer />
-    </v-list-item>
-  </v-list>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -182,3 +122,63 @@ function insertLibraryCollectionFn() {
   });
 }
 </script>
+
+<template>
+  <v-list
+    expand
+    class="library-list"
+  >
+    <library-list-tile
+      v-for="library in librariesWithoutCollection"
+      :key="library._id"
+      :model="library"
+      :to="{ name: 'singleLibrary', params: { id: library._id } }"
+      :selection="selection"
+      :single-select="singleSelect"
+      :is-selected="librariesSelected && librariesSelected.includes(library._id)"
+      :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
+      :disabled="disabled"
+      @select="val => $emit('select-library', library._id, val)"
+    />
+    <v-list-group
+      v-for="libraryCollection in libraryCollections"
+      :key="libraryCollection._id"
+      v-model="openCollections[libraryCollection._id]"
+      group="library-collection"
+      :data-id="`library-collection-${libraryCollection._id}`"
+    >
+      <template #activator>
+        <library-collection-header
+          :open="!!openCollections[libraryCollection._id]"
+          :model="libraryCollection"
+          :selection="selection"
+          :single-select="singleSelect"
+          :is-selected="libraryCollectionsSelected && libraryCollectionsSelected.includes(libraryCollection._id)"
+          :disabled="disabled"
+          @select="val => $emit('select-library-collection', libraryCollection._id, val)"
+        />
+      </template>
+      <library-list-tile
+        v-for="library in libraryCollection.libraryDocuments"
+        :key="library._id"
+        :model="library"
+        :to="{ name: 'singleLibrary', params: { id: library._id } }"
+        :selection="selection"
+        :single-select="singleSelect"
+        :is-selected="librariesSelected && librariesSelected.includes(library._id)"
+        :selected-by-collection="librariesSelectedByCollections && librariesSelectedByCollections.includes(library._id)"
+        :disabled="disabled"
+        class="ml-4"
+        @select="val => $emit('select-library', library._id, val)"
+      />
+    </v-list-group>
+    <v-list-item v-if="!librariesReady">
+      <v-spacer />
+      <v-progress-circular
+        indeterminate
+        color="primary"
+      />
+      <v-spacer />
+    </v-list-item>
+  </v-list>
+</template>

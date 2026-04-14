@@ -1,22 +1,3 @@
-<template lang="html">
-  <v-navigation-drawer
-    v-if="editing"
-    v-model="drawer"
-    location="right"
-  >
-    <tree-node-list
-      :key="refreshTree"
-      :children="docs"
-      :organize="true"
-      :selected-node="undefined"
-      :root="{ collection: 'docs', id: 'DDDDDDDDDDDDDDDDD' }"
-      group="docs"
-      @move-within-root="moveWithinRoot"
-      @selected="selected"
-    />
-  </v-navigation-drawer>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -60,5 +41,24 @@ function moveWithinRoot({ doc, newPosition }: { doc: any; newPosition: number })
   });
 }
 </script>
+
+<template lang="html">
+  <v-navigation-drawer
+    v-if="editing"
+    v-model="drawer"
+    location="right"
+  >
+    <tree-node-list
+      :key="refreshTree"
+      :children="docs"
+      :organize="true"
+      :selected-node="undefined"
+      :root="{ collection: 'docs', id: 'DDDDDDDDDDDDDDDDD' }"
+      group="docs"
+      @move-within-root="moveWithinRoot"
+      @selected="selected"
+    />
+  </v-navigation-drawer>
+</template>
 
 <style lang="css" scoped></style>

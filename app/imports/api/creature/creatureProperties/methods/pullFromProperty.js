@@ -14,8 +14,8 @@ const pullFromProperty = new ValidatedMethod({
   },
   async run({ _id, path, itemId }) {
     // Permissions
-    let property = await CreatureProperties.findOneAsync(_id);
-    let rootCreature = getRootCreatureAncestor(property);
+    const property = await CreatureProperties.findOneAsync(_id);
+    const rootCreature = getRootCreatureAncestor(property);
     await assertEditPermission(rootCreature, this.userId);
 
     // Do work

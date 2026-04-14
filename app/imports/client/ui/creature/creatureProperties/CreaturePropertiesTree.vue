@@ -1,18 +1,3 @@
-<template lang="html">
-  <tree-node-list
-    v-if="root"
-    :children="children"
-    :group="group"
-    :organize="organize"
-    :selected-node="selectedNode"
-    :start-expanded="expanded"
-    :root="root"
-    @selected="e => $emit('selected', e)"
-    @move-within-root="moveWithinRoot"
-    @move-between-roots="moveBetweenRoots"
-  />
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import { filterToForest, getCollectionByName } from '/imports/api/parenting/parentingFunctions';
@@ -63,6 +48,21 @@ function moveBetweenRoots({ doc, newPosition, newRootRef }: any) {
   });
 }
 </script>
+
+<template lang="html">
+  <tree-node-list
+    v-if="root"
+    :children="children"
+    :group="group"
+    :organize="organize"
+    :selected-node="selectedNode"
+    :start-expanded="expanded"
+    :root="root"
+    @selected="e => $emit('selected', e)"
+    @move-within-root="moveWithinRoot"
+    @move-between-roots="moveBetweenRoots"
+  />
+</template>
 
 <style lang="css" scoped>
 

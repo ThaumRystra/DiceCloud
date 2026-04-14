@@ -5,7 +5,7 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
   if (!slot) throw 'Slot is required for getSlotFillFilter';
   if (!libraryIds) throw 'LibraryIds is required for getSlotFillFilter';
 
-  let filter = {
+  const filter = {
     fillSlots: true,
     removed: { $ne: true },
     $and: [],
@@ -51,8 +51,8 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       $or: [classLevelFilter, slotFillerFilter]
     });
   }
-  let tagsOr = [];
-  let tagsNin = [];
+  const tagsOr = [];
+  const tagsNin = [];
   if (slot.slotTags && slot.slotTags.length) {
     tagsOr.push({ libraryTags: { $all: slot.slotTags } });
   }

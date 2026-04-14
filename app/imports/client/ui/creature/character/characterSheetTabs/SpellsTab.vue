@@ -1,53 +1,3 @@
-<template lang="html">
-  <div class="spells">
-    <column-layout wide-columns>
-      <folder-group-card
-        v-for="folder in startFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-      <div
-        v-if="hasSpellSlots || hasSpells"
-        class="spell-slots"
-      >
-        <spell-slot-card
-          :creature-id="creatureId"
-          :spell-slots="spellSlots"
-          :has-spells="hasSpells"
-        />
-      </div>
-      <div v-if="spellsWithoutList.length">
-        <v-card>
-          <spell-list
-            :spells="spellsWithoutList"
-            :parent-ref="{ id: creatureId, collection: 'creatures' }"
-          />
-        </v-card>
-      </div>
-      <div
-        v-for="spellList in spellListsWithoutAncestorSpellLists"
-        :key="spellList._id"
-      >
-        <spellList-card
-          :model="spellList"
-          :organize="organize"
-        />
-      </div>
-      <folder-group-card
-        v-for="folder in endFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-    </column-layout>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -207,5 +157,55 @@ function softRemove(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="spells">
+    <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+      <div
+        v-if="hasSpellSlots || hasSpells"
+        class="spell-slots"
+      >
+        <spell-slot-card
+          :creature-id="creatureId"
+          :spell-slots="spellSlots"
+          :has-spells="hasSpells"
+        />
+      </div>
+      <div v-if="spellsWithoutList.length">
+        <v-card>
+          <spell-list
+            :spells="spellsWithoutList"
+            :parent-ref="{ id: creatureId, collection: 'creatures' }"
+          />
+        </v-card>
+      </div>
+      <div
+        v-for="spellList in spellListsWithoutAncestorSpellLists"
+        :key="spellList._id"
+      >
+        <spellList-card
+          :model="spellList"
+          :organize="organize"
+        />
+      </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+    </column-layout>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

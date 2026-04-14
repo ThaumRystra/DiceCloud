@@ -1,71 +1,3 @@
-<template>
-  <div
-    class="d-flex flex-wrap align-center justify-center my-1 health-bar"
-    style="min-height: 42px;"
-    :class="{ hover }"
-    :data-id="model._id"
-  >
-    <div
-      class="subheading text-truncate pa-2 name"
-      @mouseover="hover = true"
-      @mouseleave="hover = false"
-      @click="$emit('click')"
-    >
-      {{ model.name }}
-    </div>
-    <div
-      style="height: 24px; flex-basis: 300px; flex-grow: 100;"
-    >
-      <health-bar-progress
-        :model="model"
-        style="cursor: pointer;"
-        @click="edit"
-      >
-        <div
-          class="value"
-          :class="{
-            'text-white': isTextLight,
-            'text-black': !isTextLight,
-          }"
-          style="font-size: 15px;
-              line-height: 24px;
-              font-weight: 600;
-              position: absolute;
-              left: 0;
-              top: 0;
-              right: 0;
-              bottom: 0;
-              text-align: center;"
-        >
-          {{ model.value }} / {{ model.total }}
-        </div>
-      </health-bar-progress>
-      <v-menu
-        v-model="editing"
-        transition="scale-transition"
-        origin="center center"
-        content-class="no-menu-shadow"
-        :min-width="305"
-        :close-on-content-click="false"
-      >
-        <template #activator>
-          <div
-            ref="menuActivator"
-            style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
-            :style="{ left: x + 'px', top: y + 'px' }"
-          />
-        </template>
-        <increment-menu
-          :value="model.value"
-          :open="editing"
-          @change="changeIncrementMenu"
-          @close="cancelEdit"
-        />
-      </v-menu>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject, nextTick } from 'vue';
 import { useTheme } from 'vuetify';
@@ -138,6 +70,74 @@ function changeIncrementMenu({ type, value }: { type: string; value: any }) {
   editing.value = false;
 }
 </script>
+
+<template>
+  <div
+    class="d-flex flex-wrap align-center justify-center my-1 health-bar"
+    style="min-height: 42px;"
+    :class="{ hover }"
+    :data-id="model._id"
+  >
+    <div
+      class="text-subtitle-1 text-truncate pa-2 name"
+      @mouseover="hover = true"
+      @mouseleave="hover = false"
+      @click="$emit('click')"
+    >
+      {{ model.name }}
+    </div>
+    <div
+      style="height: 24px; flex-basis: 300px; flex-grow: 100;"
+    >
+      <health-bar-progress
+        :model="model"
+        style="cursor: pointer;"
+        @click="edit"
+      >
+        <div
+          class="value"
+          :class="{
+            'text-white': isTextLight,
+            'text-black': !isTextLight,
+          }"
+          style="font-size: 15px;
+              line-height: 24px;
+              font-weight: 600;
+              position: absolute;
+              left: 0;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              text-align: center;"
+        >
+          {{ model.value }} / {{ model.total }}
+        </div>
+      </health-bar-progress>
+      <v-menu
+        v-model="editing"
+        transition="scale-transition"
+        origin="center center"
+        content-class="no-menu-shadow"
+        :min-width="305"
+        :close-on-content-click="false"
+      >
+        <template #activator>
+          <div
+            ref="menuActivator"
+            style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
+            :style="{ left: x + 'px', top: y + 'px' }"
+          />
+        </template>
+        <increment-menu
+          :value="model.value"
+          :open="editing"
+          @change="changeIncrementMenu"
+          @close="cancelEdit"
+        />
+      </v-menu>
+    </div>
+  </div>
+</template>
 
 <style>
 .health-bar .increment-menu {

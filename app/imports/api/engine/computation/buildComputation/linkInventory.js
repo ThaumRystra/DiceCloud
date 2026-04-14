@@ -31,7 +31,7 @@ function handleProp(prop, containerStack, dependencyGraph) {
   // Skip props that aren't part of the inventory
   if (prop.type !== 'item' && prop.type !== 'container') return;
   // Determine if this property is carried, items are carried by default
-  let carried = prop.type === 'container' ? prop.carried : true;
+  const carried = prop.type === 'container' ? prop.carried : true;
 
   // Item-specific links
   if (prop.type === 'item') {

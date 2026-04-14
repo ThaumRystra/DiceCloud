@@ -1,3 +1,75 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useRouter } from 'vue-router';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+import TabletopUserList from '/imports/client/ui/tabletop/TabletopUserList.vue';
+import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
+import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
+import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
+
+const props = defineProps<{
+  model: any;
+  errors?: object;
+  editPermission: boolean;
+  users: any;
+}>();
+
+const emit = defineEmits(['change', 'update-sharing']);
+
+const router = useRouter();
+
+const newSharePermission = ref('player');
+const userSearched = ref<string | undefined>(undefined);
+const userFoundState = ref<string>('idle');
+const userId = ref<string | undefined>(undefined);
+
+const link = computed(() =>
+  window.location.origin + router.resolve({ name: 'tabletop', params: { id: props.model._id } }).href
+);
+
+function change(path: any, value: any, ack: Function) {
+  emit('change', { path, value, ack });
+}
+
+function updateSharing(uid: string, role: string, ack: Function) {
+  emit('update-sharing', { userId: uid, role, ack });
+}
+
+async function getUser({ value, ack }: { value: string; ack: Function }) {
+  userSearched.value = value;
+  if (!value) {
+    userFoundState.value = 'idle';
+    ack();
+    return;
+  }
+  try {
+    const result = await (Meteor.users as any).findUserByUsernameOrEmail.callAsync({ usernameOrEmail: value });
+    userId.value = result;
+    if (result) {
+      if (props.users.gameMasters.includes(result)) {
+        userFoundState.value = 'failed';
+        ack('User is already a game master');
+      } else if (props.users.players.includes(result)) {
+        userFoundState.value = 'failed';
+        ack('User is already a player');
+      } else if (props.users.spectators.includes(result)) {
+        userFoundState.value = 'failed';
+        ack('User is already a spectator');
+      } else {
+        userFoundState.value = 'found';
+        ack();
+      }
+    } else {
+      userFoundState.value = 'notFound';
+      ack('User not found');
+    }
+  } catch (error: any) {
+    ack(error.reason || error);
+    userFoundState.value = 'failed';
+  }
+}
+</script>
+
 <template>
   <div class="tabletop-form">
     <v-row dense>
@@ -166,76 +238,4 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-import TabletopUserList from '/imports/client/ui/tabletop/TabletopUserList.vue';
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-import FormSection, { FormSections } from '/imports/client/ui/properties/forms/shared/FormSection.vue';
-import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
-
-const props = defineProps<{
-  model: any;
-  errors?: object;
-  editPermission: boolean;
-  users: any;
-}>();
-
-const emit = defineEmits(['change', 'update-sharing']);
-
-const router = useRouter();
-
-const newSharePermission = ref('player');
-const userSearched = ref<string | undefined>(undefined);
-const userFoundState = ref<string>('idle');
-const userId = ref<string | undefined>(undefined);
-
-const link = computed(() =>
-  window.location.origin + router.resolve({ name: 'tabletop', params: { id: props.model._id } }).href
-);
-
-function change(path: any, value: any, ack: Function) {
-  emit('change', { path, value, ack });
-}
-
-function updateSharing(uid: string, role: string, ack: Function) {
-  emit('update-sharing', { userId: uid, role, ack });
-}
-
-async function getUser({ value, ack }: { value: string; ack: Function }) {
-  userSearched.value = value;
-  if (!value) {
-    userFoundState.value = 'idle';
-    ack();
-    return;
-  }
-  try {
-    const result = await (Meteor.users as any).findUserByUsernameOrEmail.callAsync({ usernameOrEmail: value });
-    userId.value = result;
-    if (result) {
-      if (props.users.gameMasters.includes(result)) {
-        userFoundState.value = 'failed';
-        ack('User is already a game master');
-      } else if (props.users.players.includes(result)) {
-        userFoundState.value = 'failed';
-        ack('User is already a player');
-      } else if (props.users.spectators.includes(result)) {
-        userFoundState.value = 'failed';
-        ack('User is already a spectator');
-      } else {
-        userFoundState.value = 'found';
-        ack();
-      }
-    } else {
-      userFoundState.value = 'notFound';
-      ack('User not found');
-    }
-  } catch (error: any) {
-    ack(error.reason || error);
-    userFoundState.value = 'failed';
-  }
-}
-</script>
 

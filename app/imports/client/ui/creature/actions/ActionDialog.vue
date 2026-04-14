@@ -1,42 +1,3 @@
-<template lang="html">
-  <div class="overflow-visible">
-    <v-slide-x-reverse-transition hide-on-leave>
-      <v-card
-        :key="`${activeInput}`"
-        elevation="6"
-        class="action-dialog"
-      >
-        <component
-          :is="activeInput"
-          v-if="activeInput"
-          v-model="userInput"
-          class="action-input"
-          v-bind="activeInputParams"
-          @continue="continueAction"
-          @set-input-ready="setInputReady"
-        />
-        <div
-          v-else
-          class="log-preview card-raised-background"
-        >
-          <tabletop-log-stream-entry :model="simulatedLog" />
-        </div>
-        <v-btn
-          v-if="!activeInput"
-          size="large"
-          variant="text"
-          color="accent"
-          style="width: 100%"
-          class="done-button"
-          @click="finishAction"
-        >
-          Done
-        </v-btn>
-      </v-card>
-    </v-slide-x-reverse-transition>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
@@ -194,6 +155,45 @@ function cancel() {
   store.dispatch('popDialogStack');
 }
 </script>
+
+<template lang="html">
+  <div class="overflow-visible">
+    <v-slide-x-reverse-transition hide-on-leave>
+      <v-card
+        :key="`${activeInput}`"
+        elevation="6"
+        class="action-dialog"
+      >
+        <component
+          :is="activeInput"
+          v-if="activeInput"
+          v-model="userInput"
+          class="action-input"
+          v-bind="activeInputParams"
+          @continue="continueAction"
+          @set-input-ready="setInputReady"
+        />
+        <div
+          v-else
+          class="log-preview card-raised-background"
+        >
+          <tabletop-log-stream-entry :model="simulatedLog" />
+        </div>
+        <v-btn
+          v-if="!activeInput"
+          size="large"
+          variant="text"
+          color="accent"
+          style="width: 100%"
+          class="done-button"
+          @click="finishAction"
+        >
+          Done
+        </v-btn>
+      </v-card>
+    </v-slide-x-reverse-transition>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .action-dialog {

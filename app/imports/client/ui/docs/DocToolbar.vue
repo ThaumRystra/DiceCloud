@@ -1,28 +1,3 @@
-<template lang="html">
-  <v-app-bar
-    color="secondary"
-    theme="dark"
-    density="compact"
-  >
-    <v-app-bar-nav-icon @click="toggleDrawer" />
-    <v-toolbar-title>
-      Documentation
-    </v-toolbar-title>
-    <v-spacer />
-    <v-app-bar-nav-icon
-      v-if="editing"
-      @click="toggleRightDrawer"
-    >
-      <v-icon>mdi-file-tree</v-icon>
-    </v-app-bar-nav-icon>
-    <v-btn
-      v-if="canEdit"
-      :icon="editing ? 'mdi-check' : 'mdi-pencil'"
-      @click="toggleEdit"
-    />
-  </v-app-bar>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import { useStore } from 'vuex';
@@ -51,3 +26,28 @@ function toggleEdit() {
   Session.set('editingDocs', !Session.get('editingDocs'));
 }
 </script>
+
+<template lang="html">
+  <v-app-bar
+    color="secondary"
+    theme="dark"
+    density="compact"
+  >
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-toolbar-title>
+      Documentation
+    </v-toolbar-title>
+    <v-spacer />
+    <v-app-bar-nav-icon
+      v-if="editing"
+      @click="toggleRightDrawer"
+    >
+      <v-icon>mdi-file-tree</v-icon>
+    </v-app-bar-nav-icon>
+    <v-btn
+      v-if="canEdit"
+      :icon="editing ? 'mdi-check' : 'mdi-pencil'"
+      @click="toggleEdit"
+    />
+  </v-app-bar>
+</template>

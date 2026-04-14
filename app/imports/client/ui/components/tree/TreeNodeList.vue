@@ -1,36 +1,3 @@
-<template lang="html">
-  <!--use value for immutable, list for auto-updating children -->
-  <VueDraggable
-    v-model="displayedChildren"
-    class="drag-area"
-    :group="group"
-    :animation="200"
-    ghost-class="ghost"
-    draggable=".item"
-    handle=".handle"
-    @update="onSorted"
-    @add="onAdded"
-  >
-    <tree-node
-      v-for="child in displayedChildren"
-      :key="child.doc._id"
-      class="item"
-      :node="child.doc"
-      :children="child.children"
-      :group="group"
-      :selected-node="selectedNode"
-      :selected="selectedNode && selectedNode._id === child.doc._id"
-      :ancestors-of-selected-node="ancestorsOfSelectedNode"
-      :organize="organize"
-      :lazy="lazy"
-      :start-expanded="startExpanded"
-      @selected="e => $emit('selected', e)"
-      @move-within-root="e => $emit('move-within-root', e)"
-      @move-between-roots="e => $emit('move-between-roots', e)"
-    />
-  </VueDraggable>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import { type DraggableEvent, VueDraggable } from 'vue-draggable-plus';
@@ -103,6 +70,39 @@ function handleDrag(element: any, newIndex: number | undefined, oldIndex: number
   }
 }
 </script>
+
+<template lang="html">
+  <!--use value for immutable, list for auto-updating children -->
+  <VueDraggable
+    v-model="displayedChildren"
+    class="drag-area"
+    :group="group"
+    :animation="200"
+    ghost-class="ghost"
+    draggable=".item"
+    handle=".handle"
+    @update="onSorted"
+    @add="onAdded"
+  >
+    <tree-node
+      v-for="child in displayedChildren"
+      :key="child.doc._id"
+      class="item"
+      :node="child.doc"
+      :children="child.children"
+      :group="group"
+      :selected-node="selectedNode"
+      :selected="selectedNode && selectedNode._id === child.doc._id"
+      :ancestors-of-selected-node="ancestorsOfSelectedNode"
+      :organize="organize"
+      :lazy="lazy"
+      :start-expanded="startExpanded"
+      @selected="e => $emit('selected', e)"
+      @move-within-root="e => $emit('move-within-root', e)"
+      @move-between-roots="e => $emit('move-between-roots', e)"
+    />
+  </VueDraggable>
+</template>
 
 <style lang="css" scoped>
 .flip-list-leave-active {

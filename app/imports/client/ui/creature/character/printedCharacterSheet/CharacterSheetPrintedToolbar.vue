@@ -1,37 +1,3 @@
-<template>
-  <v-app-bar
-    class="character-sheet-printed-toolbar"
-    :color="toolbarColor"
-    :theme="isDark ? 'dark' : 'light'"
-    density="compact"
-  >
-    <v-app-bar-nav-icon @click="toggleDrawer" />
-    <v-btn
-      icon="mdi-arrow-left"
-      :to="characterUrl"
-    />
-    <v-toolbar-title>
-      <v-fade-transition mode="out-in">
-        <div :key="$store.state.pageTitle">
-          {{ $store.state.pageTitle }}
-        </div>
-      </v-fade-transition>
-    </v-toolbar-title>
-    <v-spacer />
-    <template #extension>
-      <div style="width: 100%">
-        <v-btn
-          class="print-fab"
-          color="accent"
-          elevation="4"
-          icon="mdi-printer"
-          @click="print"
-        />
-      </div>
-    </template>
-  </v-app-bar>
-</template>
-
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useRoute } from 'vue-router';
@@ -73,6 +39,40 @@ function printPage() {
   print();
 }
 </script>
+
+<template>
+  <v-app-bar
+    class="character-sheet-printed-toolbar"
+    :color="toolbarColor"
+    :theme="isDark ? 'dark' : 'light'"
+    density="compact"
+  >
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-btn
+      icon="mdi-arrow-left"
+      :to="characterUrl"
+    />
+    <v-toolbar-title>
+      <v-fade-transition mode="out-in">
+        <div :key="$store.state.pageTitle">
+          {{ $store.state.pageTitle }}
+        </div>
+      </v-fade-transition>
+    </v-toolbar-title>
+    <v-spacer />
+    <template #extension>
+      <div style="width: 100%">
+        <v-btn
+          class="print-fab"
+          color="accent"
+          elevation="4"
+          icon="mdi-printer"
+          @click="print"
+        />
+      </div>
+    </template>
+  </v-app-bar>
+</template>
 
 <style scoped>
 .print-fab {

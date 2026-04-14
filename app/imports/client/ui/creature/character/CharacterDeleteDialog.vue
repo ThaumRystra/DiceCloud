@@ -1,38 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        Delete Character
-      </v-toolbar-title>
-    </template>
-    <div>
-      <p v-if="name">
-        Type "{{ name }}" to permanently delete the character
-      </p>
-      <v-text-field
-        v-if="name"
-        v-model="inputName"
-      />
-      <v-btn
-        v-show="nameMatch"
-        class="primary"
-        @click="remove"
-      >
-        Delete forever
-      </v-btn>
-    </div>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        @click="$store.dispatch('popDialogStack')"
-      >
-        Cancel
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -77,5 +42,40 @@ async function remove() {
   }
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        Delete Character
+      </v-toolbar-title>
+    </template>
+    <div>
+      <p v-if="name">
+        Type "{{ name }}" to permanently delete the character
+      </p>
+      <v-text-field
+        v-if="name"
+        v-model="inputName"
+      />
+      <v-btn
+        v-show="nameMatch"
+        class="bg-primary"
+        @click="remove"
+      >
+        Delete forever
+      </v-btn>
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Cancel
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

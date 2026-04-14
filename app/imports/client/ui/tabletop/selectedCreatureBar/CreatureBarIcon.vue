@@ -1,10 +1,27 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+
+const props = defineProps<{
+  propId?: string;
+  icon?: string;
+  selected?: boolean;
+}>();
+
+const { result: prop } = autorun(() => {
+  if (!props.propId) return;
+  return CreatureProperties.findOne(props.propId);
+});
+</script>
+
 <template lang="html">
   <v-btn
     icon
-    :plain="!selected"
+    :variant="!selected ? 'plain' : undefined"
     size="large"
     rounded="0"
-    :outlined="selected"
+    :variant="selected ? 'outlined' : undefined"
     :color="prop && prop.color"
     @click.prevent="$emit('click', $event)"
     @mouseenter="$emit('mouseenter', $event)"
@@ -23,20 +40,3 @@
     </v-icon>
   </v-btn>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-
-const props = defineProps<{
-  propId?: string;
-  icon?: string;
-  selected?: boolean;
-}>();
-
-const { result: prop } = autorun(() => {
-  if (!props.propId) return;
-  return CreatureProperties.findOne(props.propId);
-});
-</script>

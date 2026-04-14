@@ -1,3 +1,20 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
+
+const props = defineProps<{ model: Record<string, any> }>();
+
+const proficiencyText = computed(() => {
+  switch (props.model.value) {
+    case 0.49: return 'Half proficiency bonus rounded down';
+    case 0.5: return 'Half proficiency bonus';
+    case 1: return 'Proficient';
+    case 2: return 'Double proficiency bonus';
+    default: return '';
+  }
+});
+</script>
+
 <template lang="html">
   <div class="proficiency-viewer">
     <v-row dense>
@@ -27,20 +44,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
-
-const props = defineProps<{ model: Record<string, any> }>();
-
-const proficiencyText = computed(() => {
-  switch (props.model.value) {
-    case 0.49: return 'Half proficiency bonus rounded down';
-    case 0.5: return 'Half proficiency bonus';
-    case 1: return 'Proficient';
-    case 2: return 'Double proficiency bonus';
-    default: return '';
-  }
-});
-</script>

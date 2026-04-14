@@ -1,5 +1,5 @@
 export default function aggregateInventory({ node, linkedNode, link }) {
-  let linkedProp = linkedNode.data || {};
+  const linkedProp = linkedNode.data || {};
   const prop = node.data;
 
   switch (link.data) {

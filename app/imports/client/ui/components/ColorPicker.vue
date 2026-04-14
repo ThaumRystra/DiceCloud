@@ -1,102 +1,3 @@
-<template lang="html">
-  <v-menu
-    v-model="opened"
-    :close-on-content-click="false"
-    transition="slide-y-transition"
-    left
-  >
-    <template #activator="{ props }">
-      <v-btn
-        :icon="!label"
-        :tile="!label"
-        :min-width="label && 108"
-        :height="height"
-        :width="width"
-        :disabled="context.editPermission === false"
-        v-bind="props"
-      >
-        {{ label }}
-        <v-icon
-          :right="!!label"
-          :color="noColorChange ? undefined : value"
-        >
-          mdi-format-paint
-        </v-icon>
-      </v-btn>
-    </template>
-    <v-card class="overflow-hidden">
-      <v-card-text>
-        <div class="d-flex flex-wrap">
-          <div
-            v-for="colorOption in colors"
-            :key="colorOption"
-            :class="[colorOption, shade]"
-            class="color-swatch d-flex align-center"
-            @click="color = colorOption"
-          >
-            <v-scroll-y-transition>
-              <v-icon
-                v-if="kebabColor === colorOption"
-                :class="{dark: isDark(colorOption, shade)}"
-              >
-                mdi-check
-              </v-icon>
-            </v-scroll-y-transition>
-          </div>
-          <div
-            v-for="i in 8"
-            :key="i"
-            class="spacer"
-          />
-        </div>
-        <v-fade-transition>
-          <div
-            v-show="color"
-            class="d-flex flex-wrap mt-2"
-          >
-            <div
-              v-for="shadeOption in shades"
-              :key="shadeOption"
-              :class="[kebabColor, shadeOption]"
-              class="shade-swatch d-flex align-center"
-              @click="shade = shadeOption"
-            >
-              <v-scroll-y-transition>
-                <v-icon
-                  v-if="kebabShade === shadeOption"
-                  :class="isDark(color, shade) ? 'dark' : 'light'"
-                >
-                  mdi-check
-                </v-icon>
-              </v-scroll-y-transition>
-            </div>
-            <div
-              v-for="i in 8"
-              :key="i"
-              class="spacer"
-            />
-          </div>
-        </v-fade-transition>
-      </v-card-text>
-      <v-card-actions>
-        <v-btn
-          variant="text"
-          @click="emit('input', undefined)"
-        >
-          Clear
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          variant="text"
-          @click="opened = false"
-        >
-          Done
-        </v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-menu>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor';
@@ -183,6 +84,105 @@ function isDark(kebabColorVal: string | undefined, kebabShadeVal: string | undef
   return isDarkColor(hex);
 }
 </script>
+
+<template lang="html">
+  <v-menu
+    v-model="opened"
+    :close-on-content-click="false"
+    transition="slide-y-transition"
+    location="left"
+  >
+    <template #activator="{ props }">
+      <v-btn
+        :icon="!label"
+        :tile="!label"
+        :min-width="label && 108"
+        :height="height"
+        :width="width"
+        :disabled="context.editPermission === false"
+        v-bind="props"
+      >
+        {{ label }}
+        <v-icon
+          :end="!!label"
+          :color="noColorChange ? undefined : value"
+        >
+          mdi-format-paint
+        </v-icon>
+      </v-btn>
+    </template>
+    <v-card class="overflow-hidden">
+      <v-card-text>
+        <div class="d-flex flex-wrap">
+          <div
+            v-for="colorOption in colors"
+            :key="colorOption"
+            :class="[colorOption, shade]"
+            class="color-swatch d-flex align-center"
+            @click="color = colorOption"
+          >
+            <v-scroll-y-transition>
+              <v-icon
+                v-if="kebabColor === colorOption"
+                :class="{dark: isDark(colorOption, shade)}"
+              >
+                mdi-check
+              </v-icon>
+            </v-scroll-y-transition>
+          </div>
+          <div
+            v-for="i in 8"
+            :key="i"
+            class="spacer"
+          />
+        </div>
+        <v-fade-transition>
+          <div
+            v-show="color"
+            class="d-flex flex-wrap mt-2"
+          >
+            <div
+              v-for="shadeOption in shades"
+              :key="shadeOption"
+              :class="[kebabColor, shadeOption]"
+              class="shade-swatch d-flex align-center"
+              @click="shade = shadeOption"
+            >
+              <v-scroll-y-transition>
+                <v-icon
+                  v-if="kebabShade === shadeOption"
+                  :class="isDark(color, shade) ? 'dark' : 'light'"
+                >
+                  mdi-check
+                </v-icon>
+              </v-scroll-y-transition>
+            </div>
+            <div
+              v-for="i in 8"
+              :key="i"
+              class="spacer"
+            />
+          </div>
+        </v-fade-transition>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn
+          variant="text"
+          @click="emit('input', undefined)"
+        >
+          Clear
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          variant="text"
+          @click="opened = false"
+        >
+          Done
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-menu>
+</template>
 
 <style lang="css" scoped>
   .color-swatch, .shade-swatch {

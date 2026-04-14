@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template lang="html">
   <div>
     <v-alert
@@ -8,6 +11,3 @@
     </v-alert>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>

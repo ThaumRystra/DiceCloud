@@ -4,7 +4,7 @@ import clean from '../../utility/cleanProp.testFn';
 import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
 
 export default function () {
-  let computation = buildComputationFromProps(testProperties);
+  const computation = buildComputationFromProps(testProperties);
 
   const bySelf = (propId, note) => assertDeactivatedBySelf(computation, propId, note);
   const byAncestor = (propId, note) => assertDeactivatedByAncestor(computation, propId, note);

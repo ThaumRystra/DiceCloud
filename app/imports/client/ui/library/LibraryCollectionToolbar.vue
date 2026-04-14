@@ -1,44 +1,3 @@
-<template lang="html">
-  <v-app-bar
-    color="secondary"
-    theme="dark"
-    density="compact"
-  >
-    <v-app-bar-nav-icon @click="toggleDrawer" />
-    <v-btn
-      icon="mdi-arrow-left"
-      @click="back"
-    />
-    <v-toolbar-title>
-      {{ libraryCollection && libraryCollection.name }}
-    </v-toolbar-title>
-    <v-spacer />
-    <v-btn
-      v-if="showSubscribeButton"
-      variant="text"
-      :loading="loading"
-      @click="subscribe(!subscribed)"
-    >
-      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
-    </v-btn>
-    <v-btn
-      v-if="canEdit"
-      icon="mdi-cog"
-      data-id="library-collection-edit-button"
-      @click="editLibraryCollection"
-    />
-    <template #extension>
-      <v-spacer />
-      <div
-        v-if="libraryCollection && libraryCollection.subscriberCount"
-        class="mx-4 text-disabled"
-      >
-        {{ formatNumber(libraryCollection.subscriberCount) }} subscribers
-      </div>
-    </template>
-  </v-app-bar>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -116,5 +75,46 @@ function toggleDrawer() {
   store.commit('toggleDrawer');
 }
 </script>
+
+<template lang="html">
+  <v-app-bar
+    color="secondary"
+    theme="dark"
+    density="compact"
+  >
+    <v-app-bar-nav-icon @click="toggleDrawer" />
+    <v-btn
+      icon="mdi-arrow-left"
+      @click="back"
+    />
+    <v-toolbar-title>
+      {{ libraryCollection && libraryCollection.name }}
+    </v-toolbar-title>
+    <v-spacer />
+    <v-btn
+      v-if="showSubscribeButton"
+      variant="text"
+      :loading="loading"
+      @click="subscribe(!subscribed)"
+    >
+      {{ subscribed ? 'Unsubscribe' : 'Subscribe' }}
+    </v-btn>
+    <v-btn
+      v-if="canEdit"
+      icon="mdi-cog"
+      data-id="library-collection-edit-button"
+      @click="editLibraryCollection"
+    />
+    <template #extension>
+      <v-spacer />
+      <div
+        v-if="libraryCollection && libraryCollection.subscriberCount"
+        class="mx-4 text-disabled"
+      >
+        {{ formatNumber(libraryCollection.subscriberCount) }} subscribers
+      </div>
+    </template>
+  </v-app-bar>
+</template>
 
 <style lang="css" scoped></style>

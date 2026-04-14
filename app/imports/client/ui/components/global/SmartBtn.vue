@@ -1,14 +1,3 @@
-<template lang="html">
-  <v-btn 
-    v-bind="$attrs"
-    :disabled="isDisabled"
-    :loading="loading"
-    @click.stop.prevent="click"
-  >
-    <slot />
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject, onBeforeUnmount } from 'vue';
 import { debounce as lodashDebounce } from 'lodash';
@@ -66,3 +55,14 @@ onBeforeUnmount(() => {
   debounceClicks.value.flush();
 });
 </script>
+
+<template lang="html">
+  <v-btn 
+    v-bind="$attrs"
+    :disabled="isDisabled"
+    :loading="loading"
+    @click.stop.prevent="click"
+  >
+    <slot />
+  </v-btn>
+</template>

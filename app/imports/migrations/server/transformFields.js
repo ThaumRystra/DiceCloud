@@ -3,8 +3,8 @@ import { get, set, unset, forEachRight, cloneDeep } from 'lodash';
 export default function transformFields(src, transformList, reversed = false){
   if (!transformList) return src;
   // don't bash the old document during the transforms
-  let doc = cloneDeep(src);
-  for(let originalTransform of transformList){
+  const doc = cloneDeep(src);
+  for(const originalTransform of transformList){
     let transform;
     // Swap to and from when reversing
     if (reversed){
@@ -106,7 +106,7 @@ function iterate(stack, state, src, doc, toSplit, up){return function(key, index
 
 function buildToPath(toSplit, indices){
   let toPath =  '';
-  let offset = indices.length - toSplit.length + 1;
+  const offset = indices.length - toSplit.length + 1;
   toSplit.forEach((path, i) => {
     toPath += `${path}`;
     if (i < toSplit.length - 1){

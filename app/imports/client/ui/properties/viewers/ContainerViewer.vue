@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import CoinValue from '/imports/client/ui/components/CoinValue.vue';
+
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="container-viewer">
     <v-row dense>
@@ -96,12 +102,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-
-defineProps<{ model: Record<string, any> }>();
-</script>
 
 <style lang="css" scoped>
 

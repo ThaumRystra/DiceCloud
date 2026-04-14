@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+
+const props = defineProps<{
+  model?: any[];
+  showSilenced?: boolean;
+}>();
+
+const filteredModel = computed(() =>
+  (props.model ?? []).filter(content => !content.silenced || props.showSilenced)
+);
+</script>
+
 <template lang="html">
   <div class="log-content">
     <div
@@ -23,20 +37,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-
-const props = defineProps<{
-  model?: any[];
-  showSilenced?: boolean;
-}>();
-
-const filteredModel = computed(() =>
-  (props.model ?? []).filter(content => !content.silenced || props.showSilenced)
-);
-</script>
 
 <style lang="css" scoped>
 .content-line {

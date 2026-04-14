@@ -53,7 +53,7 @@ const copyLibraryNodeTo = new ValidatedMethod({
     await assertDocCopyPermission(libraryNode, this.userId);
     await assertDocEditPermission(parentDoc, this.userId);
 
-    let decendants = await LibraryNodes.find({
+    const decendants = await LibraryNodes.find({
       ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {

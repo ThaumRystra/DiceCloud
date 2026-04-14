@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template lang="html">
   <v-card
     hover
@@ -6,9 +9,6 @@
     Character sheet
   </v-card>
 </template>
-
-<script setup lang="ts">
-</script>
 
 <style lang="css" scoped>
 </style>

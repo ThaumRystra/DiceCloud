@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import LogContent from '/imports/client/ui/log/LogContent.vue';
+
+defineProps<{
+  model: object;
+  showName?: boolean;
+}>();
+</script>
+
 <template lang="html">
   <v-card
     class="ma-2 log-entry"
@@ -13,12 +22,3 @@
     </v-card-text>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import LogContent from '/imports/client/ui/log/LogContent.vue';
-
-defineProps<{
-  model: object;
-  showName?: boolean;
-}>();
-</script>

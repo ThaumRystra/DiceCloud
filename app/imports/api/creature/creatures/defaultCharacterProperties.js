@@ -3,7 +3,7 @@ import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 export default function defaultCharacterProperties(creatureId) {
   if (!creatureId) throw 'creatureId is required';
   const creatureRef = { collection: 'creatures', id: creatureId };
-  let randomSrc = DDP.randomStream('defaultProperties');
+  const randomSrc = DDP.randomStream('defaultProperties');
   const inventoryId = randomSrc.id();
   return [
     {

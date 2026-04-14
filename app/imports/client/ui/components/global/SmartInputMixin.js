@@ -134,7 +134,7 @@ export default {
   },
   computed: {
     errors() {
-      let errors = this.ackErrors ? [this.ackErrors] : [];
+      const errors = this.ackErrors ? [this.ackErrors] : [];
       if (Array.isArray(this.rulesErrors)) {
         errors.push(...this.rulesErrors)
       }

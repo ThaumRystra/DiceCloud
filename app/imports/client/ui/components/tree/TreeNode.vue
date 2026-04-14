@@ -1,3 +1,74 @@
+<script setup lang="ts">
+/**
+* TreeNode's are list item views of character properties. Every property which
+* can belong to the character is shown in the tree view of the character
+* the tree view shows off the full character structure, and where each part of
+* character comes from.
+**/
+import { ref, computed, watch, defineAsyncComponent } from 'vue';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import { isAncestor } from '/imports/api/parenting/parentingFunctions';
+import type { TreeNode as TreeNodeType } from '/imports/api/parenting/parentingFunctions';
+import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
+
+const TreeNodeList = defineAsyncComponent(() => import('./TreeNodeList.vue'));
+
+const props = defineProps<{
+  node: TreeDoc & {
+    _ancestorOfMatchedDocument?: boolean;
+    _matchedDocumentFilter?: boolean;
+  };
+  group?: string;
+  organize?: boolean;
+  children?: TreeNodeType<TreeDoc>[];
+  getChildren?: () => TreeNodeType<TreeDoc>[];
+  selectedNode?: TreeDoc;
+  selected?: boolean;
+  startExpanded?: boolean;
+}>();
+
+const emit = defineEmits<{
+  'move-within-root': [e: unknown];
+  'move-between-roots': [e: unknown];
+  selected: [id: string];
+}>();
+
+const expanded = ref(
+  props.startExpanded ||
+  props.node._ancestorOfMatchedDocument ||
+  isAncestor(props.node, props.selectedNode)
+);
+
+const hasChildren = computed(() => {
+  return (props.children && props.children.length > 0);
+});
+
+const showExpanded = computed(() => {
+  return expanded.value && (props.organize || hasChildren.value);
+});
+
+const computedChildren = computed(() => {
+  const children: any[] = [];
+  if (props.children) {
+    children.push(...props.children);
+  }
+  if (props.getChildren) {
+    children.push(...props.getChildren());
+  }
+  return children;
+});
+
+const canExpand = computed(() => true);
+
+watch(() => props.node._ancestorOfMatchedDocument, (value) => {
+  expanded.value = !!value || isAncestor(props.node, props.selectedNode);
+});
+
+watch(() => props.selectedNode?.parentId, () => {
+  expanded.value = isAncestor(props.node, props.selectedNode) || expanded.value;
+});
+</script>
+
 <template lang="html">
   <v-sheet
     class="tree-node"
@@ -73,77 +144,6 @@
     </v-expand-transition>
   </v-sheet>
 </template>
-
-<script setup lang="ts">
-/**
-* TreeNode's are list item views of character properties. Every property which
-* can belong to the character is shown in the tree view of the character
-* the tree view shows off the full character structure, and where each part of
-* character comes from.
-**/
-import { ref, computed, watch, defineAsyncComponent } from 'vue';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-import { isAncestor } from '/imports/api/parenting/parentingFunctions';
-import type { TreeNode as TreeNodeType } from '/imports/api/parenting/parentingFunctions';
-import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
-
-const TreeNodeList = defineAsyncComponent(() => import('./TreeNodeList.vue'));
-
-const props = defineProps<{
-  node: TreeDoc & {
-    _ancestorOfMatchedDocument?: boolean;
-    _matchedDocumentFilter?: boolean;
-  };
-  group?: string;
-  organize?: boolean;
-  children?: TreeNodeType<TreeDoc>[];
-  getChildren?: () => TreeNodeType<TreeDoc>[];
-  selectedNode?: TreeDoc;
-  selected?: boolean;
-  startExpanded?: boolean;
-}>();
-
-const emit = defineEmits<{
-  'move-within-root': [e: unknown];
-  'move-between-roots': [e: unknown];
-  selected: [id: string];
-}>();
-
-const expanded = ref(
-  props.startExpanded ||
-  props.node._ancestorOfMatchedDocument ||
-  isAncestor(props.node, props.selectedNode)
-);
-
-const hasChildren = computed(() => {
-  return (props.children && props.children.length > 0);
-});
-
-const showExpanded = computed(() => {
-  return expanded.value && (props.organize || hasChildren.value);
-});
-
-const computedChildren = computed(() => {
-  const children: any[] = [];
-  if (props.children) {
-    children.push(...props.children);
-  }
-  if (props.getChildren) {
-    children.push(...props.getChildren());
-  }
-  return children;
-});
-
-const canExpand = computed(() => true);
-
-watch(() => props.node._ancestorOfMatchedDocument, (value) => {
-  expanded.value = !!value || isAncestor(props.node, props.selectedNode);
-});
-
-watch(() => props.selectedNode?.parentId, () => {
-  expanded.value = isAncestor(props.node, props.selectedNode) || expanded.value;
-});
-</script>
 
 <style lang="css" scoped>
 .rotate-90 {

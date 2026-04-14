@@ -1,3 +1,24 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
+
+defineProps<{
+  value: number;
+  loading?: boolean;
+}>();
+
+const emit = defineEmits<{
+  change: [e: unknown];
+}>();
+
+const open = ref(false);
+
+function changeIncrementMenu(e: unknown) {
+  emit('change', e);
+  open.value = false;
+}
+</script>
+
 <template lang="html">
   <v-menu
     v-model="open"
@@ -29,27 +50,6 @@
     </v-card>
   </v-menu>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import IncrementMenu from '/imports/client/ui/components/IncrementMenu.vue';
-
-defineProps<{
-  value: number;
-  loading?: boolean;
-}>();
-
-const emit = defineEmits<{
-  change: [e: unknown];
-}>();
-
-const open = ref(false);
-
-function changeIncrementMenu(e: unknown) {
-  emit('change', e);
-  open.value = false;
-}
-</script>
 
 <style lang="css" scoped>
 </style>

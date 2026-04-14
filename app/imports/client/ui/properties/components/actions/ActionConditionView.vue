@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
+
+const insufficient = computed(() => !props.model.condition?.value);
+</script>
+
 <template lang="html">
   <div
     v-if="insufficient"
@@ -11,15 +23,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = withDefaults(defineProps<{
-  model?: Record<string, any>;
-}>(), {
-  model: () => ({}),
-});
-
-const insufficient = computed(() => !props.model.condition?.value);
-</script>

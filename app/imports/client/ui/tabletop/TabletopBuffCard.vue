@@ -1,48 +1,3 @@
-<template lang="html">
-  <v-sheet
-    class="action-card  overflow-y-auto"
-    rounded
-    :class="cardClasses"
-  >
-    <div
-      class="action-header d-flex align-stretch px-3"
-      style="height: 72px;"
-      @click="$emit('open-details')"
-    >
-      <div
-        class="d-flex flex-grow-1 align-center"
-        style="cursor: pointer;"
-        @mouseover="hovering = true"
-        @mouseleave="hovering = false"
-      >
-        <property-icon
-          :model="model"
-          :color="model.color"
-        />
-        <div class="mx-3">
-          {{ model.name || propertyName }}
-        </div>
-      </div>
-      <div class="d-flex align-center">
-        <v-btn
-          icon
-          @click.stop="remove"
-        >
-          <v-icon>
-            mdi-delete
-          </v-icon>
-        </v-btn>
-      </div>
-    </div>
-    <div class="px-3 pb-3">
-      <template v-if="model.description">
-        <markdown-text :markdown="model.description.value || model.description.text" />
-      </template>
-    </div>
-    <card-highlight :active="hovering" />
-  </v-sheet>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -167,6 +122,51 @@ function shwing() {
   setTimeout(() => { activated.value = undefined; }, 150);
 }
 </script>
+
+<template lang="html">
+  <v-sheet
+    class="action-card  overflow-y-auto"
+    rounded
+    :class="cardClasses"
+  >
+    <div
+      class="action-header d-flex align-stretch px-3"
+      style="height: 72px;"
+      @click="$emit('open-details')"
+    >
+      <div
+        class="d-flex flex-grow-1 align-center"
+        style="cursor: pointer;"
+        @mouseover="hovering = true"
+        @mouseleave="hovering = false"
+      >
+        <property-icon
+          :model="model"
+          :color="model.color"
+        />
+        <div class="mx-3">
+          {{ model.name || propertyName }}
+        </div>
+      </div>
+      <div class="d-flex align-center">
+        <v-btn
+          icon
+          @click.stop="remove"
+        >
+          <v-icon>
+            mdi-delete
+          </v-icon>
+        </v-btn>
+      </div>
+    </div>
+    <div class="px-3 pb-3">
+      <template v-if="model.description">
+        <markdown-text :markdown="model.description.value || model.description.text" />
+      </template>
+    </div>
+    <card-highlight :active="hovering" />
+  </v-sheet>
+</template>
 
 <style lang="css" scoped>
 .action-card {

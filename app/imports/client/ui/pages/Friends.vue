@@ -6,8 +6,7 @@
       </h1>
       <v-btn
         fixed
-        bottom
-        right
+        location="bottom right"
       >
         <v-icon>mdi-plus</v-icon>
       </v-btn>

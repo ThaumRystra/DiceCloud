@@ -1,9 +1,57 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertySelectCard from '/imports/client/ui/properties/shared/PropertySelectCard.vue';
+
+const props = withDefaults(defineProps<{
+  noLibraryOnlyProps?: boolean;
+  parentType?: string;
+  suggestedTypes?: string[];
+  currentType?: string;
+}>(), {
+  noLibraryOnlyProps: false,
+  parentType: undefined,
+  suggestedTypes: undefined,
+  currentType: undefined,
+});
+
+const properties = computed(() => {
+  let suggested: Record<string, any> | undefined;
+  const more: Record<string, any> = {};
+  if (props.suggestedTypes) {
+    for (const key in PROPERTIES) {
+      const prop = (PROPERTIES as any)[key];
+      if (props.suggestedTypes.includes(prop.type)) {
+        if (!suggested) suggested = {};
+        suggested[key] = prop;
+      } else {
+        more[key] = prop;
+      }
+    }
+    return { suggested, more };
+  } else if (props.parentType) {
+    for (const key in PROPERTIES) {
+      const prop = (PROPERTIES as any)[key];
+      if (prop.suggestedParents.includes(props.parentType)) {
+        if (!suggested) suggested = {};
+        suggested[key] = prop;
+      } else {
+        more[key] = prop;
+      }
+    }
+    return { suggested, more };
+  } else {
+    return { more: PROPERTIES };
+  }
+});
+</script>
+
 <template lang="html">
   <div class="card-raised-background">
     <v-container fluid>
       <v-row
+        class="density"
         wrap
-        density="compact"
         justify="center"
         justify-sm="start"
       >
@@ -56,54 +104,6 @@
     </v-container>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import PROPERTIES from '/imports/constants/PROPERTIES';
-import PropertySelectCard from '/imports/client/ui/properties/shared/PropertySelectCard.vue';
-
-const props = withDefaults(defineProps<{
-  noLibraryOnlyProps?: boolean;
-  parentType?: string;
-  suggestedTypes?: string[];
-  currentType?: string;
-}>(), {
-  noLibraryOnlyProps: false,
-  parentType: undefined,
-  suggestedTypes: undefined,
-  currentType: undefined,
-});
-
-const properties = computed(() => {
-  let suggested: Record<string, any> | undefined;
-  let more: Record<string, any> = {};
-  if (props.suggestedTypes) {
-    for (const key in PROPERTIES) {
-      const prop = (PROPERTIES as any)[key];
-      if (props.suggestedTypes.includes(prop.type)) {
-        if (!suggested) suggested = {};
-        suggested[key] = prop;
-      } else {
-        more[key] = prop;
-      }
-    }
-    return { suggested, more };
-  } else if (props.parentType) {
-    for (const key in PROPERTIES) {
-      const prop = (PROPERTIES as any)[key];
-      if (prop.suggestedParents.includes(props.parentType)) {
-        if (!suggested) suggested = {};
-        suggested[key] = prop;
-      } else {
-        more[key] = prop;
-      }
-    }
-    return { suggested, more };
-  } else {
-    return { more: PROPERTIES };
-  }
-});
-</script>
 
 <style lang="css" scoped>
 

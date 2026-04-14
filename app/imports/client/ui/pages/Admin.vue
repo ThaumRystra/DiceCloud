@@ -1,3 +1,45 @@
+<script setup lang="ts">
+import { ref, onMounted } from 'vue';
+import getVersion from '/imports/migrations/methods/getVersion';
+import migrateTo from '/imports/migrations/methods/migrateTo';
+import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
+
+const loadingVersion = ref(false);
+const versions = ref<any>({});
+const versionError = ref<any>(undefined);
+const migrateError = ref<any>(undefined);
+const loadingMigration = ref(false);
+const schemaVersion = SCHEMA_VERSION;
+
+async function refreshVersions() {
+  loadingVersion.value = true;
+  try {
+    const result = await getVersion.callAsync();
+    versionError.value = undefined;
+    versions.value = result;
+  } catch (error: any) {
+    versionError.value = error;
+  }
+  loadingVersion.value = false;
+}
+
+async function migrate() {
+  loadingMigration.value = true;
+  try {
+    await migrateTo.callAsync({ version: SCHEMA_VERSION });
+    migrateError.value = undefined;
+  } catch (error: any) {
+    migrateError.value = error;
+  }
+  loadingMigration.value = false;
+  refreshVersions();
+}
+
+onMounted(() => {
+  refreshVersions();
+});
+</script>
+
 <template lang="html">
   <v-container>
     <v-row>
@@ -51,48 +93,6 @@
     </v-row>
   </v-container>
 </template>
-
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import getVersion from '/imports/migrations/methods/getVersion';
-import migrateTo from '/imports/migrations/methods/migrateTo';
-import SCHEMA_VERSION from '/imports/constants/SCHEMA_VERSION';
-
-const loadingVersion = ref(false);
-const versions = ref<any>({});
-const versionError = ref<any>(undefined);
-const migrateError = ref<any>(undefined);
-const loadingMigration = ref(false);
-const schemaVersion = SCHEMA_VERSION;
-
-async function refreshVersions() {
-  loadingVersion.value = true;
-  try {
-    const result = await getVersion.callAsync();
-    versionError.value = undefined;
-    versions.value = result;
-  } catch (error: any) {
-    versionError.value = error;
-  }
-  loadingVersion.value = false;
-}
-
-async function migrate() {
-  loadingMigration.value = true;
-  try {
-    await migrateTo.callAsync({ version: SCHEMA_VERSION });
-    migrateError.value = undefined;
-  } catch (error: any) {
-    migrateError.value = error;
-  }
-  loadingMigration.value = false;
-  refreshVersions();
-}
-
-onMounted(() => {
-  refreshVersions();
-});
-</script>
 
 <style lang="css" scoped>
 </style>

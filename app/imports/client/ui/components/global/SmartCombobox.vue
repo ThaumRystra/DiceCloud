@@ -1,24 +1,3 @@
-<template lang="html">
-  <v-combobox
-    v-bind="$attrs"
-    :loading="loading"
-    :error-messages="errors"
-    :model-value="safeValue"
-    :menu-props="{}"
-    v-model:search="searchInput"
-    :disabled="isDisabled"
-    :multiple="multiple"
-    variant="outlined"
-    @update:model-value="customChange"
-    @focus="focused = true"
-    @blur="focused = false"
-  >
-    <template #prepend>
-      <slot name="prepend" />
-    </template>
-  </v-combobox>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject, useAttrs, onBeforeUnmount } from 'vue';
 import { debounce } from 'lodash';
@@ -103,3 +82,24 @@ function customChange(val: unknown) {
   searchInput.value = '';
 }
 </script>
+
+<template lang="html">
+  <v-combobox
+    v-bind="$attrs"
+    v-model:search="searchInput"
+    :loading="loading"
+    :error-messages="errors"
+    :model-value="safeValue"
+    :menu-props="{}"
+    :disabled="isDisabled"
+    :multiple="multiple"
+    variant="outlined"
+    @update:model-value="customChange"
+    @focus="focused = true"
+    @blur="focused = false"
+  >
+    <template #prepend>
+      <slot name="prepend" />
+    </template>
+  </v-combobox>
+</template>

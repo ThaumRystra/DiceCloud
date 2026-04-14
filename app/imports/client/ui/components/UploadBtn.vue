@@ -1,16 +1,3 @@
-<template>
-  <v-btn v-bind="$attrs" @click="triggerUpload">
-    {{ title }}
-    <input
-      ref="fileInput"
-      type="file"
-      :accept="accept"
-      style="display: none;"
-      @change="onFileChange"
-    >
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 
@@ -41,3 +28,19 @@ function onFileChange(e: Event) {
   input.value = '';
 }
 </script>
+
+<template>
+  <v-btn
+    v-bind="$attrs"
+    @click="triggerUpload"
+  >
+    {{ title }}
+    <input
+      ref="fileInput"
+      type="file"
+      :accept="accept"
+      style="display: none;"
+      @change="onFileChange"
+    >
+  </v-btn>
+</template>

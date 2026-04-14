@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { ref, inject } from 'vue';
+
+const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
+
+defineProps<{
+  height?: number;
+  width?: number;
+  disableHover?: boolean;
+}>();
+
+const emit = defineEmits<{
+  click: [e: MouseEvent];
+}>();
+
+const hover = ref(false);
+</script>
+
 <template lang="html">
   <div
     class="d-flex justify-center align-center"
@@ -34,24 +52,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, inject } from 'vue';
-
-const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
-
-defineProps<{
-  height?: number;
-  width?: number;
-  disableHover?: boolean;
-}>();
-
-const emit = defineEmits<{
-  click: [e: MouseEvent];
-}>();
-
-const hover = ref(false);
-</script>
 
 <style lang="css" scoped>
 path {

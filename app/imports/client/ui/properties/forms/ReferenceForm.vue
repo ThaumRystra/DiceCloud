@@ -1,3 +1,55 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+import updateReferenceNodeMethod from '/imports/api/library/methods/updateReferenceNode';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+
+const emit = defineEmits(['change']);
+
+const store = useStore(key);
+const linkLoading = ref(false);
+
+function changeReference() {
+  store.commit('pushDialogStack', {
+    component: 'select-library-node-dialog',
+    elementId: 'change-ref',
+    callback(node: any) {
+      if (!node) return;
+      linkLoading.value = true;
+      emit('change', {
+        path: ['ref'],
+        value: {
+          id: node._id,
+          collection: 'libraryNodes',
+        },
+        ack() {
+          linkLoading.value = false;
+        },
+      });
+    },
+  });
+}
+
+async function updateReferenceNode() {
+  if (!props.model._id) return;
+  linkLoading.value = true;
+  try {
+    await updateReferenceNodeMethod.callAsync({ _id: props.model._id });
+  } finally {
+    linkLoading.value = false;
+  }
+}
+</script>
+
 <template lang="html">
   <div class="reference-form">
     <v-row dense>
@@ -63,57 +115,5 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-import updateReferenceNodeMethod from '/imports/api/library/methods/updateReferenceNode';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-
-const emit = defineEmits(['change']);
-
-const store = useStore(key);
-const linkLoading = ref(false);
-
-function changeReference() {
-  store.commit('pushDialogStack', {
-    component: 'select-library-node-dialog',
-    elementId: 'change-ref',
-    callback(node: any) {
-      if (!node) return;
-      linkLoading.value = true;
-      emit('change', {
-        path: ['ref'],
-        value: {
-          id: node._id,
-          collection: 'libraryNodes',
-        },
-        ack() {
-          linkLoading.value = false;
-        },
-      });
-    },
-  });
-}
-
-async function updateReferenceNode() {
-  if (!props.model._id) return;
-  linkLoading.value = true;
-  try {
-    await updateReferenceNodeMethod.callAsync({ _id: props.model._id });
-  } finally {
-    linkLoading.value = false;
-  }
-}
-</script>
 
 <style lang="css" scoped></style>

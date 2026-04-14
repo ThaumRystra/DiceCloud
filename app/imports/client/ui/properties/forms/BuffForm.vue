@@ -1,3 +1,12 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), {
+  errors: () => ({}),
+});
+</script>
+
 <template lang="html">
   <div class="buff-form">
     <inline-computation-field
@@ -77,15 +86,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), {
-  errors: () => ({}),
-});
-</script>
 
 <style lang="css" scoped>
 

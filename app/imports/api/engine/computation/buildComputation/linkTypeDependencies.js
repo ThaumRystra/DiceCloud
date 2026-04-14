@@ -28,7 +28,7 @@ export default function linkTypeDependencies(dependencyGraph, prop, computation)
 }
 
 function dependOnCalc({ dependencyGraph, prop, key }) {
-  let calc = get(prop, key);
+  const calc = get(prop, key);
   if (!calc?.type) return;
   if (calc.type !== '_calculation') {
     throw `Failed to dependOnCal for prop: ${prop._id}, key: ${key}. Expected calculation got ${calc.type}`
@@ -126,7 +126,7 @@ function linkClassLevel(dependencyGraph, prop) {
   if (prop.variableName && prop.level) {
     dependencyGraph.addLink(prop.variableName, prop._id, 'classLevel');
     // The level variable depends on the class variableName variable
-    let existingLevelLink = dependencyGraph.getLink('level', prop.variableName);
+    const existingLevelLink = dependencyGraph.getLink('level', prop.variableName);
     if (!existingLevelLink) {
       dependencyGraph.addLink('level', prop.variableName, 'level');
     }

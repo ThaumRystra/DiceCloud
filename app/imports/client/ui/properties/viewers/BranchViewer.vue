@@ -1,24 +1,3 @@
-<template lang="html">
-  <div class="branch-viewer">
-    <v-row dense>
-      <property-field
-        name="Branch Type"
-        :value="name"
-      />
-      <property-field
-        v-if="model.branchType === 'if'"
-        name="Condition"
-        :calculation="model.condition"
-      />
-      <property-field
-        v-else-if="model.branchType === 'index'"
-        name="Index"
-        :calculation="model.condition"
-      />
-    </v-row>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -39,6 +18,27 @@ const name = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="branch-viewer">
+    <v-row dense>
+      <property-field
+        name="Branch Type"
+        :value="name"
+      />
+      <property-field
+        v-if="model.branchType === 'if'"
+        name="Condition"
+        :calculation="model.condition"
+      />
+      <property-field
+        v-else-if="model.branchType === 'index'"
+        name="Index"
+        :calculation="model.condition"
+      />
+    </v-row>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .ability-value {

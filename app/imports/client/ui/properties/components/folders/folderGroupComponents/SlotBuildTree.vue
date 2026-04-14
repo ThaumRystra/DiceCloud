@@ -1,11 +1,3 @@
-<template>
-  <build-tree-node-list
-    :children="slotBuildTree"
-    class="mx-2"
-    @selected="_id => $emit('sub-click', _id)"
-  />
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -71,3 +63,11 @@ const { result: slotBuildTree } = autorun(() => {
   return tree;
 });
 </script>
+
+<template>
+  <build-tree-node-list
+    :children="slotBuildTree"
+    class="mx-2"
+    @selected="_id => $emit('sub-click', _id)"
+  />
+</template>

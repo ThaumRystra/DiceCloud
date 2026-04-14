@@ -1,14 +1,3 @@
-<template lang="html">
-  <v-switch
-    v-bind="$attrs"
-    :loading="loading"
-    :error-messages="errors"
-    :model-value="safeValue"
-    :disabled="isDisabled"
-    @update:model-value="change"
-  />
-</template>
-
 <script setup lang="ts">
 import { useAttrs } from 'vue';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
@@ -31,3 +20,14 @@ const emit = defineEmits<{
 const attrs = useAttrs();
 const { loading, errors, safeValue, isDisabled, change } = useSmartInput(props, emit, attrs);
 </script>
+
+<template lang="html">
+  <v-switch
+    v-bind="$attrs"
+    :loading="loading"
+    :error-messages="errors"
+    :model-value="safeValue"
+    :disabled="isDisabled"
+    @update:model-value="change"
+  />
+</template>

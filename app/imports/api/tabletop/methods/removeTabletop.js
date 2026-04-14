@@ -32,7 +32,7 @@ const removeTabletop = new ValidatedMethod({
     assertUserHasPaidBenefits(this.userId);
     assertUserIsTabletopOwner(tabletopId, this.userId);
 
-    let removed = await Tabletops.removeAsync({
+    const removed = await Tabletops.removeAsync({
       _id: tabletopId,
     });
     await Creatures.updateAsync({

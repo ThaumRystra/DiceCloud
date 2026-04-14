@@ -33,8 +33,8 @@ const moveBetweenRoots = new ValidatedMethod({
     if (skipClient && this.isSimulation) {
       return;
     }
-    let doc = await fetchDocByRefAsync(docRef);
-    let collection = getCollectionByName(docRef.collection);
+    const doc = await fetchDocByRefAsync(docRef);
+    const collection = getCollectionByName(docRef.collection);
     // The user must be able to edit both the doc and its parent to move it
     // successfully
     await assertDocEditPermission(doc, this.userId);
@@ -87,8 +87,8 @@ const moveWithinRoot = new ValidatedMethod({
     if (skipClient && this.isSimulation) {
       return;
     }
-    let doc = await fetchDocByRefAsync(docRef);
-    let collection = getCollectionByName(docRef.collection);
+    const doc = await fetchDocByRefAsync(docRef);
+    const collection = getCollectionByName(docRef.collection);
 
     // The user must be able to edit the doc
     await assertDocEditPermission(doc, this.userId);

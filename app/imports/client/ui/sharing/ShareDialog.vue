@@ -1,137 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        Sharing
-      </v-toolbar-title>
-    </template>
-    <div v-if="model">
-      <smart-select
-        label="Who can view"
-        :items="[
-          { text: 'Only people I share with', value: 'false' },
-          { text: 'Anyone with link', value: 'true' }
-        ]"
-        :value="!!model.public + ''"
-        @change="(value, ack) => setSheetPublic({ value, ack })"
-      />
-      <smart-select
-        v-if="docRef.collection === 'libraries'"
-        label="Who can copy from this library"
-        :items="[
-          { text: 'Only people with edit permission', value: 'false' },
-          { text: 'Anyone with read permission', value: 'true' }
-        ]"
-        :value="!!model.readersCanCopy + ''"
-        @change="(value, ack) => setReadersCanCopyFn({ value, ack })"
-      />
-      <text-field
-        v-if="model.public && docRef.collection === 'libraries'"
-        readonly
-        label="Link"
-        :value="location.origin + $router.resolve({
-          name: 'singleLibrary',
-          params: { id: model._id },
-        }).href"
-      />
-      <div class="layout">
-        <text-field
-          label="Username or email"
-          :value="userSearched"
-          :debounce-time="300"
-          @change="(value, ack) => getUser({ value, ack })"
-        />
-        <v-btn
-          class="ml-2 mt-2"
-          :disabled="userFoundState !== 'found'"
-          @click="updateSharing(userId, 'reader')"
-        >
-          Share
-        </v-btn>
-      </div>
-      <v-list class="sharedWith">
-        <v-list-item
-          v-for="user in sharedUsers"
-          :key="user._id"
-        >
-          <v-list-item-title>
-            {{ user.username || user._id }}
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            {{ user.permission === 'writer' ? 'Can edit' : 'Can view' }}
-          </v-list-item-subtitle>
-          <template #append>
-            <v-menu
-              bottom
-              left
-              :data-id="'menu-' + user._id"
-            >
-              <template #activator="{ props }">
-                <v-btn
-                  icon
-                  v-bind="props"
-                >
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
-              </template>
-              <v-list>
-                <v-list-item
-                  v-if="user.permission === 'reader'"
-                  @click="updateSharing(user._id, 'writer')"
-                >
-                  <template #prepend>
-                    <v-icon>mdi-pencil</v-icon>
-                  </template>
-                  <v-list-item-title>Can edit</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  v-if="user.permission === 'writer'"
-                  @click="updateSharing(user._id, 'reader')"
-                >
-                  <template #prepend>
-                    <v-icon>mdi-eye</v-icon>
-                  </template>
-                  <v-list-item-title>View only</v-list-item-title>
-                </v-list-item>
-                <v-list-item
-                  v-if="user.permission === 'writer'"
-                  @click="makeOwner(user)"
-                >
-                  <template #prepend>
-                    <v-icon>mdi-signature</v-icon>
-                  </template>
-                  <v-list-item-title>Transfer Ownership</v-list-item-title>
-                </v-list-item>
-                <v-list-item @click="updateSharing(user._id, 'none')">
-                  <template #prepend>
-                    <v-icon>mdi-delete</v-icon>
-                  </template>
-                  <v-list-item-title>Remove</v-list-item-title>
-                </v-list-item>
-              </v-list>
-            </v-menu>
-          </template>
-        </v-list-item>
-      </v-list>
-      <v-fade-transition>
-        <v-progress-circular
-          v-if="!userProfilesReady"
-          indeterminate
-        />
-      </v-fade-transition>
-    </div>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        @click="store.dispatch('popDialogStack')"
-      >
-        Done
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -262,3 +128,137 @@ function makeOwner(user: any) {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        Sharing
+      </v-toolbar-title>
+    </template>
+    <div v-if="model">
+      <smart-select
+        label="Who can view"
+        :items="[
+          { text: 'Only people I share with', value: 'false' },
+          { text: 'Anyone with link', value: 'true' }
+        ]"
+        :value="!!model.public + ''"
+        @change="(value, ack) => setSheetPublic({ value, ack })"
+      />
+      <smart-select
+        v-if="docRef.collection === 'libraries'"
+        label="Who can copy from this library"
+        :items="[
+          { text: 'Only people with edit permission', value: 'false' },
+          { text: 'Anyone with read permission', value: 'true' }
+        ]"
+        :value="!!model.readersCanCopy + ''"
+        @change="(value, ack) => setReadersCanCopyFn({ value, ack })"
+      />
+      <text-field
+        v-if="model.public && docRef.collection === 'libraries'"
+        readonly
+        label="Link"
+        :value="location.origin + $router.resolve({
+          name: 'singleLibrary',
+          params: { id: model._id },
+        }).href"
+      />
+      <div class="layout">
+        <text-field
+          label="Username or email"
+          :value="userSearched"
+          :debounce-time="300"
+          @change="(value, ack) => getUser({ value, ack })"
+        />
+        <v-btn
+          class="ml-2 mt-2"
+          :disabled="userFoundState !== 'found'"
+          @click="updateSharing(userId, 'reader')"
+        >
+          Share
+        </v-btn>
+      </div>
+      <v-list class="sharedWith">
+        <v-list-item
+          v-for="user in sharedUsers"
+          :key="user._id"
+        >
+          <v-list-item-title>
+            {{ user.username || user._id }}
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            {{ user.permission === 'writer' ? 'Can edit' : 'Can view' }}
+          </v-list-item-subtitle>
+          <template #append>
+            <v-menu
+              location="bottom left"
+              
+              :data-id="'menu-' + user._id"
+            >
+              <template #activator="{ props }">
+                <v-btn
+                  icon
+                  v-bind="props"
+                >
+                  <v-icon>mdi-dots-vertical</v-icon>
+                </v-btn>
+              </template>
+              <v-list>
+                <v-list-item
+                  v-if="user.permission === 'reader'"
+                  @click="updateSharing(user._id, 'writer')"
+                >
+                  <template #prepend>
+                    <v-icon>mdi-pencil</v-icon>
+                  </template>
+                  <v-list-item-title>Can edit</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  v-if="user.permission === 'writer'"
+                  @click="updateSharing(user._id, 'reader')"
+                >
+                  <template #prepend>
+                    <v-icon>mdi-eye</v-icon>
+                  </template>
+                  <v-list-item-title>View only</v-list-item-title>
+                </v-list-item>
+                <v-list-item
+                  v-if="user.permission === 'writer'"
+                  @click="makeOwner(user)"
+                >
+                  <template #prepend>
+                    <v-icon>mdi-signature</v-icon>
+                  </template>
+                  <v-list-item-title>Transfer Ownership</v-list-item-title>
+                </v-list-item>
+                <v-list-item @click="updateSharing(user._id, 'none')">
+                  <template #prepend>
+                    <v-icon>mdi-delete</v-icon>
+                  </template>
+                  <v-list-item-title>Remove</v-list-item-title>
+                </v-list-item>
+              </v-list>
+            </v-menu>
+          </template>
+        </v-list-item>
+      </v-list>
+      <v-fade-transition>
+        <v-progress-circular
+          v-if="!userProfilesReady"
+          indeterminate
+        />
+      </v-fade-transition>
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>

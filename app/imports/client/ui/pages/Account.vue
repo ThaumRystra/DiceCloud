@@ -1,3 +1,207 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
+import Invites from '/imports/api/users/Invites';
+import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+import addEmail from '/imports/api/users/methods/addEmail';
+import removeEmail from '/imports/api/users/methods/removeEmail';
+import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
+import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const store = useStore(key);
+const router = useRouter();
+
+const { result: user } = autorun(() => Meteor.user());
+const googleAccount = computed(() => (user.value as any)?.services?.google);
+const emails = computed(() => (user.value as any)?.emails);
+const darkMode = computed(() => (user.value as any)?.darkMode);
+
+const { result: invites } = autorun(() => {
+  const usernames: Record<string, string> = {};
+  Meteor.users.find({}).forEach((u: any) => {
+    usernames[u._id] = u.username;
+  });
+  return Invites.find({
+    inviter: Meteor.userId(),
+  }, {
+    sort: { dateConfirmed: 1, invitee: -1 },
+  }).map((invite: any) => {
+    invite.inviteeName = usernames[invite.invitee];
+    return invite;
+  });
+});
+
+subscribe(() => [
+  'userPublicProfiles',
+  invites.value?.map((i: any) => i.invitee).filter(Boolean) ?? [],
+]);
+
+const entitledCents = computed(() => getEntitledCents(user.value));
+const tier = computed(() => {
+  if (!user.value) return {};
+  return getUserTier(user.value);
+});
+
+const showApiKey = ref(false);
+const signOutBusy = ref(false);
+const apiKeyGenerationError = ref<string | null>(null);
+const emailVerificationError = ref<string | null>(null);
+const linkGoogleError = ref('');
+const linkPatreonError = ref('');
+const updatePatreonError = ref('');
+const updatePatreonLoading = ref(false);
+const showEmailInput = ref(false);
+const addEmailLoading = ref(false);
+const inputEmail = ref('');
+const addEmailError = ref<string | undefined>(undefined);
+const removeEmailLoading = ref<string | undefined>(undefined);
+const removeEmailError = ref<string | undefined>(undefined);
+
+function changeUsername() {
+  store.commit('pushDialogStack', {
+    component: 'username-dialog',
+    elementId: 'username',
+  });
+}
+
+function clearEmailInput() {
+  showEmailInput.value = false;
+  addEmailError.value = undefined;
+  inputEmail.value = '';
+}
+
+async function addEmailAddress() {
+  addEmailLoading.value = true;
+  try {
+    await addEmail.callAsync({ email: inputEmail.value });
+    showEmailInput.value = false;
+    inputEmail.value = '';
+  } catch (error: any) {
+    addEmailError.value = error?.message;
+  }
+  addEmailLoading.value = false;
+}
+
+async function removeEmailAddress(address: string) {
+  removeEmailLoading.value = address;
+  try {
+    await removeEmail.callAsync({ email: address });
+    removeEmailError.value = undefined;
+    showEmailInput.value = false;
+    inputEmail.value = '';
+  } catch (error: any) {
+    removeEmailError.value = error?.message;
+  }
+  removeEmailLoading.value = undefined;
+}
+
+function signOut() {
+  Meteor.logout();
+  router.push('/');
+}
+
+async function setDarkMode(value: string, ack?: (err?: string) => void) {
+  let dm: boolean | null;
+  if (value === 'true') {
+    dm = true;
+  } else if (value === 'false') {
+    dm = false;
+  } else {
+    dm = null;
+  }
+  try {
+    await (Meteor.users as any).setDarkMode.callAsync({ darkMode: dm });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
+
+async function swapAbilityScoresAndModifiers(value: any, ack?: (err?: string) => void) {
+  try {
+    await (Meteor.users as any).setPreference.callAsync({
+      preference: 'swapAbilityScoresAndModifiers',
+      value: !!value,
+    });
+    if (ack) ack();
+  } catch (error: any) {
+    if (ack) ack(error.reason || error.message || error);
+    else console.error(error);
+  }
+}
+
+async function generateKey() {
+  try {
+    await (Meteor.users as any).gnerateApiKey.callAsync();
+  } catch (error: any) {
+    apiKeyGenerationError.value = error.reason;
+  }
+  showApiKey.value = true;
+}
+
+async function verifyEmail(address: string) {
+  try {
+    await (Meteor.users as any).sendVerificationEmail.callAsync({ address });
+  } catch (error: any) {
+    emailVerificationError.value = error.reason;
+  }
+}
+
+function clickInvite(invite: any) {
+  store.commit('pushDialogStack', {
+    component: 'invite-dialog',
+    elementId: invite._id,
+    data: { inviteId: invite._id },
+  });
+}
+
+function linkWithGoogleAccount() {
+  linkGoogleError.value = '';
+  Meteor.linkWithGoogle((error: any) => {
+    if (error) linkGoogleError.value = error;
+  });
+}
+
+function linkWithPatreonAccount() {
+  linkPatreonError.value = '';
+  linkWithPatreon(async (error: any) => {
+    if (error) {
+      linkPatreonError.value = error;
+    } else {
+      try {
+        await Meteor.callAsync('updateMyPatreonDetails');
+      } catch (err: any) {
+        linkPatreonError.value = err;
+      }
+    }
+  });
+}
+
+async function updatePatreon() {
+  updatePatreonLoading.value = true;
+  updatePatreonError.value = '';
+  try {
+    await Meteor.callAsync('updateMyPatreonDetails');
+  } catch (error: any) {
+    updatePatreonError.value = error;
+  }
+  updatePatreonLoading.value = false;
+}
+
+function deleteAccount() {
+  store.commit('pushDialogStack', {
+    component: 'delete-user-account-dialog',
+    elementId: 'delete-account-btn',
+  });
+}
+</script>
+
 <template>
   <div
     class="d-flex justify-center card-background"
@@ -220,207 +424,3 @@
     </v-card>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
-import Invites from '/imports/api/users/Invites';
-import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
-import addEmail from '/imports/api/users/methods/addEmail';
-import removeEmail from '/imports/api/users/methods/removeEmail';
-import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
-import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const store = useStore(key);
-const router = useRouter();
-
-const { result: user } = autorun(() => Meteor.user());
-const googleAccount = computed(() => (user.value as any)?.services?.google);
-const emails = computed(() => (user.value as any)?.emails);
-const darkMode = computed(() => (user.value as any)?.darkMode);
-
-const { result: invites } = autorun(() => {
-  const usernames: Record<string, string> = {};
-  Meteor.users.find({}).forEach((u: any) => {
-    usernames[u._id] = u.username;
-  });
-  return Invites.find({
-    inviter: Meteor.userId(),
-  }, {
-    sort: { dateConfirmed: 1, invitee: -1 },
-  }).map((invite: any) => {
-    invite.inviteeName = usernames[invite.invitee];
-    return invite;
-  });
-});
-
-subscribe(() => [
-  'userPublicProfiles',
-  invites.value?.map((i: any) => i.invitee).filter(Boolean) ?? [],
-]);
-
-const entitledCents = computed(() => getEntitledCents(user.value));
-const tier = computed(() => {
-  if (!user.value) return {};
-  return getUserTier(user.value);
-});
-
-const showApiKey = ref(false);
-const signOutBusy = ref(false);
-const apiKeyGenerationError = ref<string | null>(null);
-const emailVerificationError = ref<string | null>(null);
-const linkGoogleError = ref('');
-const linkPatreonError = ref('');
-const updatePatreonError = ref('');
-const updatePatreonLoading = ref(false);
-const showEmailInput = ref(false);
-const addEmailLoading = ref(false);
-const inputEmail = ref('');
-const addEmailError = ref<string | undefined>(undefined);
-const removeEmailLoading = ref<string | undefined>(undefined);
-const removeEmailError = ref<string | undefined>(undefined);
-
-function changeUsername() {
-  store.commit('pushDialogStack', {
-    component: 'username-dialog',
-    elementId: 'username',
-  });
-}
-
-function clearEmailInput() {
-  showEmailInput.value = false;
-  addEmailError.value = undefined;
-  inputEmail.value = '';
-}
-
-async function addEmailAddress() {
-  addEmailLoading.value = true;
-  try {
-    await addEmail.callAsync({ email: inputEmail.value });
-    showEmailInput.value = false;
-    inputEmail.value = '';
-  } catch (error: any) {
-    addEmailError.value = error?.message;
-  }
-  addEmailLoading.value = false;
-}
-
-async function removeEmailAddress(address: string) {
-  removeEmailLoading.value = address;
-  try {
-    await removeEmail.callAsync({ email: address });
-    removeEmailError.value = undefined;
-    showEmailInput.value = false;
-    inputEmail.value = '';
-  } catch (error: any) {
-    removeEmailError.value = error?.message;
-  }
-  removeEmailLoading.value = undefined;
-}
-
-function signOut() {
-  Meteor.logout();
-  router.push('/');
-}
-
-async function setDarkMode(value: string, ack?: (err?: string) => void) {
-  let dm: boolean | null;
-  if (value === 'true') {
-    dm = true;
-  } else if (value === 'false') {
-    dm = false;
-  } else {
-    dm = null;
-  }
-  try {
-    await (Meteor.users as any).setDarkMode.callAsync({ darkMode: dm });
-    if (ack) ack();
-  } catch (error: any) {
-    if (ack) ack(error.reason || error.message || error);
-    else console.error(error);
-  }
-}
-
-async function swapAbilityScoresAndModifiers(value: any, ack?: (err?: string) => void) {
-  try {
-    await (Meteor.users as any).setPreference.callAsync({
-      preference: 'swapAbilityScoresAndModifiers',
-      value: !!value,
-    });
-    if (ack) ack();
-  } catch (error: any) {
-    if (ack) ack(error.reason || error.message || error);
-    else console.error(error);
-  }
-}
-
-async function generateKey() {
-  try {
-    await (Meteor.users as any).gnerateApiKey.callAsync();
-  } catch (error: any) {
-    apiKeyGenerationError.value = error.reason;
-  }
-  showApiKey.value = true;
-}
-
-async function verifyEmail(address: string) {
-  try {
-    await (Meteor.users as any).sendVerificationEmail.callAsync({ address });
-  } catch (error: any) {
-    emailVerificationError.value = error.reason;
-  }
-}
-
-function clickInvite(invite: any) {
-  store.commit('pushDialogStack', {
-    component: 'invite-dialog',
-    elementId: invite._id,
-    data: { inviteId: invite._id },
-  });
-}
-
-function linkWithGoogleAccount() {
-  linkGoogleError.value = '';
-  Meteor.linkWithGoogle((error: any) => {
-    if (error) linkGoogleError.value = error;
-  });
-}
-
-function linkWithPatreonAccount() {
-  linkPatreonError.value = '';
-  linkWithPatreon(async (error: any) => {
-    if (error) {
-      linkPatreonError.value = error;
-    } else {
-      try {
-        await Meteor.callAsync('updateMyPatreonDetails');
-      } catch (err: any) {
-        linkPatreonError.value = err;
-      }
-    }
-  });
-}
-
-async function updatePatreon() {
-  updatePatreonLoading.value = true;
-  updatePatreonError.value = '';
-  try {
-    await Meteor.callAsync('updateMyPatreonDetails');
-  } catch (error: any) {
-    updatePatreonError.value = error;
-  }
-  updatePatreonLoading.value = false;
-}
-
-function deleteAccount() {
-  store.commit('pushDialogStack', {
-    component: 'delete-user-account-dialog',
-    elementId: 'delete-account-btn',
-  });
-}
-</script>

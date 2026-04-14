@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template lang="html">
   <div
     class="d-flex flex-column align-center pa-2"
@@ -34,9 +37,6 @@
     </v-card>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>
 
 <style lang="css" scoped>
 </style>

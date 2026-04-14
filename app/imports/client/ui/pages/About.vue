@@ -1,3 +1,15 @@
+<script setup lang="ts">
+const paragons = [
+  { name: 'Kira Ametrine', title: 'Cleric of Lewd', avatar: 'kira' },
+  { name: 'Satherian', title: 'Defender of Naptime', avatar: 'satherian' },
+  { name: 'Vinton', title: 'The Gravekeeper', avatar: 'vinton' },
+  { name: 'Lord of Junk', title: 'Archwizard of the Odd', avatar: 'lordOfJunk' },
+  { name: 'Dai', title: 'A Kobold\'s Best Friend', avatar: 'dai' },
+  { name: 'Vibes', title: 'Kell of Nothing', avatar: 'vibes' },
+  { name: 'ßlue', title: 'Embodiment of Greed', avatar: 'blue' },
+];
+</script>
+
 <template lang="html">
   <div>
     <section>
@@ -56,18 +68,6 @@
     </section>
   </div>
 </template>
-
-<script setup lang="ts">
-const paragons = [
-  { name: 'Kira Ametrine', title: 'Cleric of Lewd', avatar: 'kira' },
-  { name: 'Satherian', title: 'Defender of Naptime', avatar: 'satherian' },
-  { name: 'Vinton', title: 'The Gravekeeper', avatar: 'vinton' },
-  { name: 'Lord of Junk', title: 'Archwizard of the Odd', avatar: 'lordOfJunk' },
-  { name: 'Dai', title: "A Kobold's Best Friend", avatar: 'dai' },
-  { name: 'Vibes', title: 'Kell of Nothing', avatar: 'vibes' },
-  { name: 'ßlue', title: 'Embodiment of Greed', avatar: 'blue' },
-];
-</script>
 
 <style lang="css" scoped>
 </style>

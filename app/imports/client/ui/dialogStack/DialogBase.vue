@@ -1,3 +1,40 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import { key } from '/imports/client/ui/vuexStore';
+
+const store = useStore(key);
+
+const props = defineProps<{
+  color?: string;
+  overrideBackButton?: () => void;
+  darkBody?: boolean;
+}>();
+
+const offsetTop = ref(0);
+
+const computedColor = computed(() => props.color || getThemeColor('secondary'));
+const isDark = computed(() => isDarkColor(computedColor.value));
+
+function onScroll(e: Event) {
+  offsetTop.value = (e.target as HTMLElement).scrollTop;
+}
+
+function back() {
+  if (props.overrideBackButton) {
+    props.overrideBackButton();
+  } else {
+    close();
+  }
+}
+
+function close() {
+  store.dispatch('popDialogStack');
+}
+</script>
+
 <template>
   <div
     class="d-flex flex-column"
@@ -46,43 +83,6 @@
     </v-card-actions>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor';
-import { key } from '/imports/client/ui/vuexStore';
-
-const store = useStore(key);
-
-const props = defineProps<{
-  color?: string;
-  overrideBackButton?: () => void;
-  darkBody?: boolean;
-}>();
-
-const offsetTop = ref(0);
-
-const computedColor = computed(() => props.color || getThemeColor('secondary'));
-const isDark = computed(() => isDarkColor(computedColor.value));
-
-function onScroll(e: Event) {
-  offsetTop.value = (e.target as HTMLElement).scrollTop;
-}
-
-function back() {
-  if (props.overrideBackButton) {
-    props.overrideBackButton();
-  } else {
-    close();
-  }
-}
-
-function close() {
-  store.dispatch('popDialogStack');
-}
-</script>
 
 <style scoped>
 .base-dialog-toolbar {

@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template lang="html">
   <div>
     <div
@@ -12,9 +15,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>
 
 <style lang="css" scoped>
 </style>

@@ -14,7 +14,7 @@ export interface LogContent {
   }
 }
 
-let LogContentSchema = new SimpleSchema({
+const LogContentSchema = new SimpleSchema({
   // The name of the field, included in discord webhook message
   name: {
     type: String,

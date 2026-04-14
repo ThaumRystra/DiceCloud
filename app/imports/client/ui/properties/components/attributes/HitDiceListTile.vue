@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+
+const props = defineProps<{
+  model: Record<string, any>;
+}>();
+
+const emit = defineEmits(['click', 'change']);
+const context = inject('context', {});
+
+const hover = ref(false);
+
+const signedConMod = computed(() => numberToSignedString(props.model.constitutionMod));
+
+function click(e: Event) {
+  emit('click', e);
+}
+
+function increment(value: number) {
+  emit('change', { type: 'increment', value });
+}
+</script>
+
 <template lang="html">
   <v-list-item
     class="hit-dice-list-tile"
@@ -45,30 +69,6 @@
     </v-list-item-title>
   </v-list-item>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
-
-const props = defineProps<{
-  model: Record<string, any>;
-}>();
-
-const emit = defineEmits(['click', 'change']);
-const context = inject('context', {});
-
-const hover = ref(false);
-
-const signedConMod = computed(() => numberToSignedString(props.model.constitutionMod));
-
-function click(e: Event) {
-  emit('click', e);
-}
-
-function increment(value: number) {
-  emit('change', { type: 'increment', value });
-}
-</script>
 
 <style lang="css" scoped>
 .hit-dice-list-tile {

@@ -5,12 +5,12 @@
 import { get, toPath } from 'lodash';
 
 function resolvePath(model, path, set) {
-  let arrayPath = toPath(path);
+  const arrayPath = toPath(path);
   if (arrayPath.length === 1) {
     return { object: model, key: arrayPath[0] };
   }
-  let key = arrayPath.slice(-1);
-  let objectPath = arrayPath.slice(0, -1);
+  const key = arrayPath.slice(-1);
+  const objectPath = arrayPath.slice(0, -1);
   let object = model;
   // Ensure that nested objects exist before navigating them
   objectPath.forEach(pathKey => {
@@ -37,11 +37,11 @@ const schemaFormMixin = {
         throw new Error('this.model must be set');
       }
       if (!this.validationContext) return {};
-      let cleanModel = this.validationContext.clean(this.model, {
+      const cleanModel = this.validationContext.clean(this.model, {
         getAutoValues: false,
       });
       this.validationContext.validate(cleanModel);
-      let errors = {};
+      const errors = {};
       this.validationContext.validationErrors().forEach(error => {
         if (this.valid) this.valid = false;
         errors[error.name] = this.schema.messageForError(error);
@@ -52,15 +52,15 @@ const schemaFormMixin = {
   methods: {
     // Sets the value at the given path
     change({ path, value, ack }) {
-      let { object, key } = resolvePath(this.model, path, this.$set);
+      const { object, key } = resolvePath(this.model, path, this.$set);
 
       this.$set(object, key, value);
       if (ack) ack();
     },
     push({ path, value, ack }) {
-      let array = get(this.model, path);
+      const array = get(this.model, path);
       if (array === undefined) {
-        let { object, key } = resolvePath(this.model, path, this.$set);
+        const { object, key } = resolvePath(this.model, path, this.$set);
         this.$set(object, key, [value]);
       } else if (!array.push) {
         throw `${path.join('.')} is ${array}, doesn't have "push"`
@@ -70,7 +70,7 @@ const schemaFormMixin = {
       if (ack) ack();
     },
     pull({ path, ack }) {
-      let { object, key } = resolvePath(this.model, path, this.$set);
+      const { object, key } = resolvePath(this.model, path, this.$set);
       if (!object || !object.splice) {
         throw `${path.join('.')} is ${object}, doesnt have "splice"`
       }

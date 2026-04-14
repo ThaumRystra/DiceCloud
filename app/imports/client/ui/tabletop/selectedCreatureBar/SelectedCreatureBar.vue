@@ -1,165 +1,3 @@
-<template lang="html">
-  <div
-    v-if="creatureId"
-    class="selected-creature-bar d-flex pa-3  align-end"
-    style="gap: 8px;"
-  >
-    <v-menu
-      v-model="menuOpen"
-      v-click-outside="{
-        handler: clickOutsideMenu,
-        include: menuClickOutsideInclude,
-      }"
-      location="top"
-      origin="center bottom"
-      :close-on-click="false"
-      :content-class="`tabletop-prop-menu rows-${rows}`"
-      :close-on-content-click="false"
-      style="z-index: 2"
-    >
-      <template #activator>
-        <div
-          ref="menuActivator"
-          style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
-          :style="{ left: menuX + 'px', top: menuY + 'px' }"
-        />
-      </template>
-      <tabletop-action-card
-        v-if="selectedProp && selectedProp.type === 'action'"
-        style="width: 300px;"
-        :style="{
-          width: '300px',
-          opacity: selectedIcon ? 1 : 0.7,
-          transition: 'opacity 0.2s ease',
-        }"
-        :model="selectedProp"
-        :targets="targets"
-        data-id="tabletop-action-card"
-        @close-menu="menuOpen = false"
-        @dialog-opened="menuOpen = false"
-        @open-details="openPropertyDetails('tabletop-action-card')"
-      />
-      <tabletop-buff-card
-        v-if="selectedProp && selectedProp.type === 'buff'"
-        style="width: 300px;"
-        :style="{
-          width: '300px',
-          opacity: selectedIcon ? 1 : 0.7,
-          transition: 'opacity 0.2s ease',
-        }"
-        :model="selectedProp"
-        data-id="tabletop-buff-card"
-        @close-menu="menuOpen = false"
-        @dialog-opened="menuOpen = false"
-        @open-details="openPropertyDetails('tabletop-buff-card')"
-      />
-      <v-card
-        v-else-if="activeIcon && activeIcon.tab"
-        style="width: 300px"
-        data-id="tabletop-standard-card"
-      >
-        <v-card-title>
-          <v-icon class="mr-1">
-            {{ activeIcon.icon }}
-          </v-icon>
-          {{ activeIcon.tabName }}
-        </v-card-title>
-      </v-card>
-      <v-card
-        v-else-if="activeIcon && activeIcon.actionName"
-        style="width: 300px"
-      >
-        <v-card-title>
-          <v-icon class="mr-1">
-            {{ activeIcon.icon }}
-          </v-icon>
-          {{ activeIcon.actionName }}
-        </v-card-title>
-      </v-card>
-    </v-menu>
-    <v-card class="delete-card">
-      <div class="d-flex">
-        <creature-bar-icon
-          icon="mdi-delete"
-          data-id="trashIcon"
-          @click="$emit('remove')"
-        />
-      </div>
-    </v-card>
-    <v-card
-      v-if="iconGroups.buffs"
-      class="buffs-card"
-    >
-      <div
-        v-for="(row, rowIndex) in iconGroups.buffs.rows"
-        :key="rowIndex"
-        class="d-flex"
-      >
-        <template
-          v-for="(icon, iconIndex) in row"
-          :key="icon.propId || iconIndex"
-        >
-          <creature-bar-icon
-            :prop-id="icon.propId"
-            :icon="icon.icon"
-            :selected="selectedIcon === icon"
-            :data-id="icon.propId || icon.standardId"
-            @click="e => selectIcon(e, icon)"
-            @mouseenter="e => hoverIcon(e, icon)"
-            @mouseleave="unHoverIcon(icon)"
-          />
-        </template>
-      </div>
-    </v-card>
-    <v-card
-      class="creature-portrait"
-      :width="90"
-      :height="120"
-    >
-      <v-img
-        v-if="creature.picture"
-        :height="120"
-        :src="creature.picture"
-        position="top center"
-      />
-      <div
-        v-else
-        class="fill-height d-flex align-center justify-center"
-        style="opacity: 0.2;"
-      >
-        <v-icon size="90">
-          mdi-account
-        </v-icon>
-      </div>
-    </v-card>
-    <v-card
-      v-for="group in iconGroups"
-      :key="group.name"
-    >
-      <div
-        v-for="(row, rowIndex) in group.rows"
-        :key="rowIndex"
-        class="d-flex"
-      >
-        <template
-          v-for="(icon, iconIndex) in row"
-          :key="icon.propId || iconIndex"
-        >
-          <creature-bar-icon
-            :prop-id="icon.propId"
-            :icon="icon.icon"
-            :selected="selectedIcon === icon"
-            :data-id="icon.propId || icon.standardId"
-            @click="e => selectIcon(e, icon)"
-            @mouseenter="e => hoverIcon(e, icon)"
-            @mouseleave="unHoverIcon(icon)"
-          />
-        </template>
-      </div>
-    </v-card>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -404,6 +242,168 @@ const { result: iconGroups } = autorun(() => {
   return filteredIconGroups;
 });
 </script>
+
+<template lang="html">
+  <div
+    v-if="creatureId"
+    class="selected-creature-bar d-flex pa-3  align-end"
+    style="gap: 8px;"
+  >
+    <v-menu
+      v-model="menuOpen"
+      v-click-outside="{
+        handler: clickOutsideMenu,
+        include: menuClickOutsideInclude,
+      }"
+      location="top"
+      origin="center bottom"
+      persistent
+      :content-class="`tabletop-prop-menu rows-${rows}`"
+      :close-on-content-click="false"
+      style="z-index: 2"
+    >
+      <template #activator>
+        <div
+          ref="menuActivator"
+          style="position: fixed; width: 1px; height: 1px; pointer-events: none;"
+          :style="{ left: menuX + 'px', top: menuY + 'px' }"
+        />
+      </template>
+      <tabletop-action-card
+        v-if="selectedProp && selectedProp.type === 'action'"
+        style="width: 300px;"
+        :style="{
+          width: '300px',
+          opacity: selectedIcon ? 1 : 0.7,
+          transition: 'opacity 0.2s ease',
+        }"
+        :model="selectedProp"
+        :targets="targets"
+        data-id="tabletop-action-card"
+        @close-menu="menuOpen = false"
+        @dialog-opened="menuOpen = false"
+        @open-details="openPropertyDetails('tabletop-action-card')"
+      />
+      <tabletop-buff-card
+        v-if="selectedProp && selectedProp.type === 'buff'"
+        style="width: 300px;"
+        :style="{
+          width: '300px',
+          opacity: selectedIcon ? 1 : 0.7,
+          transition: 'opacity 0.2s ease',
+        }"
+        :model="selectedProp"
+        data-id="tabletop-buff-card"
+        @close-menu="menuOpen = false"
+        @dialog-opened="menuOpen = false"
+        @open-details="openPropertyDetails('tabletop-buff-card')"
+      />
+      <v-card
+        v-else-if="activeIcon && activeIcon.tab"
+        style="width: 300px"
+        data-id="tabletop-standard-card"
+      >
+        <v-card-title>
+          <v-icon class="mr-1">
+            {{ activeIcon.icon }}
+          </v-icon>
+          {{ activeIcon.tabName }}
+        </v-card-title>
+      </v-card>
+      <v-card
+        v-else-if="activeIcon && activeIcon.actionName"
+        style="width: 300px"
+      >
+        <v-card-title>
+          <v-icon class="mr-1">
+            {{ activeIcon.icon }}
+          </v-icon>
+          {{ activeIcon.actionName }}
+        </v-card-title>
+      </v-card>
+    </v-menu>
+    <v-card class="delete-card">
+      <div class="d-flex">
+        <creature-bar-icon
+          icon="mdi-delete"
+          data-id="trashIcon"
+          @click="$emit('remove')"
+        />
+      </div>
+    </v-card>
+    <v-card
+      v-if="iconGroups.buffs"
+      class="buffs-card"
+    >
+      <div
+        v-for="(row, rowIndex) in iconGroups.buffs.rows"
+        :key="rowIndex"
+        class="d-flex"
+      >
+        <template
+          v-for="(icon, iconIndex) in row"
+          :key="icon.propId || iconIndex"
+        >
+          <creature-bar-icon
+            :prop-id="icon.propId"
+            :icon="icon.icon"
+            :selected="selectedIcon === icon"
+            :data-id="icon.propId || icon.standardId"
+            @click="e => selectIcon(e, icon)"
+            @mouseenter="e => hoverIcon(e, icon)"
+            @mouseleave="unHoverIcon(icon)"
+          />
+        </template>
+      </div>
+    </v-card>
+    <v-card
+      class="creature-portrait"
+      :width="90"
+      :height="120"
+    >
+      <v-img
+        v-if="creature.picture"
+        :height="120"
+        :src="creature.picture"
+        position="top center"
+      />
+      <div
+        v-else
+        class="fill-height d-flex align-center justify-center"
+        style="opacity: 0.2;"
+      >
+        <v-icon size="90">
+          mdi-account
+        </v-icon>
+      </div>
+    </v-card>
+    <v-card
+      v-for="group in iconGroups"
+      :key="group.name"
+    >
+      <div
+        v-for="(row, rowIndex) in group.rows"
+        :key="rowIndex"
+        class="d-flex"
+      >
+        <template
+          v-for="(icon, iconIndex) in row"
+          :key="icon.propId || iconIndex"
+        >
+          <creature-bar-icon
+            :prop-id="icon.propId"
+            :icon="icon.icon"
+            :selected="selectedIcon === icon"
+            :data-id="icon.propId || icon.standardId"
+            @click="e => selectIcon(e, icon)"
+            @mouseenter="e => hoverIcon(e, icon)"
+            @mouseleave="unHoverIcon(icon)"
+          />
+        </template>
+      </div>
+    </v-card>
+  </div>
+</template>
 
 <style lang="css">
 .tabletop-prop-menu {

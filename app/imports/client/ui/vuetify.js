@@ -20,7 +20,7 @@ const customSvgSet = {
   component: (props) => h(SvgIconByName, { name: props.icon }),
 };
 
-let vuetify = createVuetify({
+const vuetify = createVuetify({
   components,
   directives,
   theme: {

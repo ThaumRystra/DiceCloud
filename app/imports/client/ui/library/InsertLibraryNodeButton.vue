@@ -1,17 +1,3 @@
-<template lang="html">
-  <v-btn
-    :fab="fab"
-    :outlined="!fab"
-    size="small"
-    color="primary"
-    data-id="insert-library-node-button"
-    @click="insertLibraryNode"
-  >
-    <v-icon>mdi-plus</v-icon>
-    <slot />
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { Meteor } from 'meteor/meteor';
@@ -58,5 +44,19 @@ function insertLibraryNode() {
   });
 }
 </script>
+
+<template lang="html">
+  <v-btn
+    :fab="fab"
+    :variant="!fab ? 'outlined' : undefined"
+    size="small"
+    color="primary"
+    data-id="insert-library-node-button"
+    @click="insertLibraryNode"
+  >
+    <v-icon>mdi-plus</v-icon>
+    <slot />
+  </v-btn>
+</template>
 
 <style lang="css" scoped></style>

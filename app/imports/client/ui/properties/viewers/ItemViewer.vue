@@ -1,3 +1,40 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import CoinValue from '/imports/client/ui/components/CoinValue.vue';
+import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
+import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+
+const props = defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+
+const incrementLoading = ref(false);
+
+const totalValue = computed(() =>
+  stripFloatingPointOddities(props.model.value * props.model.quantity)
+);
+
+const totalWeight = computed(() =>
+  stripFloatingPointOddities(props.model.weight * props.model.quantity)
+);
+
+async function changeQuantity({ type, value }: { type: string; value: number }) {
+  incrementLoading.value = true;
+  try {
+    await adjustQuantity.callAsync({
+      _id: props.model._id,
+      operation: type,
+      value,
+    });
+  } catch (error: any) {
+    snackbar({ text: error.reason });
+    console.error(error);
+  }
+  incrementLoading.value = false;
+}
+</script>
+
 <template lang="html">
   <div class="item-viewer">
     <v-row dense>
@@ -158,43 +195,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adjustQuantity';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-
-const props = defineProps<{ model: Record<string, any> }>();
-const context = inject<any>('context', {});
-
-const incrementLoading = ref(false);
-
-const totalValue = computed(() =>
-  stripFloatingPointOddities(props.model.value * props.model.quantity)
-);
-
-const totalWeight = computed(() =>
-  stripFloatingPointOddities(props.model.weight * props.model.quantity)
-);
-
-async function changeQuantity({ type, value }: { type: string; value: number }) {
-  incrementLoading.value = true;
-  try {
-    await adjustQuantity.callAsync({
-      _id: props.model._id,
-      operation: type,
-      value,
-    });
-  } catch (error: any) {
-    snackbar({ text: error.reason });
-    console.error(error);
-  }
-  incrementLoading.value = false;
-}
-</script>
 
 <style lang="css" scoped>
 

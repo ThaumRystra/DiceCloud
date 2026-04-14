@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
+
+const props = defineProps<{
+  value: Record<string, any>;
+}>();
+
+const emit = defineEmits <{
+  input: any;
+  continue: [];
+}>();
+
+const abilityOptions = ref(createListOfProperties({
+  attributeType: 'ability',
+  'root.id': props.value.prop.root.id,
+}, true));
+
+const skillOptions = ref(createListOfProperties({
+  type: 'skill',
+  'root.id': props.value.prop.root.id,
+}, true));
+
+function changeAdvantage(e: number) {
+  emit('input', { ...props.value, advantage: e });
+}
+
+function change(key: string, value: any, ack: Function) {
+  emit('input', { ...props.value, [key]: value });
+  ack();
+}
+</script>
+
 <template>
   <div class="d-flex flex-wrap">
     <div class="d-flex flex-column justify-center align-center ma-2">
@@ -56,37 +90,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
-
-const props = defineProps<{
-  value: Record<string, any>;
-}>();
-
-const emit = defineEmits <{
-  input: any;
-  continue: [];
-}>();
-
-const abilityOptions = ref(createListOfProperties({
-  attributeType: 'ability',
-  'root.id': props.value.prop.root.id,
-}, true));
-
-const skillOptions = ref(createListOfProperties({
-  type: 'skill',
-  'root.id': props.value.prop.root.id,
-}, true));
-
-function changeAdvantage(e: number) {
-  emit('input', { ...props.value, advantage: e });
-}
-
-function change(key: string, value: any, ack: Function) {
-  emit('input', { ...props.value, [key]: value });
-  ack();
-}
-</script>

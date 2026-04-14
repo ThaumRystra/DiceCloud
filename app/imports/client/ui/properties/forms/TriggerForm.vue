@@ -1,3 +1,67 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { TriggerSchema, eventOptions, timingOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change', 'push']);
+
+const context = inject<any>('context', {});
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const eventOptionsList = Object.keys(eventOptions).map(value => ({
+  value,
+  text: (eventOptions as Record<string, string>)[value],
+}));
+
+const timingOptionsList = Object.keys(timingOptions).map(value => ({
+  value,
+  text: (timingOptions as Record<string, string>)[value],
+}));
+
+const actionPropertyTypeOptionsList = Object.keys(actionPropertyTypeOptions).map(value => ({
+  value,
+  text: (actionPropertyTypeOptions as Record<string, string>)[value],
+}));
+
+const addExtraTagsLoading = ref(false);
+
+const extraTagsFull = computed(() => {
+  if (!props.model.extraTags) return false;
+  const maxCount = TriggerSchema.get('extraTags', 'maxCount');
+  return props.model.extraTags.length >= maxCount;
+});
+
+const showTags = computed(() =>
+  props.model.event !== 'shortRest' &&
+  props.model.event !== 'longRest' &&
+  props.model.event !== 'anyRest'
+);
+
+function addExtraTags() {
+  addExtraTagsLoading.value = true;
+  emit('push', {
+    path: ['extraTags'],
+    value: {
+      _id: Random.id(),
+      operation: 'OR',
+      tags: [],
+    },
+    ack() {
+      addExtraTagsLoading.value = false;
+    },
+  });
+}
+</script>
+
 <template lang="html">
   <div class="trigger-form">
     <v-row dense>
@@ -97,67 +161,3 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import { TriggerSchema, eventOptions, timingOptions, actionPropertyTypeOptions } from '/imports/api/properties/Triggers';
-import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change', 'push']);
-
-const context = inject<any>('context', {});
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const eventOptionsList = Object.keys(eventOptions).map(value => ({
-  value,
-  text: (eventOptions as Record<string, string>)[value],
-}));
-
-const timingOptionsList = Object.keys(timingOptions).map(value => ({
-  value,
-  text: (timingOptions as Record<string, string>)[value],
-}));
-
-const actionPropertyTypeOptionsList = Object.keys(actionPropertyTypeOptions).map(value => ({
-  value,
-  text: (actionPropertyTypeOptions as Record<string, string>)[value],
-}));
-
-const addExtraTagsLoading = ref(false);
-
-const extraTagsFull = computed(() => {
-  if (!props.model.extraTags) return false;
-  const maxCount = TriggerSchema.get('extraTags', 'maxCount');
-  return props.model.extraTags.length >= maxCount;
-});
-
-const showTags = computed(() =>
-  props.model.event !== 'shortRest' &&
-  props.model.event !== 'longRest' &&
-  props.model.event !== 'anyRest'
-);
-
-function addExtraTags() {
-  addExtraTagsLoading.value = true;
-  emit('push', {
-    path: ['extraTags'],
-    value: {
-      _id: Random.id(),
-      operation: 'OR',
-      tags: [],
-    },
-    ack() {
-      addExtraTagsLoading.value = false;
-    },
-  });
-}
-</script>

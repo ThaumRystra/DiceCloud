@@ -1,25 +1,3 @@
-<template lang="html">
-  <smart-select
-    append-icon="mdi-menu-down"
-    :clearable="clearable"
-    class="ml-3"
-    v-bind="$attrs"
-    :menu-props="{transition: 'slide-y-transition', lazy: true}"
-    :items="values"
-    :value="value"
-    @change="(value, ack) => $emit('change', value, ack)"
-  >
-    <template #prepend>
-      <v-icon
-        class="icon"
-        :class="iconClass"
-      >
-        {{ displayedIcon }}
-      </v-icon>
-    </template>
-  </smart-select>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
@@ -56,6 +34,28 @@ watch(() => props.value, (newValue) => {
   }, ICON_SPIN_DURATION / 2);
 }, { immediate: true });
 </script>
+
+<template lang="html">
+  <smart-select
+    append-icon="mdi-menu-down"
+    :clearable="clearable"
+    class="ml-3"
+    v-bind="$attrs"
+    :menu-props="{transition: 'slide-y-transition', lazy: true}"
+    :items="values"
+    :value="value"
+    @change="(value, ack) => $emit('change', value, ack)"
+  >
+    <template #prepend>
+      <v-icon
+        class="icon"
+        :class="iconClass"
+      >
+        {{ displayedIcon }}
+      </v-icon>
+    </template>
+  </smart-select>
+</template>
 
 <style lang="css" scoped>
   .v-theme--light .icon {

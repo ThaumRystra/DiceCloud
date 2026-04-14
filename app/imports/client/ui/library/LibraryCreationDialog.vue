@@ -1,3 +1,30 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+
+const library = ref({
+  name: 'New Library',
+  description: undefined as string | undefined,
+});
+const valid = ref(true);
+
+function nameChanged(val: string, ack: (error?: string) => void) {
+  if (val) {
+    library.value.name = val;
+    valid.value = true;
+    ack();
+  } else {
+    valid.value = false;
+    ack('Name is required');
+  }
+}
+
+function descriptionChanged(val: string, ack: () => void) {
+  library.value.description = val;
+  ack();
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -29,33 +56,6 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-
-const library = ref({
-  name: 'New Library',
-  description: undefined as string | undefined,
-});
-const valid = ref(true);
-
-function nameChanged(val: string, ack: (error?: string) => void) {
-  if (val) {
-    library.value.name = val;
-    valid.value = true;
-    ack();
-  } else {
-    valid.value = false;
-    ack('Name is required');
-  }
-}
-
-function descriptionChanged(val: string, ack: () => void) {
-  library.value.description = val;
-  ack();
-}
-</script>
 
 <style lang="css" scoped>
 

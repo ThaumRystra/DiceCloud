@@ -1,3 +1,9 @@
+<script setup lang="ts">
+defineProps<{
+  error: object | string;
+}>();
+</script>
+
 <template lang="html">
   <div>
     <div
@@ -12,12 +18,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  error: object | string;
-}>();
-</script>
 
 <style lang="css" scoped>
 </style>

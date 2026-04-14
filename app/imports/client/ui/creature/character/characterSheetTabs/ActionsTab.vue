@@ -1,38 +1,3 @@
-<template lang="html">
-  <div class="actions-tab ma-2">
-    <column-layout wide-columns>
-      <folder-group-card
-        v-for="folder in startFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-      <div
-        v-for="action in actions"
-        :key="action._id"
-        class="action"
-      >
-        <action-card
-          :model="action"
-          :data-id="action._id"
-          @click="clickProperty({ _id: action._id })"
-          @sub-click="_id => clickTreeProperty({ _id })"
-        />
-      </div>
-      <folder-group-card
-        v-for="folder in endFolders"
-        :key="folder._id"
-        :model="folder"
-        @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({ _id })"
-        @remove="softRemove"
-      />
-    </column-layout>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
@@ -118,3 +83,38 @@ function softRemove(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="actions-tab ma-2">
+    <column-layout wide-columns>
+      <folder-group-card
+        v-for="folder in startFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+      <div
+        v-for="action in actions"
+        :key="action._id"
+        class="action"
+      >
+        <action-card
+          :model="action"
+          :data-id="action._id"
+          @click="clickProperty({ _id: action._id })"
+          @sub-click="_id => clickTreeProperty({ _id })"
+        />
+      </div>
+      <folder-group-card
+        v-for="folder in endFolders"
+        :key="folder._id"
+        :model="folder"
+        @click-property="clickProperty"
+        @sub-click="_id => clickTreeProperty({ _id })"
+        @remove="softRemove"
+      />
+    </column-layout>
+  </div>
+</template>

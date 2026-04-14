@@ -1,12 +1,3 @@
-<template lang="html">
-  <v-navigation-drawer
-    v-model="drawer"
-    location="right"
-  >
-    <character-log :creature-id="$route.params.id" />
-  </v-navigation-drawer>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -24,5 +15,14 @@ const drawer = computed({
   },
 });
 </script>
+
+<template lang="html">
+  <v-navigation-drawer
+    v-model="drawer"
+    location="right"
+  >
+    <character-log :creature-id="$route.params.id" />
+  </v-navigation-drawer>
+</template>
 
 <style lang="css" scoped></style>

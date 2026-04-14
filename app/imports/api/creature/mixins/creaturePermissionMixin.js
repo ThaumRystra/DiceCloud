@@ -22,7 +22,7 @@ export default function creaturePermissionMixin(methodOptions) {
   } else if (methodOptions.permission === 'view') {
     assertPermission = assertViewPermission;
   } else {
-    throw "`permission` missing in method options";
+    throw '`permission` missing in method options';
   }
 
   let getCharId;
@@ -37,12 +37,12 @@ export default function creaturePermissionMixin(methodOptions) {
     };
   } else {
     getCharId = function () {
-      throw "`getCharId` or `collection` missing in method options," +
-      " or {charId} missing in call";
+      throw '`getCharId` or `collection` missing in method options,' +
+      ' or {charId} missing in call';
     };
   }
 
-  let runFunc = methodOptions.run;
+  const runFunc = methodOptions.run;
   methodOptions.run = async function (doc, ...rest) {
     // Store the charId on the doc for other mixins if it had to be fetched
     doc.charId = doc.charId || await getCharId.apply(this, arguments);

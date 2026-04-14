@@ -1,32 +1,3 @@
-<template lang="html">
-  <div class="d-flex align-center justify-start">
-    <property-icon
-      v-if="!hideIcon"
-      class="mr-2"
-      :model="model"
-      :class="selected && 'text-primary'"
-      :color="model.color"
-    />
-    <div
-      class="text-no-wrap text-truncate"
-    >
-      <template v-if="model.amount && model.amount.calculation">
-        <span v-if="amount < 0">+</span>
-        {{ absoluteAmount }} {{ model.stat }}
-        <span v-if="typeof absoluteAmount === 'string' || amount >= 0">
-          damage
-        </span>
-        <span v-if="model.target === 'self'">
-          to self
-        </span>
-      </template>
-      <template v-else>
-        <span>{{ model.stat || 'Attribute' }} damage</span>
-      </template>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -62,3 +33,32 @@ const absoluteAmount = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="d-flex align-center justify-start">
+    <property-icon
+      v-if="!hideIcon"
+      class="mr-2"
+      :model="model"
+      :class="selected && 'text-primary'"
+      :color="model.color"
+    />
+    <div
+      class="text-no-wrap text-truncate"
+    >
+      <template v-if="model.amount && model.amount.calculation">
+        <span v-if="amount < 0">+</span>
+        {{ absoluteAmount }} {{ model.stat }}
+        <span v-if="typeof absoluteAmount === 'string' || amount >= 0">
+          damage
+        </span>
+        <span v-if="model.target === 'self'">
+          to self
+        </span>
+      </template>
+      <template v-else>
+        <span>{{ model.stat || 'Attribute' }} damage</span>
+      </template>
+    </div>
+  </div>
+</template>

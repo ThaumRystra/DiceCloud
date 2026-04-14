@@ -22,7 +22,7 @@ const insertTabletop = new ValidatedMethod({
         'You need to be logged in to insert a tabletop');
     }
     await assertUserHasPaidBenefits(this.userId);
-    let tier = getUserTier(this.userId);
+    const tier = getUserTier(this.userId);
     const currentTabletopCount = await Tabletops.find({ owner: this.userId }).countAsync();
 
     if (tier.tabletopSlots !== -1 && tier.tabletopSlots <= currentTabletopCount) {

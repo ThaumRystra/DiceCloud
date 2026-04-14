@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const store = useStore(key);
+const node = ref<any>(undefined);
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -24,16 +35,5 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const store = useStore(key);
-const node = ref<any>(undefined);
-</script>
 
 <style lang="css" scoped></style>

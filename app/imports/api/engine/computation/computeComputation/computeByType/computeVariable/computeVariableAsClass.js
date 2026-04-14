@@ -1,5 +1,5 @@
 export default function computeVariableAsAttribute(computation, node, prop){
-  let classLevelAgg = node.data.classLevelAggregator;
+  const classLevelAgg = node.data.classLevelAggregator;
   if (!classLevelAgg) return;
   prop.level = classLevelAgg.level;
   for (let index = 1; index < classLevelAgg.level; index++ ){

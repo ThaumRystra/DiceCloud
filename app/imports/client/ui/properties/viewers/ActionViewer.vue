@@ -1,3 +1,92 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
+import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
+import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import doActionFn from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  model: Record<string, any>;
+  attack?: boolean;
+}>();
+const context = inject<any>('context', {});
+const store = useStore(key);
+
+const doActionLoading = ref(false);
+
+const actionTypes: Record<string, string> = {
+  action: 'Action',
+  bonus: 'Bonus action',
+  attack: 'Attack action',
+  reaction: 'Reaction',
+  free: 'Free action',
+  long: 'Long action',
+};
+
+const targetTypes: Record<string, string> = {
+  self: 'Self',
+  singleTarget: 'Single target',
+  multipleTargets: 'Multiple targets',
+};
+
+const reset = computed(() => {
+  const r = props.model.reset;
+  if (r === 'shortRest') return 'Reset on a short rest';
+  if (r === 'longRest') return 'Reset on a long rest';
+  return undefined;
+});
+
+const totalUses = computed(() => {
+  if (!props.model.uses) return 0;
+  return Math.max(props.model.uses.value || 0, 0);
+});
+
+const usesLeft = computed(() =>
+  Math.max(totalUses.value - (props.model.usesUsed || 0), 0)
+);
+
+async function doAction() {
+  if (props.model.type === 'spell') {
+    return store.commit('pushDialogStack', {
+      component: 'cast-spell-with-slot-dialog',
+      elementId: 'cast-spell',
+      data: {
+        creatureId: props.model.root.id,
+        spellId: props.model._id,
+      },
+    });
+  }
+  doActionLoading.value = true;
+  try {
+    await doActionFn({
+      creatureId: props.model.root.id,
+      $store: store,
+      propId: props.model._id,
+      elementId: 'do-action-button',
+      targetIds: [],
+    });
+  } catch (e: any) {
+    console.error(e);
+    snackbar({ text: e.message || e.reason || e.toString() });
+  } finally {
+    doActionLoading.value = false;
+  }
+}
+
+function resetUses() {
+  updateCreatureProperty.callAsync({
+    _id: props.model._id,
+    path: ['usesUsed'],
+    value: 0,
+  });
+}
+</script>
+
 <template lang="html">
   <div class="action-viewer">
     <v-row dense>
@@ -116,95 +205,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import { useStore } from 'vuex';
-import ActionConditionView from '/imports/client/ui/properties/components/actions/ActionConditionView.vue';
-import AttributeConsumedView from '/imports/client/ui/properties/components/actions/AttributeConsumedView.vue';
-import ItemConsumedView from '/imports/client/ui/properties/components/actions/ItemConsumedView.vue';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import doActionFn from '/imports/client/ui/creature/actions/doAction';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  model: Record<string, any>;
-  attack?: boolean;
-}>();
-const context = inject<any>('context', {});
-const store = useStore(key);
-
-const doActionLoading = ref(false);
-
-const actionTypes: Record<string, string> = {
-  action: 'Action',
-  bonus: 'Bonus action',
-  attack: 'Attack action',
-  reaction: 'Reaction',
-  free: 'Free action',
-  long: 'Long action',
-};
-
-const targetTypes: Record<string, string> = {
-  self: 'Self',
-  singleTarget: 'Single target',
-  multipleTargets: 'Multiple targets',
-};
-
-const reset = computed(() => {
-  const r = props.model.reset;
-  if (r === 'shortRest') return 'Reset on a short rest';
-  if (r === 'longRest') return 'Reset on a long rest';
-  return undefined;
-});
-
-const totalUses = computed(() => {
-  if (!props.model.uses) return 0;
-  return Math.max(props.model.uses.value || 0, 0);
-});
-
-const usesLeft = computed(() =>
-  Math.max(totalUses.value - (props.model.usesUsed || 0), 0)
-);
-
-async function doAction() {
-  if (props.model.type === 'spell') {
-    return store.commit('pushDialogStack', {
-      component: 'cast-spell-with-slot-dialog',
-      elementId: 'cast-spell',
-      data: {
-        creatureId: props.model.root.id,
-        spellId: props.model._id,
-      },
-    });
-  }
-  doActionLoading.value = true;
-  try {
-    await doActionFn({
-      creatureId: props.model.root.id,
-      $store: store,
-      propId: props.model._id,
-      elementId: 'do-action-button',
-      targetIds: [],
-    });
-  } catch (e: any) {
-    console.error(e);
-    snackbar({ text: e.message || e.reason || e.toString() });
-  } finally {
-    doActionLoading.value = false;
-  }
-}
-
-function resetUses() {
-  updateCreatureProperty.callAsync({
-    _id: props.model._id,
-    path: ['usesUsed'],
-    value: 0,
-  });
-}
-</script>
 
 <style lang="css" scoped>
 .action-sub-title {

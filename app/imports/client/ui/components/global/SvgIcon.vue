@@ -1,24 +1,3 @@
-<template lang="html">
-  <i
-    ref="icon"
-    aria-hidden
-    role="img"
-    class="v-icon"
-    :class="themeClasses"
-    :style="color && `color: ${color}`"
-  >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 512 512"
-      :style="`height: ${size}; width: ${size}`"
-    >
-      <path
-        :d="shape"
-      />
-    </svg>
-  </i>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject, onMounted } from 'vue';
 
@@ -67,6 +46,27 @@ onMounted(() => {
   inheritedSize.value = icon.value?.style.fontSize;
 });
 </script>
+
+<template lang="html">
+  <i
+    ref="icon"
+    aria-hidden
+    role="img"
+    class="v-icon"
+    :class="themeClasses"
+    :style="color && `color: ${color}`"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 512 512"
+      :style="`height: ${size}; width: ${size}`"
+    >
+      <path
+        :d="shape"
+      />
+    </svg>
+  </i>
+</template>
 
 <style lang="css" scoped>
   svg {

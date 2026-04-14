@@ -1,9 +1,54 @@
+<script setup lang="ts">
+import { ref, computed, watch, inject, onMounted } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import DependencyLoopError from '/imports/client/ui/creature/character/errors/DependencyLoopError.vue';
+import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
+
+const props = withDefaults(defineProps<{
+  creatureId?: string;
+}>(), {
+  creatureId: undefined,
+});
+
+const context = inject('context', {} as any);
+
+const expanded = ref(false);
+
+const { result: creature } = autorun(() => {
+  if (!props.creatureId) return undefined;
+  return Creatures.findOne(props.creatureId, { fields: { computeErrors: 1, settings: 1 } });
+});
+
+const errors = computed(() => {
+  if (!creature.value || !creature.value.computeErrors) return [];
+  return creature.value.computeErrors;
+});
+
+watch(expanded, async (value) => {
+  if (context.editPermission === false) return;
+  try {
+    await updateCreature.callAsync({
+      _id: props.creatureId,
+      path: ['settings', 'hideCalculationErrors'],
+      value: !value || null,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+onMounted(() => {
+  expanded.value = !creature.value?.settings?.hideCalculationErrors;
+});
+</script>
+
 <template>
   <div v-if="creature && errors && errors.length">
     <v-btn
       size="small"
       absolute
-      right
+      location="right"
       color="warning"
       class="mr-4"
       style="margin-top: -20px;"
@@ -58,51 +103,6 @@
     </v-slide-y-transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, watch, inject, onMounted } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-import DependencyLoopError from '/imports/client/ui/creature/character/errors/DependencyLoopError.vue';
-import updateCreature from '/imports/api/creature/creatures/methods/updateCreature';
-
-const props = withDefaults(defineProps<{
-  creatureId?: string;
-}>(), {
-  creatureId: undefined,
-});
-
-const context = inject('context', {} as any);
-
-const expanded = ref(false);
-
-const { result: creature } = autorun(() => {
-  if (!props.creatureId) return undefined;
-  return Creatures.findOne(props.creatureId, { fields: { computeErrors: 1, settings: 1 } });
-});
-
-const errors = computed(() => {
-  if (!creature.value || !creature.value.computeErrors) return [];
-  return creature.value.computeErrors;
-});
-
-watch(expanded, async (value) => {
-  if (context.editPermission === false) return;
-  try {
-    await updateCreature.callAsync({
-      _id: props.creatureId,
-      path: ['settings', 'hideCalculationErrors'],
-      value: !value || null,
-    });
-  } catch (error) {
-    console.error(error);
-  }
-});
-
-onMounted(() => {
-  expanded.value = !creature.value?.settings?.hideCalculationErrors;
-});
-</script>
 
 <style>
 </style>

@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { computed, useAttrs, inject } from 'vue';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import CoinValue from '/imports/client/ui/components/CoinValue.vue';
+import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
+import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+
+const props = defineProps<{
+  model?: Record<string, any>;
+  selected?: boolean;
+  hideIcon?: boolean;
+  preparingSpells?: boolean;
+}>();
+
+const context = inject('context', {} as any);
+const attrs = useAttrs();
+
+const hasClickListener = computed(() => !!(attrs as any).onClick);
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return undefined;
+  if (model.quantity !== 1) {
+    if (model.plural) return `${model.quantity} ${model.plural}`;
+    if (model.name) return `${model.quantity} ${model.name}`;
+  } else if (model.name) {
+    return model.name;
+  }
+  const prop = (PROPERTIES as any)[model.type];
+  return prop && prop.name;
+});
+
+const totalValue = computed(() =>
+  stripFloatingPointOddities(props.model!.value * props.model!.quantity)
+);
+
+const totalWeight = computed(() =>
+  stripFloatingPointOddities(props.model!.weight * props.model!.quantity)
+);
+
+const attunementText = computed(() => {
+  if (props.model?.requiresAttunement) {
+    if (props.model.attuned) return 'Attuned';
+    return 'Requires attunement';
+  }
+  return undefined;
+});
+</script>
+
 <template>
   <div class="item">
     <div class="d-flex justify-space-between">
@@ -98,56 +148,6 @@
     />
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, useAttrs, inject } from 'vue';
-import PROPERTIES from '/imports/constants/PROPERTIES';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import CoinValue from '/imports/client/ui/components/CoinValue.vue';
-import PropertyDescription from '/imports/client/ui/properties/viewers/shared/PropertyDescription.vue';
-import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
-
-const props = defineProps<{
-  model?: Record<string, any>;
-  selected?: boolean;
-  hideIcon?: boolean;
-  preparingSpells?: boolean;
-}>();
-
-const context = inject('context', {} as any);
-const attrs = useAttrs();
-
-const hasClickListener = computed(() => !!(attrs as any).onClick);
-
-const title = computed(() => {
-  const model = props.model;
-  if (!model) return undefined;
-  if (model.quantity !== 1) {
-    if (model.plural) return `${model.quantity} ${model.plural}`;
-    if (model.name) return `${model.quantity} ${model.name}`;
-  } else if (model.name) {
-    return model.name;
-  }
-  const prop = (PROPERTIES as any)[model.type];
-  return prop && prop.name;
-});
-
-const totalValue = computed(() =>
-  stripFloatingPointOddities(props.model!.value * props.model!.quantity)
-);
-
-const totalWeight = computed(() =>
-  stripFloatingPointOddities(props.model!.weight * props.model!.quantity)
-);
-
-const attunementText = computed(() => {
-  if (props.model?.requiresAttunement) {
-    if (props.model.attuned) return 'Attuned';
-    return 'Requires attunement';
-  }
-  return undefined;
-});
-</script>
 
 <style lang="css" scoped>
 .item-avatar {

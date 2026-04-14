@@ -1,37 +1,3 @@
-<template>
-  <v-card :data-id="`${model._id}-archive-card`">
-    <v-card-title>
-      {{ model.meta.creatureName }}
-    </v-card-title>
-    <v-card-subtitle>
-      {{ model.size }}
-    </v-card-subtitle>
-    <v-card-actions>
-      <v-btn
-        v-if="characterSlots > 0"
-        variant="text"
-        :loading="restoreLoading"
-        @click="restore(model._id)"
-      >
-        Restore
-      </v-btn>
-      <div class="flex" />
-      <v-btn
-        icon
-        @click="removeArchiveCharacter"
-      >
-        <v-icon>mdi-delete</v-icon>
-      </v-btn>
-      <v-btn
-        icon
-        :href="`${model.link}?download=true`"
-      >
-        <v-icon>mdi-download</v-icon>
-      </v-btn>
-    </v-card-actions>
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -82,3 +48,37 @@ function removeArchiveCharacter() {
   });
 }
 </script>
+
+<template>
+  <v-card :data-id="`${model._id}-archive-card`">
+    <v-card-title>
+      {{ model.meta.creatureName }}
+    </v-card-title>
+    <v-card-subtitle>
+      {{ model.size }}
+    </v-card-subtitle>
+    <v-card-actions>
+      <v-btn
+        v-if="characterSlots > 0"
+        variant="text"
+        :loading="restoreLoading"
+        @click="restore(model._id)"
+      >
+        Restore
+      </v-btn>
+      <div class="flex" />
+      <v-btn
+        icon
+        @click="removeArchiveCharacter"
+      >
+        <v-icon>mdi-delete</v-icon>
+      </v-btn>
+      <v-btn
+        icon
+        :href="`${model.link}?download=true`"
+      >
+        <v-icon>mdi-download</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>

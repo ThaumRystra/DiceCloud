@@ -1,7 +1,14 @@
+<script setup lang="ts">
+import { inject } from 'vue';
+
+defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+</script>
+
 <template lang="html">
   <div class="class-level-viewer">
     <v-row
-      density="compact"
+      class="density"
       justify="center"
     >
       <property-field
@@ -28,13 +35,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { inject } from 'vue';
-
-defineProps<{ model: Record<string, any> }>();
-const context = inject<any>('context', {});
-</script>
 
 <style lang="css" scoped>
 

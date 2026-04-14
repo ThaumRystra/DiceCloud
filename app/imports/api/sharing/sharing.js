@@ -18,7 +18,7 @@ const setPublic = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, isPublic }) {
-    let doc = fetchDocByRef(docRef);
+    const doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
     return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { public: isPublic },
@@ -38,7 +38,7 @@ const setReadersCanCopy = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, readersCanCopy }) {
-    let doc = fetchDocByRef(docRef);
+    const doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
     return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { readersCanCopy },
@@ -65,7 +65,7 @@ const updateUserSharePermissions = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, userId, role }) {
-    let doc = fetchDocByRef(docRef);
+    const doc = fetchDocByRef(docRef);
     if (role === 'none') {
       // only assert ownership if you aren't removing yourself
       if (this.userId !== userId) {
@@ -109,14 +109,14 @@ const transferOwnership = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, userId }) {
-    let doc = fetchDocByRef(docRef);
+    const doc = fetchDocByRef(docRef);
     assertOwnership(doc, this.userId);
 
-    let collection = getCollectionByName(docRef.collection);
+    const collection = getCollectionByName(docRef.collection);
 
-    let tier = getUserTier(userId);
+    const tier = getUserTier(userId);
     if (docRef.collection === 'creatures') {
-      let currentCharacterCount = await collection.find({
+      const currentCharacterCount = await collection.find({
         owner: userId,
       }, {
         fields: { _id: 1 },

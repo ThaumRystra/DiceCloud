@@ -1,28 +1,3 @@
-<template>
-  <div
-    v-if="model.name || (properties && properties.length)"
-  >
-    <v-card
-      class="folder-group-card pb-2"
-    >
-      <v-list-subheader v-if="model.name">
-        {{ model.name }}
-      </v-list-subheader>
-      <component
-        :is="propComponents[prop.type]"
-        v-for="prop in properties"
-        :key="prop._id"
-        :model="prop"
-        :data-id="prop._id"
-        @click="$emit('click-property', {_id: prop._id})"
-        @click-property="e => $emit('click-property', e)"
-        @sub-click="e => $emit('sub-click', e)"
-        @remove="id => $emit('remove', id || prop._id)"
-      />
-    </v-card>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -64,6 +39,31 @@ const { result: properties } = autorun(() => {
   return result;
 });
 </script>
+
+<template>
+  <div
+    v-if="model.name || (properties && properties.length)"
+  >
+    <v-card
+      class="folder-group-card pb-2"
+    >
+      <v-list-subheader v-if="model.name">
+        {{ model.name }}
+      </v-list-subheader>
+      <component
+        :is="propComponents[prop.type]"
+        v-for="prop in properties"
+        :key="prop._id"
+        :model="prop"
+        :data-id="prop._id"
+        @click="$emit('click-property', {_id: prop._id})"
+        @click-property="e => $emit('click-property', e)"
+        @sub-click="e => $emit('sub-click', e)"
+        @remove="id => $emit('remove', id || prop._id)"
+      />
+    </v-card>
+  </div>
+</template>
 
 <style>
 .folder-group-card .v-card {

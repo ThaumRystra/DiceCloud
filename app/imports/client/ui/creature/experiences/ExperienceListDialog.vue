@@ -1,3 +1,76 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
+import { format } from 'date-fns';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import { Meteor } from 'meteor/meteor';
+import Experiences, { removeExperience as removeExperienceMethod, recomputeExperiences } from '/imports/api/creature/experience/Experiences';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  creatureId: string;
+  startAsMilestone?: boolean;
+}>();
+
+const store = useStore(key);
+const experiencesRemovalLoading = ref(new Set<string>());
+const recomputeLoading = ref(false);
+
+const { result: experiencesSubReady } = autorun(() => {
+  const handle = Meteor.subscribe('experiences', props.creatureId);
+  return handle.ready();
+});
+
+const { result: experiences } = autorun(() =>
+  Experiences.find({ creatureId: props.creatureId }, { sort: { date: 1 } }).fetch()
+);
+
+function xpText(experience: any) {
+  const xpTextParts: string[] = [];
+  if (experience.levels === 1) xpTextParts.push('1 Milestone level');
+  else if (experience.levels) xpTextParts.push(`${experience.levels} Milestone levels`);
+  if (experience.xp || !experience.levels) xpTextParts.push(`${experience.xp || 0} XP`);
+  return xpTextParts.join(', ');
+}
+
+function formatDate(date: Date) {
+  return format(date, 'yyyy-MM-dd');
+}
+
+async function removeExperience(experienceId: string) {
+  experiencesRemovalLoading.value.add(experienceId);
+  try {
+    await removeExperienceMethod.callAsync({ experienceId });
+  } catch (error) {
+    console.error(error);
+  }
+  experiencesRemovalLoading.value.delete(experienceId);
+}
+
+async function recompute() {
+  recomputeLoading.value = true;
+  try {
+    await recomputeExperiences.callAsync({ creatureId: props.creatureId });
+  } catch (error) {
+    console.error(error);
+  }
+  recomputeLoading.value = false;
+}
+
+function addExperience() {
+  store.commit('pushDialogStack', {
+    component: 'experience-insert-dialog',
+    elementId: 'experience-add-button',
+    data: {
+      creatureIds: [props.creatureId],
+      startAsMilestone: props.startAsMilestone,
+    },
+    callback(id: string) { return id; },
+  });
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -81,79 +154,6 @@
     </v-list>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
-import { format } from 'date-fns';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { Meteor } from 'meteor/meteor';
-import Experiences, { removeExperience as removeExperienceMethod, recomputeExperiences } from '/imports/api/creature/experience/Experiences';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  creatureId: string;
-  startAsMilestone?: boolean;
-}>();
-
-const store = useStore(key);
-const experiencesRemovalLoading = ref(new Set<string>());
-const recomputeLoading = ref(false);
-
-const { result: experiencesSubReady } = autorun(() => {
-  const handle = Meteor.subscribe('experiences', props.creatureId);
-  return handle.ready();
-});
-
-const { result: experiences } = autorun(() =>
-  Experiences.find({ creatureId: props.creatureId }, { sort: { date: 1 } }).fetch()
-);
-
-function xpText(experience: any) {
-  const xpTextParts: string[] = [];
-  if (experience.levels === 1) xpTextParts.push('1 Milestone level');
-  else if (experience.levels) xpTextParts.push(`${experience.levels} Milestone levels`);
-  if (experience.xp || !experience.levels) xpTextParts.push(`${experience.xp || 0} XP`);
-  return xpTextParts.join(', ');
-}
-
-function formatDate(date: Date) {
-  return format(date, 'yyyy-MM-dd');
-}
-
-async function removeExperience(experienceId: string) {
-  experiencesRemovalLoading.value.add(experienceId);
-  try {
-    await removeExperienceMethod.callAsync({ experienceId });
-  } catch (error) {
-    console.error(error);
-  }
-  experiencesRemovalLoading.value.delete(experienceId);
-}
-
-async function recompute() {
-  recomputeLoading.value = true;
-  try {
-    await recomputeExperiences.callAsync({ creatureId: props.creatureId });
-  } catch (error) {
-    console.error(error);
-  }
-  recomputeLoading.value = false;
-}
-
-function addExperience() {
-  store.commit('pushDialogStack', {
-    component: 'experience-insert-dialog',
-    elementId: 'experience-add-button',
-    data: {
-      creatureIds: [props.creatureId],
-      startAsMilestone: props.startAsMilestone,
-    },
-    callback(id: string) { return id; },
-  });
-}
-</script>
 
 <style lang="css">
 .big-icon,

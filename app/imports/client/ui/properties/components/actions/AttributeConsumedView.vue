@@ -1,3 +1,15 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+}>(), {
+  model: () => ({}),
+});
+
+const insufficient = computed(() => props.model.quantity > props.model.available);
+</script>
+
 <template lang="html">
   <div
     class="d-flex align-center justify-start"
@@ -24,15 +36,3 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = withDefaults(defineProps<{
-  model?: Record<string, any>;
-}>(), {
-  model: () => ({}),
-});
-
-const insufficient = computed(() => props.model.quantity > props.model.available);
-</script>

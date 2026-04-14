@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="reference-viewer">
     <v-row>
@@ -13,7 +19,7 @@
       >
         <div style="overflow: hidden; min-width: 100%; min-height: 100%;">
           <v-btn
-            plain
+            variant="plain"
             class="normal-text"
             style="min-width: 100%; min-height: 100%;"
             :to="(model.cache.library && model.cache.library.id) ? `/library/${model.cache.library.id}` : undefined"
@@ -36,7 +42,7 @@
       >
         <div style="overflow: hidden; min-width: 100%; min-height: 100%;">
           <v-btn
-            plain
+            variant="plain"
             height="56"
             class="normal-text"
             style="min-width: 100%; min-height: 100%;"
@@ -51,12 +57,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-
-defineProps<{ model: Record<string, any> }>();
-</script>
 
 <style lang="css">
   .reference-viewer .normal-text {

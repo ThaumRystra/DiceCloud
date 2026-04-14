@@ -1,18 +1,3 @@
-<template lang="html">
-  <v-textarea
-    v-bind="$attrs"
-    :loading="loading"
-    :error-messages="errors"
-    :model-value="safeValue"
-    :disabled="isDisabled"
-    :auto-grow="autoGrow"
-    variant="outlined"
-    @update:model-value="input"
-    @focus="focused = true"
-    @blur="focused = false"
-  />
-</template>
-
 <script setup lang="ts">
 import { useAttrs } from 'vue';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
@@ -36,3 +21,18 @@ const emit = defineEmits<{
 const attrs = useAttrs();
 const { loading, errors, safeValue, isDisabled, focused, input } = useSmartInput(props, emit, attrs);
 </script>
+
+<template lang="html">
+  <v-textarea
+    v-bind="$attrs"
+    :loading="loading"
+    :error-messages="errors"
+    :model-value="safeValue"
+    :disabled="isDisabled"
+    :auto-grow="autoGrow"
+    variant="outlined"
+    @update:model-value="input"
+    @focus="focused = true"
+    @blur="focused = false"
+  />
+</template>

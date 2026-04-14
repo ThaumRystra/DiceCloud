@@ -1,27 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="inline-proficiency layout align-center"
-    :class="{'text-disabled': model.overridden}"
-    density="compact"
-    @click="click"
-  >
-    <div class="effect-icon">
-      <proficiency-icon
-        :value="model.proficiency"
-        class="prof-icon"
-      />
-    </div>
-    <v-list-item-title>
-      <span
-        class="effect-value mr-2"
-      >
-        {{ displayedValue }}
-      </span>
-      {{ displayedText }}
-    </v-list-item-title>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -49,6 +25,30 @@ function click(e: Event) {
   emit('click', e);
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="inline-proficiency layout align-center"
+    :class="{'text-disabled': model.overridden}"
+    density="compact"
+    @click="click"
+  >
+    <div class="effect-icon">
+      <proficiency-icon
+        :value="model.proficiency"
+        class="prof-icon"
+      />
+    </div>
+    <v-list-item-title>
+      <span
+        class="effect-value mr-2"
+      >
+        {{ displayedValue }}
+      </span>
+      {{ displayedText }}
+    </v-list-item-title>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
   .icon, .effect-icon {

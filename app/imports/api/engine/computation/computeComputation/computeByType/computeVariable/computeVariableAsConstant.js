@@ -1,7 +1,7 @@
 import { parse } from '/imports/parser/parser';
 
 export default function computeVariableAsConstant(computation, node, prop) {
-  let string = prop.calculation;
+  const string = prop.calculation;
   if (!string) return;
   let parseNode;
   try {

@@ -1,3 +1,12 @@
+<script setup lang="ts">
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+defineEmits(['change']);
+</script>
+
 <template lang="html">
   <v-row dense>
     <v-col
@@ -26,12 +35,3 @@
     </v-col>
   </v-row>
 </template>
-
-<script setup lang="ts">
-withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-defineEmits(['change']);
-</script>

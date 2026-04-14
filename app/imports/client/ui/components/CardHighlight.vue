@@ -1,11 +1,3 @@
-<template lang="html">
-  <div
-    v-if="dark || theme.isDark"
-    class="overlay"
-    :class="{active, 'extra-bright': dark && !theme.isDark}"
-  />
-</template>
-
 <script setup lang="ts">
 import { inject } from 'vue';
 
@@ -16,6 +8,14 @@ defineProps<{
   dark?: boolean;
 }>();
 </script>
+
+<template lang="html">
+  <div
+    v-if="dark || theme.isDark"
+    class="overlay"
+    :class="{active, 'extra-bright': dark && !theme.isDark}"
+  />
+</template>
 
 <style lang="css" scoped>
   .overlay {

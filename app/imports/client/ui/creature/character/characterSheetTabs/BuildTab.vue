@@ -1,187 +1,3 @@
-<template lang="html">
-  <v-container fluid>
-    <v-row dense>
-      <v-col cols="12">
-        <character-errors
-          class="mt-4"
-          :creature-id="creatureId"
-        />
-      </v-col>
-    </v-row>
-    <v-row dense>
-      <slot-cards-to-fill :creature-id="creatureId" />
-    </v-row>
-    <v-row dense>
-      <v-col
-        v-for="folder in startFolders"
-        :key="folder._id"
-        v-bind="cols"
-      >
-        <folder-group-card
-          :model="folder"
-          @click-property="clickProperty"
-          @sub-click="_id => clickTreeProperty({ _id })"
-          @remove="softRemove"
-        />
-      </v-col>
-      <v-col v-bind="cols">
-        <v-card class="pb-4">
-          <v-card-title style="height: 68px;">
-            Slots
-            <v-spacer />
-            <v-scale-transition>
-              <v-menu
-                bottom
-                left
-                transition="slide-y-transition"
-              >
-                <template #activator="{ props }">
-                  <v-badge
-                    v-show="hiddenCount"
-                    color="primary"
-                    overlap
-                    :value="hiddenCount"
-                    :content="hiddenCount"
-                  >
-                    <v-btn
-                      icon
-                      v-bind="props"
-                    >
-                      <v-icon>mdi-file-hidden</v-icon>
-                    </v-btn>
-                  </v-badge>
-                </template>
-                <v-list>
-                  <v-list-subheader>
-                    <v-icon class="mr-2">
-                      mdi-file-hidden
-                    </v-icon>
-                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'properties' : 'property' }}
-                  </v-list-subheader>
-                  <v-list-item
-                    v-for="pointBuy in hiddenPointBuys"
-                    :key="pointBuy._id"
-                    @click="unhideProp(pointBuy._id)"
-                  >
-                    <v-list-item-title>
-                      {{ getPropertyTitle(pointBuy) }}
-                    </v-list-item-title>
-                  </v-list-item>
-                  <v-list-item
-                    v-for="slot in hiddenSlots"
-                    :key="slot._id"
-                    @click="unhideProp(slot._id)"
-                  >
-                    <v-list-item-title>
-                      {{ getPropertyTitle(slot) }}
-                    </v-list-item-title>
-                  </v-list-item>
-                </v-list>
-              </v-menu>
-            </v-scale-transition>
-          </v-card-title>
-          <build-tree-node-list
-            :children="slotBuildTree"
-            class="mx-2"
-            @selected="_id => propertyClicked({ _id, prefix: 'tree-node-' })"
-          />
-        </v-card>
-      </v-col>
-      <v-col v-bind="cols">
-        <v-card class="class-details mb-2">
-          <v-card-title
-            v-if="variables.level"
-            class="text-h6"
-          >
-            Level {{ variables.level.value }}
-          </v-card-title>
-          <v-list lines="two">
-            <v-list-item>
-              <v-list-item-title v-if="
-                variables.milestoneLevels &&
-                variables.milestoneLevels.value
-              ">
-                {{ variables.milestoneLevels.value }} Milestone levels
-              </v-list-item-title>
-              <v-list-item-title v-if="
-                !(variables.milestoneLevels &&
-                  variables.milestoneLevels.value) ||
-                (variables.xp &&
-                  variables.xp.value)
-              ">
-                {{
-                  variables.xp &&
-                  variables.xp.value ||
-                  0
-                }} XP
-              </v-list-item-title>
-              <template #append>
-                <v-btn
-                  icon
-                  data-id="experience-info-button"
-                  @click="showExperienceList"
-                >
-                  <v-icon>mdi-information-outline</v-icon>
-                </v-btn>
-                <v-btn
-                  icon
-                  data-id="experience-add-button"
-                  @click="addExperience"
-                >
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
-              </template>
-            </v-list-item>
-            <v-list-item
-              v-for="cls in classes"
-              :key="cls._id"
-              :data-id="`class-${cls._id}`"
-              v-on="cls.type === 'class' ? { click: () => propertyClicked({ _id: cls._id, prefix: 'class-' }) } : {}"
-            >
-              <v-list-item-title>
-                {{ cls.name }}
-              </v-list-item-title>
-              <template #prepend>
-                {{ cls.level }}
-              </template>
-              <template #append>
-                <v-btn
-                  v-if="cls.type === 'class'"
-                  variant="outlined"
-                  color="accent"
-                  data-id="level-up-btn"
-                  :disabled="cls.slotCondition && cls.slotCondition.hasOwnProperty('value') && !cls.slotCondition.value"
-                  @click.stop="levelUpDialog(cls._id)"
-                  prepend-icon="mdi-plus"
-                >
-                  <template v-if="cls.missingLevels && cls.missingLevels.length">
-                    Get Missing Levels
-                  </template>
-                  <template v-else>
-                    Level Up
-                  </template>
-                </v-btn>
-              </template>
-            </v-list-item>
-          </v-list>
-        </v-card>
-      </v-col>
-      <v-col
-        v-for="folder in endFolders"
-        :key="folder._id"
-        v-bind="cols"
-      >
-        <folder-group-card
-          :model="folder"
-          @click-property="clickProperty"
-          @sub-click="_id => clickTreeProperty({ _id })"
-          @remove="softRemove"
-        />
-      </v-col>
-    </v-row>
-  </v-container>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -457,5 +273,193 @@ async function unhideProp(_id: string) {
   }
 }
 </script>
+
+<template lang="html">
+  <v-container fluid>
+    <v-row dense>
+      <v-col cols="12">
+        <character-errors
+          class="mt-4"
+          :creature-id="creatureId"
+        />
+      </v-col>
+    </v-row>
+    <v-row dense>
+      <slot-cards-to-fill :creature-id="creatureId" />
+    </v-row>
+    <v-row dense>
+      <v-col
+        v-for="folder in startFolders"
+        :key="folder._id"
+        v-bind="cols"
+      >
+        <folder-group-card
+          :model="folder"
+          @click-property="clickProperty"
+          @sub-click="_id => clickTreeProperty({ _id })"
+          @remove="softRemove"
+        />
+      </v-col>
+      <v-col v-bind="cols">
+        <v-card class="pb-4">
+          <v-card-title style="height: 68px;">
+            Slots
+            <v-spacer />
+            <v-scale-transition>
+              <v-menu
+                location="bottom left"
+                
+                transition="slide-y-transition"
+              >
+                <template #activator="{ props }">
+                  <v-badge
+                    v-show="hiddenCount"
+                    color="primary"
+                    overlap
+                    :model-value="hiddenCount"
+                    :content="hiddenCount"
+                  >
+                    <v-btn
+                      icon
+                      v-bind="props"
+                    >
+                      <v-icon>mdi-file-hidden</v-icon>
+                    </v-btn>
+                  </v-badge>
+                </template>
+                <v-list>
+                  <v-list-subheader>
+                    <v-icon class="mr-2">
+                      mdi-file-hidden
+                    </v-icon>
+                    {{ hiddenCount }} hidden {{ hiddenCount > 1 ? 'properties' : 'property' }}
+                  </v-list-subheader>
+                  <v-list-item
+                    v-for="pointBuy in hiddenPointBuys"
+                    :key="pointBuy._id"
+                    @click="unhideProp(pointBuy._id)"
+                  >
+                    <v-list-item-title>
+                      {{ getPropertyTitle(pointBuy) }}
+                    </v-list-item-title>
+                  </v-list-item>
+                  <v-list-item
+                    v-for="slot in hiddenSlots"
+                    :key="slot._id"
+                    @click="unhideProp(slot._id)"
+                  >
+                    <v-list-item-title>
+                      {{ getPropertyTitle(slot) }}
+                    </v-list-item-title>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+            </v-scale-transition>
+          </v-card-title>
+          <build-tree-node-list
+            :children="slotBuildTree"
+            class="mx-2"
+            @selected="_id => propertyClicked({ _id, prefix: 'tree-node-' })"
+          />
+        </v-card>
+      </v-col>
+      <v-col v-bind="cols">
+        <v-card class="class-details mb-2">
+          <v-card-title
+            v-if="variables.level"
+            class="text-h6"
+          >
+            Level {{ variables.level.value }}
+          </v-card-title>
+          <v-list lines="two">
+            <v-list-item>
+              <v-list-item-title
+                v-if="
+                  variables.milestoneLevels &&
+                    variables.milestoneLevels.value
+                "
+              >
+                {{ variables.milestoneLevels.value }} Milestone levels
+              </v-list-item-title>
+              <v-list-item-title
+                v-if="
+                  !(variables.milestoneLevels &&
+                    variables.milestoneLevels.value) ||
+                    (variables.xp &&
+                      variables.xp.value)
+                "
+              >
+                {{
+                  variables.xp &&
+                    variables.xp.value ||
+                    0
+                }} XP
+              </v-list-item-title>
+              <template #append>
+                <v-btn
+                  icon
+                  data-id="experience-info-button"
+                  @click="showExperienceList"
+                >
+                  <v-icon>mdi-information-outline</v-icon>
+                </v-btn>
+                <v-btn
+                  icon
+                  data-id="experience-add-button"
+                  @click="addExperience"
+                >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn>
+              </template>
+            </v-list-item>
+            <v-list-item
+              v-for="cls in classes"
+              :key="cls._id"
+              :data-id="`class-${cls._id}`"
+              v-on="cls.type === 'class' ? { click: () => propertyClicked({ _id: cls._id, prefix: 'class-' }) } : {}"
+            >
+              <v-list-item-title>
+                {{ cls.name }}
+              </v-list-item-title>
+              <template #prepend>
+                {{ cls.level }}
+              </template>
+              <template #append>
+                <v-btn
+                  v-if="cls.type === 'class'"
+                  variant="outlined"
+                  color="accent"
+                  data-id="level-up-btn"
+                  :disabled="cls.slotCondition && cls.slotCondition.hasOwnProperty('value') && !cls.slotCondition.value"
+                  prepend-icon="mdi-plus"
+                  @click.stop="levelUpDialog(cls._id)"
+                >
+                  <template v-if="cls.missingLevels && cls.missingLevels.length">
+                    Get Missing Levels
+                  </template>
+                  <template v-else>
+                    Level Up
+                  </template>
+                </v-btn>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-card>
+      </v-col>
+      <v-col
+        v-for="folder in endFolders"
+        :key="folder._id"
+        v-bind="cols"
+      >
+        <folder-group-card
+          :model="folder"
+          @click-property="clickProperty"
+          @sub-click="_id => clickTreeProperty({ _id })"
+          @remove="softRemove"
+        />
+      </v-col>
+    </v-row>
+  </v-container>
+</template>
 
 <style lang="css" scoped></style>

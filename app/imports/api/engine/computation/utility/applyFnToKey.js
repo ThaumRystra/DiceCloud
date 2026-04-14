@@ -46,7 +46,7 @@ function applyToArrayKey(doc, key, fn) {
   while (stack.length) {
     const state = stack.pop();
     if (!state) break;
-    for (let index in state.array) {
+    for (const index in state.array) {
       const currentPath = `${state.currentPath}[${index}]${state.paths[0]}`
       if (state.paths.length == 1) {
         applyToSingleKey(doc, currentPath, fn);
@@ -78,7 +78,7 @@ async function applyToArrayKeyAsync(doc, key, fn) {
   while (stack.length) {
     const state = stack.pop();
     if (!state) break;
-    for (let index in state.array) {
+    for (const index in state.array) {
       const currentPath = `${state.currentPath}[${index}]${state.paths[0]}`
       if (state.paths.length == 1) {
         await applyToSingleKey(doc, currentPath, fn);

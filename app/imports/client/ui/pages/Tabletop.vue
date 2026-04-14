@@ -1,12 +1,21 @@
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import Tabletops from '/imports/api/tabletop/Tabletops';
+import TabletopComponent from '/imports/client/ui/tabletop/TabletopComponent.vue';
+
+const route = useRoute();
+const { ready: tabletopReady } = subscribe(() => ['tabletop', route.params.id as string]);
+const { result: tabletop } = autorun(() => Tabletops.findOne(route.params.id as string));
+</script>
+
 <template lang="html">
   <v-fade-transition mode="out-in">
     <v-container
       v-if="!tabletopReady"
       key="Loading"
       fluid
-      class="fill-height"
-      align="center"
-      justify="center"
+      class="fill-height align justify"
     >
       <v-row justify="center">
         <v-col cols="1">
@@ -29,9 +38,7 @@
       v-else
       key="Not Found"
       fluid
-      class="fill-height"
-      align="center"
-      justify="center"
+      class="fill-height align justify"
     >
       <v-row
         class="pa-4"
@@ -47,14 +54,3 @@
     </v-container>
   </v-fade-transition>
 </template>
-
-<script setup lang="ts">
-import { useRoute } from 'vue-router';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import Tabletops from '/imports/api/tabletop/Tabletops';
-import TabletopComponent from '/imports/client/ui/tabletop/TabletopComponent.vue';
-
-const route = useRoute();
-const { ready: tabletopReady } = subscribe(() => ['tabletop', route.params.id as string]);
-const { result: tabletop } = autorun(() => Tabletops.findOne(route.params.id as string));
-</script>

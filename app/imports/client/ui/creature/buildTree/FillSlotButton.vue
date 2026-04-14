@@ -1,18 +1,3 @@
-<template>
-  <v-btn
-    v-if="!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft"
-    :icon="!$slots.default"
-    v-bind="$attrs"
-    :data-id="`slot-add-button-${model._id}`"
-    class="slot-add-button text-accent"
-    @click.stop="fillSlot()"
-  >
-    <slot>
-      <v-icon>mdi-plus</v-icon>
-    </slot>
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { inject } from 'vue';
 import { useStore } from 'vuex';
@@ -28,7 +13,7 @@ const store = useStore(key);
 
 function fillSlot() {
   const slotId = props.model._id;
-  const creatureId = (context as any).creatureId;
+  const creatureId = (context).creatureId;
   store.commit('pushDialogStack', {
     component: 'slot-fill-dialog',
     elementId: `slot-add-button-${slotId}`,
@@ -50,5 +35,20 @@ function fillSlot() {
   });
 }
 </script>
+
+<template>
+  <v-btn
+    v-if="!model.quantityExpected || !model.quantityExpected.value || model.spaceLeft"
+    :icon="!$slots.default"
+    v-bind="$attrs"
+    :data-id="`slot-add-button-${model._id}`"
+    class="slot-add-button text-accent"
+    @click.stop="fillSlot()"
+  >
+    <slot>
+      <v-icon>mdi-plus</v-icon>
+    </slot>
+  </v-btn>
+</template>
 
 <style></style>

@@ -1,48 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        New Collection
-      </v-toolbar-title>
-    </template>
-    <template>
-      <text-field
-        label="Name"
-        :value="libraryCollection.name"
-        :debounce-time="0"
-        @change="nameChanged"
-      />
-      <text-area
-        label="Description"
-        :value="libraryCollection.description"
-        :debounce-time="0"
-        @change="descriptionChanged"
-      />
-      <smart-select
-        label="Libraries"
-        :items="libraryOptions"
-        :value="libraryCollection.libraries"
-        :debounce-time="0"
-        multiple
-        chips
-        deletable-chips
-        no-data-text="No libraries found"
-        @change="librariesChanged"
-      />
-    </template>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        :disabled="!valid"
-        @click="$store.dispatch('popDialogStack', libraryCollection)"
-      >
-        Insert Collection
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -93,6 +48,51 @@ function librariesChanged(val: string[], ack: () => void) {
   ack();
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        New Collection
+      </v-toolbar-title>
+    </template>
+    <template>
+      <text-field
+        label="Name"
+        :value="libraryCollection.name"
+        :debounce-time="0"
+        @change="nameChanged"
+      />
+      <text-area
+        label="Description"
+        :value="libraryCollection.description"
+        :debounce-time="0"
+        @change="descriptionChanged"
+      />
+      <smart-select
+        label="Libraries"
+        :items="libraryOptions"
+        :value="libraryCollection.libraries"
+        :debounce-time="0"
+        multiple
+        chips
+        deletable-chips
+        no-data-text="No libraries found"
+        @change="librariesChanged"
+      />
+    </template>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        :disabled="!valid"
+        @click="$store.dispatch('popDialogStack', libraryCollection)"
+      >
+        Insert Collection
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped>
 </style>

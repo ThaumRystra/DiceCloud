@@ -9,7 +9,7 @@ export default async function assertHasCharactersSlots(userId) {
 }
 
 export async function characterSlotsRemainingAsync(userId) {
-  let tier = getUserTier(userId);
+  const tier = getUserTier(userId);
   const currentCharacterCount = await Creatures.find({
     owner: userId,
   }, {
@@ -22,7 +22,7 @@ export async function characterSlotsRemainingAsync(userId) {
 }
 
 export function characterSlotsRemaining(userId) {
-  let tier = getUserTier(userId);
+  const tier = getUserTier(userId);
   const currentCharacterCount = Creatures.find({
     owner: userId,
   }, {

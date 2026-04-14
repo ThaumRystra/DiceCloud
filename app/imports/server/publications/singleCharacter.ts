@@ -10,7 +10,7 @@ import { loadCreature } from '/imports/api/engine/loadCreatures';
 import { rebuildCreatureNestedSets } from '/imports/api/parenting/parentingFunctions';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 
-let schema = new SimpleSchema({
+const schema = new SimpleSchema({
   creatureId: {
     type: String,
     max: 32,
@@ -24,8 +24,8 @@ Meteor.publish('singleCharacter', async function (creatureId) {
     console.warn(e);
     return this.error(e as Error);
   }
-  let userId = this.userId;
-  let permissionCreature = await Creatures.findOneAsync({
+  const userId = this.userId;
+  const permissionCreature = await Creatures.findOneAsync({
     _id: creatureId,
   }, {
     fields: {

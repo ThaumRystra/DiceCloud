@@ -15,9 +15,9 @@ function hexToRgb(hex) {
 }
 
 export default function isDarkColor(hexColor){
-  let rgb = hexToRgb(hexColor);
+  const rgb = hexToRgb(hexColor);
   if (!rgb) return null;
-  let brightness = Math.round(
+  const brightness = Math.round(
     ((rgb.r* 299) + (rgb.g * 587) + (rgb.b * 114))
     / 1000
   );

@@ -1,4 +1,4 @@
-import { computed, type ComputedRef, getCurrentInstance, markRaw, ref, watchEffect } from "vue"
+import { computed, type ComputedRef, getCurrentInstance, markRaw, ref, watchEffect } from 'vue'
 
 interface Stoppable {
   stop: () => void

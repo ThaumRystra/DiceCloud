@@ -1,61 +1,3 @@
-<template lang="html">
-  <toolbar-card
-    :color="model.color"
-    :data-id="model._id"
-    @toolbarclick="clickSpellList(model._id)"
-  >
-    <template #toolbar>
-      <v-toolbar-title v-if="!preparingSpells">
-        {{ model.name }}
-      </v-toolbar-title>
-      <v-spacer v-if="!preparingSpells && preparedError" />
-      <v-toolbar-title
-        v-if="preparingSpells || preparedError"
-        :class="{ 'text-error': preparedError }"
-      >
-        {{ numPrepared }}/{{ model.maxPrepared && model.maxPrepared.value || 0 }} spells prepared
-      </v-toolbar-title>
-      <v-spacer />
-      <v-menu
-        v-if="!preparingSpells"
-        bottom
-        left
-        transition="slide-y-transition"
-        style="margin-right: -12px;"
-      >
-        <template #activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-            @click.stop
-          >
-            <v-icon>mdi-dots-vertical</v-icon>
-          </v-btn>
-        </template>
-        <v-list class="pa-2">
-          <v-switch
-            v-model="preparingSpells"
-            class="ma-2"
-            label="Change prepared spells"
-            hide-details
-          />
-        </v-list>
-      </v-menu>
-      <v-btn
-        v-else
-        icon
-        @click.stop="preparingSpells = false"
-      >
-        <v-icon>mdi-check</v-icon>
-      </v-btn>
-    </template>
-    <spell-list
-      :spells="spells"
-      :preparing-spells="preparingSpells"
-    />
-  </toolbar-card>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -128,5 +70,63 @@ function clickSpellList(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <toolbar-card
+    :color="model.color"
+    :data-id="model._id"
+    @toolbarclick="clickSpellList(model._id)"
+  >
+    <template #toolbar>
+      <v-toolbar-title v-if="!preparingSpells">
+        {{ model.name }}
+      </v-toolbar-title>
+      <v-spacer v-if="!preparingSpells && preparedError" />
+      <v-toolbar-title
+        v-if="preparingSpells || preparedError"
+        :class="{ 'text-error': preparedError }"
+      >
+        {{ numPrepared }}/{{ model.maxPrepared && model.maxPrepared.value || 0 }} spells prepared
+      </v-toolbar-title>
+      <v-spacer />
+      <v-menu
+        v-if="!preparingSpells"
+        location="bottom left"
+        
+        transition="slide-y-transition"
+        style="margin-right: -12px;"
+      >
+        <template #activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+            @click.stop
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+        <v-list class="pa-2">
+          <v-switch
+            v-model="preparingSpells"
+            class="ma-2"
+            label="Change prepared spells"
+            hide-details
+          />
+        </v-list>
+      </v-menu>
+      <v-btn
+        v-else
+        icon
+        @click.stop="preparingSpells = false"
+      >
+        <v-icon>mdi-check</v-icon>
+      </v-btn>
+    </template>
+    <spell-list
+      :spells="spells"
+      :preparing-spells="preparingSpells"
+    />
+  </toolbar-card>
+</template>
 
 <style lang="css" scoped></style>

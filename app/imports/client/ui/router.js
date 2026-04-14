@@ -44,7 +44,7 @@ const DocsRightDrawer = () => import('/imports/client/ui/docs/DocsRightDrawer.vu
 // Not found
 const NotFound = () => import('/imports/client/ui/pages/NotFound.vue');
 
-let userSubscription = Meteor.subscribe('user');
+const userSubscription = Meteor.subscribe('user');
 
 function ensureLoggedIn(to, from, next) {
   Tracker.autorun((computation) => {
@@ -84,7 +84,7 @@ async function claimInvite(to, from, next) {
       computation.stop();
       const user = Meteor.user();
       if (user) {
-        let inviteToken = to.params.inviteToken;
+        const inviteToken = to.params.inviteToken;
         acceptInviteToken.callAsync({
           inviteToken
         }).then(() => {

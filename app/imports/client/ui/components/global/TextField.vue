@@ -1,27 +1,3 @@
-<template lang="html">
-  <v-text-field
-    ref="input"
-    v-bind="$attrs"
-    class="dc-text-field"
-    :loading="loading"
-    :error-messages="errors"
-    :model-value="safeValue"
-    :disabled="isDisabled"
-    :variant="regular ? 'filled' : 'outlined'"
-    @update:model-value="input"
-    @focus="focused = true"
-    @blur="focused = false"
-    @keyup="e => $emit('keyup', e)"
-  >
-    <template #append>
-      <slot name="value" />
-    </template>
-    <template #prepend>
-      <slot name="prepend" />
-    </template>
-  </v-text-field>
-</template>
-
 <script setup lang="ts">
 import { ref, useAttrs } from 'vue';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
@@ -46,6 +22,30 @@ const emit = defineEmits<{
 const attrs = useAttrs();
 const { loading, errors, safeValue, isDisabled, focused, input } = useSmartInput(props, emit, attrs);
 </script>
+
+<template lang="html">
+  <v-text-field
+    ref="input"
+    v-bind="$attrs"
+    class="dc-text-field"
+    :loading="loading"
+    :error-messages="errors"
+    :model-value="safeValue"
+    :disabled="isDisabled"
+    :variant="regular ? 'filled' : 'outlined'"
+    @update:model-value="input"
+    @focus="focused = true"
+    @blur="focused = false"
+    @keyup="e => $emit('keyup', e)"
+  >
+    <template #append>
+      <slot name="value" />
+    </template>
+    <template #prepend>
+      <slot name="prepend" />
+    </template>
+  </v-text-field>
+</template>
 
 <style lang="css">
 .dc-text-field .v-input__append-inner{

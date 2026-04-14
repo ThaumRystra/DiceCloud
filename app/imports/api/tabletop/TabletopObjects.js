@@ -1,9 +1,9 @@
 import SimpleSchema from 'simpl-schema';
 import ChildSchema from '/imports/api/parenting/ChildSchema';
 
-let TabletopObjects = new Mongo.Collection('tabletopObjects');
+const TabletopObjects = new Mongo.Collection('tabletopObjects');
 
-let TabletopObjectSchema = new SimpleSchema({
+const TabletopObjectSchema = new SimpleSchema({
   name: {
     type: String,
     optional: true,

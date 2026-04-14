@@ -66,7 +66,7 @@ const copyPropertyToLibrary = new ValidatedMethod({
 async function insertNodeFromProperty(propId, order, method) {
   // Fetch the property and its descendants, provided they have not been
   // removed
-  let prop = await CreatureProperties.findOneAsync({
+  const prop = await CreatureProperties.findOneAsync({
     _id: propId,
     removed: { $ne: true },
   });
@@ -83,7 +83,7 @@ async function insertNodeFromProperty(propId, order, method) {
   // Make sure we can edit this property
   await assertDocEditPermission(prop, method.userId);
 
-  let oldParentId = prop.parentId;
+  const oldParentId = prop.parentId;
   const descCount = await CreatureProperties.find({
     ...getFilter.descendants(prop),
     removed: { $ne: true },
@@ -179,7 +179,7 @@ function assertSourceLibraryCopyPermission(props, method) {
 
 export function cleanProps(props) {
   return props.map(prop => {
-    let schema = LibraryNodes.simpleSchema(prop);
+    const schema = LibraryNodes.simpleSchema(prop);
     return schema.clean(prop);
   });
 }

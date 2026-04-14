@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
+
+const props = defineProps<{
+  model: Record<string, any>;
+  errors: Record<string, any>;
+  tagField?: string;
+  extraTagsField?: string;
+  tagHint?: string;
+  orHint?: string;
+  notHint?: string;
+}>();
+
+const emit = defineEmits(['change', 'push']);
+
+const addExtraTagsLoading = ref(false);
+
+const maxTags = computed(() => {
+  if (!props.model?.type) return 0;
+  const schema = (propertySchemasIndex as any)[props.model.type];
+  return schema.get(props.extraTagsField ?? 'extraTags', 'maxCount');
+});
+
+const extraTagsFull = computed(() => {
+  const field = props.extraTagsField ?? 'extraTags';
+  if (!props.model[field]) return false;
+  return props.model[field].length >= maxTags.value;
+});
+
+function addExtraTags() {
+  addExtraTagsLoading.value = true;
+  const field = props.extraTagsField ?? 'extraTags';
+  emit('push', {
+    path: [field],
+    value: {
+      _id: Random.id(),
+      operation: 'OR',
+      tags: [],
+    },
+    ack: () => { addExtraTagsLoading.value = false; },
+  });
+}
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+</script>
+
 <template lang="html">
   <div class="tag-targeting">
     <div class="d-flex align-center">
@@ -64,53 +114,3 @@
     </v-slide-x-transition>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
-
-const props = defineProps<{
-  model: Record<string, any>;
-  errors: Record<string, any>;
-  tagField?: string;
-  extraTagsField?: string;
-  tagHint?: string;
-  orHint?: string;
-  notHint?: string;
-}>();
-
-const emit = defineEmits(['change', 'push']);
-
-const addExtraTagsLoading = ref(false);
-
-const maxTags = computed(() => {
-  if (!props.model?.type) return 0;
-  const schema = (propertySchemasIndex as any)[props.model.type];
-  return schema.get(props.extraTagsField ?? 'extraTags', 'maxCount');
-});
-
-const extraTagsFull = computed(() => {
-  const field = props.extraTagsField ?? 'extraTags';
-  if (!props.model[field]) return false;
-  return props.model[field].length >= maxTags.value;
-});
-
-function addExtraTags() {
-  addExtraTagsLoading.value = true;
-  const field = props.extraTagsField ?? 'extraTags';
-  emit('push', {
-    path: [field],
-    value: {
-      _id: Random.id(),
-      operation: 'OR',
-      tags: [],
-    },
-    ack: () => { addExtraTagsLoading.value = false; },
-  });
-}
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-</script>

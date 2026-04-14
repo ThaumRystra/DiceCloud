@@ -1,3 +1,28 @@
+<script setup lang="ts">
+import { ref, computed, useAttrs } from 'vue';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
+
+const props = withDefaults(defineProps<{
+  color?: string;
+  transparentToolbar?: boolean;
+}>(), {
+  color: () => getThemeColor('secondary'),
+});
+
+const attrs = useAttrs();
+const hovering = ref(false);
+
+const isDark = computed(() => isDarkColor(props.color));
+const hasClickListener = computed(() => !!attrs.onClick);
+const hasToolbarClickListener = computed(() => !!attrs.onToolbarclick);
+
+function hoverToolbar(val: boolean) {
+  hovering.value = !!attrs.onToolbarclick && val;
+}
+</script>
+
 <template lang="html">
   <v-card
     :hover="hasClickListener"
@@ -24,31 +49,6 @@
     <card-highlight :active="hovering" />
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, useAttrs } from 'vue';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor';
-import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
-
-const props = withDefaults(defineProps<{
-  color?: string;
-  transparentToolbar?: boolean;
-}>(), {
-  color: () => getThemeColor('secondary'),
-});
-
-const attrs = useAttrs();
-const hovering = ref(false);
-
-const isDark = computed(() => isDarkColor(props.color));
-const hasClickListener = computed(() => !!attrs.onClick);
-const hasToolbarClickListener = computed(() => !!attrs.onToolbarclick);
-
-function hoverToolbar(val: boolean) {
-  hovering.value = !!attrs.onToolbarclick && val;
-}
-</script>
 
 <style lang="css">
 .toolbar-card .v-toolbar__title {

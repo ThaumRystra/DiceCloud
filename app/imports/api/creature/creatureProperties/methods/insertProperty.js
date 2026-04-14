@@ -95,7 +95,7 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
 
     // Add the folder first if we need to
     if (insertFolderFirst) {
-      let id = await CreatureProperties.insertAsync({
+      const id = await CreatureProperties.insertAsync({
         type: 'folder',
         name: tagDefaultName || (tag.charAt(0).toUpperCase() + tag.slice(1)),
         tags: [tag],
@@ -116,7 +116,7 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
 export async function insertPropertyWork(property) {
   delete property._id;
   property.dirty = true;
-  let _id = await CreatureProperties.insertAsync(property);
+  const _id = await CreatureProperties.insertAsync(property);
   // Tree structure changed by insert, reorder the tree
   await rebuildNestedSets(CreatureProperties, property.root.id);
   return _id;

@@ -1,29 +1,3 @@
-<template lang="html">
-  <v-fade-transition hide-on-leave>
-    <tree-node-list
-      v-if="slowShouldSubscribe && libraryNodesReady"
-      group="library"
-      :children="libraryChildren"
-      :organize="organizeMode"
-      :selected-node="selectedNode"
-      :root="{collection: 'libraries', id: libraryId}"
-      @selected="e => $emit('selected', e)"
-      @move-within-root="moveWithinRoot"
-      @move-between-roots="moveBetweenRoots"
-    />
-    <div
-      v-else
-      class="d-flex align-center justify-center"
-      style="width: 100%;"
-    >
-      <v-progress-circular
-        color="primary"
-        :indeterminate="slowShouldSubscribe"
-      />
-    </div>
-  </v-fade-transition>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
@@ -95,6 +69,32 @@ function moveBetweenRoots({ doc, newPosition, newRootRef }: any) {
   });
 }
 </script>
+
+<template lang="html">
+  <v-fade-transition hide-on-leave>
+    <tree-node-list
+      v-if="slowShouldSubscribe && libraryNodesReady"
+      group="library"
+      :children="libraryChildren"
+      :organize="organizeMode"
+      :selected-node="selectedNode"
+      :root="{collection: 'libraries', id: libraryId}"
+      @selected="e => $emit('selected', e)"
+      @move-within-root="moveWithinRoot"
+      @move-between-roots="moveBetweenRoots"
+    />
+    <div
+      v-else
+      class="d-flex align-center justify-center"
+      style="width: 100%;"
+    >
+      <v-progress-circular
+        color="primary"
+        :indeterminate="slowShouldSubscribe"
+      />
+    </div>
+  </v-fade-transition>
+</template>
 
 <style lang="css" scoped>
 

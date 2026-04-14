@@ -1,41 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-icon class="mr-2">
-        mdi-help
-      </v-icon>
-      <v-toolbar-title>
-        Help: {{ title }}
-      </v-toolbar-title>
-    </template>
-    <div>
-      <v-progress-circular
-        v-if="!doc && !docsReady"
-        indeterminate
-        color="primary"
-        size="32"
-      />
-      <div v-else-if="!doc">
-        Help document not found for {{ title }}
-      </div>
-      <markdown-text
-        v-else
-        :markdown="doc"
-        @click="linkClick"
-      />
-    </div>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        @click="store.dispatch('popDialogStack')"
-      >
-        Close
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -91,3 +53,41 @@ function linkClick(e: Event) {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-icon class="mr-2">
+        mdi-help
+      </v-icon>
+      <v-toolbar-title>
+        Help: {{ title }}
+      </v-toolbar-title>
+    </template>
+    <div>
+      <v-progress-circular
+        v-if="!doc && !docsReady"
+        indeterminate
+        color="primary"
+        size="32"
+      />
+      <div v-else-if="!doc">
+        Help document not found for {{ title }}
+      </div>
+      <markdown-text
+        v-else
+        :markdown="doc"
+        @click="linkClick"
+      />
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="store.dispatch('popDialogStack')"
+      >
+        Close
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>

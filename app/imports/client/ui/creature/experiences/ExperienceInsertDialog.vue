@@ -1,32 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        Add Experience
-      </v-toolbar-title>
-    </template>
-    <experience-form
-      :start-as-milestone="startAsMilestone"
-      :model="model"
-      :errors="errors"
-      @change="change"
-      @push="push"
-      @pull="pull"
-    />
-    <template #actions>
-      <div class="d-flex justify-end">
-        <v-btn
-          variant="text"
-          :disabled="!valid"
-          @click="insertExperience"
-        >
-          Insert
-        </v-btn>
-      </div>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, provide } from 'vue';
 import { useStore } from 'vuex';
@@ -118,5 +89,34 @@ async function insertExperienceFn() {
   }
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        Add Experience
+      </v-toolbar-title>
+    </template>
+    <experience-form
+      :start-as-milestone="startAsMilestone"
+      :model="model"
+      :errors="errors"
+      @change="change"
+      @push="push"
+      @pull="pull"
+    />
+    <template #actions>
+      <div class="d-flex justify-end">
+        <v-btn
+          variant="text"
+          :disabled="!valid"
+          @click="insertExperience"
+        >
+          Insert
+        </v-btn>
+      </div>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

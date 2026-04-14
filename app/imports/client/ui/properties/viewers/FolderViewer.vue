@@ -1,8 +1,10 @@
+<script setup lang="ts">
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="folder-viewer">
-    <v-row
-      density="compact"
-    >
+    <v-row class="density">
       <property-field
         name="Name"
         :value="model.name"
@@ -14,10 +16,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{ model: Record<string, any> }>();
-</script>
 
 <style lang="css" scoped>
 

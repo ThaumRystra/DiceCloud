@@ -1,40 +1,3 @@
-<template lang="html">
-  <div
-    style="height: 100%; overflow: hidden;"
-    class="character-log layout column justify-end"
-  >
-    <v-slide-y-reverse-transition
-      group
-      hide-on-leave
-      class="card-raised-background flex layout column reverse align-end py-3 px-1"
-      style="overflow: auto;"
-    >
-      <tabletop-log-entry
-        v-for="log in logs"
-        :key="log._id"
-        :model="log"
-      />
-    </v-slide-y-reverse-transition>
-    <v-card>
-      <v-text-field
-        v-model="input"
-        class="mx-2 mb-2"
-        persistent-hint
-        style="flex-grow: 0"
-        append-icon="mdi-send"
-        :hint="inputHint"
-        :error-messages="inputError"
-        :disabled="!editPermission"
-        :loading="submitLoading"
-        @click:append="submit"
-        @keyup.enter="submit"
-        @keyup.up="decrementHistory"
-        @keyup.down="incrementHistory"
-      />
-    </v-card>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -162,6 +125,43 @@ function decrementHistory() {
   if (historyIndex.value > 0) historyIndex.value -= 1;
 }
 </script>
+
+<template lang="html">
+  <div
+    style="height: 100%; overflow: hidden;"
+    class="character-log layout column justify-end"
+  >
+    <v-slide-y-reverse-transition
+      group
+      hide-on-leave
+      class="card-raised-background flex layout column reverse align-end py-3 px-1"
+      style="overflow: auto;"
+    >
+      <tabletop-log-entry
+        v-for="log in logs"
+        :key="log._id"
+        :model="log"
+      />
+    </v-slide-y-reverse-transition>
+    <v-card>
+      <v-text-field
+        v-model="input"
+        class="mx-2 mb-2"
+        persistent-hint
+        style="flex-grow: 0"
+        append-icon="mdi-send"
+        :hint="inputHint"
+        :error-messages="inputError"
+        :disabled="!editPermission"
+        :loading="submitLoading"
+        @click:append="submit"
+        @keyup.enter="submit"
+        @keyup.up="decrementHistory"
+        @keyup.down="incrementHistory"
+      />
+    </v-card>
+  </div>
+</template>
 
 <style lang="css">
   .log-tab p:last-child {

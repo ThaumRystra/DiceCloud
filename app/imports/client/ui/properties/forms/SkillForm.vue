@@ -1,3 +1,48 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
+import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
+
+withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const skillTypes = [
+  { text: 'Skill', value: 'skill' },
+  { text: 'Save', value: 'save' },
+  { text: 'Check', value: 'check' },
+  { text: 'Tool', value: 'tool' },
+  { text: 'Weapon', value: 'weapon' },
+  { text: 'Armor', value: 'armor' },
+  { text: 'Language', value: 'language' },
+  { text: 'Utility', value: 'utility' },
+];
+
+const skillTypeHints: Record<string, string> = {
+  skill: 'A normal character sheet skill like Athletics, Deception, or Investigation',
+  save: 'A saving throw the character can make: Strength Save, etc.',
+  check: 'An ability check that might include a proficiency bonus later eg. Initiative',
+  tool: 'A tool proficiency. Be sure to add a base proficiency in the advanced section.',
+  weapon: 'A weapon proficiency. Be sure to add a base proficiency in the advanced section.',
+  armor: 'A armor proficiency. Be sure to add a base proficiency in the advanced section.',
+  language: 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
+  utility: 'A skill that does not show up in the sheet, but can be used by other caclulations',
+};
+
+const { result: abilityScoreList } = autorun(() =>
+  createListOfProperties({ type: 'attribute', attributeType: 'ability' })
+);
+</script>
+
 <template lang="html">
   <div class="skill-form">
     <v-row dense>
@@ -103,51 +148,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import ProficiencySelect from '/imports/client/ui/properties/forms/shared/ProficiencySelect.vue';
-import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
-
-withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const skillTypes = [
-  { text: 'Skill', value: 'skill' },
-  { text: 'Save', value: 'save' },
-  { text: 'Check', value: 'check' },
-  { text: 'Tool', value: 'tool' },
-  { text: 'Weapon', value: 'weapon' },
-  { text: 'Armor', value: 'armor' },
-  { text: 'Language', value: 'language' },
-  { text: 'Utility', value: 'utility' },
-];
-
-const skillTypeHints: Record<string, string> = {
-  skill: 'A normal character sheet skill like Athletics, Deception, or Investigation',
-  save: 'A saving throw the character can make: Strength Save, etc.',
-  check: 'An ability check that might include a proficiency bonus later eg. Initiative',
-  tool: 'A tool proficiency. Be sure to add a base proficiency in the advanced section.',
-  weapon: 'A weapon proficiency. Be sure to add a base proficiency in the advanced section.',
-  armor: 'A armor proficiency. Be sure to add a base proficiency in the advanced section.',
-  language: 'A language proficiency. Be sure to add a base proficiency in the advanced section.',
-  utility: 'A skill that does not show up in the sheet, but can be used by other caclulations',
-};
-
-const { result: abilityScoreList } = autorun(() =>
-  createListOfProperties({ type: 'attribute', attributeType: 'ability' })
-);
-</script>
 
 <style lang="css" scoped>
 

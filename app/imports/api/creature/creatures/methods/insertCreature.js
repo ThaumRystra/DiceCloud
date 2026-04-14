@@ -43,7 +43,7 @@ const insertCreature = new ValidatedMethod({
     await assertHasCharactersSlots(userId);
 
     // Create the creature document
-    let creatureId = await Creatures.insertAsync({
+    const creatureId = await Creatures.insertAsync({
       owner: userId,
       name,
       gender,
@@ -73,7 +73,7 @@ const insertCreature = new ValidatedMethod({
     // Not batchInsert because we want the properties cleaned by the schema
     let baseId, rulesetSlot;
     for (const prop of defaultCharacterProperties(creatureId)) {
-      let id = await CreatureProperties.insertAsync(prop);
+      const id = await CreatureProperties.insertAsync(prop);
       if (prop.name === 'Ruleset') {
         baseId = id;
         rulesetSlot = prop;

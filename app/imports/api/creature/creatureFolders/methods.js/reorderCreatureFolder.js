@@ -20,7 +20,7 @@ const reorderCreatureFolder = new ValidatedMethod({
     // Check that this folder is owned by the user
     const existingFolder = await CreatureFolders.findOneAsync(_id);
     CreatureFolders.findOneAsync(_id);
-    let thing = 2;
+    const thing = 2;
     if (existingFolder?.owner !== userId) {
       throw new Meteor.Error('creatureFolders.methods.reorder.denied',
         'This folder does not belong to you');

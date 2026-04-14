@@ -1,31 +1,3 @@
-<template lang="html">
-  <v-list
-    two-line
-    density="compact"
-    class="spell-list"
-  >
-    <template v-for="spell in computedSpells">
-      <v-list-subheader
-        v-if="spell.isSubheader"
-        :key="`${spell.level}-header`"
-        class="item"
-      >
-        {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
-      </v-list-subheader>
-      <spell-list-tile
-        v-else
-        :key="spell._id"
-        class="item"
-        :disabled="context.editPermission === false"
-        :data-id="`spell-list-tile-${spell._id}`"
-        :model="spell"
-        :preparing-spells="preparingSpells"
-        @click="clickProperty(spell._id)"
-      />
-    </template>
-  </v-list>
-</template>
-
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -54,3 +26,31 @@ function clickProperty(_id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <v-list
+    lines="two"
+    density="compact"
+    class="spell-list"
+  >
+    <template v-for="spell in computedSpells">
+      <v-list-subheader
+        v-if="spell.isSubheader"
+        :key="`${spell.level}-header`"
+        class="item"
+      >
+        {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+      </v-list-subheader>
+      <spell-list-tile
+        v-else
+        :key="spell._id"
+        class="item"
+        :disabled="context.editPermission === false"
+        :data-id="`spell-list-tile-${spell._id}`"
+        :model="spell"
+        :preparing-spells="preparingSpells"
+        @click="clickProperty(spell._id)"
+      />
+    </template>
+  </v-list>
+</template>

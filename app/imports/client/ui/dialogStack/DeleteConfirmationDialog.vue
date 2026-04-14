@@ -1,3 +1,26 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const store = useStore(key);
+
+const props = defineProps<{
+  typeName?: string;
+  name?: string;
+}>();
+
+const inputName = ref<string | undefined>(undefined);
+
+const nameMatch = computed(() => {
+  if (!props.name) return true;
+  const uppername = props.name.toUpperCase();
+  const upperInputName = inputName.value?.toUpperCase();
+  return uppername === upperInputName;
+});
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -24,7 +47,7 @@
       <div class="d-flex justify-center">
         <v-btn
           v-show="nameMatch"
-          class="primary"
+          class="bg-primary"
           @click="store.dispatch('popDialogStack', true)"
         >
           Delete forever
@@ -42,28 +65,5 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const store = useStore(key);
-
-const props = defineProps<{
-  typeName?: string;
-  name?: string;
-}>();
-
-const inputName = ref<string | undefined>(undefined);
-
-const nameMatch = computed(() => {
-  if (!props.name) return true;
-  const uppername = props.name.toUpperCase();
-  const upperInputName = inputName.value?.toUpperCase();
-  return uppername === upperInputName;
-});
-</script>
 
 <style lang="css" scoped></style>

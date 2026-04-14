@@ -1,86 +1,3 @@
-<template>
-  <div
-    class="card-background"
-    style="height: 100%"
-  >
-    <v-container>
-      <v-row
-        justify="center"
-        class="mb-16"
-      >
-        <v-col
-          cols="12"
-          xl="8"
-        >
-          <v-alert
-            v-if="characterSpaceLeft < 0"
-            type="error"
-          >
-            You have exceeded your maximum number of character slots, archive or delete
-            some characters.
-          </v-alert>
-          <v-alert
-            v-else-if="characterSpaceLeft === 0"
-            type="info"
-          >
-            You have hit your maximum number of characters.
-            <archive-button
-              size="small"
-              variant="text"
-              class="mx-2"
-            />
-            or
-            <v-btn
-              href="https://www.patreon.com/join/dicecloud/"
-              class="mx-2"
-              target="_blank"
-              size="small"
-              variant="text"
-              append-icon="mdi-patreon"
-            >
-              Increase Patreon tier
-            </v-btn>
-          </v-alert>
-          <v-card :class="{ 'mb-4': folders && folders.length }">
-            <creature-folder-list
-              :creatures="CreaturesWithNoParty"
-              :folders="folders"
-            />
-          </v-card>
-          <div class="d-flex justify-end mt-2">
-            <v-btn
-              v-if="showImportButton"
-              variant="text"
-              data-id="import-character-button"
-              @click="importCharacter"
-            >
-              import character
-            </v-btn>
-            <v-btn
-              variant="text"
-              :loading="loadingInsertFolder"
-              @click="insertFolder"
-            >
-              add folder
-            </v-btn>
-          </div>
-          <v-btn
-            color="accent"
-            fixed
-            bottom
-            right
-            data-id="new-character-button"
-            :disabled="characterSpaceLeft <= 0"
-            @click="insertCharacter"
-          >
-            <v-icon>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
-      </v-row>
-    </v-container>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -194,3 +111,86 @@ async function insertFolder() {
   loadingInsertFolder.value = false;
 }
 </script>
+
+<template>
+  <div
+    class="card-background"
+    style="height: 100%"
+  >
+    <v-container>
+      <v-row
+        justify="center"
+        class="mb-16"
+      >
+        <v-col
+          cols="12"
+          xl="8"
+        >
+          <v-alert
+            v-if="characterSpaceLeft < 0"
+            type="error"
+          >
+            You have exceeded your maximum number of character slots, archive or delete
+            some characters.
+          </v-alert>
+          <v-alert
+            v-else-if="characterSpaceLeft === 0"
+            type="info"
+          >
+            You have hit your maximum number of characters.
+            <archive-button
+              size="small"
+              variant="text"
+              class="mx-2"
+            />
+            or
+            <v-btn
+              href="https://www.patreon.com/join/dicecloud/"
+              class="mx-2"
+              target="_blank"
+              size="small"
+              variant="text"
+              append-icon="mdi-patreon"
+            >
+              Increase Patreon tier
+            </v-btn>
+          </v-alert>
+          <v-card :class="{ 'mb-4': folders && folders.length }">
+            <creature-folder-list
+              :creatures="CreaturesWithNoParty"
+              :folders="folders"
+            />
+          </v-card>
+          <div class="d-flex justify-end mt-2">
+            <v-btn
+              v-if="showImportButton"
+              variant="text"
+              data-id="import-character-button"
+              @click="importCharacter"
+            >
+              import character
+            </v-btn>
+            <v-btn
+              variant="text"
+              :loading="loadingInsertFolder"
+              @click="insertFolder"
+            >
+              add folder
+            </v-btn>
+          </div>
+          <v-btn
+            color="accent"
+            fixed
+            location="bottom right"
+            
+            data-id="new-character-button"
+            :disabled="characterSpaceLeft <= 0"
+            @click="insertCharacter"
+          >
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
+</template>

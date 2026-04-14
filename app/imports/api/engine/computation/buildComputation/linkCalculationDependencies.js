@@ -23,7 +23,7 @@ export default function linkCalculationDependencies(dependencyGraph, prop, { pro
       if (node.parseType !== 'symbol' && node.parseType !== 'accessor') return;
       // Link ancestor references as direct property dependencies
       if (node.name[0] === '#') {
-        let ancestorProp = getAncestorProp(
+        const ancestorProp = getAncestorProp(
           node.name.slice(1), memo, prop, propsById
         );
         if (!ancestorProp) return;

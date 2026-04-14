@@ -1,3 +1,35 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
+import LibraryList from '/imports/client/ui/library/LibraryList.vue';
+import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
+import Libraries from '/imports/api/library/Libraries';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+
+defineProps<{ selectedNode?: Record<string, any> }>();
+
+const libraryId = ref<string | undefined>(undefined);
+
+const { result: library } = autorun(() => Libraries.findOne(libraryId.value));
+
+const { result: canEditLibrary } = autorun(() => {
+  if (!libraryId.value) return false;
+  try {
+    assertEditPermission(library.value, Meteor.userId());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+autorun(() => {
+  if (libraryId.value) {
+    Meteor.subscribe('library', libraryId.value);
+  }
+});
+</script>
+
 <template lang="html">
   <div class="d-flex flex-column fill-height">
     <v-fade-transition mode="out-in">
@@ -72,38 +104,6 @@
     </v-sheet>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import { Meteor } from 'meteor/meteor';
-import LibraryList from '/imports/client/ui/library/LibraryList.vue';
-import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
-import Libraries from '/imports/api/library/Libraries';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-
-defineProps<{ selectedNode?: Record<string, any> }>();
-
-const libraryId = ref<string | undefined>(undefined);
-
-const { result: library } = autorun(() => Libraries.findOne(libraryId.value));
-
-const { result: canEditLibrary } = autorun(() => {
-  if (!libraryId.value) return false;
-  try {
-    assertEditPermission(library.value, Meteor.userId());
-    return true;
-  } catch (e) {
-    return false;
-  }
-});
-
-autorun(() => {
-  if (libraryId.value) {
-    Meteor.subscribe('library', libraryId.value);
-  }
-});
-</script>
 
 <style lang="css" scoped>
 </style>

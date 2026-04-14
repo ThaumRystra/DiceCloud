@@ -1,3 +1,21 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { tail } from 'lodash';
+import HexagonProgress from '/imports/client/ui/components/HexagonProgress.vue';
+
+const props = defineProps<{
+  bars: {
+    value: number;
+    total: number;
+    color?: string;
+    healthBarColorMid?: string;
+    healthBarColorLow?: string;
+  }[];
+}>();
+
+const tailBars = computed(() => tail(props.bars));
+</script>
+
 <template>
   <div
     v-if="!bars.length"
@@ -19,24 +37,6 @@
     </hexagon-progress-stack>
   </hexagon-progress>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { tail } from 'lodash';
-import HexagonProgress from '/imports/client/ui/components/HexagonProgress.vue';
-
-const props = defineProps<{
-  bars: {
-    value: number;
-    total: number;
-    color?: string;
-    healthBarColorMid?: string;
-    healthBarColorLow?: string;
-  }[];
-}>();
-
-const tailBars = computed(() => tail(props.bars));
-</script>
 
 <style scoped>
 .hexagon-content {

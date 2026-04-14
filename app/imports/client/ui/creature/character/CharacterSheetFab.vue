@@ -1,43 +1,3 @@
-<template lang="html">
-  <div
-    v-bind="$attrs"
-    class="v-speed-dial"
-    :style="!speedDials ? 'visibility: hidden;' : ''"
-    style="position: relative;"
-  >
-    <v-btn
-      color="primary"
-      icon
-      size="small"
-      data-id="insert-creature-property-fab"
-      class="insert-creature-property-fab"
-      @click="fab = !fab"
-    >
-      <v-icon
-        style="transition: transform 0.2s ease-in-out"
-        :style="fab && 'transform: rotate(45deg)'"
-      >
-        mdi-plus
-      </v-icon>
-    </v-btn>
-    <div
-      v-show="fab"
-      class="v-speed-dial__list"
-    >
-      <labeled-fab
-        v-for="type in speedDials"
-        :key="type"
-        color="primary"
-        :data-id="`insert-creature-property-type-${type}`"
-        :label="getPropertyLabel(type)"
-        :icon="type ? properties[type].icon : 'mdi-plus'"
-        :disabled="!editPermission"
-        @click="addProperty(type)"
-      />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -91,7 +51,7 @@ function getParentFromSelectedTreeNode(cId: string) {
 }
 
 function hideFab() {
-  const el = document.querySelector('.insert-creature-property-fab') as HTMLElement | null;
+  const el = document.querySelector('.insert-creature-property-fab');
   if (el) el.style.opacity = '0';
   return el;
 }
@@ -145,6 +105,46 @@ function addProperty(forcedType: string | null) {
   });
 }
 </script>
+
+<template lang="html">
+  <div
+    v-bind="$attrs"
+    class="v-speed-dial"
+    :style="!speedDials ? 'visibility: hidden;' : ''"
+    style="position: relative;"
+  >
+    <v-btn
+      color="primary"
+      icon
+      size="small"
+      data-id="insert-creature-property-fab"
+      class="insert-creature-property-fab"
+      @click="fab = !fab"
+    >
+      <v-icon
+        style="transition: transform 0.2s ease-in-out"
+        :style="fab && 'transform: rotate(45deg)'"
+      >
+        mdi-plus
+      </v-icon>
+    </v-btn>
+    <div
+      v-show="fab"
+      class="v-speed-dial__list"
+    >
+      <labeled-fab
+        v-for="type in speedDials"
+        :key="type"
+        color="primary"
+        :data-id="`insert-creature-property-type-${type}`"
+        :label="getPropertyLabel(type)"
+        :icon="type ? properties[type].icon : 'mdi-plus'"
+        :disabled="!editPermission"
+        @click="addProperty(type)"
+      />
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .insert-creature-property-fab {

@@ -1,3 +1,42 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
+import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any>;
+  collection?: string;
+}>(), {
+  model: undefined,
+  collection: 'creatureProperties',
+});
+
+const emit = defineEmits(['change', 'remove', 'select-sub-property']);
+
+const childrenLength = ref(0);
+
+const viewerComponent = computed(() =>
+  props.model ? (propertyViewerIndex as any)[props.model.type] : undefined
+);
+
+const { result: deactivatingToggle } = autorun(() => {
+  if (!props.model?.deactivatingToggleId) return undefined;
+  return CreatureProperties.findOne(props.model.deactivatingToggleId);
+});
+
+const slotFillTypeName = computed(() =>
+  getPropertyName(props.model?.slotFillerType)
+);
+
+function selectSubProperty(_id: string) {
+  emit('select-sub-property', _id);
+}
+</script>
+
 <template lang="html">
   <div
     v-if="model && viewerComponent"
@@ -150,45 +189,6 @@
     This property can't be viewed yet.
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
-import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
-
-const props = withDefaults(defineProps<{
-  model?: Record<string, any>;
-  collection?: string;
-}>(), {
-  model: undefined,
-  collection: 'creatureProperties',
-});
-
-const emit = defineEmits(['change', 'remove', 'select-sub-property']);
-
-const childrenLength = ref(0);
-
-const viewerComponent = computed(() =>
-  props.model ? (propertyViewerIndex as any)[props.model.type] : undefined
-);
-
-const { result: deactivatingToggle } = autorun(() => {
-  if (!props.model?.deactivatingToggleId) return undefined;
-  return CreatureProperties.findOne(props.model.deactivatingToggleId);
-});
-
-const slotFillTypeName = computed(() =>
-  getPropertyName(props.model?.slotFillerType)
-);
-
-function selectSubProperty(_id: string) {
-  emit('select-sub-property', _id);
-}
-</script>
 
 <style lang="css">
 .property-viewer ol, .property-viewer ul {

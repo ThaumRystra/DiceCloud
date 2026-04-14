@@ -1,30 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <text-field
-      label="Username"
-      :value="newUsername || username"
-      @change="change"
-    />
-    <div
-      v-if="error"
-      class="error"
-    >
-      {{ error }}
-    </div>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        :disabled="!valid"
-        :loading="loading"
-        @click="setUsername"
-      >
-        Update
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -76,5 +49,32 @@ async function setUsername() {
   }
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <text-field
+      label="Username"
+      :value="newUsername || username"
+      @change="change"
+    />
+    <div
+      v-if="error"
+      class="bg-error"
+    >
+      {{ error }}
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        :disabled="!valid"
+        :loading="loading"
+        @click="setUsername"
+      >
+        Update
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

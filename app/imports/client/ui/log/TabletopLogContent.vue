@@ -1,67 +1,3 @@
-<template lang="html">
-  <div class="log-content">
-    <div
-      v-for="(contentGroup, index) in contentByTargetId"
-      :key="index"
-      class="d-flex justify-space-between mb-2"
-    >
-      <div class="d-flex flex-wrap">
-        <div
-          v-for="(content, contentIndex) in contentGroup.content"
-          :key="contentIndex"
-          class="mx-2 my-1"
-          :class="{'full-width': !content.inline}"
-        >
-          <div
-            class="content-name text-body"
-          >
-            {{ content.name }}
-          </div>
-          <markdown-text
-            v-if="content.value"
-            class="content-value text-body-2"
-            :markdown="content.value"
-          />
-          <div
-            v-else
-            style="min-height: 12px;"
-          />
-        </div>
-      </div>
-      <div
-        v-if="contentGroup.targetIds && contentGroup.targetIds.length"
-        class="content-target-ids d-flex flex-column justify-center" 
-      >
-        <v-tooltip
-          v-for="creature in contentGroup.targetCreatures"
-          :key="creature._id"
-          left
-        >
-          <template #activator="{ on, attrs }">
-            <v-avatar
-              :color="model.color || 'grey'"
-              size="28"
-              class="ma-2"
-              v-bind="attrs"
-              v-on="on"
-            >
-              <img
-                v-if="creature.avatarPicture"
-                :src="creature.avatarPicture"
-                :alt="creature.name"
-              >
-              <span v-else>
-                {{ creature.name && creature.name[0] || '?' }}
-              </span>
-            </v-avatar>
-          </template>
-          <span>{{ creature.name }}</span>
-        </v-tooltip>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -102,6 +38,70 @@ const { result: contentByTargetId } = autorun(() => {
   return content;
 });
 </script>
+
+<template lang="html">
+  <div class="log-content">
+    <div
+      v-for="(contentGroup, index) in contentByTargetId"
+      :key="index"
+      class="d-flex justify-space-between mb-2"
+    >
+      <div class="d-flex flex-wrap">
+        <div
+          v-for="(content, contentIndex) in contentGroup.content"
+          :key="contentIndex"
+          class="mx-2 my-1"
+          :class="{'full-width': !content.inline}"
+        >
+          <div
+            class="content-name text-body"
+          >
+            {{ content.name }}
+          </div>
+          <markdown-text
+            v-if="content.value"
+            class="content-value text-body-2"
+            :markdown="content.value"
+          />
+          <div
+            v-else
+            style="min-height: 12px;"
+          />
+        </div>
+      </div>
+      <div
+        v-if="contentGroup.targetIds && contentGroup.targetIds.length"
+        class="content-target-ids d-flex flex-column justify-center" 
+      >
+        <v-tooltip
+          v-for="creature in contentGroup.targetCreatures"
+          :key="creature._id"
+          location="left"
+        >
+          <template #activator="{ props }">
+            <v-avatar
+              :color="model.color || 'grey'"
+              size="28"
+              class="ma-2"
+             
+              v-bind="props"
+            >
+              <img
+                v-if="creature.avatarPicture"
+                :src="creature.avatarPicture"
+                :alt="creature.name"
+              >
+              <span v-else>
+                {{ creature.name && creature.name[0] || '?' }}
+              </span>
+            </v-avatar>
+          </template>
+          <span>{{ creature.name }}</span>
+        </v-tooltip>
+      </div>
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
   .full-width {

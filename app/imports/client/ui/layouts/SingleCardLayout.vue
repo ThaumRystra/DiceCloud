@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template
   lang="html"
 >
@@ -12,6 +15,3 @@
     </v-card>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>

@@ -1,14 +1,3 @@
-<template>
-  <div
-    class="hexagon-progress"
-    :style="fillStyle"
-  >
-    <div class="hexagon-content">
-      <slot />
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useTheme } from 'vuetify';
@@ -63,6 +52,17 @@ const fillStyle = computed(() => ({
   backgroundColor: barBackgroundColor.value,
 }));
 </script>
+
+<template>
+  <div
+    class="hexagon-progress"
+    :style="fillStyle"
+  >
+    <div class="hexagon-content">
+      <slot />
+    </div>
+  </div>
+</template>
 
 <style>
 .hexagon-progress {

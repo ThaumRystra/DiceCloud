@@ -15,19 +15,19 @@ const pushToProperty = new ValidatedMethod({
   },
   async run({ _id, path, value }) {
     // Permissions
-    let property = await CreatureProperties.findOneAsync(_id);
-    let rootCreature = getRootCreatureAncestor(property);
+    const property = await CreatureProperties.findOneAsync(_id);
+    const rootCreature = getRootCreatureAncestor(property);
     await assertEditPermission(rootCreature, this.userId);
 
-    let joinedPath = path.join('.');
+    const joinedPath = path.join('.');
 
     // Respect maxCount
-    let schema = CreatureProperties.simpleSchema(property);
-    let maxCount = schema.get(joinedPath, 'maxCount');
+    const schema = CreatureProperties.simpleSchema(property);
+    const maxCount = schema.get(joinedPath, 'maxCount');
 
     if (Number.isFinite(maxCount)) {
-      let array = get(property, path);
-      let currentCount = array ? array.length : 0;
+      const array = get(property, path);
+      const currentCount = array ? array.length : 0;
       if (currentCount >= maxCount) {
         throw new Meteor.Error(
           'Array is full',

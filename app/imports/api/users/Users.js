@@ -173,7 +173,7 @@ Meteor.users.sendVerificationEmail = new ValidatedMethod({
   },
   async run({ userId, address }) {
     userId = this.userId || userId;
-    let user = await Meteor.users.findOneAsync(userId);
+    const user = await Meteor.users.findOneAsync(userId);
     if (!user) {
       throw new Meteor.Error('User not found',
         'Can\'t send a validation email to a user that does not exist');
@@ -196,7 +196,7 @@ Meteor.users.canPickUsername = new ValidatedMethod({
   },
   run({ username }) {
     if (Meteor.isClient) return;
-    let user = Accounts.findUserByUsername(username);
+    const user = Accounts.findUserByUsername(username);
     // You can pick your own username
     if (user && user._id === this.userId) {
       return false;
@@ -237,7 +237,7 @@ Meteor.users.setPreference = new ValidatedMethod({
   },
   async run({ preference, value }) {
     if (!this.userId) throw 'You can only set preferences once logged in';
-    let prefPath = `preferences.${preference}`
+    const prefPath = `preferences.${preference}`
     if (value == true) {
       return await Meteor.users.updateAsync(this.userId, {
         $set: { [prefPath]: true },
@@ -352,7 +352,7 @@ Meteor.users.findUserByUsernameOrEmail = new ValidatedMethod({
   },
   run({ usernameOrEmail }) {
     if (Meteor.isClient) return;
-    let user = Accounts.findUserByUsername(usernameOrEmail) ||
+    const user = Accounts.findUserByUsername(usernameOrEmail) ||
       Accounts.findUserByEmail(usernameOrEmail);
     return user && user._id;
   }

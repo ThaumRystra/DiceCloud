@@ -1,79 +1,3 @@
-<template>
-  <div
-    class="card-background"
-    style="height: 100%"
-  >
-    <v-container>
-      <v-fade-transition mode="out-in">
-        <v-row
-          v-if="browseReady"
-          key="loaded-cards"
-          density="compact"
-        >
-          <v-col
-            v-for="card in libraryCards"
-            :key="card._id"
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
-          >
-            <v-sheet
-              class="fill-height"
-              rounded
-              border
-              :color="card.subscribed ? 'accent': ''"
-            >
-              <v-card
-                class="fill-height d-flex flex-column"
-                elevation="0"
-                :to="`/library${card._type === 'libraryCollection' ? '-collection' : ''}/${card._id}`"
-              >
-                <v-card-title>
-                  {{ card.name }}
-                </v-card-title>
-                <v-card-subtitle v-if="card.subscriberCount">
-                  {{ formatNumber(card.subscriberCount) }} subscribers
-                </v-card-subtitle>
-                <v-card-text>
-                  <markdown-text :markdown="card.description" />
-                </v-card-text>
-                <v-spacer />
-                <v-card-actions>
-                  <v-spacer />
-                  <smart-btn
-                    variant="text"
-                    single-click
-                    :color="card.subscribed ? '': 'accent'"
-                    @click="ack => changeSubscribe(card, ack)"
-                  >
-                    {{ card.subscribed ? 'Unsubscribe' : 'Subscribe' }}
-                  </smart-btn>
-                </v-card-actions>
-              </v-card>
-            </v-sheet>
-          </v-col>
-        </v-row>
-        <v-row
-          v-else
-          key="loading-spinner"
-        >
-          <v-col
-            cols="12"
-            class="d-flex align-center justify-center"
-          >
-            <v-progress-circular
-              indeterminate 
-              color="primary"
-              size="64"
-            />
-          </v-col>
-        </v-row>
-      </v-fade-transition>
-    </v-container>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
@@ -152,3 +76,79 @@ async function changeSubscribe(card: any, ack: (err?: string) => void) {
   }
 }
 </script>
+
+<template>
+  <div
+    class="card-background"
+    style="height: 100%"
+  >
+    <v-container>
+      <v-fade-transition mode="out-in">
+        <v-row
+          v-if="browseReady"
+          key="loaded-cards"
+          class="density"
+        >
+          <v-col
+            v-for="card in libraryCards"
+            :key="card._id"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <v-sheet
+              class="fill-height"
+              rounded
+              border
+              :color="card.subscribed ? 'accent': ''"
+            >
+              <v-card
+                class="fill-height d-flex flex-column"
+                elevation="0"
+                :to="`/library${card._type === 'libraryCollection' ? '-collection' : ''}/${card._id}`"
+              >
+                <v-card-title>
+                  {{ card.name }}
+                </v-card-title>
+                <v-card-subtitle v-if="card.subscriberCount">
+                  {{ formatNumber(card.subscriberCount) }} subscribers
+                </v-card-subtitle>
+                <v-card-text>
+                  <markdown-text :markdown="card.description" />
+                </v-card-text>
+                <v-spacer />
+                <v-card-actions>
+                  <v-spacer />
+                  <smart-btn
+                    variant="text"
+                    single-click
+                    :color="card.subscribed ? '': 'accent'"
+                    @click="ack => changeSubscribe(card, ack)"
+                  >
+                    {{ card.subscribed ? 'Unsubscribe' : 'Subscribe' }}
+                  </smart-btn>
+                </v-card-actions>
+              </v-card>
+            </v-sheet>
+          </v-col>
+        </v-row>
+        <v-row
+          v-else
+          key="loading-spinner"
+        >
+          <v-col
+            cols="12"
+            class="d-flex align-center justify-center"
+          >
+            <v-progress-circular
+              indeterminate 
+              color="primary"
+              size="64"
+            />
+          </v-col>
+        </v-row>
+      </v-fade-transition>
+    </v-container>
+  </div>
+</template>

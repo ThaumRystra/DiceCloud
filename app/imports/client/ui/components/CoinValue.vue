@@ -1,3 +1,14 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import valueToCoins from '/imports/client/ui/utility/valueToCoins';
+
+const props = defineProps<{
+  value?: number;
+}>();
+
+const coinValue = computed(() => valueToCoins(props.value));
+</script>
+
 <template lang="html">
   <div>
     <span
@@ -17,17 +28,6 @@
     </span>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import valueToCoins from '/imports/client/ui/utility/valueToCoins';
-
-const props = defineProps<{
-  value?: number;
-}>();
-
-const coinValue = computed(() => valueToCoins(props.value));
-</script>
 
 <style lang="css" scoped>
 </style>

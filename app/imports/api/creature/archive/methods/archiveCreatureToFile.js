@@ -19,7 +19,7 @@ export async function getArchiveObj(creatureId) {
   const properties = await CreatureProperties.find({ ...getFilter.descendantsOfRoot(creatureId) }).fetchAsync();
   const experiences = await Experiences.find({ creatureId }).fetchAsync();
   const logs = await CreatureLogs.find({ creatureId }).fetchAsync();
-  let archiveCreature = {
+  const archiveCreature = {
     meta: {
       type: 'DiceCloud V2 Creature Archive',
       schemaVersion: SCHEMA_VERSION,

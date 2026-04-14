@@ -1,91 +1,3 @@
-<template lang="html">
-  <dialog-base v-if="model">
-    <template #toolbar>
-      <v-toolbar-title>
-        {{ model.name || 'Unnamed Tabletop' }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-slide-x-transition>
-        <v-btn
-          v-if="editing"
-          icon
-          :disabled="editPermission === false"
-          data-id="remove-btn"
-          @click="removeTabletop"
-        >
-          <v-icon>mdi-delete</v-icon>
-        </v-btn>
-      </v-slide-x-transition>
-      <v-btn
-        rounded="0"
-        variant="outlined"
-        @click="toggleEditing"
-      >
-        <span style="width: 44px;">
-          {{ editing ? 'Done' : 'Edit' }}
-        </span>
-        <v-slide-y-transition hide-on-leave>
-          <v-icon
-            v-if="editing"
-            key="doneIcon"
-            right
-          >
-            mdi-check
-          </v-icon>
-          <v-icon
-            v-else
-            key="createIcon"
-            right
-          >
-            mdi-pencil
-          </v-icon>
-        </v-slide-y-transition>
-      </v-btn>
-    </template>
-    <v-fade-transition mode="out-in">
-      <tabletop-form
-        v-if="editing"
-        key="tabletop-form"
-        :model="model"
-        :edit-permission="editPermission"
-        :users="users"
-        @change="changeEvent"
-        @update-sharing="updateSharingEvent"
-      />
-      <tabletop-viewer
-        v-else
-        key="tabletop-viewer"
-        :model="model"
-        :users="users"
-      />
-    </v-fade-transition>
-    <template #actions>
-      <div class="layout">
-        <v-btn
-          variant="text"
-          @click="$store.dispatch('popDialogStack')"
-        >
-          Close
-        </v-btn>
-        <v-spacer />
-        <v-btn
-          color="accent"
-          :to="`/tabletop/${model._id}`"
-          @click="$store.dispatch('popDialogStack')"
-        >
-          Launch
-          <v-icon
-            right
-            dark
-          >
-            mdi-play
-          </v-icon>
-        </v-btn>
-      </div>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -187,3 +99,91 @@ function removeTabletopFn() {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base v-if="model">
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ model.name || 'Unnamed Tabletop' }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-slide-x-transition>
+        <v-btn
+          v-if="editing"
+          icon
+          :disabled="editPermission === false"
+          data-id="remove-btn"
+          @click="removeTabletop"
+        >
+          <v-icon>mdi-delete</v-icon>
+        </v-btn>
+      </v-slide-x-transition>
+      <v-btn
+        rounded="0"
+        variant="outlined"
+        @click="toggleEditing"
+      >
+        <span style="width: 44px;">
+          {{ editing ? 'Done' : 'Edit' }}
+        </span>
+        <v-slide-y-transition hide-on-leave>
+          <v-icon
+            v-if="editing"
+            key="doneIcon"
+            end
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-else
+            key="createIcon"
+            end
+          >
+            mdi-pencil
+          </v-icon>
+        </v-slide-y-transition>
+      </v-btn>
+    </template>
+    <v-fade-transition mode="out-in">
+      <tabletop-form
+        v-if="editing"
+        key="tabletop-form"
+        :model="model"
+        :edit-permission="editPermission"
+        :users="users"
+        @change="changeEvent"
+        @update-sharing="updateSharingEvent"
+      />
+      <tabletop-viewer
+        v-else
+        key="tabletop-viewer"
+        :model="model"
+        :users="users"
+      />
+    </v-fade-transition>
+    <template #actions>
+      <div class="layout">
+        <v-btn
+          variant="text"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Close
+        </v-btn>
+        <v-spacer />
+        <v-btn
+          color="accent"
+          :to="`/tabletop/${model._id}`"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Launch
+          <v-icon
+            end
+            dark
+          >
+            mdi-play
+          </v-icon>
+        </v-btn>
+      </div>
+    </template>
+  </dialog-base>
+</template>

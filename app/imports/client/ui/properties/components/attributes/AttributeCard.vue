@@ -1,17 +1,3 @@
-<template lang="html">
-  <v-card
-    :hover="hasClickListener"
-    :color="model.color"
-    :theme="model.color ? (isDark ? 'dark' : 'light') : undefined"
-    @click="click"
-    @mouseover="hasClickListener ? hovering = true : undefined"
-    @mouseleave="hasClickListener ? hovering = false : undefined"
-  >
-    <attribute-card-content :model="model" />
-    <card-highlight :active="hasClickListener && hovering" />
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, useAttrs } from 'vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
@@ -39,3 +25,17 @@ function click(e: Event) {
   emit('click', e);
 }
 </script>
+
+<template lang="html">
+  <v-card
+    :hover="hasClickListener"
+    :color="model.color"
+    :theme="model.color ? (isDark ? 'dark' : 'light') : undefined"
+    @click="click"
+    @mouseover="hasClickListener ? hovering = true : undefined"
+    @mouseleave="hasClickListener ? hovering = false : undefined"
+  >
+    <attribute-card-content :model="model" />
+    <card-highlight :active="hasClickListener && hovering" />
+  </v-card>
+</template>

@@ -1,3 +1,18 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import { Meteor } from 'meteor/meteor';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import { getUserTier } from '/imports/api/users/patreon/tiers';
+
+const { result: creatureCount } = autorun(() =>
+  Creatures.find({ owner: Meteor.userId() }).count()
+);
+
+const { result: characterSlots } = autorun(() =>
+  getUserTier(Meteor.userId()).characterSlots
+);
+</script>
+
 <template>
   <div
     class="creature-storage-stats d-flex align-center"
@@ -14,21 +29,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import { Meteor } from 'meteor/meteor';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
-
-const { result: creatureCount } = autorun(() =>
-  Creatures.find({ owner: Meteor.userId() }).count()
-);
-
-const { result: characterSlots } = autorun(() =>
-  getUserTier(Meteor.userId()).characterSlots
-);
-</script>
 
 <style>
 

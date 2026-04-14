@@ -22,8 +22,8 @@ const adjustQuantity = new ValidatedMethod({
   },
   async run({ _id, operation, value }) {
     // Permissions
-    let property = await CreatureProperties.findOneAsync(_id);
-    let rootCreature = getRootCreatureAncestor(property);
+    const property = await CreatureProperties.findOneAsync(_id);
+    const rootCreature = getRootCreatureAncestor(property);
     await assertEditPermission(rootCreature, this.userId);
 
     // Do work
@@ -33,7 +33,7 @@ const adjustQuantity = new ValidatedMethod({
 
 export async function adjustQuantityWork({ property, operation, value }) {
   // Check if property has quantity
-  let schema = CreatureProperties.simpleSchema(property);
+  const schema = CreatureProperties.simpleSchema(property);
   if (!schema.allowsKey('quantity')) {
     throw new Meteor.Error(
       'Adjust quantity failed',
@@ -49,7 +49,7 @@ export async function adjustQuantityWork({ property, operation, value }) {
   } else if (operation === 'increment') {
     // value here is 'damage'
     value = -value;
-    let currentQuantity = property.quantity;
+    const currentQuantity = property.quantity;
     if (currentQuantity + value < 0) value = -currentQuantity;
     await CreatureProperties.updateAsync(property._id, {
       $inc: { quantity: value },

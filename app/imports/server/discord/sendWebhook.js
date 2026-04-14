@@ -2,9 +2,9 @@
 export default function sendWebhook({ webhookURL, data = {} }) {
   return;
   //webhookURL = https://discordapp.com/api/webhooks/<id>/<token>
-  let urlArray = webhookURL.split('/');
-  let token = urlArray.pop();
-  let id = urlArray.pop();
+  const urlArray = webhookURL.split('/');
+  const token = urlArray.pop();
+  const id = urlArray.pop();
 
   // prevent discord mention exploit
   data.allowedMentions = { parse: [] };

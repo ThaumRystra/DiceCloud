@@ -1,3 +1,37 @@
+<script setup lang="ts">
+import { ref, computed, useAttrs } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
+
+const props = defineProps<{
+  model: any;
+  height?: number;
+  width?: number;
+  active?: boolean;
+  targeted?: boolean;
+  showTargetBtn?: boolean;
+}>();
+
+const attrs = useAttrs();
+const hover = ref(false);
+const loadingImg = ref('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAXdJREFUWEftlq1vAkEQxedSB7pYDklBNsgmyCa4Cv5GBI6k8tJKUglULrWcBlvySA4B+/HeAcV07O3t/ObtvNnNHsyc3TEyAGRm+T0Yfs3WFwE0mk3bbbe12WsDtDsda+e5PbZaR4C1c/a9XEowtQC6vZ499ftniaCECiEDoPLnwSBa5WdRWLnZUErIAK+jkeHcY4HkgGBCAmCqr5KyKkgAobP3VXoTAJw9VGBitVhQjpAUeBkOD7Zj4sc5+5rPk0slAOUIkBwQqZAAUD1UYOImALAfbMjE+2xGjWhJASRmGpFtQOwnAzAqTCcTRqTDGhkAP8UGklK9BIDKq9svZUVcShjHZVkmnUApoNjvVHvAfBRFsCGTAJckr2AAAVf4Igqg+D7VdaHJGAVQRm8KIKRCFOBtPE7tK3333ZBBAOXuZyl8Fv1TAF8fBAGYkctWXq3zPdWCANdswJgdgwDM41NVwOeEf4BoE6be/3WO4PSdeARQN7vm+j0BlQ9wWvLB6AAAAABJRU5ErkJggg==');
+
+const hasClickListener = computed(() => !!attrs.onClick);
+
+const { result: healthBars } = autorun(() => {
+  return CreatureProperties.find({
+    'root.id': props.model._id,
+    type: 'attribute',
+    attributeType: 'healthBar',
+    healthBarNoDamage: { $ne: true },
+    inactive: { $ne: true },
+    removed: { $ne: true },
+    total: { $ne: 0 },
+  }, { sort: { order: 1 } });
+});
+</script>
+
 <template lang="html">
   <v-card
     :style="`height: ${height}px; width: ${width}px;`"
@@ -46,40 +80,6 @@
     </div>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, useAttrs } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
-
-const props = defineProps<{
-  model: any;
-  height?: number;
-  width?: number;
-  active?: boolean;
-  targeted?: boolean;
-  showTargetBtn?: boolean;
-}>();
-
-const attrs = useAttrs();
-const hover = ref(false);
-const loadingImg = ref('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAXdJREFUWEftlq1vAkEQxedSB7pYDklBNsgmyCa4Cv5GBI6k8tJKUglULrWcBlvySA4B+/HeAcV07O3t/ObtvNnNHsyc3TEyAGRm+T0Yfs3WFwE0mk3bbbe12WsDtDsda+e5PbZaR4C1c/a9XEowtQC6vZ499ftniaCECiEDoPLnwSBa5WdRWLnZUErIAK+jkeHcY4HkgGBCAmCqr5KyKkgAobP3VXoTAJw9VGBitVhQjpAUeBkOD7Zj4sc5+5rPk0slAOUIkBwQqZAAUD1UYOImALAfbMjE+2xGjWhJASRmGpFtQOwnAzAqTCcTRqTDGhkAP8UGklK9BIDKq9svZUVcShjHZVkmnUApoNjvVHvAfBRFsCGTAJckr2AAAVf4Igqg+D7VdaHJGAVQRm8KIKRCFOBtPE7tK3333ZBBAOXuZyl8Fv1TAF8fBAGYkctWXq3zPdWCANdswJgdgwDM41NVwOeEf4BoE6be/3WO4PSdeARQN7vm+j0BlQ9wWvLB6AAAAABJRU5ErkJggg==');
-
-const hasClickListener = computed(() => !!attrs.onClick);
-
-const { result: healthBars } = autorun(() => {
-  return CreatureProperties.find({
-    'root.id': props.model._id,
-    type: 'attribute',
-    attributeType: 'healthBar',
-    healthBarNoDamage: { $ne: true },
-    inactive: { $ne: true },
-    removed: { $ne: true },
-    total: { $ne: 0 },
-  }, { sort: { order: 1 } });
-});
-</script>
 
 <style lang="css" scoped>
 .small-title {

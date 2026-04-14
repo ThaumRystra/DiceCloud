@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import LibraryCollections from '/imports/api/library/LibraryCollections';
+import Libraries from '/imports/api/library/Libraries';
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+
+const route = useRoute();
+
+subscribe(() => ['libraryCollection', route.params.id as string]);
+
+const { result: collection } = autorun(() =>
+  LibraryCollections.findOne(route.params.id as string)
+);
+
+const { result: libraries } = autorun(() => {
+  if (!collection.value) return undefined;
+  return Libraries.find({
+    _id: { $in: (collection.value).libraries },
+  }).fetch();
+});
+</script>
+
 <template lang="html">
   <v-container class="pa-6">
     <v-row
@@ -42,27 +66,3 @@
     </v-row> 
   </v-container>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { useRoute } from 'vue-router';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import LibraryCollections from '/imports/api/library/LibraryCollections';
-import Libraries from '/imports/api/library/Libraries';
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-
-const route = useRoute();
-
-subscribe(() => ['libraryCollection', route.params.id as string]);
-
-const { result: collection } = autorun(() =>
-  LibraryCollections.findOne(route.params.id as string)
-);
-
-const { result: libraries } = autorun(() => {
-  if (!collection.value) return undefined;
-  return Libraries.find({
-    _id: { $in: (collection.value as any).libraries },
-  }).fetch();
-});
-</script>

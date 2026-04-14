@@ -1,53 +1,3 @@
-<template>
-  <v-card
-    class="user-image-card d-flex flex-column"
-    @click="previewImage"
-  >
-    <v-img
-      :lazy-src="thumbHashDataUrl"
-      :src="model.link"
-      :data-id="`${model._id}-image`"
-    />
-    <div class="flex" />
-    <v-card-title class="no-wrap">
-      {{ model.name }}
-    </v-card-title>
-    <v-card-subtitle class="no-wrap">
-      {{ model.size }}
-    </v-card-subtitle>
-    <v-card-actions>
-      <div class="flex" />
-      <v-menu location="start">
-        <template #activator="{ props }">
-          <v-btn
-            icon
-            v-bind="props"
-          >
-            <v-icon>mdi-delete</v-icon>
-          </v-btn>
-        </template>
-        <v-list>
-          <v-list-item @click="removeUserFile">
-            <v-list-item-title>
-              Delete file
-              <v-icon class="ml-1">
-                mdi-delete
-              </v-icon>
-            </v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      <v-btn
-        icon
-        :href="`${model.link}?download=true`"
-        @click.stop
-      >
-        <v-icon>mdi-download</v-icon>
-      </v-btn>
-    </v-card-actions>
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
@@ -90,6 +40,56 @@ function previewImage() {
   });
 }
 </script>
+
+<template>
+  <v-card
+    class="user-image-card d-flex flex-column"
+    @click="previewImage"
+  >
+    <v-img
+      :lazy-src="thumbHashDataUrl"
+      :src="model.link"
+      :data-id="`${model._id}-image`"
+    />
+    <div class="flex" />
+    <v-card-title class="text-no-wrap">
+      {{ model.name }}
+    </v-card-title>
+    <v-card-subtitle class="text-no-wrap">
+      {{ model.size }}
+    </v-card-subtitle>
+    <v-card-actions>
+      <div class="flex" />
+      <v-menu location="start">
+        <template #activator="{ props }">
+          <v-btn
+            icon
+            v-bind="props"
+          >
+            <v-icon>mdi-delete</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item @click="removeUserFile">
+            <v-list-item-title>
+              Delete file
+              <v-icon class="ml-1">
+                mdi-delete
+              </v-icon>
+            </v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <v-btn
+        icon
+        :href="`${model.link}?download=true`"
+        @click.stop
+      >
+        <v-icon>mdi-download</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>
 
 <style scoped>
 .no-wrap {

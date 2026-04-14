@@ -1,3 +1,68 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
+import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
+import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = withDefaults(defineProps<{
+  model?: Record<string, any> | any[];
+  collection?: string;
+  errors?: Record<string, string>;
+  embedded?: boolean;
+  noChildInsert?: boolean;
+}>(), {
+  model: () => ({}),
+  collection: 'creatureProperties',
+  errors: () => ({}),
+  embedded: false,
+  noChildInsert: false,
+});
+
+defineEmits(['change', 'push', 'pull']);
+
+const store = useStore(key);
+const context = inject<any>('context', {});
+
+const slotTypes: Array<{ text: string; value: string }> = [];
+for (const key in PROPERTIES) {
+  slotTypes.push({ text: (PROPERTIES as any)[key].name, value: key });
+}
+
+const formComponent = computed(() =>
+  props.model && !Array.isArray(props.model)
+    ? (propertyFormIndex as any)[(props.model as any).type]
+    : undefined
+);
+
+const suggestedChildren = computed(() => {
+  if (Array.isArray(props.model) || !props.model?.type) return [];
+  return getSuggestedChildren((props.model as any).type);
+});
+
+const schemaHasName = computed(() => {
+  if (Array.isArray(props.model) || !props.model?.type) return true;
+  const schema = (propertySchemasIndex as any)[(props.model as any).type];
+  return schema.allowsKey('name');
+});
+
+function selectSubProperty(_id: string) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: {
+      _id,
+      startInEditTab: false,
+    },
+  });
+}
+</script>
+
 <template>
   <div class="property-form">
     <v-row>
@@ -36,7 +101,7 @@
       >
         <v-row
           v-if="context.isLibraryForm"
-          density="compact"
+          class="density"
         >
           <v-col
             cols="12"
@@ -148,8 +213,7 @@
       </v-col>
     </v-row>
     <v-row
-      class="mt-1"
-      density="compact"
+      class="mt-1 density"
     >
       <v-col
         cols="12"
@@ -174,23 +238,23 @@
             :key="suggestion.type"
             :disabled="noChildInsert"
             rounded="0"
-            plain
+            variant="plain"
             :data-id="`insert-${suggestion.type}-property-btn`"
-            @click="$event => $emit('add-child', { suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn` })"
             prepend-icon="mdi-plus"
+            @click="$event => $emit('add-child', { suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn` })"
           >
             {{ suggestion.details.name }}
           </v-btn>
           <v-btn
             :disabled="noChildInsert || context.editPermission === false"
             rounded="0"
-            plain
+            variant="plain"
             data-id="insert-any-property-btn"
             @click="$event => $emit('add-child', { elementId: 'insert-any-property-btn' })"
           >
             <v-icon
               v-if="!suggestedChildren.length"
-              left
+              start
             >
               mdi-plus
             </v-icon>
@@ -207,68 +271,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import { useStore } from 'vuex';
-import propertyFormIndex from '/imports/client/ui/properties/forms/shared/propertyFormIndex';
-import IconColorMenu from '/imports/client/ui/properties/forms/shared/IconColorMenu.vue';
-import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
-import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
-import PROPERTIES from '/imports/constants/PROPERTIES';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = withDefaults(defineProps<{
-  model?: Record<string, any> | any[];
-  collection?: string;
-  errors?: Record<string, string>;
-  embedded?: boolean;
-  noChildInsert?: boolean;
-}>(), {
-  model: () => ({}),
-  collection: 'creatureProperties',
-  errors: () => ({}),
-  embedded: false,
-  noChildInsert: false,
-});
-
-defineEmits(['change', 'push', 'pull']);
-
-const store = useStore(key);
-const context = inject<any>('context', {});
-
-const slotTypes: Array<{ text: string; value: string }> = [];
-for (const key in PROPERTIES) {
-  slotTypes.push({ text: (PROPERTIES as any)[key].name, value: key });
-}
-
-const formComponent = computed(() =>
-  props.model && !Array.isArray(props.model)
-    ? (propertyFormIndex as any)[(props.model as any).type]
-    : undefined
-);
-
-const suggestedChildren = computed(() => {
-  if (Array.isArray(props.model) || !props.model?.type) return [];
-  return getSuggestedChildren((props.model as any).type);
-});
-
-const schemaHasName = computed(() => {
-  if (Array.isArray(props.model) || !props.model?.type) return true;
-  const schema = (propertySchemasIndex as any)[(props.model as any).type];
-  return schema.allowsKey('name');
-});
-
-function selectSubProperty(_id: string) {
-  store.commit('pushDialogStack', {
-    component: 'creature-property-dialog',
-    elementId: `tree-node-${_id}`,
-    data: {
-      _id,
-      startInEditTab: false,
-    },
-  });
-}
-</script>

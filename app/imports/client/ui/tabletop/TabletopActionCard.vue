@@ -1,96 +1,3 @@
-<template lang="html">
-  <v-sheet
-    class="action-card  overflow-y-auto"
-    rounded
-    :class="cardClasses"
-  >
-    <div class="d-flex align-center px-3">
-      <div class="avatar">
-        <v-btn
-          icon
-          variant="outlined"
-          style="letter-spacing: normal;"
-          class="mr-2"
-          :style="{
-            fontSize: '24px'
-          }"
-          data-id="do-action-button"
-          :color="model.color || 'primary'"
-          :loading="doActionLoading"
-          :disabled="model.insufficientResources || !context.editPermission"
-          @click="doAction"
-        >
-          <template v-if="rollBonus && !rollBonusTooLong">
-            {{ rollBonus }}
-          </template>
-          <property-icon
-            v-else
-            :model="model"
-          />
-        </v-btn>
-      </div>
-      <div
-        class="action-header flex layout column justify-center pl-1"
-        style="height: 72px; cursor: pointer;"
-        @click="$emit('open-details')"
-      >
-        <div class="action-title my-1">
-          {{ model.name || propertyName }}
-        </div>
-        <div class="action-sub-title layout align-center">
-          <div
-            v-if="targetingError"
-            class="flex text-error"
-          >
-            {{ targetingError }}
-          </div>
-          <template v-else>
-            <div class="flex">
-              {{ model.actionType }}
-            </div>
-            <div v-if="Number.isFinite(model.usesLeft)">
-              {{ model.usesLeft }} uses
-            </div>
-          </template>
-        </div>
-      </div>
-    </div>
-    <div class="px-3 pb-3">
-      <template v-if="model.resources && model.resources.attributesConsumed.length ||
-        model.resources.itemsConsumed.length">
-        <attribute-consumed-view
-          v-for="attributeConsumed in model.resources.attributesConsumed"
-          :key="attributeConsumed._id"
-          class="action-child"
-          :model="attributeConsumed"
-        />
-        <item-consumed-view
-          v-for="itemConsumed in model.resources.itemsConsumed"
-          :key="itemConsumed._id"
-          class="action-child"
-          :model="itemConsumed"
-          :action="model"
-        />
-        <v-divider
-          v-if="model.summary"
-          class="my-2"
-        />
-      </template>
-      <template v-if="model.summary">
-        <markdown-text :markdown="model.summary.value || model.summary.text" />
-      </template>
-      <v-divider v-if="children && children.length" />
-      <tree-node-list
-        v-if="children && children.length"
-        start-expanded
-        :children="children"
-        :root="model.root"
-        @selected="e => $emit('sub-click', e)"
-      />
-    </div>
-  </v-sheet>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -199,6 +106,101 @@ function shwing() {
   setTimeout(() => { activated.value = undefined; }, 150);
 }
 </script>
+
+<template lang="html">
+  <v-sheet
+    class="action-card  overflow-y-auto"
+    rounded
+    :class="cardClasses"
+  >
+    <div class="d-flex align-center px-3">
+      <div class="avatar">
+        <v-btn
+          icon
+          variant="outlined"
+          style="letter-spacing: normal;"
+          class="mr-2"
+          :style="{
+            fontSize: '24px'
+          }"
+          data-id="do-action-button"
+          :color="model.color || 'primary'"
+          :loading="doActionLoading"
+          :disabled="model.insufficientResources || !context.editPermission"
+          @click="doAction"
+        >
+          <template v-if="rollBonus && !rollBonusTooLong">
+            {{ rollBonus }}
+          </template>
+          <property-icon
+            v-else
+            :model="model"
+          />
+        </v-btn>
+      </div>
+      <div
+        class="action-header flex layout column justify-center pl-1"
+        style="height: 72px; cursor: pointer;"
+        @click="$emit('open-details')"
+      >
+        <div class="action-title my-1">
+          {{ model.name || propertyName }}
+        </div>
+        <div class="action-sub-title layout align-center">
+          <div
+            v-if="targetingError"
+            class="flex text-error"
+          >
+            {{ targetingError }}
+          </div>
+          <template v-else>
+            <div class="flex">
+              {{ model.actionType }}
+            </div>
+            <div v-if="Number.isFinite(model.usesLeft)">
+              {{ model.usesLeft }} uses
+            </div>
+          </template>
+        </div>
+      </div>
+    </div>
+    <div class="px-3 pb-3">
+      <template
+        v-if="model.resources && model.resources.attributesConsumed.length ||
+          model.resources.itemsConsumed.length"
+      >
+        <attribute-consumed-view
+          v-for="attributeConsumed in model.resources.attributesConsumed"
+          :key="attributeConsumed._id"
+          class="action-child"
+          :model="attributeConsumed"
+        />
+        <item-consumed-view
+          v-for="itemConsumed in model.resources.itemsConsumed"
+          :key="itemConsumed._id"
+          class="action-child"
+          :model="itemConsumed"
+          :action="model"
+        />
+        <v-divider
+          v-if="model.summary"
+          class="my-2"
+        />
+      </template>
+      <template v-if="model.summary">
+        <markdown-text :markdown="model.summary.value || model.summary.text" />
+      </template>
+      <v-divider v-if="children && children.length" />
+      <tree-node-list
+        v-if="children && children.length"
+        start-expanded
+        :children="children"
+        :root="model.root"
+        @selected="e => $emit('sub-click', e)"
+      />
+    </div>
+  </v-sheet>
+</template>
 
 <style lang="css" scoped>
 .action-card {

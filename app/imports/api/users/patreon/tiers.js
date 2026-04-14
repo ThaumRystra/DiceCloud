@@ -108,7 +108,7 @@ export async function getUserTier(user) {
   const entitledCents = getEntitledCents(user);
   const tier = getTierByEntitledCents(entitledCents);
   if (tier.paidBenefits) return tier;
-  let invite = await Invites.findOneAsync({ invitee: user._id, isFunded: true });
+  const invite = await Invites.findOneAsync({ invitee: user._id, isFunded: true });
   if (invite) {
     return GUEST_TIER;
   } else {
@@ -117,7 +117,7 @@ export async function getUserTier(user) {
 }
 
 export async function assertUserHasPaidBenefits(user) {
-  let tier = await getUserTier(user);
+  const tier = await getUserTier(user);
   if (!tier.paidBenefits) {
     throw new Meteor.Error('no paid benefits',
       `The ${tier.name} tier does not have the required benefits`);

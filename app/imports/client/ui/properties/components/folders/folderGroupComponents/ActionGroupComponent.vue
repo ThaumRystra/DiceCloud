@@ -1,3 +1,12 @@
+<script setup lang="ts">
+import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
+import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
+
+defineProps<{
+  model: Record<string, any>;
+}>();
+</script>
+
 <template>
   <div
     v-if="model.actionType === 'event'"
@@ -15,12 +24,3 @@
     @sub-click="_id => $emit('sub-click', _id)"
   />
 </template>
-
-<script setup lang="ts">
-import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
-import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
-
-defineProps<{
-  model: Record<string, any>;
-}>();
-</script>

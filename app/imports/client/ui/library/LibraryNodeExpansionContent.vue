@@ -1,31 +1,3 @@
-<template lang="html">
-  <div :key="id">
-    <v-progress-linear
-      v-if="!subsReady"
-      indeterminate
-      color="accent"
-    />
-    <v-expand-transition>
-      <div
-        v-if="subsReady"
-        class="pt-4"
-      >
-        <component
-          :is="model.type"
-          :model="model"
-          class="property-viewer"
-        />
-        <tree-node-list
-          group="library-node-expansion"
-          :root="{ collection: 'libraryNodes', id: id }"
-          :children="propertyChildren"
-          @selected="clickChild"
-        />
-      </div>
-    </v-expand-transition>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useStore } from 'vuex';
@@ -70,5 +42,33 @@ function clickChild(id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div :key="id">
+    <v-progress-linear
+      v-if="!subsReady"
+      indeterminate
+      color="accent"
+    />
+    <v-expand-transition>
+      <div
+        v-if="subsReady"
+        class="pt-4"
+      >
+        <component
+          :is="model.type"
+          :model="model"
+          class="property-viewer"
+        />
+        <tree-node-list
+          group="library-node-expansion"
+          :root="{ collection: 'libraryNodes', id: id }"
+          :children="propertyChildren"
+          @selected="clickChild"
+        />
+      </div>
+    </v-expand-transition>
+  </div>
+</template>
 
 <style lang="css" scoped></style>

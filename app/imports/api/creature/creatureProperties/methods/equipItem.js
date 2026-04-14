@@ -22,7 +22,7 @@ const equipItem = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, equipped }) {
-    let item = await CreatureProperties.findOneAsync(_id);
+    const item = await CreatureProperties.findOneAsync(_id);
     if (!item) throw new Meteor.Error('item not found',
       'Could not find the item to equip or unequip');
     if (item.type !== 'item') throw new Meteor.Error('wrong type',
@@ -37,7 +37,7 @@ const equipItem = new ValidatedMethod({
     }, {
       selector: { type: 'item' },
     });
-    let tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
+    const tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
     let newPosition = 0.5;
     const newParent = getParentRefByTag(creature._id, tag);
     if (newParent) newPosition = newParent.left + 0.5;

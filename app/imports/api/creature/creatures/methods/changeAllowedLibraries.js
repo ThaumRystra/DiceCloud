@@ -37,7 +37,7 @@ const changeAllowedLibraries = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, allowedLibraries, allowedLibraryCollections }) {
-    let creature = await Creatures.findOneAsync(_id);
+    const creature = await Creatures.findOneAsync(_id);
     await assertEditPermission(creature, this.userId);
     let $set;
     if (allowedLibraries) {

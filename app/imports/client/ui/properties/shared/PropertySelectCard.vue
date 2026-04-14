@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+
+defineProps<{
+  property: Record<string, any>;
+  disabled?: boolean;
+}>();
+
+const { result: showPropertyHelp } = autorun(() => {
+  const user = Meteor.user();
+  return !(user?.preferences?.hidePropertySelectDialogHelp);
+});
+</script>
+
 <template lang="html">
   <v-card
     hover
@@ -37,20 +51,6 @@
     </v-expand-transition>
   </v-card>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-
-defineProps<{
-  property: Record<string, any>;
-  disabled?: boolean;
-}>();
-
-const { result: showPropertyHelp } = autorun(() => {
-  const user = Meteor.user();
-  return !(user?.preferences?.hidePropertySelectDialogHelp);
-});
-</script>
 
 <style lang="css" scoped>
 </style>

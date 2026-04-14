@@ -1,39 +1,3 @@
-<template lang="html">
-  <div class="d-flex align-center justify-start">
-    <v-icon
-      v-if="!hideIcon"
-      class="mr-2"
-      :class="selected && 'text-primary'"
-      :color="model.color"
-    >
-      {{ effectIcon }}
-    </v-icon>
-    <div
-      class="text-no-wrap text-truncate"
-    >
-      <template v-if="model.name">
-        {{ model.name }}
-      </template>
-      <template v-else-if="model.targetByTags">
-        <span class="mr-1">
-          {{ displayedValue }}
-        </span>
-        <span
-          class="mr-1"
-        >{{ displayedTags }}</span>
-      </template>
-      <template v-else>
-        <span class="mr-1">
-          {{ displayedValue }}
-        </span>
-        <span
-          class="mr-1"
-        >{{ displayedStats }}</span>
-      </template>
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -101,3 +65,39 @@ const displayedTags = computed(() => {
   return tags + extraTags;
 });
 </script>
+
+<template lang="html">
+  <div class="d-flex align-center justify-start">
+    <v-icon
+      v-if="!hideIcon"
+      class="mr-2"
+      :class="selected && 'text-primary'"
+      :color="model.color"
+    >
+      {{ effectIcon }}
+    </v-icon>
+    <div
+      class="text-no-wrap text-truncate"
+    >
+      <template v-if="model.name">
+        {{ model.name }}
+      </template>
+      <template v-else-if="model.targetByTags">
+        <span class="mr-1">
+          {{ displayedValue }}
+        </span>
+        <span
+          class="mr-1"
+        >{{ displayedTags }}</span>
+      </template>
+      <template v-else>
+        <span class="mr-1">
+          {{ displayedValue }}
+        </span>
+        <span
+          class="mr-1"
+        >{{ displayedStats }}</span>
+      </template>
+    </div>
+  </div>
+</template>

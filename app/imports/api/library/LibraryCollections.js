@@ -58,7 +58,7 @@ const insertLibraryCollection = new ValidatedMethod({
       throw new Meteor.Error('LibraryCollections.methods.insert.denied',
         'You need to be logged in to insert a library');
     }
-    let tier = getUserTier(this.userId);
+    const tier = getUserTier(this.userId);
     if (!tier.paidBenefits) {
       throw new Meteor.Error('LibraryCollections.methods.insert.denied',
         `The ${tier.name} tier does not allow you to insert a library collection`);

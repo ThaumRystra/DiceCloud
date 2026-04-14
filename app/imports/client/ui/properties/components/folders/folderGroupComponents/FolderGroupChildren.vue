@@ -1,21 +1,3 @@
-<template>
-  <div
-    v-if="properties && properties.length"
-  >
-    <component
-      :is="propComponents[prop.type]"
-      v-for="prop in properties"
-      :key="prop._id"
-      :model="prop"
-      :data-id="prop._id"
-      @click="$emit('click-property', {_id: prop._id})"
-      @click-property="(e) => $emit('click-property', e)"
-      @sub-click="(e) => $emit('sub-click', e)"
-      @remove="$emit('remove', prop._id)"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
@@ -57,3 +39,21 @@ const { result: properties } = autorun(() => {
   return result;
 });
 </script>
+
+<template>
+  <div
+    v-if="properties && properties.length"
+  >
+    <component
+      :is="propComponents[prop.type]"
+      v-for="prop in properties"
+      :key="prop._id"
+      :model="prop"
+      :data-id="prop._id"
+      @click="$emit('click-property', {_id: prop._id})"
+      @click-property="(e) => $emit('click-property', e)"
+      @sub-click="(e) => $emit('sub-click', e)"
+      @remove="$emit('remove', prop._id)"
+    />
+  </div>
+</template>

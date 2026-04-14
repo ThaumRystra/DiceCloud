@@ -32,12 +32,12 @@ const duplicateLibraryNode = new ValidatedMethod({
     timeInterval: 6000,
   },
   async run({ _id }) {
-    let libraryNode = await LibraryNodes.findOneAsync(_id);
+    const libraryNode = await LibraryNodes.findOneAsync(_id);
     if (!libraryNode) throw new Meteor.Error('not-found', 'Library node was not found');
 
     await assertDocEditPermission(libraryNode, this.userId);
 
-    let nodes = await LibraryNodes.find({
+    const nodes = await LibraryNodes.find({
       ...getFilter.descendants(libraryNode),
       removed: { $ne: true },
     }, {

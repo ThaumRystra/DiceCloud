@@ -1,3 +1,13 @@
+<script setup lang="ts">
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
+
+defineProps<{
+  model: object;
+  users: object;
+}>();
+</script>
+
 <template>
   <div
     class="tabletop-viewer layout d-flex flex-wrap"
@@ -72,16 +82,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import PropertyField from '/imports/client/ui/properties/viewers/shared/PropertyField.vue';
-
-defineProps<{
-  model: object;
-  users: object;
-}>();
-</script>
 
 <style>
 .tabletop-viewer .reset-width {

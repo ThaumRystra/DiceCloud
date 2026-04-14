@@ -1,3 +1,6 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <div
     class="d-flex character-sheet-initiative"
@@ -14,14 +17,11 @@
       :height="64"
       class="mx-1"
     >
-      <v-progress-linear :value="62" />
+      <v-progress-linear :model-value="62" />
       <v-img src="https://picsum.photos/200/300" />
     </v-card>
   </div>
 </template>
-
-<script setup lang="ts">
-</script>
 
 <style scoped>
 .character-sheet-initiative {

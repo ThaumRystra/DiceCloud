@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { inject, watch } from 'vue';
+import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
+import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
+import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+const context = inject<any>('context', {});
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const attributeTypes = [
+  { text: 'Ability score', value: 'ability', help: 'Ability scores are your primary attributes, like Strength and Intelligence' },
+  { text: 'Stat', value: 'stat', help: 'Stats are attributes with a numerical value like speed or carrying capacity' },
+  { text: 'Modifier', value: 'modifier', help: 'Modifiers are attributes that are added to rolls, like proficiency bonus' },
+  { text: 'Hit dice', value: 'hitDice' },
+  { text: 'Health bar', value: 'healthBar' },
+  { text: 'Resource', value: 'resource', help: 'Resources are attributes that are spent to fuel actions, like sorcery points or ki' },
+  { text: 'Spell slot', value: 'spellSlot' },
+  { text: 'Utility', value: 'utility', help: 'Utility attributes aren\'t displayed on your character sheet, but can be referenced or used in calculations' },
+];
+
+const attributeTypeHints: Record<string, string | undefined> = {};
+attributeTypes.forEach(type => {
+  attributeTypeHints[type.value] = (type as any).help;
+});
+
+const resetOptions = [
+  { text: 'Short rest', value: 'shortRest' },
+  { text: 'Long rest', value: 'longRest' },
+];
+
+watch(() => props.model.attributeType, (newVal, oldVal) => {
+  if (newVal === 'hitDice' && !props.model.hitDiceSize) {
+    emit('change', { path: ['hitDiceSize'], value: 'd8' });
+  } else if (oldVal === 'hitDice') {
+    emit('change', { path: ['hitDiceSize'], value: undefined });
+  }
+});
+</script>
+
 <template lang="html">
   <div class="attribute-form">
     <v-row dense>
@@ -296,56 +346,6 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { inject, watch } from 'vue';
-import ColorPicker from '/imports/client/ui/components/ColorPicker.vue';
-import ResetSelector from '/imports/client/ui/components/ResetSelector.vue';
-import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change']);
-
-const context = inject<any>('context', {});
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const attributeTypes = [
-  { text: 'Ability score', value: 'ability', help: 'Ability scores are your primary attributes, like Strength and Intelligence' },
-  { text: 'Stat', value: 'stat', help: 'Stats are attributes with a numerical value like speed or carrying capacity' },
-  { text: 'Modifier', value: 'modifier', help: 'Modifiers are attributes that are added to rolls, like proficiency bonus' },
-  { text: 'Hit dice', value: 'hitDice' },
-  { text: 'Health bar', value: 'healthBar' },
-  { text: 'Resource', value: 'resource', help: 'Resources are attributes that are spent to fuel actions, like sorcery points or ki' },
-  { text: 'Spell slot', value: 'spellSlot' },
-  { text: 'Utility', value: 'utility', help: 'Utility attributes aren\'t displayed on your character sheet, but can be referenced or used in calculations' },
-];
-
-const attributeTypeHints: Record<string, string | undefined> = {};
-attributeTypes.forEach(type => {
-  attributeTypeHints[type.value] = (type as any).help;
-});
-
-const resetOptions = [
-  { text: 'Short rest', value: 'shortRest' },
-  { text: 'Long rest', value: 'longRest' },
-];
-
-watch(() => props.model.attributeType, (newVal, oldVal) => {
-  if (newVal === 'hitDice' && !props.model.hitDiceSize) {
-    emit('change', { path: ['hitDiceSize'], value: 'd8' });
-  } else if (oldVal === 'hitDice') {
-    emit('change', { path: ['hitDiceSize'], value: undefined });
-  }
-});
-</script>
 
 <style lang="css" scoped>
 .no-flex {

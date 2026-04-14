@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import countdown from '@chenfengyuan/vue-countdown';
+import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE';
+
+const router = useRouter();
+
+const now = new Date();
+const timeLeft = (LAUNCH_DATE as unknown as number) - now.getTime();
+setTimeout(() => {
+  router.push('/');
+}, timeLeft);
+
+const time = ref(timeLeft);
+
+function formatNumber(num: number): string {
+  return ('0' + num).slice(-2);
+}
+</script>
+
+
 <template>
   <div
     class="d-flex flex-column align-center justify-center fill-height"
@@ -20,25 +42,3 @@
     </h1>
   </div>
 </template>
-
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import countdown from '@chenfengyuan/vue-countdown';
-import LAUNCH_DATE from '/imports/constants/LAUNCH_DATE';
-
-const router = useRouter();
-
-const now = new Date();
-const timeLeft = (LAUNCH_DATE as unknown as number) - now.getTime();
-setTimeout(() => {
-  router.push('/');
-}, timeLeft);
-
-const time = ref(timeLeft);
-
-function formatNumber(num: number): string {
-  return ('0' + num).slice(-2);
-}
-</script>

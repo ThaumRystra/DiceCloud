@@ -1,30 +1,3 @@
-<template lang="html">
-  <div class="adjustment-viewer">
-    <v-row dense>
-      <property-field
-        name="Amount"
-        center
-        large
-      >
-        <v-icon class="mx-1">
-          {{ effectIcon }}
-        </v-icon>
-        {{ displayedValue }}
-      </property-field>
-      <property-field
-        name="Attribute"
-        mono
-        :value="model.stat"
-      />
-      <property-field
-        v-if="model.target === 'self'"
-        name="Target"
-        value="Self"
-      />
-    </v-row>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
@@ -59,6 +32,33 @@ const displayedValue = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <div class="adjustment-viewer">
+    <v-row dense>
+      <property-field
+        name="Amount"
+        center
+        large
+      >
+        <v-icon class="mx-1">
+          {{ effectIcon }}
+        </v-icon>
+        {{ displayedValue }}
+      </property-field>
+      <property-field
+        name="Attribute"
+        mono
+        :value="model.stat"
+      />
+      <property-field
+        v-if="model.target === 'self'"
+        name="Target"
+        value="Self"
+      />
+    </v-row>
+  </div>
+</template>
 
 <style lang="css" scoped>
 

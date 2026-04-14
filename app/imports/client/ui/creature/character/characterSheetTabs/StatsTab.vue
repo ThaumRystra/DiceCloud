@@ -1,3 +1,218 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
+import AttributeCard from '/imports/client/ui/properties/components/attributes/AttributeCard.vue';
+import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
+import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
+import DamageMultiplierCard from '/imports/client/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
+import HitDiceListTile from '/imports/client/ui/properties/components/attributes/HitDiceListTile.vue';
+import SkillListTile from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
+import ResourceCard from '/imports/client/ui/properties/components/attributes/ResourceCard.vue';
+import RestButton from '/imports/client/ui/creature/RestButton.vue';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
+import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
+import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
+import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
+import { get, set, uniqBy } from 'lodash';
+import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
+import doAction from '/imports/client/ui/creature/actions/doAction';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
+
+function walkDown(forest: any[], callback: (node: any) => { skipChildren?: boolean } | void) {
+  const stack = [...forest].reverse();
+  while (stack.length) {
+    const node = stack.pop();
+    const { skipChildren } = callback(node) ?? { skipChildren: false };
+    if (!skipChildren) {
+      stack.push(...[...node.children].reverse());
+    }
+  }
+}
+
+const propertyHandlers: Record<string, (prop: any) => { propPath: any; skipChildren?: boolean }> = {
+  folder(prop) {
+    let propPath = null;
+    if (prop.groupStats && prop.tab === 'stats') {
+      propPath = ['folder', prop.location];
+    }
+    return { propPath };
+  },
+  attribute(prop) {
+    if (
+      prop.attributeType === 'utility' ||
+      prop.overridden ||
+      (prop.hideWhenTotalZero && prop.total === 0) ||
+      (prop.hideWhenValueZero && prop.value === 0)
+    ) return { propPath: null };
+    return { propPath: ['attribute', prop.attributeType] };
+  },
+  skill(prop) {
+    if (prop.skillType === 'utility') return { propPath: null };
+    return { propPath: ['skill', prop.skillType] };
+  },
+  toggle(prop) {
+    if (prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI) return { propPath: null };
+    return { propPath: 'toggle' };
+  },
+  action(prop) {
+    if (prop.actionType === 'event' && !prop.overridden) {
+      return { propPath: 'event' };
+    }
+    return { propPath: null };
+  },
+};
+
+const props = defineProps<{ creatureId: string }>();
+const store = useStore(key);
+
+const { result: creature } = autorun(() =>
+  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
+);
+
+const { result: properties } = autorun(() => {
+  const cre = creature.value;
+  if (!cre) return undefined;
+  const folderIds = CreatureProperties.find({
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    type: 'folder',
+    groupStats: true,
+    hideStatsGroup: true,
+    removed: { $ne: true },
+    inactive: { $ne: true },
+  }, { fields: { _id: 1 } }).map((folder: any) => folder._id);
+
+  const filter: any = {
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    parentId: { $nin: folderIds },
+    $or: [
+      { inactive: { $ne: true } },
+      { type: 'toggle' },
+    ],
+    overridden: { $ne: true },
+    removed: { $ne: true },
+    type: {
+      $in: ['action', 'attribute', 'buff', 'damageMultiplier', 'folder', 'skill', 'toggle'],
+    },
+  };
+  if (cre.settings?.hideUnusedStats) {
+    filter.hide = { $ne: true };
+  }
+  const allProps = CreatureProperties.find(filter, { sort: { left: 1 } }).fetch();
+  const forest = docsToForest(allProps);
+  const result: any = { folder: {}, attribute: {}, skill: {} };
+  walkDown(forest, node => {
+    const prop = node.doc;
+    const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ?? { propPath: prop.type };
+    if (propPath) {
+      let propArray = get(result, propPath);
+      if (!propArray) {
+        propArray = [];
+        set(result, propPath, propArray);
+      }
+      propArray.push(prop);
+    }
+    return { skipChildren };
+  });
+  result.damageMultiplier?.sort((a: any, b: any) => a.value - b.value);
+  return result;
+});
+
+const { result: toggles } = autorun(() =>
+  CreatureProperties.find({
+    type: 'toggle',
+    ...getFilter.descendantsOfRoot(props.creatureId),
+    removed: { $ne: true },
+    deactivatedByAncestor: { $ne: true },
+    deactivatedByToggle: { $ne: true },
+    showUI: true,
+  }, { sort: { left: 1 } }).fetch()
+);
+
+const saveConditionals = computed(() => {
+  const conditionals: any[] = [];
+  properties.value?.skill?.save?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+const skillConditionals = computed(() => {
+  const conditionals: any[] = [];
+  properties.value?.skill?.skill?.forEach((prop: any) => {
+    prop?.effects?.forEach((effect: any) => {
+      if (effect.operation === 'conditional') conditionals.push(effect);
+    });
+  });
+  return uniqBy(conditionals, '_id');
+});
+
+function clickProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `${_id}`,
+    data: { _id },
+  });
+}
+
+function clickTreeProperty({ _id }: { _id: string }) {
+  store.commit('pushDialogStack', {
+    component: 'creature-property-dialog',
+    elementId: `tree-node-${_id}`,
+    data: { _id },
+  });
+}
+
+async function incrementChange(_id: string, { type, value, ack }: any) {
+  const model = CreatureProperties.findOne(_id);
+  if (!model) return;
+  if (type === 'increment') value = -value;
+  try {
+    await doAction({
+      creatureId: (model as any).root.id,
+      $store: store,
+      elementId: `${(model as any)._id}`,
+      task: {
+        subtaskFn: 'damageProp',
+        targetIds: [(model as any).root.id],
+        params: {
+          title: getPropertyTitle(model),
+          operation: type,
+          value,
+          targetProp: model,
+        },
+      },
+    });
+    ack?.();
+  } catch (error: any) {
+    if (ack) {
+      ack(error);
+    } else {
+      snackbar({ text: error.reason || error.message || error.toString() });
+      console.error(error);
+    }
+  }
+}
+
+async function softRemove(_id: string) {
+  try {
+    await softRemoveProperty.callAsync({ _id });
+  } catch (error: any) {
+    snackbar({ text: error.reason || error.message || error.toString() });
+    console.error(error);
+  }
+}
+</script>
+
 <template lang="html">
   <div
     v-if="properties"
@@ -382,218 +597,3 @@
     </column-layout>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
-import HealthBar from '/imports/client/ui/properties/components/attributes/HealthBar.vue';
-import AttributeCard from '/imports/client/ui/properties/components/attributes/AttributeCard.vue';
-import AbilityListTile from '/imports/client/ui/properties/components/attributes/AbilityListTile.vue';
-import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import DamageMultiplierCard from '/imports/client/ui/properties/components/damageMultipliers/DamageMultiplierCard.vue';
-import HitDiceListTile from '/imports/client/ui/properties/components/attributes/HitDiceListTile.vue';
-import SkillListTile from '/imports/client/ui/properties/components/skills/SkillListTile.vue';
-import ResourceCard from '/imports/client/ui/properties/components/attributes/ResourceCard.vue';
-import RestButton from '/imports/client/ui/creature/RestButton.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import ToggleCard from '/imports/client/ui/properties/components/toggles/ToggleCard.vue';
-import BuffListItem from '/imports/client/ui/properties/components/buffs/BuffListItem.vue';
-import SpellSlotCard from '/imports/client/ui/properties/components/attributes/SpellSlotCard.vue';
-import EventButton from '/imports/client/ui/properties/components/actions/EventButton.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import { get, set, uniqBy } from 'lodash';
-import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
-import doAction from '/imports/client/ui/creature/actions/doAction';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
-import { key } from '/imports/client/ui/vuexStore';
-
-function walkDown(forest: any[], callback: (node: any) => { skipChildren?: boolean } | void) {
-  const stack = [...forest].reverse();
-  while (stack.length) {
-    const node = stack.pop();
-    const { skipChildren } = callback(node) ?? { skipChildren: false };
-    if (!skipChildren) {
-      stack.push(...[...node.children].reverse());
-    }
-  }
-}
-
-const propertyHandlers: Record<string, (prop: any) => { propPath: any; skipChildren?: boolean }> = {
-  folder(prop) {
-    let propPath = null;
-    if (prop.groupStats && prop.tab === 'stats') {
-      propPath = ['folder', prop.location];
-    }
-    return { propPath };
-  },
-  attribute(prop) {
-    if (
-      prop.attributeType === 'utility' ||
-      prop.overridden ||
-      (prop.hideWhenTotalZero && prop.total === 0) ||
-      (prop.hideWhenValueZero && prop.value === 0)
-    ) return { propPath: null };
-    return { propPath: ['attribute', prop.attributeType] };
-  },
-  skill(prop) {
-    if (prop.skillType === 'utility') return { propPath: null };
-    return { propPath: ['skill', prop.skillType] };
-  },
-  toggle(prop) {
-    if (prop.deactivatedByToggle || prop.deactivatedByAncestor || !prop.showUI) return { propPath: null };
-    return { propPath: 'toggle' };
-  },
-  action(prop) {
-    if (prop.actionType === 'event' && !prop.overridden) {
-      return { propPath: 'event' };
-    }
-    return { propPath: null };
-  },
-};
-
-const props = defineProps<{ creatureId: string }>();
-const store = useStore(key);
-
-const { result: creature } = autorun(() =>
-  Creatures.findOne(props.creatureId, { fields: { settings: 1 } })
-);
-
-const { result: properties } = autorun(() => {
-  const cre = creature.value;
-  if (!cre) return undefined;
-  const folderIds = CreatureProperties.find({
-    ...getFilter.descendantsOfRoot(props.creatureId),
-    type: 'folder',
-    groupStats: true,
-    hideStatsGroup: true,
-    removed: { $ne: true },
-    inactive: { $ne: true },
-  }, { fields: { _id: 1 } }).map((folder: any) => folder._id);
-
-  const filter: any = {
-    ...getFilter.descendantsOfRoot(props.creatureId),
-    parentId: { $nin: folderIds },
-    $or: [
-      { inactive: { $ne: true } },
-      { type: 'toggle' },
-    ],
-    overridden: { $ne: true },
-    removed: { $ne: true },
-    type: {
-      $in: ['action', 'attribute', 'buff', 'damageMultiplier', 'folder', 'skill', 'toggle'],
-    },
-  };
-  if (cre.settings?.hideUnusedStats) {
-    filter.hide = { $ne: true };
-  }
-  const allProps = CreatureProperties.find(filter, { sort: { left: 1 } }).fetch();
-  const forest = docsToForest(allProps);
-  const result: any = { folder: {}, attribute: {}, skill: {} };
-  walkDown(forest, node => {
-    const prop = node.doc;
-    const { propPath, skipChildren } = propertyHandlers[prop.type]?.(prop) ?? { propPath: prop.type };
-    if (propPath) {
-      let propArray = get(result, propPath);
-      if (!propArray) {
-        propArray = [];
-        set(result, propPath, propArray);
-      }
-      propArray.push(prop);
-    }
-    return { skipChildren };
-  });
-  result.damageMultiplier?.sort((a: any, b: any) => a.value - b.value);
-  return result;
-});
-
-const { result: toggles } = autorun(() =>
-  CreatureProperties.find({
-    type: 'toggle',
-    ...getFilter.descendantsOfRoot(props.creatureId),
-    removed: { $ne: true },
-    deactivatedByAncestor: { $ne: true },
-    deactivatedByToggle: { $ne: true },
-    showUI: true,
-  }, { sort: { left: 1 } }).fetch()
-);
-
-const saveConditionals = computed(() => {
-  const conditionals: any[] = [];
-  properties.value?.skill?.save?.forEach((prop: any) => {
-    prop?.effects?.forEach((effect: any) => {
-      if (effect.operation === 'conditional') conditionals.push(effect);
-    });
-  });
-  return uniqBy(conditionals, '_id');
-});
-
-const skillConditionals = computed(() => {
-  const conditionals: any[] = [];
-  properties.value?.skill?.skill?.forEach((prop: any) => {
-    prop?.effects?.forEach((effect: any) => {
-      if (effect.operation === 'conditional') conditionals.push(effect);
-    });
-  });
-  return uniqBy(conditionals, '_id');
-});
-
-function clickProperty({ _id }: { _id: string }) {
-  store.commit('pushDialogStack', {
-    component: 'creature-property-dialog',
-    elementId: `${_id}`,
-    data: { _id },
-  });
-}
-
-function clickTreeProperty({ _id }: { _id: string }) {
-  store.commit('pushDialogStack', {
-    component: 'creature-property-dialog',
-    elementId: `tree-node-${_id}`,
-    data: { _id },
-  });
-}
-
-async function incrementChange(_id: string, { type, value, ack }: any) {
-  const model = CreatureProperties.findOne(_id);
-  if (!model) return;
-  if (type === 'increment') value = -value;
-  try {
-    await doAction({
-      creatureId: (model as any).root.id,
-      $store: store,
-      elementId: `${(model as any)._id}`,
-      task: {
-        subtaskFn: 'damageProp',
-        targetIds: [(model as any).root.id],
-        params: {
-          title: getPropertyTitle(model),
-          operation: type,
-          value,
-          targetProp: model,
-        },
-      },
-    });
-    ack?.();
-  } catch (error: any) {
-    if (ack) {
-      ack(error);
-    } else {
-      snackbar({ text: error.reason || error.message || error.toString() });
-      console.error(error);
-    }
-  }
-}
-
-async function softRemove(_id: string) {
-  try {
-    await softRemoveProperty.callAsync({ _id });
-  } catch (error: any) {
-    snackbar({ text: error.reason || error.message || error.toString() });
-    console.error(error);
-  }
-}
-</script>

@@ -1,23 +1,3 @@
-<template lang="html">
-  <v-btn
-    :disabled="context.editPermission === false"
-    :data-id="`event-btn-${model._id}`"
-    variant="outlined"
-    class="event-button"
-    style="min-width: 160px; max-width: 100%;"
-    :color="model.color"
-    @click="doActionClick"
-  >
-    <property-icon
-      style="margin-left: -4px; margin-right: 8px;"
-      :model="model"
-    />
-    <div class="text-truncate">
-      {{ model.name }}
-    </div>
-  </v-btn>
-</template>
-
 <script setup lang="ts">
 import { ref, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -54,6 +34,26 @@ async function doActionClick() {
   }
 }
 </script>
+
+<template lang="html">
+  <v-btn
+    :disabled="context.editPermission === false"
+    :data-id="`event-btn-${model._id}`"
+    variant="outlined"
+    class="event-button"
+    style="min-width: 160px; max-width: 100%;"
+    :color="model.color"
+    @click="doActionClick"
+  >
+    <property-icon
+      style="margin-left: -4px; margin-right: 8px;"
+      :model="model"
+    />
+    <div class="text-truncate">
+      {{ model.name }}
+    </div>
+  </v-btn>
+</template>
 
 <style lang="css">
 .event-button .v-btn__content {

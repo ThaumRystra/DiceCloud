@@ -41,7 +41,7 @@ Meteor.publish('user', function () {
   ];
 });
 
-let userIdsSchema = new SimpleSchema({
+const userIdsSchema = new SimpleSchema({
   ids: {
     type: Array,
     optional: true,

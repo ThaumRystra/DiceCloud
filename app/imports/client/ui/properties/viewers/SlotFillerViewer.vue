@@ -1,3 +1,9 @@
+<script setup lang="ts">
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="slot-filler-viewer">
     <v-row dense>
@@ -11,9 +17,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-
-defineProps<{ model: Record<string, any> }>();
-</script>

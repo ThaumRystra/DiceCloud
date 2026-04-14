@@ -1,3 +1,104 @@
+<script setup lang="ts">
+import { ref, reactive, computed, watch, toRef, provide } from 'vue';
+import { useStore } from 'vuex';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import Libraries from '/imports/api/library/Libraries';
+import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
+import { difference } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
+
+const props = defineProps<{
+  slotId?: string;
+  creatureId?: string;
+  dummySlot?: object;
+}>();
+
+const store = useStore(key);
+
+provide('context', reactive({ creatureId: toRef(props, 'creatureId') }));
+
+const selectedNodeIds = ref<string[]>([]);
+const searchInput = ref<string | undefined>(undefined);
+const searchValue = ref<string | undefined>(undefined);
+const autoSelectRan = ref(false);
+const currentLimit = ref(50);
+
+const hasMore = computed(() => libraryNodes.value && libraryNodes.value.length >= currentLimit.value);
+
+const { ready: creatureTemplatesReady } = subscribe(() => ['creatureTemplates', searchValue.value || undefined, currentLimit.value]);
+
+const { result: searchLoading } = autorun(() => !!searchValue.value && !creatureTemplatesReady.value);
+
+const { result: libraryNames } = autorun(() => {
+  const names: Record<string, string> = {};
+  Libraries.find().forEach((lib: any) => { names[lib._id] = lib.name; });
+  return names;
+});
+
+const { result: libraryNodes } = autorun(() => {
+  if (!creatureTemplatesReady.value) return [];
+  const nodes = LibraryNodes.find({ _creatureTemplateResult: true }, {
+    sort: { name: 1, order: 1 },
+  }).fetch();
+
+  if (!autoSelectRan.value) {
+    autoSelectRan.value = true;
+    if (nodes.length === 1 && !nodes[0]._disabled && !selectedNodeIds.value?.length) {
+      selectedNodeIds.value = [nodes[0]._id];
+    }
+  }
+  return nodes;
+});
+
+const activeCount = computed(() => libraryNodes.value?.length ?? 0);
+
+const { result: selectedExcludedNodes } = autorun(() => {
+  const displayedIds = (libraryNodes.value ?? []).map((node: any) => node._id);
+  const excludedNodeIds = difference(selectedNodeIds.value, displayedIds);
+  return LibraryNodes.find({ _id: { $in: excludedNodeIds } });
+});
+
+watch(activeCount, (val) => {
+  if (!creatureTemplatesSubReady.value) return;
+  if (hasMore.value && val < 25) {
+    loadMore();
+  }
+});
+
+function loadMore() {
+  if (!hasMore.value) return;
+  currentLimit.value += 50;
+}
+
+function openPropertyDetails(id: string) {
+  store.commit('pushDialogStack', {
+    component: 'library-node-dialog',
+    elementId: id,
+    data: { _id: id },
+  });
+}
+
+function openLibraryBrowser() {
+  store.commit('pushDialogStack', {
+    component: 'library-browser-dialog',
+    elementId: 'library-browser-button',
+  });
+}
+
+function isDisabled(node: any) {
+  return node._disabledByAlreadyAdded ||
+    (node._disabledByQuantityFilled && !selectedNodeIds.value.includes(node._id));
+}
+
+function insertCustomFiller() {
+  // TODO
+  return;
+}
+</script>
+
 <template lang="html">
   <dialog-base dark-body>
     <template #toolbar>
@@ -31,7 +132,7 @@
       </div>
       <v-expansion-panels
         v-else
-        accordion
+        variant="accordion"
         rounded="0"
         multiple
         hover
@@ -161,107 +262,6 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref, reactive, computed, watch, toRef, provide } from 'vue';
-import { useStore } from 'vuex';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-import Libraries from '/imports/api/library/Libraries';
-import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
-import { difference } from 'lodash';
-import { key } from '/imports/client/ui/vuexStore';
-
-const props = defineProps<{
-  slotId?: string;
-  creatureId?: string;
-  dummySlot?: object;
-}>();
-
-const store = useStore(key);
-
-provide('context', reactive({ creatureId: toRef(props, 'creatureId') }));
-
-const selectedNodeIds = ref<string[]>([]);
-const searchInput = ref<string | undefined>(undefined);
-const searchValue = ref<string | undefined>(undefined);
-const autoSelectRan = ref(false);
-const currentLimit = ref(50);
-
-const hasMore = computed(() => libraryNodes.value && libraryNodes.value.length >= currentLimit.value);
-
-const { ready: creatureTemplatesReady } = subscribe(() => ['creatureTemplates', searchValue.value || undefined, currentLimit.value]);
-
-const { result: searchLoading } = autorun(() => !!searchValue.value && !creatureTemplatesReady.value);
-
-const { result: libraryNames } = autorun(() => {
-  const names: Record<string, string> = {};
-  Libraries.find().forEach((lib: any) => { names[lib._id] = lib.name; });
-  return names;
-});
-
-const { result: libraryNodes } = autorun(() => {
-  if (!creatureTemplatesReady.value) return [];
-  const nodes = LibraryNodes.find({ _creatureTemplateResult: true }, {
-    sort: { name: 1, order: 1 },
-  }).fetch();
-
-  if (!autoSelectRan.value) {
-    autoSelectRan.value = true;
-    if (nodes.length === 1 && !nodes[0]._disabled && !selectedNodeIds.value?.length) {
-      selectedNodeIds.value = [nodes[0]._id];
-    }
-  }
-  return nodes;
-});
-
-const activeCount = computed(() => libraryNodes.value?.length ?? 0);
-
-const { result: selectedExcludedNodes } = autorun(() => {
-  const displayedIds = (libraryNodes.value ?? []).map((node: any) => node._id);
-  const excludedNodeIds = difference(selectedNodeIds.value, displayedIds);
-  return LibraryNodes.find({ _id: { $in: excludedNodeIds } });
-});
-
-watch(activeCount, (val) => {
-  if (!creatureTemplatesSubReady.value) return;
-  if (hasMore.value && val < 25) {
-    loadMore();
-  }
-});
-
-function loadMore() {
-  if (!hasMore.value) return;
-  currentLimit.value += 50;
-}
-
-function openPropertyDetails(id: string) {
-  store.commit('pushDialogStack', {
-    component: 'library-node-dialog',
-    elementId: id,
-    data: { _id: id },
-  });
-}
-
-function openLibraryBrowser() {
-  store.commit('pushDialogStack', {
-    component: 'library-browser-dialog',
-    elementId: 'library-browser-button',
-  });
-}
-
-function isDisabled(node: any) {
-  return node._disabledByAlreadyAdded ||
-    (node._disabledByQuantityFilled && !selectedNodeIds.value.includes(node._id));
-}
-
-function insertCustomFiller() {
-  // TODO
-  return;
-}
-</script>
 
 <style lang="css" scoped>
 .disabled {

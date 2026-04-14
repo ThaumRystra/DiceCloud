@@ -1,3 +1,67 @@
+<script setup lang="ts">
+import { ref, computed, inject } from 'vue';
+import { autorun } from 'vue-meteor-tracker';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
+import { getFilter, docsToForest } from '/imports/api/parenting/parentingFunctions';
+import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { some } from 'lodash';
+
+const props = defineProps<{ model: Record<string, any> }>();
+
+const context = inject('context', {} as any);
+const theme = inject('theme', { isDark: false } as any);
+
+const hovering = ref(false);
+const activated = ref<boolean | undefined>(undefined);
+
+const rollBonus = computed(() => {
+  if (!props.model.attackRoll) return undefined;
+  return numberToSignedString(props.model.attackRoll.value);
+});
+
+const rollBonusTooLong = computed(() => rollBonus.value && rollBonus.value.length > 3);
+
+const propertyName = computed(() => getPropertyName(props.model.type));
+
+const cardClasses = computed(() => ({
+  'v-theme--dark': theme.isDark,
+  'v-theme--light': !theme.isDark,
+  'muted-text': props.model.insufficientResources,
+  'active': activated.value,
+  'elevation-8': hovering.value,
+}));
+
+const actionTypeName = computed(() => ({
+  'action': 'Action',
+  'bonus': 'Bonus Action',
+  'attack': 'Attack',
+  'reaction': 'Reaction',
+  'free': 'Free Action',
+  'long': 'Long Action',
+} as Record<string, string>)[props.model.actionType] || props.model.actionType);
+
+const { result: children } = autorun(() => {
+  const rangesToExclude: { left: number; right: number }[] = [];
+  const descendants = CreatureProperties.find({
+    ...getFilter.descendants(props.model),
+    removed: { $ne: true },
+  }, { sort: { left: 1 } }).map((prop: any) => {
+    if (prop.type === 'buff' || prop.type === 'folder') {
+      rangesToExclude.push({ left: prop.left, right: prop.right });
+    }
+    return prop;
+  }).filter((prop: any) => {
+    if (prop.type === 'folder') return false;
+    return !some(rangesToExclude, range => prop.left > range.left && prop.right < range.right);
+  });
+  return docsToForest(descendants);
+});
+</script>
+
 <template lang="html">
   <div
     class="action-card"
@@ -69,70 +133,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, inject } from 'vue';
-import { autorun } from 'vue-meteor-tracker';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
-import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { getFilter, docsToForest } from '/imports/api/parenting/parentingFunctions';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { some } from 'lodash';
-
-const props = defineProps<{ model: Record<string, any> }>();
-
-const context = inject('context', {} as any);
-const theme = inject('theme', { isDark: false } as any);
-
-const hovering = ref(false);
-const activated = ref<boolean | undefined>(undefined);
-
-const rollBonus = computed(() => {
-  if (!props.model.attackRoll) return undefined;
-  return numberToSignedString(props.model.attackRoll.value);
-});
-
-const rollBonusTooLong = computed(() => rollBonus.value && rollBonus.value.length > 3);
-
-const propertyName = computed(() => getPropertyName(props.model.type));
-
-const cardClasses = computed(() => ({
-  'v-theme--dark': theme.isDark,
-  'v-theme--light': !theme.isDark,
-  'muted-text': props.model.insufficientResources,
-  'active': activated.value,
-  'elevation-8': hovering.value,
-}));
-
-const actionTypeName = computed(() => ({
-  'action': 'Action',
-  'bonus': 'Bonus Action',
-  'attack': 'Attack',
-  'reaction': 'Reaction',
-  'free': 'Free Action',
-  'long': 'Long Action',
-} as Record<string, string>)[props.model.actionType] || props.model.actionType);
-
-const { result: children } = autorun(() => {
-  const rangesToExclude: { left: number; right: number }[] = [];
-  const descendants = CreatureProperties.find({
-    ...getFilter.descendants(props.model),
-    removed: { $ne: true },
-  }, { sort: { left: 1 } }).map((prop: any) => {
-    if (prop.type === 'buff' || prop.type === 'folder') {
-      rangesToExclude.push({ left: prop.left, right: prop.right });
-    }
-    return prop;
-  }).filter((prop: any) => {
-    if (prop.type === 'folder') return false;
-    return !some(rangesToExclude, range => prop.left > range.left && prop.right < range.right);
-  });
-  return docsToForest(descendants);
-});
-</script>
 
 <style lang="css" scoped>
 .action-card {

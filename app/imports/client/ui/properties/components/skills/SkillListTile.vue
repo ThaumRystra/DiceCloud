@@ -1,58 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="skill-list-tile pl-0"
-    style="min-height: 36px;"
-    v-on="hasClickListener ? { click } : {}"
-  >
-    <v-list-item-title class="d-flex align-center">
-      <v-btn
-        v-if="!hideModifier"
-        variant="text"
-        rounded="0"
-        :loading="checkLoading"
-        :disabled="!context.editPermission"
-        :data-id="`check-btn-${model._id}`"
-        class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
-        @click.stop="check"
-      >
-        <proficiency-icon
-          :value="model.proficiency"
-          class="prof-icon"
-        />
-        <div class="prof-mod">
-          {{ displayedModifier }}
-        </div>
-        <v-icon
-          v-if="model.advantage > 0"
-          size="20px"
-        >
-          mdi-chevron-double-up
-        </v-icon>
-        <v-icon
-          v-if="model.advantage < 0"
-          size="20px"
-        >
-          mdi-chevron-double-down
-        </v-icon>
-      </v-btn>
-      <proficiency-icon
-        v-else
-        :value="model.proficiency"
-        class="prof-icon ml-3 mr-2"
-      />
-      <div class="text-truncate">
-        {{ model.name }}
-        <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
-          *
-        </template>
-        <template v-if="'passiveBonus' in model">
-          ({{ passiveScore }})
-        </template>
-      </div>
-    </v-list-item-title>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, useAttrs, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -116,6 +61,61 @@ async function check() {
   }
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="skill-list-tile pl-0"
+    style="min-height: 36px;"
+    v-on="hasClickListener ? { click } : {}"
+  >
+    <v-list-item-title class="d-flex align-center">
+      <v-btn
+        v-if="!hideModifier"
+        variant="text"
+        rounded="0"
+        :loading="checkLoading"
+        :disabled="!context.editPermission"
+        :data-id="`check-btn-${model._id}`"
+        class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
+        @click.stop="check"
+      >
+        <proficiency-icon
+          :value="model.proficiency"
+          class="prof-icon"
+        />
+        <div class="prof-mod">
+          {{ displayedModifier }}
+        </div>
+        <v-icon
+          v-if="model.advantage > 0"
+          size="20px"
+        >
+          mdi-chevron-double-up
+        </v-icon>
+        <v-icon
+          v-if="model.advantage < 0"
+          size="20px"
+        >
+          mdi-chevron-double-down
+        </v-icon>
+      </v-btn>
+      <proficiency-icon
+        v-else
+        :value="model.proficiency"
+        class="prof-icon ml-3 mr-2"
+      />
+      <div class="text-truncate">
+        {{ model.name }}
+        <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
+          *
+        </template>
+        <template v-if="'passiveBonus' in model">
+          ({{ passiveScore }})
+        </template>
+      </div>
+    </v-list-item-title>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
 .prof-icon {

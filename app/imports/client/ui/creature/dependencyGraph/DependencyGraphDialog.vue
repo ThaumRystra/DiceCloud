@@ -1,20 +1,3 @@
-<template lang="html">
-  <dialog-base class="dependency-graph">
-    <template #toolbar>
-      <div>
-        Dependency Graph
-      </div>
-    </template>
-    <template #unwrapped-content>
-      <div
-        id="dependency-graph-container"
-        ref="container"
-        class="graph-container"
-      />
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -126,6 +109,23 @@ onMounted(() => {
   cyInstance.on('tap', 'edge', function (evt: any) { console.log(evt.target.data()); });
 });
 </script>
+
+<template lang="html">
+  <dialog-base class="dependency-graph">
+    <template #toolbar>
+      <div>
+        Dependency Graph
+      </div>
+    </template>
+    <template #unwrapped-content>
+      <div
+        id="dependency-graph-container"
+        ref="container"
+        class="graph-container"
+      />
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css">
   .graph-container {

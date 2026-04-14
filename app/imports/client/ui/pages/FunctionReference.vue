@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import functions from '/imports/parser/functions';
+import { computed } from 'vue';
+
+const functionList = computed(() => {
+  const fns: any[] = [];
+  for (const name in functions) {
+    const f = (functions as any)[name];
+    fns.push({ name, ...f });
+  }
+  return fns;
+});
+</script>
+
 <template>
   <v-container class="documentation">
     <v-row justify="center">
@@ -40,17 +54,3 @@
     </v-row>
   </v-container>
 </template>
-
-<script setup lang="ts">
-import functions from '/imports/parser/functions';
-import { computed } from 'vue';
-
-const functionList = computed(() => {
-  const fns: any[] = [];
-  for (const name in functions) {
-    const f = (functions as any)[name];
-    fns.push({ name, ...f });
-  }
-  return fns;
-});
-</script>

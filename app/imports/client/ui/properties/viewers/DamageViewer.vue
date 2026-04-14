@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { computed } from 'vue';
+
+const props = defineProps<{ model: Record<string, any> }>();
+
+const type = computed(() => {
+  if (props.model.damageType === 'healing') return props.model.damageType;
+  return `${props.model.damageType} damage`;
+});
+
+const saveDamage = computed(() => {
+  if (!props.model.save) return;
+  if (!props.model.save.damageFunction?.calculation) {
+    return { value: 'Half damage' };
+  }
+  if (props.model.save.damageFunction.calculation == '0' || props.model.save.damageFunction.value === 0) {
+    return { value: 'No damage' };
+  }
+  return { calculation: props.model.save.damageFunction };
+});
+</script>
+
 <template lang="html">
   <div class="damage-viewer">
     <v-row dense>
@@ -36,28 +58,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed } from 'vue';
-
-const props = defineProps<{ model: Record<string, any> }>();
-
-const type = computed(() => {
-  if (props.model.damageType === 'healing') return props.model.damageType;
-  return `${props.model.damageType} damage`;
-});
-
-const saveDamage = computed(() => {
-  if (!props.model.save) return;
-  if (!props.model.save.damageFunction?.calculation) {
-    return { value: 'Half damage' };
-  }
-  if (props.model.save.damageFunction.calculation == '0' || props.model.save.damageFunction.value === 0) {
-    return { value: 'No damage' };
-  }
-  return { calculation: props.model.save.damageFunction };
-});
-</script>
 
 <style lang="css" scoped>
 

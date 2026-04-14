@@ -1,50 +1,3 @@
-<template>
-  <v-container class="documentation">
-    <v-row justify="center">
-      <v-col
-        cols="12"
-        md="8"
-      >
-        <doc-breadcrumbs :doc="doc" />
-      </v-col>
-    </v-row>
-    <v-fade-transition mode="out-in">
-      <v-progress-circular
-        v-if="!docsReady"
-        key="loading"
-        indeterminate
-        color="primary"
-        size="32"
-      />
-      <v-row
-        v-else-if="docNotFound"
-        key="failed"
-        justify="center"
-      >
-        <v-col
-          cols="12"
-          md="8"
-        >
-          <h1>Documentation not found</h1>
-        </v-col>
-      </v-row>
-      <doc-edit-form
-        v-else-if="editing"
-        key="editing"
-        :doc="doc"
-        :child-docs="childDocs"
-      />
-      <doc-viewer
-        v-else
-        key="viewing"
-        :doc="doc"
-        :child-docs="childDocs"
-        :sibling-docs="siblingDocs"
-      />
-    </v-fade-transition>
-  </v-container>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -129,6 +82,53 @@ watch(title, (value) => {
   store.commit('setPageTitle', value);
 }, { immediate: true });
 </script>
+
+<template>
+  <v-container class="documentation">
+    <v-row justify="center">
+      <v-col
+        cols="12"
+        md="8"
+      >
+        <doc-breadcrumbs :doc="doc" />
+      </v-col>
+    </v-row>
+    <v-fade-transition mode="out-in">
+      <v-progress-circular
+        v-if="!docsReady"
+        key="loading"
+        indeterminate
+        color="primary"
+        size="32"
+      />
+      <v-row
+        v-else-if="docNotFound"
+        key="failed"
+        justify="center"
+      >
+        <v-col
+          cols="12"
+          md="8"
+        >
+          <h1>Documentation not found</h1>
+        </v-col>
+      </v-row>
+      <doc-edit-form
+        v-else-if="editing"
+        key="editing"
+        :doc="doc"
+        :child-docs="childDocs"
+      />
+      <doc-viewer
+        v-else
+        key="viewing"
+        :doc="doc"
+        :child-docs="childDocs"
+        :sibling-docs="siblingDocs"
+      />
+    </v-fade-transition>
+  </v-container>
+</template>
 
 <style>
 .documentation .fade-transition-enter-active {

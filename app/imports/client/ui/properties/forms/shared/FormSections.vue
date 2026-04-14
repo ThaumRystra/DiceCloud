@@ -1,15 +1,3 @@
-<template lang="html">
-  <v-expansion-panels
-    v-model="expand"
-    accordion
-    rounded="0"
-    multiple
-    hover
-  >
-    <slot />
-  </v-expansion-panels>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -31,3 +19,15 @@ watch(expand, (value) => {
   store.commit('setFormExpansion', { type: props.type, value });
 });
 </script>
+
+<template lang="html">
+  <v-expansion-panels
+    v-model="expand"
+    variant="accordion"
+    rounded="0"
+    multiple
+    hover
+  >
+    <slot />
+  </v-expansion-panels>
+</template>

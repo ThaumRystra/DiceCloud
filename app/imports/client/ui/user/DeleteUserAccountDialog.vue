@@ -1,3 +1,47 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+import { autorun, subscribe } from 'vue-meteor-tracker';
+import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+import Libraries from '/imports/api/library/Libraries';
+import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
+import { key } from '/imports/client/ui/vuexStore';
+
+const store = useStore(key);
+const router = useRouter();
+
+const usernameInput = ref('');
+const verificationInput = ref('');
+
+subscribe('ownedDocuments');
+
+const { result: characters } = autorun(() => Creatures.find({ owner: Meteor.userId() }));
+const { result: libraries } = autorun(() => Libraries.find({ owner: Meteor.userId() }));
+const { result: user } = autorun(() => Meteor.user());
+
+const usernameInputValid = computed(() => {
+  const username = user.value?.username;
+  if (!username) return true;
+  const input = usernameInput.value;
+  if (!input) return false;
+  return input.toLowerCase() === username.toLowerCase();
+});
+
+const verificationInputValid = computed(() =>
+  (verificationInput.value || '').toLowerCase() === 'delete my account'
+);
+
+const valid = computed(() => usernameInputValid.value && verificationInputValid.value);
+
+function deleteAccount() {
+  router.push('/');
+  Meteor.users.deleteMyAccount.callAsync();
+  store.dispatch('popDialogStack');
+}
+</script>
+
 <template lang="html">
   <dialog-base>
     <template #toolbar>
@@ -85,49 +129,5 @@
     </template>
   </dialog-base>
 </template>
-
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-import { autorun, subscribe } from 'vue-meteor-tracker';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-import Libraries from '/imports/api/library/Libraries';
-import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
-import { key } from '/imports/client/ui/vuexStore';
-
-const store = useStore(key);
-const router = useRouter();
-
-const usernameInput = ref('');
-const verificationInput = ref('');
-
-subscribe('ownedDocuments');
-
-const { result: characters } = autorun(() => Creatures.find({ owner: Meteor.userId() }));
-const { result: libraries } = autorun(() => Libraries.find({ owner: Meteor.userId() }));
-const { result: user } = autorun(() => Meteor.user());
-
-const usernameInputValid = computed(() => {
-  const username = user.value?.username;
-  if (!username) return true;
-  const input = usernameInput.value;
-  if (!input) return false;
-  return input.toLowerCase() === username.toLowerCase();
-});
-
-const verificationInputValid = computed(() =>
-  (verificationInput.value || '').toLowerCase() === 'delete my account'
-);
-
-const valid = computed(() => usernameInputValid.value && verificationInputValid.value);
-
-function deleteAccount() {
-  router.push('/');
-  Meteor.users.deleteMyAccount.callAsync();
-  store.dispatch('popDialogStack');
-}
-</script>
 
 <style lang="css" scoped></style>

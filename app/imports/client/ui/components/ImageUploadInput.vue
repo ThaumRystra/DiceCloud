@@ -1,46 +1,3 @@
-<template>
-  <div
-    v-bind="$attrs"
-    class="d-flex flex-column "
-  >
-    <v-btn
-      variant="outlined"
-      block
-      class="image-upload-button flex-grow-1"
-      v-bind="$attrs"
-      style="min-height: 64px;"
-      :loading="uploadingInProgress"
-      @click="hiddenFileInput?.click()"
-      prepend-icon="mdi-file-upload-outline"
-    >
-      <div>
-        Upload Image
-      </div>
-      <template #loader>
-        <v-progress-circular
-          :value="progress"
-          :indeterminate="uploadIndeterminate"
-        />
-      </template>
-      <input
-        ref="hiddenFileInput"
-        type="file"
-        accept="image/*"
-        style="display: none;"
-        @input="inputChange"
-      >
-    </v-btn>
-    <v-alert
-      v-if="fileUploadError"
-      variant="outlined"
-      type="error"
-      class="mb-0 mt-4"
-    >
-      {{ fileUploadError }}
-    </v-alert>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import UserImages from '/imports/api/files/userImages/UserImages';
@@ -125,6 +82,49 @@ function resetState() {
   progress.value = 0;
 }
 </script>
+
+<template>
+  <div
+    v-bind="$attrs"
+    class="d-flex flex-column "
+  >
+    <v-btn
+      variant="outlined"
+      block
+      class="image-upload-button flex-grow-1"
+      v-bind="$attrs"
+      style="min-height: 64px;"
+      :loading="uploadingInProgress"
+      prepend-icon="mdi-file-upload-outline"
+      @click="hiddenFileInput?.click()"
+    >
+      <div>
+        Upload Image
+      </div>
+      <template #loader>
+        <v-progress-circular
+          :model-value="progress"
+          :indeterminate="uploadIndeterminate"
+        />
+      </template>
+      <input
+        ref="hiddenFileInput"
+        type="file"
+        accept="image/*"
+        style="display: none;"
+        @input="inputChange"
+      >
+    </v-btn>
+    <v-alert
+      v-if="fileUploadError"
+      variant="outlined"
+      type="error"
+      class="mb-0 mt-4"
+    >
+      {{ fileUploadError }}
+    </v-alert>
+  </div>
+</template>
 
 <style>
 

@@ -62,7 +62,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
 export { LIBRARY_NODE_TREE_FIELDS };
 
 Meteor.publish('libraryCollection', async function (libraryCollectionId) {
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return this.error(new Meteor.Error('logged-out', 'You must be logged in to view your library collections'));
   }
@@ -99,7 +99,7 @@ Meteor.publish('libraryCollection', async function (libraryCollectionId) {
 });
 
 Meteor.publish('libraries', async function () {
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return this.error(new Meteor.Error('logged-out', 'You must be logged in to view your libraries'));
   }
@@ -181,8 +181,8 @@ Meteor.publish('library', async function (libraryId) {
     console.warn(e);
     return this.error(e as Error);
   }
-  let userId = this.userId;
-  let library = await Libraries.findOneAsync(libraryId);
+  const userId = this.userId;
+  const library = await Libraries.findOneAsync(libraryId);
   try {
     await assertViewPermission(library, userId)
   }
@@ -201,7 +201,7 @@ Meteor.publish('library', async function (libraryId) {
   ];
 });
 
-let libraryIdSchema = new SimpleSchema({
+const libraryIdSchema = new SimpleSchema({
   libraryId: {
     type: String,
     max: 32,
@@ -227,8 +227,8 @@ Meteor.publish('libraryNodes', async function (libraryId: string, extraFields: s
     console.warn(e);
     return this.error(e as Error);
   }
-  let userId = this.userId;
-  let library = await Libraries.findOneAsync(libraryId);
+  const userId = this.userId;
+  const library = await Libraries.findOneAsync(libraryId);
   try {
     assertViewPermission(library, userId)
   } catch (e) {
@@ -261,7 +261,7 @@ Meteor.publish('libraryNode', async function (libraryNodeId) {
   nodeIdSchema.validate({ libraryNodeId });
   const userId = this.userId;
   const nodeCursor = LibraryNodes.find({ _id: libraryNodeId });
-  let node = await nodeCursor.fetchAsync()[0];
+  const node = await nodeCursor.fetchAsync()[0];
   try {
     assertDocViewPermission(node, userId);
   }
@@ -275,8 +275,8 @@ Meteor.publish('libraryNode', async function (libraryNodeId) {
 Meteor.publish('softRemovedLibraryNodes', async function (libraryId) {
   if (!libraryId) return [];
   libraryIdSchema.validate({ libraryId });
-  let userId = this.userId;
-  let library = await Libraries.findOneAsync(libraryId);
+  const userId = this.userId;
+  const library = await Libraries.findOneAsync(libraryId);
   try { assertViewPermission(library, userId) }
   catch (e) {
     console.warn(e);
@@ -294,10 +294,10 @@ Meteor.publish('softRemovedLibraryNodes', async function (libraryId) {
 });
 
 Meteor.publish('descendantLibraryNodes', async function (nodeId) {
-  let node = await LibraryNodes.findOneAsync(nodeId);
-  let libraryId = node?.root.id;
+  const node = await LibraryNodes.findOneAsync(nodeId);
+  const libraryId = node?.root.id;
   if (!libraryId || !node) return [];
-  let userId = this.userId;
+  const userId = this.userId;
   try {
     assertDocViewPermission(node, userId);
   }

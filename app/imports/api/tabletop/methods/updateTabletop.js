@@ -11,7 +11,7 @@ const updateTabletop = new ValidatedMethod({
   validate({ _id, path }) {
     if (!_id) return false;
     // Allowed fields
-    let allowedFields = [
+    const allowedFields = [
       'name',
       'description',
       'imageUrl',

@@ -1,87 +1,3 @@
-<template lang="html">
-  <v-menu
-    v-model="menu"
-    :close-on-content-click="false"
-    transition="slide-y-transition"
-    min-width="290px"
-    style="overflow-y: auto;"
-    left
-  >
-    <template #activator="{ props }">
-      <v-btn
-        :loading="loading"
-        :outlined="!!label"
-        :icon="!label"
-        :tile="!label"
-        :min-width="label && 108"
-        :height="height"
-        :width="width"
-        :style="buttonStyle"
-        :disabled="context.editPermission === false"
-        v-bind="{...$attrs, ...props}"
-      >
-        {{ label }}
-        <svg-icon
-          v-if="safeValue && safeValue.shape"
-          right
-          :class="{'ml-2': !!label}"
-          :shape="safeValue.shape"
-        />
-        <v-icon
-          v-else
-          :right="!!label"
-        >
-          mdi-select-search
-        </v-icon>
-      </v-btn>
-    </template>
-    <v-card>
-      <v-card-text>
-        <div class="d-flex align-center">
-          <text-field
-            ref="iconSearchField"
-            label="Search icons"
-            append-icon="mdi-magnify"
-            clearable
-            hide-details
-            class="ma-2"
-            :value="searchString"
-            @change="search"
-          />
-          <v-btn
-            variant="text"
-            @click="select()"
-          >
-            clear
-          </v-btn>
-        </div>
-        <div
-          class="d-flex flex-wrap"
-          style="max-height: 400px; overflow-y: auto;"
-        >
-          <v-scale-transition
-            group
-            hide-on-leave
-          >
-            <v-btn
-              v-for="icon in icons"
-              :key="icon._id"
-              icon
-              size="large"
-              @click="select(icon)"
-            >
-              <svg-icon
-                :shape="icon.shape"
-                size="x-large"
-              />
-            </v-btn>
-          </v-scale-transition>
-        </div>
-      </v-card-text>
-    </v-card>
-  </v-menu>
-</template>
-
 <script setup lang="ts">
 import { ref, watch, inject, useAttrs } from 'vue';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
@@ -142,6 +58,90 @@ function select(icon?: unknown) {
   change(icon);
 }
 </script>
+
+<template lang="html">
+  <v-menu
+    v-model="menu"
+    :close-on-content-click="false"
+    transition="slide-y-transition"
+    min-width="290px"
+    style="overflow-y: auto;"
+    location="left"
+  >
+    <template #activator="{ props }">
+      <v-btn
+        :loading="loading"
+        :variant="!!label ? 'outlined' : undefined"
+        :icon="!label"
+        :tile="!label"
+        :min-width="label && 108"
+        :height="height"
+        :width="width"
+        :style="buttonStyle"
+        :disabled="context.editPermission === false"
+        v-bind="{...$attrs, ...props}"
+      >
+        {{ label }}
+        <svg-icon
+          v-if="safeValue && safeValue.shape"
+          right
+          :class="{'ml-2': !!label}"
+          :shape="safeValue.shape"
+        />
+        <v-icon
+          v-else
+          :end="!!label"
+        >
+          mdi-select-search
+        </v-icon>
+      </v-btn>
+    </template>
+    <v-card>
+      <v-card-text>
+        <div class="d-flex align-center">
+          <text-field
+            ref="iconSearchField"
+            label="Search icons"
+            append-icon="mdi-magnify"
+            clearable
+            hide-details
+            class="ma-2"
+            :value="searchString"
+            @change="search"
+          />
+          <v-btn
+            variant="text"
+            @click="select()"
+          >
+            clear
+          </v-btn>
+        </div>
+        <div
+          class="d-flex flex-wrap"
+          style="max-height: 400px; overflow-y: auto;"
+        >
+          <v-scale-transition
+            group
+            hide-on-leave
+          >
+            <v-btn
+              v-for="icon in icons"
+              :key="icon._id"
+              icon
+              size="large"
+              @click="select(icon)"
+            >
+              <svg-icon
+                :shape="icon.shape"
+                size="x-large"
+              />
+            </v-btn>
+          </v-scale-transition>
+        </div>
+      </v-card-text>
+    </v-card>
+  </v-menu>
+</template>
 
 <style lang="css" scoped>
 

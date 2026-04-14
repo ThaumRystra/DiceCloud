@@ -1,61 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #toolbar>
-      <v-toolbar-title>
-        {{ mode === 'archive' ? 'Archive' : 'Restore' }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-btn-toggle
-        v-model="mode"
-        mandatory
-      >
-        <v-btn
-          value="archive"
-          append-icon="mdi-archive-arrow-down"
-        >
-          <span>Archive</span>
-        </v-btn>
-        <v-btn
-          value="restore"
-          append-icon="mdi-archive-arrow-up-outline"
-        >
-          <span>Restore</span>
-        </v-btn>
-      </v-btn-toggle>
-    </template>
-    <creature-folder-list
-      selection
-      :creatures="mode === 'archive' ? CreaturesWithNoParty : archiveCreaturesWithNoParty"
-      :folders="mode === 'archive' ? folders : archivefolders"
-      :selected-creature="selectedCreature ?? undefined"
-      @creature-selected="id => selectedCreature = id"
-    />
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        :loading="archiveActionLoading"
-        :disabled="!numSelected || (mode === 'restore' && characterSlots <= 0)"
-        color="primary"
-        @click="archiveAction"
-      >
-        <template v-if="mode === 'restore' && characterSlots <= 0">
-          No Character Slots Left
-        </template>
-        <template v-else>
-          {{ mode === 'archive' ? 'Archive' : 'Restore' }}
-        </template>
-      </v-btn>
-      <v-btn
-        variant="text"
-        @click="store.dispatch('popDialogStack')"
-      >
-        Close
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
@@ -123,7 +65,7 @@ const { result: characterSlots } = autorun(() =>
 const { result: folders } = autorun(() => {
   const userId = Meteor.userId();
   if (!userId) return [];
-  let result = CreatureFolders.find(
+  const result = CreatureFolders.find(
     { owner: userId, archived: { $ne: true } },
     { sort: { left: 1 } },
   ).map((folder: any) => {
@@ -159,7 +101,7 @@ const { result: CreaturesWithNoParty } = autorun(() => {
 
 const { result: archivefolders } = autorun(() => {
   const userId = Meteor.userId();
-  let result = CreatureFolders.find(
+  const result = CreatureFolders.find(
     { owner: userId },
     { sort: { left: 1 } },
   ).map((folder: any) => {
@@ -207,5 +149,63 @@ async function archiveAction() {
   selectedCreature.value = null;
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ mode === 'archive' ? 'Archive' : 'Restore' }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-btn-toggle
+        v-model="mode"
+        mandatory
+      >
+        <v-btn
+          value="archive"
+          append-icon="mdi-archive-arrow-down"
+        >
+          <span>Archive</span>
+        </v-btn>
+        <v-btn
+          value="restore"
+          append-icon="mdi-archive-arrow-up-outline"
+        >
+          <span>Restore</span>
+        </v-btn>
+      </v-btn-toggle>
+    </template>
+    <creature-folder-list
+      selection
+      :creatures="mode === 'archive' ? CreaturesWithNoParty : archiveCreaturesWithNoParty"
+      :folders="mode === 'archive' ? folders : archivefolders"
+      :selected-creature="selectedCreature ?? undefined"
+      @creature-selected="id => selectedCreature = id"
+    />
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        :loading="archiveActionLoading"
+        :disabled="!numSelected || (mode === 'restore' && characterSlots <= 0)"
+        color="primary"
+        @click="archiveAction"
+      >
+        <template v-if="mode === 'restore' && characterSlots <= 0">
+          No Character Slots Left
+        </template>
+        <template v-else>
+          {{ mode === 'archive' ? 'Archive' : 'Restore' }}
+        </template>
+      </v-btn>
+      <v-btn
+        variant="text"
+        @click="store.dispatch('popDialogStack')"
+      >
+        Close
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

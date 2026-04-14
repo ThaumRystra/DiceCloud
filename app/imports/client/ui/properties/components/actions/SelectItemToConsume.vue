@@ -1,23 +1,3 @@
-<template lang="html">
-  <v-list v-if="items.length">
-    <v-list-item
-      v-for="item in items"
-      :key="item._id"
-      @click="selectItem(item._id)"
-    >
-      <item-tree-node
-        :model="item"
-        :selected="itemConsumed.itemId === item._id"
-      />
-    </v-list-item>
-  </v-list>
-  <v-card v-else>
-    <v-card-text>
-      No active items found with the tag "{{ itemConsumed.tag }}"
-    </v-card-text>
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import ItemTreeNode from '/imports/client/ui/properties/treeNodeViews/ItemTreeNode.vue';
@@ -60,6 +40,26 @@ async function selectItem(itemId: string) {
   }
 }
 </script>
+
+<template lang="html">
+  <v-list v-if="items.length">
+    <v-list-item
+      v-for="item in items"
+      :key="item._id"
+      @click="selectItem(item._id)"
+    >
+      <item-tree-node
+        :model="item"
+        :selected="itemConsumed.itemId === item._id"
+      />
+    </v-list-item>
+  </v-list>
+  <v-card v-else>
+    <v-card-text>
+      No active items found with the tag "{{ itemConsumed.tag }}"
+    </v-card-text>
+  </v-card>
+</template>
 
 <style lang="css" scoped>
 </style>

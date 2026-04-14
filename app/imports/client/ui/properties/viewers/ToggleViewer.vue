@@ -1,3 +1,7 @@
+<script setup lang="ts">
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="toggle-viewer">
     <v-row dense>
@@ -23,7 +27,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{ model: Record<string, any> }>();
-</script>

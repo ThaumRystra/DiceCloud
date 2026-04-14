@@ -1,17 +1,3 @@
-<template lang="html">
-  <markdown-text
-    v-if="text && model"
-    :markdown="textValue"
-  />
-  <property-field
-    v-else-if="model && textValue"
-    :name="name"
-    :cols="{cols: 12}"
-  >
-    <markdown-text :markdown="textValue" />
-  </property-field>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 
@@ -34,6 +20,20 @@ const textValue = computed(() => {
   }
 });
 </script>
+
+<template lang="html">
+  <markdown-text
+    v-if="text && model"
+    :markdown="textValue"
+  />
+  <property-field
+    v-else-if="model && textValue"
+    :name="name"
+    :cols="{cols: 12}"
+  >
+    <markdown-text :markdown="textValue" />
+  </property-field>
+</template>
 
 <style lang="css">
 .computed {

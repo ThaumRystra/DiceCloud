@@ -15,10 +15,10 @@ export default {
   },
   computed: {
     title() {
-      let model = this.model;
+      const model = this.model;
       if (!model) return;
       if (model.name) return model.name;
-      let prop = PROPERTIES[model.type]
+      const prop = PROPERTIES[model.type]
       return prop && prop.name;
     }
   }

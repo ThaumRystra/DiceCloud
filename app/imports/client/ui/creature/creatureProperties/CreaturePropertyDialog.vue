@@ -1,73 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #replace-toolbar="{ flat }">
-      <property-toolbar
-        :model="model"
-        :editing="editing"
-        :flat="flat"
-        :embedded="embedded"
-        style="flex-grow: 0;"
-        @duplicate="duplicate"
-        @remove="remove"
-        @copy-to-library="copyToLibrary"
-        @toggle-editing="editing = !editing"
-      />
-    </template>
-    <template v-if="model">
-      <div class="d-flex mb-4">
-        <breadcrumbs
-          :model="model"
-          :editing="editing"
-          :embedded="embedded"
-          @select-sub-property="selectSubProperty"
-        />
-        <v-spacer />
-        <v-chip disabled>
-          {{ typeName }}
-        </v-chip>
-      </div>
-      <v-fade-transition mode="out-in">
-        <div v-if="editing">
-          <property-form
-            :key="_id"
-            class="creature-property-form"
-            :model="model"
-            :embedded="embedded"
-            @change="change"
-            @push="push"
-            @pull="pull"
-            @add-child="addProperty"
-            @select-sub-property="selectSubProperty"
-          />
-        </div>
-        <property-viewer
-          v-else
-          :key="_id"
-          :model="model"
-          @select-sub-property="selectSubProperty"
-          @remove="remove"
-          @change="change"
-        />
-      </v-fade-transition>
-    </template>
-    <template #actions>
-      <div
-        v-if="!embedded"
-        class="layout"
-      >
-        <v-spacer />
-        <v-btn
-          variant="text"
-          color="accent"
-          @click="$store.dispatch('popDialogStack')"
-        >
-          Close
-        </v-btn>
-      </div>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch, reactive, provide, nextTick } from 'vue';
 import { useStore } from 'vuex';
@@ -303,5 +233,75 @@ function addProperty({ elementId, suggestedType }: any) {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #replace-toolbar="{ flat }">
+      <property-toolbar
+        :model="model"
+        :editing="editing"
+        :flat="flat"
+        :embedded="embedded"
+        style="flex-grow: 0;"
+        @duplicate="duplicate"
+        @remove="remove"
+        @copy-to-library="copyToLibrary"
+        @toggle-editing="editing = !editing"
+      />
+    </template>
+    <template v-if="model">
+      <div class="d-flex mb-4">
+        <breadcrumbs
+          :model="model"
+          :editing="editing"
+          :embedded="embedded"
+          @select-sub-property="selectSubProperty"
+        />
+        <v-spacer />
+        <v-chip disabled>
+          {{ typeName }}
+        </v-chip>
+      </div>
+      <v-fade-transition mode="out-in">
+        <div v-if="editing">
+          <property-form
+            :key="_id"
+            class="creature-property-form"
+            :model="model"
+            :embedded="embedded"
+            @change="change"
+            @push="push"
+            @pull="pull"
+            @add-child="addProperty"
+            @select-sub-property="selectSubProperty"
+          />
+        </div>
+        <property-viewer
+          v-else
+          :key="_id"
+          :model="model"
+          @select-sub-property="selectSubProperty"
+          @remove="remove"
+          @change="change"
+        />
+      </v-fade-transition>
+    </template>
+    <template #actions>
+      <div
+        v-if="!embedded"
+        class="layout"
+      >
+        <v-spacer />
+        <v-btn
+          variant="text"
+          color="accent"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Close
+        </v-btn>
+      </div>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

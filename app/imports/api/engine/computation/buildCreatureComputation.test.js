@@ -11,7 +11,7 @@ import linkTypeDependencies from '/imports/api/engine/computation/buildComputati
 
 describe('buildComputation', function () {
   it('Builds something at all', function () {
-    let computation = buildComputationFromProps(testProperties);
+    const computation = buildComputationFromProps(testProperties);
     assert.exists(computation);
   });
   it('Computes inactive status', computeInactiveStatus);
@@ -38,6 +38,6 @@ var testProperties = [
 ];
 
 function clean(prop) {
-  let schema = CreatureProperties.simpleSchema(prop);
+  const schema = CreatureProperties.simpleSchema(prop);
   return schema.clean(prop);
 }

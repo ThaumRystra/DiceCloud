@@ -21,7 +21,7 @@ const validateDatabase = new ValidatedMethod({
       if (!collection.instance._c2?._simpleSchemas) return;
       collection.instance.find({}).forEach(doc => {
         const schema = collection.instance.simpleSchema(doc);
-        let cleanDoc = schema.clean(doc);
+        const cleanDoc = schema.clean(doc);
         try {
           schema.validate(cleanDoc, { modifier: false });
         } catch (e) {

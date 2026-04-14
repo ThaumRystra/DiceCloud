@@ -9,7 +9,7 @@ import escapeRegex from '/imports/api/utility/escapeRegex';
 
 // Publish docs the user has already selected so they don't disappear when searching
 Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -38,9 +38,9 @@ Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
     sort: { name: 1 }
   });
 
-  let filter = { _id: { $in: nodeIds } };
+  const filter = { _id: { $in: nodeIds } };
   // Get the limit of the documents the user can fetch
-  let options = {
+  const options = {
     sort: {
       name: 1,
       order: 1,
@@ -59,7 +59,7 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   limit = limit || 50;
   check(limit, Number);
 
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -89,7 +89,7 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   });
 
   // Build a filter for nodes in those libraries that match the slot
-  let filter = getSlotFillFilter({ slot, libraryIds });
+  const filter = getSlotFillFilter({ slot, libraryIds });
 
   let options = undefined;
   if (searchTerm) {
@@ -126,11 +126,11 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   }
   options.limit = limit;
 
-  let self = this;
+  const self = this;
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
-  let cursor = LibraryNodes.find(filter, options);
-  let observeHandle = cursor.observeChanges({
+  const cursor = LibraryNodes.find(filter, options);
+  const observeHandle = cursor.observeChanges({
     added: function (id, fields) {
       fields._slotFillerResult = true;
       self.added('libraryNodes', id, fields);
@@ -157,12 +157,12 @@ Meteor.publish('classFillers', function (classId, searchTerm, limit) {
   limit = limit || 50;
   check(limit, Number);
 
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
   // Get the class
-  let classProp = CreatureProperties.findOne(classId);
+  const classProp = CreatureProperties.findOne(classId);
   if (!classProp) {
     return [];
   }
@@ -182,9 +182,9 @@ Meteor.publish('classFillers', function (classId, searchTerm, limit) {
   });
 
   // Build a filter for nodes in those libraries that match the slot
-  let filter = getSlotFillFilter({ slot: classProp, libraryIds });
+  const filter = getSlotFillFilter({ slot: classProp, libraryIds });
 
-  let options = {
+  const options = {
     sort: {
       level: 1,
       name: 1,
@@ -194,11 +194,11 @@ Meteor.publish('classFillers', function (classId, searchTerm, limit) {
     limit,
   };
 
-  let self = this;
+  const self = this;
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
-  let cursor = LibraryNodes.find(filter, options);
-  let observeHandle = cursor.observeChanges({
+  const cursor = LibraryNodes.find(filter, options);
+  const observeHandle = cursor.observeChanges({
     added: function (id, fields) {
       fields._classFillerResult = true;
       self.added('libraryNodes', id, fields);

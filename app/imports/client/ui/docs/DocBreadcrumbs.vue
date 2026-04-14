@@ -1,10 +1,3 @@
-<template>
-  <v-breadcrumbs
-    :items="items"
-    divider=">"
-  />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import Docs from '/imports/api/docs/Docs';
@@ -26,3 +19,10 @@ const items = computed(() => {
   return items;
 });
 </script>
+
+<template>
+  <v-breadcrumbs
+    :items="items"
+    divider=">"
+  />
+</template>

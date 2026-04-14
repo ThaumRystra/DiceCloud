@@ -1,66 +1,3 @@
-<template lang="html">
-  <dialog-base>
-    <template #replace-toolbar="{ flat }">
-      <property-toolbar
-        :model="creature"
-        :editing="editing"
-        :flat="flat"
-        :embedded="embedded"
-        style="flex-grow: 0;"
-        @toggle-editing="editing = !editing"
-      />
-    </template>
-    <template v-if="_id">
-      <v-fade-transition mode="out-in">
-        <div v-if="editing">
-          <creature-properties-tree
-            style="width: 100%;"
-            class="mb-2"
-            organize
-            :root="{ collection: 'creatures', id: _id }"
-            @length="childrenLength = $event"
-            @selected="selectSubProperty"
-          />
-          <v-btn
-            icon
-            variant="outlined"
-            color="accent"
-            data-id="insert-creature-property-btn"
-            @click="addProperty"
-          >
-            <v-icon>
-              mdi-plus
-            </v-icon>
-          </v-btn>
-        </div>
-        <div v-else>
-          <creature-properties-tree
-            style="width: 100%;"
-            :root="{ collection: 'creatures', id: _id }"
-            @length="childrenLength = $event"
-            @selected="selectSubProperty"
-          />
-        </div>
-      </v-fade-transition>
-    </template>
-    <template
-      v-if="!embedded"
-      #actions
-    >
-      <div class="layout">
-        <v-spacer />
-        <v-btn
-          variant="text"
-          color="accent"
-          @click="$store.dispatch('popDialogStack')"
-        >
-          Close
-        </v-btn>
-      </div>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, watch, provide, reactive, nextTick } from 'vue';
 import { useStore } from 'vuex';
@@ -152,5 +89,68 @@ function addProperty() {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base>
+    <template #replace-toolbar="{ flat }">
+      <property-toolbar
+        :model="creature"
+        :editing="editing"
+        :flat="flat"
+        :embedded="embedded"
+        style="flex-grow: 0;"
+        @toggle-editing="editing = !editing"
+      />
+    </template>
+    <template v-if="_id">
+      <v-fade-transition mode="out-in">
+        <div v-if="editing">
+          <creature-properties-tree
+            style="width: 100%;"
+            class="mb-2"
+            organize
+            :root="{ collection: 'creatures', id: _id }"
+            @length="childrenLength = $event"
+            @selected="selectSubProperty"
+          />
+          <v-btn
+            icon
+            variant="outlined"
+            color="accent"
+            data-id="insert-creature-property-btn"
+            @click="addProperty"
+          >
+            <v-icon>
+              mdi-plus
+            </v-icon>
+          </v-btn>
+        </div>
+        <div v-else>
+          <creature-properties-tree
+            style="width: 100%;"
+            :root="{ collection: 'creatures', id: _id }"
+            @length="childrenLength = $event"
+            @selected="selectSubProperty"
+          />
+        </div>
+      </v-fade-transition>
+    </template>
+    <template
+      v-if="!embedded"
+      #actions
+    >
+      <div class="layout">
+        <v-spacer />
+        <v-btn
+          variant="text"
+          color="accent"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Close
+        </v-btn>
+      </div>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped></style>

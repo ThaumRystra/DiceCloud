@@ -20,7 +20,7 @@ describe('Parser', function () {
     assert.equal(toString(mul), '24');
   });
   it('simplifies addition when possible, even if a roll is in the way', async function () {
-    let { result } = await resolve('compile', parse('1 + 3 + d12 + 3 + 4'));
+    const { result } = await resolve('compile', parse('1 + 3 + d12 + 3 + 4'));
     assert.equal(toString(result), 'd12 + 11');
   });
 });

@@ -5,9 +5,9 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 
-let Experiences = new Mongo.Collection('experiences');
+const Experiences = new Mongo.Collection('experiences');
 
-let ExperienceSchema = new SimpleSchema({
+const ExperienceSchema = new SimpleSchema({
   name: {
     type: String,
     optional: true,
@@ -57,7 +57,7 @@ const insertExperienceForCreature = async function ({ experience, creatureId }) 
     });
   }
   experience.creatureId = creatureId;
-  let id = await Experiences.insertAsync(experience);
+  const id = await Experiences.insertAsync(experience);
   return id;
 };
 
@@ -82,15 +82,15 @@ const insertExperience = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ experience, creatureIds }) {
-    let userId = this.userId;
+    const userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.insert.denied',
         'You need to be logged in to insert an experience');
     }
-    let insertedIds = [];
+    const insertedIds = [];
     for (const creatureId of creatureIds) {
       await assertEditPermission(creatureId, userId);
-      let id = await insertExperienceForCreature({ experience, creatureId });
+      const id = await insertExperienceForCreature({ experience, creatureId });
       insertedIds.push(id);
     }
     return insertedIds;
@@ -111,14 +111,14 @@ const removeExperience = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ experienceId }) {
-    let userId = this.userId;
+    const userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.remove.denied',
         'You need to be logged in to remove an experience');
     }
-    let experience = await Experiences.findOneAsync(experienceId);
+    const experience = await Experiences.findOneAsync(experienceId);
     if (!experience) return;
-    let creatureId = experience.creatureId
+    const creatureId = experience.creatureId
     await assertEditPermission(creatureId, userId);
     if (experience.xp) {
       await Creatures.updateAsync(creatureId, {
@@ -133,7 +133,7 @@ const removeExperience = new ValidatedMethod({
       });
     }
     experience.creatureId = creatureId;
-    let numRemoved = await Experiences.removeAsync(experienceId);
+    const numRemoved = await Experiences.removeAsync(experienceId);
     return numRemoved;
   },
 });
@@ -152,7 +152,7 @@ const recomputeExperiences = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ creatureId }) {
-    let userId = this.userId;
+    const userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('Experiences.methods.recompute.denied',
         'You need to be logged in to recompute a creature\'s experiences');

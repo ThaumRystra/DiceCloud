@@ -1,3 +1,53 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
+
+const props = withDefaults(defineProps<{
+  model: Record<string, any>;
+  errors?: Record<string, string>;
+}>(), { errors: () => ({}) });
+
+const emit = defineEmits(['change']);
+
+function change(path: string | string[], value: any, ack?: Function) {
+  const pathArray = Array.isArray(path) ? path : [path];
+  emit('change', { path: pathArray, value, ack });
+}
+
+const { result: abilityScoreList } = autorun(() =>
+  createListOfProperties({ type: 'attribute', attributeType: 'ability' })
+);
+
+function changeAbility(value: string, ack?: Function) {
+  emit('change', { path: ['ability'], value, ack });
+  const oldValue = props.model.ability;
+
+  const attackRollBonus = props.model.attackRollBonus?.calculation;
+  if (
+    value &&
+    (!attackRollBonus ||
+    attackRollBonus === `proficiencyBonus + ${oldValue}.modifier`)
+  ) {
+    emit('change', {
+      path: ['attackRollBonus', 'calculation'],
+      value: `proficiencyBonus + ${value}.modifier`,
+    });
+  }
+
+  const dc = props.model.dc?.calculation;
+  if (
+    value &&
+    (!dc ||
+    dc === `8 + proficiencyBonus + ${oldValue}.modifier`)
+  ) {
+    emit('change', {
+      path: ['dc', 'calculation'],
+      value: `8 + proficiencyBonus + ${value}.modifier`,
+    });
+  }
+}
+</script>
+
 <template lang="html">
   <div class="spell-list-form">
     <v-row dense>
@@ -71,53 +121,3 @@
     </form-sections>
   </div>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
-
-const props = withDefaults(defineProps<{
-  model: Record<string, any>;
-  errors?: Record<string, string>;
-}>(), { errors: () => ({}) });
-
-const emit = defineEmits(['change']);
-
-function change(path: string | string[], value: any, ack?: Function) {
-  const pathArray = Array.isArray(path) ? path : [path];
-  emit('change', { path: pathArray, value, ack });
-}
-
-const { result: abilityScoreList } = autorun(() =>
-  createListOfProperties({ type: 'attribute', attributeType: 'ability' })
-);
-
-function changeAbility(value: string, ack?: Function) {
-  emit('change', { path: ['ability'], value, ack });
-  const oldValue = props.model.ability;
-
-  const attackRollBonus = props.model.attackRollBonus?.calculation;
-  if (
-    value &&
-    (!attackRollBonus ||
-    attackRollBonus === `proficiencyBonus + ${oldValue}.modifier`)
-  ) {
-    emit('change', {
-      path: ['attackRollBonus', 'calculation'],
-      value: `proficiencyBonus + ${value}.modifier`,
-    });
-  }
-
-  const dc = props.model.dc?.calculation;
-  if (
-    value &&
-    (!dc ||
-    dc === `8 + proficiencyBonus + ${oldValue}.modifier`)
-  ) {
-    emit('change', {
-      path: ['dc', 'calculation'],
-      value: `8 + proficiencyBonus + ${value}.modifier`,
-    });
-  }
-}
-</script>

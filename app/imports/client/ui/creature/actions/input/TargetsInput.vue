@@ -1,3 +1,41 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+import Creatures from '/imports/api/creature/creatures/Creatures';
+
+const props = withDefaults(defineProps<{
+  value: string[];
+  target?: string;
+  tabletopId: string;
+}>(), {
+  target: 'multipleTargets',
+});
+
+const emit = defineEmits(['input', 'continue']);
+
+const { result: creatures } = autorun(() =>
+  Creatures.find({
+    tabletopId: props.tabletopId,
+  }, {
+    sort: { name: 1 },
+  }).fetch()
+);
+
+function selectCreature(id: string) {
+  let newValue: string[];
+  if (props.value.includes(id)) {
+    newValue = props.value.filter((creatureId) => creatureId !== id);
+  } else if (props.target === 'singleTarget') {
+    newValue = [id];
+  } else {
+    newValue = [...props.value, id];
+  }
+  emit('input', newValue);
+  if (props.target === 'singleTarget') {
+    emit('continue');
+  }
+}
+</script>
+
 <template>
   <div class="choice-input">
     <v-card-title>
@@ -51,41 +89,3 @@
     </v-btn>
   </div>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-import Creatures from '/imports/api/creature/creatures/Creatures';
-
-const props = withDefaults(defineProps<{
-  value: string[];
-  target?: string;
-  tabletopId: string;
-}>(), {
-  target: 'multipleTargets',
-});
-
-const emit = defineEmits(['input', 'continue']);
-
-const { result: creatures } = autorun(() =>
-  Creatures.find({
-    tabletopId: props.tabletopId,
-  }, {
-    sort: { name: 1 },
-  }).fetch()
-);
-
-function selectCreature(id: string) {
-  let newValue: string[];
-  if (props.value.includes(id)) {
-    newValue = props.value.filter((creatureId) => creatureId !== id);
-  } else if (props.target === 'singleTarget') {
-    newValue = [id];
-  } else {
-    newValue = [...props.value, id];
-  }
-  emit('input', newValue);
-  if (props.target === 'singleTarget') {
-    emit('continue');
-  }
-}
-</script>

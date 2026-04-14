@@ -1,217 +1,3 @@
-<template lang="html">
-  <dialog-base
-    :color="model?.color"
-    dark-body
-  >
-    <template #toolbar>
-      <v-toolbar-title>
-        {{ model?.name }}
-      </v-toolbar-title>
-      <v-spacer />
-      <v-text-field
-        v-model="searchInput"
-        prepend-inner-icon="mdi-magnify"
-        regular
-        clearable
-        hide-details
-        class="flex-grow-0"
-        style="flex-basis: 300px;"
-        :loading="searchLoading"
-        @change="searchValue = (searchInput && searchInput.trim()) || undefined"
-        @click:clear="searchValue = undefined"
-      />
-    </template>
-    <property-description
-      text
-      :string="model?.description"
-    />
-    <p>
-      {{ slotPropertyTypeName }} with library tags:
-      <property-tags
-        v-for="(tags, index) in tagsSearched.or"
-        :key="index + 'tags'"
-        :tags="tags"
-        :prefix="index ? 'OR' : undefined"
-      />
-      <property-tags
-        v-for="(tags, index) in tagsSearched.not"
-        :key="index + 'not'"
-        :tags="tags"
-        prefix="NOT"
-      />
-    </p>
-    <v-fade-transition>
-      <div
-        v-if="!slotFillerSubReady"
-        class="fill-height layout justify-center align-center"
-      >
-        <v-progress-circular
-          indeterminate
-          color="primary"
-          size="64"
-        />
-      </div>
-      <v-expansion-panels
-        v-else
-        accordion
-        rounded="0"
-        multiple
-        hover
-      >
-        <template v-for="libraryNode in [...selectedExcludedNodes, ...libraryNodes]">
-          <v-expansion-panel
-            v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
-            :key="libraryNode._id"
-            :model="libraryNode"
-            :data-id="libraryNode._id"
-            :class="{ disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition }"
-          >
-            <v-expansion-panel-title>
-              <template #default="{ expanded }">
-                <div class="d-flex align-center flex-grow-0 mr-2">
-                  <v-checkbox
-                    v-if="libraryNode._disabledByAlreadyAdded"
-                    class="my-0 py-0"
-                    hide-details
-                    :model-value="true"
-                    disabled
-                  />
-                  <v-checkbox
-                    v-else
-                    v-model="selectedNodeIds"
-                    class="my-0 py-0"
-                    hide-details
-                    :color="libraryNode._disabledBySlotFillerCondition ? 'error' : ''"
-                    :disabled="isDisabled(libraryNode)"
-                    :value="libraryNode._id"
-                    @click.stop
-                  />
-                </div>
-                <div class="d-flex flex-column">
-                  <div class="d-flex align-center">
-                    <tree-node-view :model="libraryNode" />
-                    <div
-                      v-if="libraryNode._disabledBySlotFillerCondition"
-                      class="text-error text-no-wrap text-truncate"
-                    >
-                      {{ libraryNode._conditionError }}
-                    </div>
-                  </div>
-                  <div class="text-caption text-no-wrap text-truncate">
-                    {{ libraryNames[libraryNode.root.id] }}
-                  </div>
-                </div>
-                <div
-                  v-if="libraryNode.slotQuantityFilled !== undefined && libraryNode.slotQuantityFilled !== 1"
-                  class="text-overline flex-grow-0 text-no-wrap"
-                  :class="{
-                    'text-error': isDisabled(libraryNode) &&
-                      libraryNode._disabledByQuantityFilled
-                  }"
-                >
-                  {{ libraryNode.slotQuantityFilled }} slots
-                </div>
-                <template v-if="expanded">
-                  <v-btn
-                    icon
-                    class="flex-grow-0"
-                    @click.stop="openPropertyDetails(libraryNode._id)"
-                  >
-                    <v-icon>mdi-window-restore</v-icon>
-                  </v-btn>
-                </template>
-              </template>
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <library-node-expansion-content :id="libraryNode._id" />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </template>
-      </v-expansion-panels>
-    </v-fade-transition>
-    <div
-      v-if="(!slotFillerSubReady && !searchValue) || hasMore"
-      class="d-flex flex-column align-center justify-center ma-3 mt-8"
-    >
-      <v-btn
-        :loading="!slotFillerSubReady"
-        color="accent"
-        variant="outlined"
-        @click="loadMore"
-      >
-        Load More
-      </v-btn>
-    </div>
-    <template v-if="!showDisabled && disabledNodeCount">
-      <div class="d-flex flex-column align-center justify-center ma-3 mt-8">
-        <div>
-          Requirements of {{ disabledNodeCount }} properties were not met
-        </div>
-        <v-btn
-          class="mt-2"
-          elevation="0"
-          color="accent"
-          variant="outlined"
-          @click="showDisabled = true"
-        >
-          Show All
-        </v-btn>
-      </div>
-    </template>
-    <div class="d-flex align-center justify-center text-caption text-disabled mt-8 mb-2">
-      Can't find what you're looking for?
-    </div>
-    <div class="d-flex align-center justify-center flex-wrap mx-4 mb-4">
-      <v-btn
-        v-if="!dummySlot"
-        variant="text"
-        size="small"
-        data-id="library-browser-button"
-        :disabled="!model"
-        @click="openLibraryBrowser"
-      >
-        Browse community libraries
-      </v-btn>
-      <v-btn
-        v-if="!dummySlot"
-        variant="text"
-        size="small"
-        :disabled="!model"
-        data-id="custom-button"
-        @click="insertCustomFiller"
-      >
-        Create custom filler
-      </v-btn>
-    </div>
-
-    <template #actions>
-      <v-btn
-        variant="text"
-        @click="store.dispatch('popDialogStack')"
-      >
-        Cancel
-      </v-btn>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        color="primary"
-        :disabled="!dummySlot && !selectedNodeIds.length"
-        @click="store.dispatch('popDialogStack', selectedNodeIds)"
-      >
-        <template v-if="model?.spaceLeft">
-          {{ totalQuantitySelected }} / {{ model.spaceLeft }}
-        </template>
-        <template v-if="slotId">
-          Insert
-        </template>
-        <template v-else>
-          Close Test
-        </template>
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, reactive, watch, toRef, provide } from 'vue';
 import { useStore } from 'vuex';
@@ -478,6 +264,220 @@ function insertCustomFiller() {
   });
 }
 </script>
+
+<template lang="html">
+  <dialog-base
+    :color="model?.color"
+    dark-body
+  >
+    <template #toolbar>
+      <v-toolbar-title>
+        {{ model?.name }}
+      </v-toolbar-title>
+      <v-spacer />
+      <v-text-field
+        v-model="searchInput"
+        prepend-inner-icon="mdi-magnify"
+        regular
+        clearable
+        hide-details
+        class="flex-grow-0"
+        style="flex-basis: 300px;"
+        :loading="searchLoading"
+        @change="searchValue = (searchInput && searchInput.trim()) || undefined"
+        @click:clear="searchValue = undefined"
+      />
+    </template>
+    <property-description
+      text
+      :string="model?.description"
+    />
+    <p>
+      {{ slotPropertyTypeName }} with library tags:
+      <property-tags
+        v-for="(tags, index) in tagsSearched.or"
+        :key="index + 'tags'"
+        :tags="tags"
+        :prefix="index ? 'OR' : undefined"
+      />
+      <property-tags
+        v-for="(tags, index) in tagsSearched.not"
+        :key="index + 'not'"
+        :tags="tags"
+        prefix="NOT"
+      />
+    </p>
+    <v-fade-transition>
+      <div
+        v-if="!slotFillerSubReady"
+        class="fill-height layout justify-center align-center"
+      >
+        <v-progress-circular
+          indeterminate
+          color="primary"
+          size="64"
+        />
+      </div>
+      <v-expansion-panels
+        v-else
+        variant="accordion"
+        rounded="0"
+        multiple
+        hover
+      >
+        <template v-for="libraryNode in [...selectedExcludedNodes, ...libraryNodes]">
+          <v-expansion-panel
+            v-if="showDisabled || !libraryNode._disabledBySlotFillerCondition"
+            :key="libraryNode._id"
+            :model="libraryNode"
+            :data-id="libraryNode._id"
+            :class="{ disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition }"
+          >
+            <v-expansion-panel-title>
+              <template #default="{ expanded }">
+                <div class="d-flex align-center flex-grow-0 mr-2">
+                  <v-checkbox
+                    v-if="libraryNode._disabledByAlreadyAdded"
+                    class="my-0 py-0"
+                    hide-details
+                    :model-value="true"
+                    disabled
+                  />
+                  <v-checkbox
+                    v-else
+                    v-model="selectedNodeIds"
+                    class="my-0 py-0"
+                    hide-details
+                    :color="libraryNode._disabledBySlotFillerCondition ? 'error' : ''"
+                    :disabled="isDisabled(libraryNode)"
+                    :value="libraryNode._id"
+                    @click.stop
+                  />
+                </div>
+                <div class="d-flex flex-column">
+                  <div class="d-flex align-center">
+                    <tree-node-view :model="libraryNode" />
+                    <div
+                      v-if="libraryNode._disabledBySlotFillerCondition"
+                      class="text-error text-no-wrap text-truncate"
+                    >
+                      {{ libraryNode._conditionError }}
+                    </div>
+                  </div>
+                  <div class="text-caption text-no-wrap text-truncate">
+                    {{ libraryNames[libraryNode.root.id] }}
+                  </div>
+                </div>
+                <div
+                  v-if="libraryNode.slotQuantityFilled !== undefined && libraryNode.slotQuantityFilled !== 1"
+                  class="text-overline flex-grow-0 text-no-wrap"
+                  :class="{
+                    'text-error': isDisabled(libraryNode) &&
+                      libraryNode._disabledByQuantityFilled
+                  }"
+                >
+                  {{ libraryNode.slotQuantityFilled }} slots
+                </div>
+                <template v-if="expanded">
+                  <v-btn
+                    icon
+                    class="flex-grow-0"
+                    @click.stop="openPropertyDetails(libraryNode._id)"
+                  >
+                    <v-icon>mdi-window-restore</v-icon>
+                  </v-btn>
+                </template>
+              </template>
+            </v-expansion-panel-title>
+            <v-expansion-panel-text>
+              <library-node-expansion-content :id="libraryNode._id" />
+            </v-expansion-panel-text>
+          </v-expansion-panel>
+        </template>
+      </v-expansion-panels>
+    </v-fade-transition>
+    <div
+      v-if="(!slotFillerSubReady && !searchValue) || hasMore"
+      class="d-flex flex-column align-center justify-center ma-3 mt-8"
+    >
+      <v-btn
+        :loading="!slotFillerSubReady"
+        color="accent"
+        variant="outlined"
+        @click="loadMore"
+      >
+        Load More
+      </v-btn>
+    </div>
+    <template v-if="!showDisabled && disabledNodeCount">
+      <div class="d-flex flex-column align-center justify-center ma-3 mt-8">
+        <div>
+          Requirements of {{ disabledNodeCount }} properties were not met
+        </div>
+        <v-btn
+          class="mt-2"
+          elevation="0"
+          color="accent"
+          variant="outlined"
+          @click="showDisabled = true"
+        >
+          Show All
+        </v-btn>
+      </div>
+    </template>
+    <div class="d-flex align-center justify-center text-caption text-disabled mt-8 mb-2">
+      Can't find what you're looking for?
+    </div>
+    <div class="d-flex align-center justify-center flex-wrap mx-4 mb-4">
+      <v-btn
+        v-if="!dummySlot"
+        variant="text"
+        size="small"
+        data-id="library-browser-button"
+        :disabled="!model"
+        @click="openLibraryBrowser"
+      >
+        Browse community libraries
+      </v-btn>
+      <v-btn
+        v-if="!dummySlot"
+        variant="text"
+        size="small"
+        :disabled="!model"
+        data-id="custom-button"
+        @click="insertCustomFiller"
+      >
+        Create custom filler
+      </v-btn>
+    </div>
+
+    <template #actions>
+      <v-btn
+        variant="text"
+        @click="store.dispatch('popDialogStack')"
+      >
+        Cancel
+      </v-btn>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        color="primary"
+        :disabled="!dummySlot && !selectedNodeIds.length"
+        @click="store.dispatch('popDialogStack', selectedNodeIds)"
+      >
+        <template v-if="model?.spaceLeft">
+          {{ totalQuantitySelected }} / {{ model.spaceLeft }}
+        </template>
+        <template v-if="slotId">
+          Insert
+        </template>
+        <template v-else>
+          Close Test
+        </template>
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped>
 .disabled {

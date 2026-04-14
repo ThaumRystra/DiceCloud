@@ -1,15 +1,3 @@
-<template lang="html">
-  <component
-    :is="treeNodeView"
-    :model="model"
-    :selected="selected"
-    :class="{
-      'inactive': model.inactive,
-    }"
-    v-bind="$attrs"
-  />
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import treeNodeViewIndex from '/imports/client/ui/properties/treeNodeViews/treeNodeViewIndex';
@@ -24,6 +12,18 @@ const treeNodeView = computed(() => {
   return (treeNodeViewIndex as any)[type] || (treeNodeViewIndex as any).default;
 });
 </script>
+
+<template lang="html">
+  <component
+    :is="treeNodeView"
+    :model="model"
+    :selected="selected"
+    :class="{
+      'inactive': model.inactive,
+    }"
+    v-bind="$attrs"
+  />
+</template>
 
 <style lang="css" scoped>
   .inactive {

@@ -1,85 +1,3 @@
-<template lang="html">
-  <v-col
-    v-if="value !== undefined ||
-      calculation !== undefined ||
-      ($slots.default && $slots.default.length)"
-    v-bind="cols"
-    class="mb-3"
-  >
-    <fieldset
-      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
-      class="rounded v-sheet--outlined pa-2 layout column align-start fill-height"
-      @click="$emit('click', $event)"
-    >
-      <legend
-        v-if="name"
-        class="text-caption px-1 name"
-        style="line-height: 0;"
-      >
-        {{ name }}
-      </legend>
-      <div
-        class="flex-grow-1 d-flex align-center flex-wrap"
-        style="width: 100%;"
-      >
-        <div
-          class="d-flex align-center"
-          :class="{
-            'text-body-1': !isLarge,
-            'text-h4': isLarge,
-            'justify-center': isCenter,
-            'justify-end': end,
-            'flex-wrap': wrap,
-            'mono': isMono,
-            'flex-grow-0': hasEffectsOrProficiencies,
-            'flex-grow-1': !hasEffectsOrProficiencies,
-            'ma-3': hasEffectsOrProficiencies,
-            ...$attrs.class,
-          }"
-          style="overflow-x: auto;"
-          v-bind="$attrs"
-        >
-          <slot>
-            <template v-if="value !== undefined">
-              {{ valueText }}
-            </template>
-            <template v-else-if="calculation !== undefined">
-              {{ calculationText }}
-            </template>
-          </slot>
-        </div>
-        <div
-          v-if="hasEffectsOrProficiencies"
-          class="flex-grow-1"
-          style="max-width: 100%;"
-        >
-          <inline-effect
-            v-for="effectId in calculation.effectIds"
-            :key="effectId"
-            :data-id="effectId"
-            :effect-id="effectId"
-            @click="clickEffect(effectId)"
-          />
-          <inline-proficiency
-            v-for="proficiencyId in calculation.proficiencyIds"
-            :key="proficiencyId"
-            :data-id="proficiencyId"
-            :proficiency-id="proficiencyId"
-            @click="clickEffect(proficiencyId)"
-          />
-        </div>
-        <div
-          v-if="hasEffectsOrProficiencies"
-          class="d-flex justify-end border-t-sm pt-2"
-          style="width: 100%; opacity: 0.5"
-        >
-          {{ calculation.value }}
-        </div>
-      </div>
-    </fieldset>
-  </v-col>
-</template>
-
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -175,6 +93,88 @@ function clickEffect(id: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <v-col
+    v-if="value !== undefined ||
+      calculation !== undefined ||
+      ($slots.default && $slots.default.length)"
+    v-bind="cols"
+    class="mb-3"
+  >
+    <fieldset
+      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
+      class="rounded v-sheet--outlined pa-2 layout column align-start fill-height"
+      @click="$emit('click', $event)"
+    >
+      <legend
+        v-if="name"
+        class="text-caption px-1 name"
+        style="line-height: 0;"
+      >
+        {{ name }}
+      </legend>
+      <div
+        class="flex-grow-1 d-flex align-center flex-wrap"
+        style="width: 100%;"
+      >
+        <div
+          class="d-flex align-center"
+          :class="{
+            'text-body-1': !isLarge,
+            'text-h4': isLarge,
+            'justify-center': isCenter,
+            'justify-end': end,
+            'flex-wrap': wrap,
+            'mono': isMono,
+            'flex-grow-0': hasEffectsOrProficiencies,
+            'flex-grow-1': !hasEffectsOrProficiencies,
+            'ma-3': hasEffectsOrProficiencies,
+            ...$attrs.class,
+          }"
+          style="overflow-x: auto;"
+          v-bind="$attrs"
+        >
+          <slot>
+            <template v-if="value !== undefined">
+              {{ valueText }}
+            </template>
+            <template v-else-if="calculation !== undefined">
+              {{ calculationText }}
+            </template>
+          </slot>
+        </div>
+        <div
+          v-if="hasEffectsOrProficiencies"
+          class="flex-grow-1"
+          style="max-width: 100%;"
+        >
+          <inline-effect
+            v-for="effectId in calculation.effectIds"
+            :key="effectId"
+            :data-id="effectId"
+            :effect-id="effectId"
+            @click="clickEffect(effectId)"
+          />
+          <inline-proficiency
+            v-for="proficiencyId in calculation.proficiencyIds"
+            :key="proficiencyId"
+            :data-id="proficiencyId"
+            :proficiency-id="proficiencyId"
+            @click="clickEffect(proficiencyId)"
+          />
+        </div>
+        <div
+          v-if="hasEffectsOrProficiencies"
+          class="d-flex justify-end border-t-sm pt-2"
+          style="width: 100%; opacity: 0.5"
+        >
+          {{ calculation.value }}
+        </div>
+      </div>
+    </fieldset>
+  </v-col>
+</template>
 
 <style lang="css" scoped>
 .name {

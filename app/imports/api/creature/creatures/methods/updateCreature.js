@@ -8,7 +8,7 @@ const updateCreature = new ValidatedMethod({
   validate({ _id, path }) {
     if (!_id) return false;
     // Allowed fields
-    let allowedFields = [
+    const allowedFields = [
       'name',
       'alignment',
       'gender',
@@ -28,7 +28,7 @@ const updateCreature = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ _id, path, value }) {
-    let creature = await Creatures.findOneAsync(_id);
+    const creature = await Creatures.findOneAsync(_id);
     await assertEditPermission(creature, this.userId);
     if (value === undefined || value === null) {
       await Creatures.updateAsync(_id, {

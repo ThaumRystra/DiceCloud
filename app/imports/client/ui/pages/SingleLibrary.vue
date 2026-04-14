@@ -1,9 +1,3 @@
-<template lang="html">
-  <single-card-layout>
-    <library-and-node :library-id="route.params.id" />
-  </single-card-layout>
-</template>
-
 <script setup lang="ts">
 import { watch, onMounted } from 'vue';
 import { useStore } from 'vuex';
@@ -23,11 +17,17 @@ const { result: library } = autorun(() => {
   return Libraries.findOne(libraryId, { fields: { name: 1 } });
 });
 
-watch(() => (library.value as any)?.name, (newName) => {
+watch(() => (library.value)?.name, (newName) => {
   store.commit('setPageTitle', newName || 'Library');
 });
 
 onMounted(() => {
-  store.commit('setPageTitle', (library.value as any)?.name || 'Library');
+  store.commit('setPageTitle', (library.value)?.name || 'Library');
 });
 </script>
+
+<template lang="html">
+  <single-card-layout>
+    <library-and-node :library-id="route.params.id" />
+  </single-card-layout>
+</template>

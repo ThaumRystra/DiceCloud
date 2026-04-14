@@ -1,9 +1,19 @@
+<script setup lang="ts">
+defineProps<{
+  doc: object;
+  icon?: boolean;
+}>();
+</script>
+
 <template>
   <v-list-item
     :to="doc.href"
     style="min-width: 180px;"
   >
-    <template v-if="icon" #prepend>
+    <template
+      v-if="icon"
+      #prepend
+    >
       <v-avatar>
         <svg-icon
           v-if="doc && doc.icon"
@@ -16,10 +26,3 @@
     </v-list-item-title>
   </v-list-item>
 </template>
-
-<script setup lang="ts">
-defineProps<{
-  doc: object;
-  icon?: boolean;
-}>();
-</script>

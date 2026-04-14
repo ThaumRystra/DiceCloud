@@ -1,3 +1,110 @@
+<script setup lang="ts">
+import { ref, computed, watch, defineAsyncComponent, inject } from 'vue';
+import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
+import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
+import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
+import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+
+// Lazy import to break circular dependency
+const BuildTreeNodeList = defineAsyncComponent(() =>
+  import('/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue')
+);
+
+const props = withDefaults(defineProps<{
+  depth?: number;
+  doc: Record<string, any>;
+  children?: any[];
+  parentSlotId?: string;
+}>(), {
+  depth: 0,
+  children: () => [],
+  parentSlotId: undefined,
+});
+
+const context = inject('context', {} as any);
+
+const expanded = ref(props.depth <= 2);
+
+const condenseChild = computed(() =>
+  props.doc.type === 'propertySlot' &&
+  props.children.length === 1 &&
+  props.children[0].doc.type !== 'propertySlot' &&
+  props.doc.quantityExpected &&
+  props.doc.quantityExpected.value === 1 &&
+  !canFill.value
+);
+
+const isSlot = computed(() => props.doc.type === 'propertySlot');
+const canFill = computed(() => !!props.doc._canFill);
+
+const canFillWithOne = computed(() =>
+  isSlot.value &&
+  canFill.value &&
+  props.doc.quantityExpected &&
+  props.doc.quantityExpected.value === 1 &&
+  props.doc.spaceLeft === 1 &&
+  !props.children?.length
+);
+
+const canFillWithMany = computed(() =>
+  isSlot.value && canFill.value && (
+    !props.doc.quantityExpected ||
+    props.doc.quantityExpected.value === 0 ||
+    (props.doc.quantityExpected.value > 1 && props.doc.spaceLeft > 0) ||
+    (props.doc.quantityExpected.value === 1 && props.children?.length)
+  )
+);
+
+const computedChildren = computed(() => {
+  if (condenseChild.value) {
+    return props.children[0].children;
+  }
+  return props.children;
+});
+
+const hasChildren = computed(() =>
+  !!props.children && !!computedChildren.value.length
+);
+
+const showExpanded = computed(() => canExpand.value && expanded.value);
+
+const computedSlotId = computed(() => {
+  if (condenseChild.value) {
+    if (props.children[0].doc.type === 'propertySlot') {
+      return props.children[0].doc._id;
+    } else {
+      return undefined;
+    }
+  } else {
+    if (props.doc.type === 'propertySlot') {
+      return props.doc._id;
+    } else {
+      return undefined;
+    }
+  }
+});
+
+const canExpand = computed(() => !!computedChildren.value.length || canFillWithMany.value);
+
+watch(() => props.doc._ancestorOfMatchedDocument, (value) => {
+  expanded.value = !!value;
+});
+
+function remove(model: Record<string, any>) {
+  const _id = model._id;
+  softRemoveProperty.callAsync({ _id });
+  snackbar({
+    text: `Deleted ${getPropertyTitle(model)}`,
+    callbackName: 'undo',
+    callback() {
+      restoreProperty.callAsync({ _id });
+    },
+  });
+}
+</script>
+
 <template lang="html">
   <v-sheet
     class="tree-node"
@@ -116,113 +223,6 @@
     </v-expand-transition>
   </v-sheet>
 </template>
-
-<script setup lang="ts">
-import { ref, computed, watch, defineAsyncComponent, inject } from 'vue';
-import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
-import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
-import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
-import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
-import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
-
-// Lazy import to break circular dependency
-const BuildTreeNodeList = defineAsyncComponent(() =>
-  import('/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue')
-);
-
-const props = withDefaults(defineProps<{
-  depth?: number;
-  doc: Record<string, any>;
-  children?: any[];
-  parentSlotId?: string;
-}>(), {
-  depth: 0,
-  children: () => [],
-  parentSlotId: undefined,
-});
-
-const context = inject('context', {} as any);
-
-const expanded = ref(props.depth <= 2);
-
-const condenseChild = computed(() =>
-  props.doc.type === 'propertySlot' &&
-  props.children.length === 1 &&
-  props.children[0].doc.type !== 'propertySlot' &&
-  props.doc.quantityExpected &&
-  props.doc.quantityExpected.value === 1 &&
-  !canFill.value
-);
-
-const isSlot = computed(() => props.doc.type === 'propertySlot');
-const canFill = computed(() => !!props.doc._canFill);
-
-const canFillWithOne = computed(() =>
-  isSlot.value &&
-  canFill.value &&
-  props.doc.quantityExpected &&
-  props.doc.quantityExpected.value === 1 &&
-  props.doc.spaceLeft === 1 &&
-  !props.children?.length
-);
-
-const canFillWithMany = computed(() =>
-  isSlot.value && canFill.value && (
-    !props.doc.quantityExpected ||
-    props.doc.quantityExpected.value === 0 ||
-    (props.doc.quantityExpected.value > 1 && props.doc.spaceLeft > 0) ||
-    (props.doc.quantityExpected.value === 1 && props.children?.length)
-  )
-);
-
-const computedChildren = computed(() => {
-  if (condenseChild.value) {
-    return props.children[0].children;
-  }
-  return props.children;
-});
-
-const hasChildren = computed(() =>
-  !!props.children && !!computedChildren.value.length
-);
-
-const showExpanded = computed(() => canExpand.value && expanded.value);
-
-const computedSlotId = computed(() => {
-  if (condenseChild.value) {
-    if (props.children[0].doc.type === 'propertySlot') {
-      return props.children[0].doc._id;
-    } else {
-      return undefined;
-    }
-  } else {
-    if (props.doc.type === 'propertySlot') {
-      return props.doc._id;
-    } else {
-      return undefined;
-    }
-  }
-});
-
-const canExpand = computed(() => !!computedChildren.value.length || canFillWithMany.value);
-
-watch(() => props.doc._ancestorOfMatchedDocument, (value) => {
-  expanded.value = !!value;
-});
-
-function remove(model: Record<string, any>) {
-  const _id = model._id;
-  softRemoveProperty.callAsync({ _id });
-  snackbar({
-    text: `Deleted ${getPropertyTitle(model)}`,
-    callbackName: 'undo',
-    callback() {
-      restoreProperty.callAsync({ _id });
-    },
-  });
-}
-</script>
 
 <style lang="css" scoped>
   .rotate-90 {

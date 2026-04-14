@@ -1,46 +1,3 @@
-<template>
-  <outlined-input
-    :name="label"
-    class="smart-image-input mb-3"
-    :data-id="id"
-    :class="{ dragging }"
-    @click="openImageInputDialog"
-    @dragover="handleDragOver"
-    @dragleave="handleDragLeave"
-    @drop="handleDrop"
-  >
-    <template v-if="value">
-      <img
-        v-if="value"
-        class="image"
-        :src="value"
-      >
-      <div
-        class="image-overlay"
-        :class="themeClasses"
-      />
-      <v-btn
-        v-if="value"
-        icon
-        dark
-        class="clear-button ma-1"
-        @click.stop="change(undefined)"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </template>
-    <div
-      v-else
-      class="add-image-text d-flex align-center justify-center"
-    >
-      Add image
-      <v-icon right>
-        mdi-image-outline
-      </v-icon>
-    </div>
-  </outlined-input>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject, useAttrs } from 'vue';
 import { useStore } from 'vuex';
@@ -107,6 +64,49 @@ function uploadFile(_file: File) {
   // Implement your file upload logic here
 }
 </script>
+
+<template>
+  <outlined-input
+    :name="label"
+    class="smart-image-input mb-3"
+    :data-id="id"
+    :class="{ dragging }"
+    @click="openImageInputDialog"
+    @dragover="handleDragOver"
+    @dragleave="handleDragLeave"
+    @drop="handleDrop"
+  >
+    <template v-if="value">
+      <img
+        v-if="value"
+        class="image"
+        :src="value"
+      >
+      <div
+        class="image-overlay"
+        :class="themeClasses"
+      />
+      <v-btn
+        v-if="value"
+        icon
+        dark
+        class="clear-button ma-1"
+        @click.stop="change(undefined)"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
+    <div
+      v-else
+      class="add-image-text d-flex align-center justify-center"
+    >
+      Add image
+      <v-icon end>
+        mdi-image-outline
+      </v-icon>
+    </div>
+  </outlined-input>
+</template>
 
 <style scoped>
 .smart-image-input {

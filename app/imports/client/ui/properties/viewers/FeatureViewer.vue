@@ -1,3 +1,7 @@
+<script setup lang="ts">
+defineProps<{ model: Record<string, any> }>();
+</script>
+
 <template lang="html">
   <div class="feature-viewer">
     <v-row dense>
@@ -12,10 +16,6 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-defineProps<{ model: Record<string, any> }>();
-</script>
 
 <style lang="css" scoped>
 

@@ -1,29 +1,3 @@
-<template lang="html">
-  <div class="d-flex align-center justify-start">
-    <property-icon
-      v-if="!hideIcon"
-      class="mr-2"
-      :model="model"
-      :color="model.color"
-      :class="selected && 'text-primary'"
-    />
-    <v-icon
-      v-if="model.equipped && !hideIcon"
-      class="mr-2"
-      :class="selected && 'text-primary'"
-      size="small"
-    >
-      mdi-account-arrow-left
-    </v-icon>
-    <div
-      class="text-no-wrap text-truncate"
-      :class="model.equipped && 'body-2'"
-    >
-      {{ title }}
-    </div>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { computed } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -55,6 +29,32 @@ const title = computed(() => {
   return prop && prop.name;
 });
 </script>
+
+<template lang="html">
+  <div class="d-flex align-center justify-start">
+    <property-icon
+      v-if="!hideIcon"
+      class="mr-2"
+      :model="model"
+      :color="model.color"
+      :class="selected && 'text-primary'"
+    />
+    <v-icon
+      v-if="model.equipped && !hideIcon"
+      class="mr-2"
+      :class="selected && 'text-primary'"
+      size="small"
+    >
+      mdi-account-arrow-left
+    </v-icon>
+    <div
+      class="text-no-wrap text-truncate"
+      :class="model.equipped && 'body-2'"
+    >
+      {{ title }}
+    </div>
+  </div>
+</template>
 
 <style lang="css" scoped>
 </style>

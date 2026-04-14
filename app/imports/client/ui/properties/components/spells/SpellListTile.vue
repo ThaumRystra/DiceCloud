@@ -1,46 +1,3 @@
-<template lang="html">
-  <v-list-item
-    class="spell"
-    v-bind="$attrs"
-    :disabled="disabled"
-    v-on="hasClickListener ? {click} : {}"
-  >
-    <template #prepend>
-      <property-icon
-        class="mr-2"
-        :model="model"
-        :color="model.color"
-        :disabled="disabled"
-      />
-    </template>
-    <v-list-item-title>
-      {{ title }}
-    </v-list-item-title>
-    <v-list-item-subtitle v-if="spellComponents">
-      {{ spellComponents }}
-    </v-list-item-subtitle>
-    <template v-if="preparingSpells || showInfoButton" #append>
-      <smart-checkbox
-        v-if="preparingSpells"
-        :value="model.prepared || model.alwaysPrepared"
-        :disabled="model.alwaysPrepared || context.editPermission === false"
-        @click.stop="() => {}"
-        @change="setPrepared"
-      />
-      <v-btn
-        v-else-if="showInfoButton"
-        icon
-        class="info-icon"
-        :disabled="disabled"
-        :data-id="`spell-info-btn-${model._id}`"
-        @click.stop="$emit('show-info')"
-      >
-        <v-icon>mdi-information</v-icon>
-      </v-btn>
-    </template>
-  </v-list-item>
-</template>
-
 <script setup lang="ts">
 import { computed, useAttrs, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -106,6 +63,52 @@ async function setPrepared(val: boolean, ack?: Function) {
   }
 }
 </script>
+
+<template lang="html">
+  <v-list-item
+    class="spell"
+    v-bind="$attrs"
+    :disabled="disabled"
+    v-on="hasClickListener ? {click} : {}"
+  >
+    <template #prepend>
+      <property-icon
+        class="mr-2"
+        :model="model"
+        :color="model.color"
+        :disabled="disabled"
+      />
+    </template>
+    <v-list-item-title>
+      {{ title }}
+    </v-list-item-title>
+    <v-list-item-subtitle v-if="spellComponents">
+      {{ spellComponents }}
+    </v-list-item-subtitle>
+    <template
+      v-if="preparingSpells || showInfoButton"
+      #append
+    >
+      <smart-checkbox
+        v-if="preparingSpells"
+        :value="model.prepared || model.alwaysPrepared"
+        :disabled="model.alwaysPrepared || context.editPermission === false"
+        @click.stop="() => {}"
+        @change="setPrepared"
+      />
+      <v-btn
+        v-else-if="showInfoButton"
+        icon
+        class="info-icon"
+        :disabled="disabled"
+        :data-id="`spell-info-btn-${model._id}`"
+        @click.stop="$emit('show-info')"
+      >
+        <v-icon>mdi-information</v-icon>
+      </v-btn>
+    </template>
+  </v-list-item>
+</template>
 
 <style lang="css" scoped>
 .spell-avatar {

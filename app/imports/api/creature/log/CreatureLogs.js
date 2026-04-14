@@ -16,9 +16,9 @@ if (Meteor.isServer) {
   var sendWebhookAsCreature = require('/imports/server/discord/sendWebhook').sendWebhookAsCreature;
 }
 
-let CreatureLogs = new Mongo.Collection('creatureLogs');
+const CreatureLogs = new Mongo.Collection('creatureLogs');
 
-let CreatureLogSchema = new SimpleSchema({
+const CreatureLogSchema = new SimpleSchema({
   content: {
     type: Array,
     defaultValue: [],
@@ -70,7 +70,7 @@ async function removeOldLogs({ creatureId, tabletopId }) {
     filter = { tabletopId }
   }
   // Find the first log that is over the limit
-  let firstExpiredLog = await CreatureLogs.findOneAsync(filter, {
+  const firstExpiredLog = await CreatureLogs.findOneAsync(filter, {
     sort: { date: -1 },
     skip: PER_CREATURE_LOG_LIMIT,
   });
@@ -83,7 +83,7 @@ async function removeOldLogs({ creatureId, tabletopId }) {
 }
 
 function logToMessageData(log) {
-  let embed = {
+  const embed = {
     fields: [],
   };
   log.content.forEach((field, index) => {
@@ -139,7 +139,7 @@ const insertCreatureLog = new ValidatedMethod({
     });
     await assertEditPermission(creature, this.userId);
     // Build the new log
-    let id = await insertCreatureLogWork({ log, creature, method: this })
+    const id = await insertCreatureLogWork({ log, creature, method: this })
     return id;
   },
 });
@@ -160,7 +160,7 @@ export async function insertCreatureLogWork({ log, creature, method }) {
   log.date = new Date();
   if (creature && creature.tabletop) log.tabletopId = creature.tabletop;
   // Insert it
-  let id = await CreatureLogs.insertAsync(log);
+  const id = await CreatureLogs.insertAsync(log);
   if (Meteor.isServer) {
     method?.unblock();
     if (creature) {
@@ -222,11 +222,11 @@ const logRoll = new ValidatedMethod({
     try {
       parsedResult = parse(roll);
     } catch (e) {
-      let error = prettifyParseError(e);
+      const error = prettifyParseError(e);
       logContent.push({ name: 'Parse Error', value: error });
     }
     if (parsedResult) try {
-      let {
+      const {
         result: compiled,
         context
       } = await resolve('compile', parsedResult, variables);
@@ -237,13 +237,13 @@ const logRoll = new ValidatedMethod({
       logContent.push({
         value: compiledString
       });
-      let { result: rolled } = await resolve('roll', compiled, variables, context);
-      let rolledString = toString(rolled);
+      const { result: rolled } = await resolve('roll', compiled, variables, context);
+      const rolledString = toString(rolled);
       if (rolledString !== compiledString) logContent.push({
         value: rolledString
       });
-      let { result } = await resolve('reduce', rolled, variables, context);
-      let resultString = toString(result);
+      const { result } = await resolve('reduce', rolled, variables, context);
+      const resultString = toString(result);
       if (resultString !== rolledString) logContent.push({
         value: resultString
       });
@@ -257,7 +257,7 @@ const logRoll = new ValidatedMethod({
       date: new Date(),
     };
 
-    let id = insertCreatureLogWork({ log, creature, method: this });
+    const id = insertCreatureLogWork({ log, creature, method: this });
 
     return id;
   },

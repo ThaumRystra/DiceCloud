@@ -2,7 +2,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import Libraries from '/imports/api/library/Libraries';
 
 Meteor.publish('ownedDocuments', function () {
-  let userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }

@@ -1,3 +1,25 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import numberToSignedString from '../../../../../../api/utility/numberToSignedString';
+import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
+
+const props = defineProps<{
+  model: Record<string, any>;
+  hideModifier?: boolean;
+}>();
+
+const context = inject('context', {} as any);
+
+const displayedModifier = computed(() => {
+  if (props.model.fail) return 'fail';
+  return numberToSignedString(props.model.value);
+});
+
+const passiveScore = computed(() =>
+  10 + props.model.value + props.model.passiveBonus
+);
+</script>
+
 <template lang="html">
   <div
     class="printed-skill pl-0 d-flex align-center"
@@ -44,28 +66,6 @@
     </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import numberToSignedString from '../../../../../../api/utility/numberToSignedString';
-import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
-
-const props = defineProps<{
-  model: Record<string, any>;
-  hideModifier?: boolean;
-}>();
-
-const context = inject('context', {} as any);
-
-const displayedModifier = computed(() => {
-  if (props.model.fail) return 'fail';
-  return numberToSignedString(props.model.value);
-});
-
-const passiveScore = computed(() =>
-  10 + props.model.value + props.model.passiveBonus
-);
-</script>
 
 <style lang="css" scoped>
 .printed-skill{

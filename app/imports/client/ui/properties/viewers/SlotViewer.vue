@@ -1,3 +1,27 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
+
+const props = defineProps<{ model: Record<string, any> }>();
+const context = inject<any>('context', {});
+
+const uniqueTextMap: Record<string, string> = {
+  uniqueInSlot: 'Each property inside this slot should be unique',
+  uniqueInCreature: 'Properties in this slot should be unique across the whole character',
+};
+
+const slotTypeName = computed(() => {
+  if (!props.model.slotType) return undefined;
+  return getPropertyName(props.model.slotType);
+});
+
+const uniqueText = computed(() => {
+  if (!props.model.unique) return undefined;
+  return uniqueTextMap[props.model.unique];
+});
+</script>
+
 <template lang="html">
   <div class="slot-viewer">
     <v-row dense>
@@ -58,27 +82,3 @@
     </v-row>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
-import FillSlotButton from '/imports/client/ui/creature/buildTree/FillSlotButton.vue';
-
-const props = defineProps<{ model: Record<string, any> }>();
-const context = inject<any>('context', {});
-
-const uniqueTextMap: Record<string, string> = {
-  uniqueInSlot: 'Each property inside this slot should be unique',
-  uniqueInCreature: 'Properties in this slot should be unique across the whole character',
-};
-
-const slotTypeName = computed(() => {
-  if (!props.model.slotType) return undefined;
-  return getPropertyName(props.model.slotType);
-});
-
-const uniqueText = computed(() => {
-  if (!props.model.unique) return undefined;
-  return uniqueTextMap[props.model.unique];
-});
-</script>

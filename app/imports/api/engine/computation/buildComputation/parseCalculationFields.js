@@ -20,7 +20,7 @@ function discoverInlineCalculationFields(prop, schemas) {
       // Store a reference to all the inline calculations
       prop._computationDetails.inlineCalculations.push(inlineCalcObj);
       // Extract the calculations and store them on the property
-      let string = inlineCalcObj.text;
+      const string = inlineCalcObj.text;
       // If there is no text, delete the whole field
       if (!string) {
         unset(prop, calcKey);
@@ -40,9 +40,9 @@ function discoverInlineCalculationFields(prop, schemas) {
 
       // It will be re set including the embedded calculation at the end of
       // the computation
-      let matches = string.matchAll(INLINE_CALCULATION_REGEX);
-      for (let match of matches) {
-        let calculation = match[1];
+      const matches = string.matchAll(INLINE_CALCULATION_REGEX);
+      for (const match of matches) {
+        const calculation = match[1];
         inlineCalcObj.inlineCalculations.push({
           calculation,
         });
@@ -120,7 +120,7 @@ function parseCalculation(calcObj) {
     calcObj.parseNode = parse(calcObj.calculation || '0');
     calcObj.parseError = null;
   } catch (e) {
-    let error = {
+    const error = {
       type: 'evaluation',
       message: prettifyParseError(e),
     };

@@ -1,32 +1,3 @@
-<template>
-  <v-col
-    cols="12"
-    md="4"
-    lg="3"
-    class="d-flex flex-column justify-center align-center"
-  >
-    <v-progress-circular
-      :rotate="-90"
-      :size="100"
-      :width="15"
-      :value="percentFileStorageUsed"
-      :buffer-value="50"
-      color="accent"
-    >
-      {{ percentFileStorageUsed }}%
-    </v-progress-circular>
-    <div class="ma-2 mt-4">
-      {{ prettyBytes(storageUsed) }} / {{ prettyBytes(storageAllowed) }}
-      <v-btn
-        icon
-        @click="updateStorageUsed"
-      >
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
-    </div>
-  </v-col>
-</template>
-
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
@@ -54,6 +25,35 @@ async function updateStorageUsedFn() {
   updateStorageUsedLoading.value = false;
 }
 </script>
+
+<template>
+  <v-col
+    cols="12"
+    md="4"
+    lg="3"
+    class="d-flex flex-column justify-center align-center"
+  >
+    <v-progress-circular
+      :rotate="-90"
+      :size="100"
+      :width="15"
+      :model-value="percentFileStorageUsed"
+      :buffer-value="50"
+      color="accent"
+    >
+      {{ percentFileStorageUsed }}%
+    </v-progress-circular>
+    <div class="ma-2 mt-4">
+      {{ prettyBytes(storageUsed) }} / {{ prettyBytes(storageAllowed) }}
+      <v-btn
+        icon
+        @click="updateStorageUsed"
+      >
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+    </div>
+  </v-col>
+</template>
 
 <style>
 

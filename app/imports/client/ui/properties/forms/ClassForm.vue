@@ -1,56 +1,3 @@
-<template lang="html">
-  <div class="class-form">
-    <v-row dense>
-      <v-col
-        cols="12"
-      >
-        <text-field
-          label="Variable name"
-          :value="model.variableName"
-          hint="Use this name in calculations to reference this class"
-          :error-messages="errors.variableName"
-          @change="change('variableName', ...arguments)"
-        />
-      </v-col>
-    </v-row>
-
-    <inline-computation-field
-      label="Description"
-      :model="model.description"
-      :error-messages="errors['description.text']"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['description', ...path], value, ack})"
-    />
-
-    <form-sections type="class">
-      <form-section name="Class levels from libraries">
-        <tag-targeting
-          :model="model"
-          :errors="errors"
-          tag-field="slotTags"
-          tag-hint="Find class levels that have all of these tags"
-          or-hint="Also find class levels that have all of these tags instead"
-          not-hint="Ignore class levels that have any of these tags"
-          @change="e => $emit('change', e)"
-          @push="e => $emit('push', e)"
-          @pull="e => $emit('pull', e)"
-        />
-
-        <computed-field
-          label="Active condition"
-          hint="A calculation to determine if this class can have class levels added to it"
-          placeholder="Always active"
-          :model="model.slotCondition"
-          :error-messages="errors.slotCondition"
-          @change="({path, value, ack}) =>
-            $emit('change', {path: ['slotCondition', ...path], value, ack})"
-        />
-      </form-section>
-      <slot />
-    </form-sections>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
@@ -103,3 +50,56 @@ function addExtraTags() {
   });
 }
 </script>
+
+<template lang="html">
+  <div class="class-form">
+    <v-row dense>
+      <v-col
+        cols="12"
+      >
+        <text-field
+          label="Variable name"
+          :value="model.variableName"
+          hint="Use this name in calculations to reference this class"
+          :error-messages="errors.variableName"
+          @change="change('variableName', ...arguments)"
+        />
+      </v-col>
+    </v-row>
+
+    <inline-computation-field
+      label="Description"
+      :model="model.description"
+      :error-messages="errors['description.text']"
+      @change="({path, value, ack}) =>
+        $emit('change', {path: ['description', ...path], value, ack})"
+    />
+
+    <form-sections type="class">
+      <form-section name="Class levels from libraries">
+        <tag-targeting
+          :model="model"
+          :errors="errors"
+          tag-field="slotTags"
+          tag-hint="Find class levels that have all of these tags"
+          or-hint="Also find class levels that have all of these tags instead"
+          not-hint="Ignore class levels that have any of these tags"
+          @change="e => $emit('change', e)"
+          @push="e => $emit('push', e)"
+          @pull="e => $emit('pull', e)"
+        />
+
+        <computed-field
+          label="Active condition"
+          hint="A calculation to determine if this class can have class levels added to it"
+          placeholder="Always active"
+          :model="model.slotCondition"
+          :error-messages="errors.slotCondition"
+          @change="({path, value, ack}) =>
+            $emit('change', {path: ['slotCondition', ...path], value, ack})"
+        />
+      </form-section>
+      <slot />
+    </form-sections>
+  </div>
+</template>

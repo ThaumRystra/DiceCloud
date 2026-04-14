@@ -1,39 +1,3 @@
-<template>
-  <v-card
-    v-if="model"
-    v-bind="$attrs"
-    :data-id="`slot-card-${model._id}`"
-    :style="`border: solid 1px ${accentColor};`"
-    hover
-    class="slot-card d-flex flex-column"
-    @mouseover="hover = true"
-    @mouseleave="hover = false"
-    @click="fillSlot"
-  >
-    <card-highlight :active="hover" />
-    <v-card-title>
-      {{ model.name }}
-    </v-card-title>
-    <v-card-text v-if="model.description">
-      <property-description
-        text
-        :model="model.description"
-      />
-    </v-card-text>
-    <v-spacer />
-    <v-card-actions>
-      <v-spacer />
-      <v-btn
-        icon
-        color="accent"
-        @click.stop="ignoreProp"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </v-card-actions>
-  </v-card>
-</template>
-
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -93,3 +57,39 @@ async function ignoreProp() {
   }
 }
 </script>
+
+<template>
+  <v-card
+    v-if="model"
+    v-bind="$attrs"
+    :data-id="`slot-card-${model._id}`"
+    :style="`border: solid 1px ${accentColor};`"
+    hover
+    class="slot-card d-flex flex-column"
+    @mouseover="hover = true"
+    @mouseleave="hover = false"
+    @click="fillSlot"
+  >
+    <card-highlight :active="hover" />
+    <v-card-title>
+      {{ model.name }}
+    </v-card-title>
+    <v-card-text v-if="model.description">
+      <property-description
+        text
+        :model="model.description"
+      />
+    </v-card-text>
+    <v-spacer />
+    <v-card-actions>
+      <v-spacer />
+      <v-btn
+        icon
+        color="accent"
+        @click.stop="ignoreProp"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </v-card-actions>
+  </v-card>
+</template>

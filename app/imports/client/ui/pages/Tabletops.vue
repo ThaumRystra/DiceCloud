@@ -1,99 +1,3 @@
-<template lang="html">
-  <div
-    key="tabletops"
-    class="card-background tabletops"
-    style="height: 100%"
-  >
-    <v-container>
-      <v-fade-transition mode="out-in">
-        <v-row
-          v-if="!tabletopsReady"
-          key="loading-spinner"
-        >
-          <v-col
-            cols="12"
-            class="d-flex align-center justify-center"
-          >
-            <v-progress-circular
-              indeterminate
-              color="primary"
-              size="64"
-            />
-          </v-col>
-        </v-row>
-        <v-row
-          v-else-if="tabletops.length"
-          key="loaded-cards"
-          density="compact"
-        >
-          <v-col
-            v-for="tabletop in tabletops"
-            :key="tabletop._id"
-            cols="12"
-            sm="6"
-            md="4"
-            lg="3"
-          >
-            <v-card
-              class="fill-height d-flex flex-column"
-              :data-id="`tabletop-${tabletop._id}`"
-              @click="clickTabletop(tabletop._id)"
-            >
-              <v-img
-                v-if="tabletop.imageUrl"
-                height="200"
-                :src="tabletop.imageUrl"
-              />
-              <v-card-title>
-                {{ tabletop.name || 'Unnamed Tabletop' }}
-              </v-card-title>
-              <v-card-text v-if="tabletop.description">
-                <markdown-text
-                  class="line-clamp"
-                  :markdown="tabletop.description"
-                />
-              </v-card-text>
-              <v-spacer />
-              <v-card-actions>
-                <v-spacer />
-                <v-btn
-                  variant="text"
-                  :to="`/tabletop/${tabletop._id}`"
-                  @click.stop=""
-                  append-icon="mdi-play"
-                >
-                  Launch
-                </v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row
-          v-else
-          key="no-tabletops"
-        >
-          <v-col
-            cols="12"
-            class="d-flex align-center justify-center"
-          >
-            <h1>You don't have any tabletops yet</h1>
-          </v-col>
-        </v-row>
-      </v-fade-transition>
-    </v-container>
-    <v-btn
-      color="primary"
-      fixed
-      bottom
-      right
-      :loading="addTabletopLoading"
-      @click="addTabletop"
-    >
-      <v-icon>mdi-plus</v-icon>
-    </v-btn>
-  </div>
-</template>
-
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useStore } from 'vuex';
@@ -129,6 +33,102 @@ function clickTabletop(tabletopId: string) {
   });
 }
 </script>
+
+<template lang="html">
+  <div
+    key="tabletops"
+    class="card-background tabletops"
+    style="height: 100%"
+  >
+    <v-container>
+      <v-fade-transition mode="out-in">
+        <v-row
+          v-if="!tabletopsReady"
+          key="loading-spinner"
+        >
+          <v-col
+            cols="12"
+            class="d-flex align-center justify-center"
+          >
+            <v-progress-circular
+              indeterminate
+              color="primary"
+              size="64"
+            />
+          </v-col>
+        </v-row>
+        <v-row
+          v-else-if="tabletops.length"
+          key="loaded-cards"
+          class="density"
+        >
+          <v-col
+            v-for="tabletop in tabletops"
+            :key="tabletop._id"
+            cols="12"
+            sm="6"
+            md="4"
+            lg="3"
+          >
+            <v-card
+              class="fill-height d-flex flex-column"
+              :data-id="`tabletop-${tabletop._id}`"
+              @click="clickTabletop(tabletop._id)"
+            >
+              <v-img
+                v-if="tabletop.imageUrl"
+                height="200"
+                :src="tabletop.imageUrl"
+              />
+              <v-card-title>
+                {{ tabletop.name || 'Unnamed Tabletop' }}
+              </v-card-title>
+              <v-card-text v-if="tabletop.description">
+                <markdown-text
+                  class="line-clamp"
+                  :markdown="tabletop.description"
+                />
+              </v-card-text>
+              <v-spacer />
+              <v-card-actions>
+                <v-spacer />
+                <v-btn
+                  variant="text"
+                  :to="`/tabletop/${tabletop._id}`"
+                  append-icon="mdi-play"
+                  @click.stop=""
+                >
+                  Launch
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row
+          v-else
+          key="no-tabletops"
+        >
+          <v-col
+            cols="12"
+            class="d-flex align-center justify-center"
+          >
+            <h1>You don't have any tabletops yet</h1>
+          </v-col>
+        </v-row>
+      </v-fade-transition>
+    </v-container>
+    <v-btn
+      color="primary"
+      fixed
+      location="bottom right"
+      
+      :loading="addTabletopLoading"
+      @click="addTabletop"
+    >
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
+  </div>
+</template>
 
 <style lang="css" scoped>
 .line-clamp {

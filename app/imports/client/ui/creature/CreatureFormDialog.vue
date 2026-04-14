@@ -1,38 +1,3 @@
-<template lang="html">
-  <dialog-base
-    v-if="model"
-    :color="model.color"
-  >
-    <template #toolbar>
-      <v-toolbar-title>
-        Character Details
-      </v-toolbar-title>
-      <v-spacer />
-      <color-picker
-        :value="model.color"
-        no-color-change
-        @input="value => change({path: ['color'], value})"
-      />
-    </template>
-    <div>
-      <creature-form
-        :model="model"
-        :disabled="editPermission === false"
-        @change="change"
-      />
-    </div>
-    <template #actions>
-      <v-spacer />
-      <v-btn
-        variant="text"
-        @click="$store.dispatch('popDialogStack')"
-      >
-        Done
-      </v-btn>
-    </template>
-  </dialog-base>
-</template>
-
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
@@ -74,6 +39,41 @@ async function change({ path, value, ack }: { path: string[]; value: any; ack?: 
   }
 }
 </script>
+
+<template lang="html">
+  <dialog-base
+    v-if="model"
+    :color="model.color"
+  >
+    <template #toolbar>
+      <v-toolbar-title>
+        Character Details
+      </v-toolbar-title>
+      <v-spacer />
+      <color-picker
+        :value="model.color"
+        no-color-change
+        @input="value => change({path: ['color'], value})"
+      />
+    </template>
+    <div>
+      <creature-form
+        :model="model"
+        :disabled="editPermission === false"
+        @change="change"
+      />
+    </div>
+    <template #actions>
+      <v-spacer />
+      <v-btn
+        variant="text"
+        @click="$store.dispatch('popDialogStack')"
+      >
+        Done
+      </v-btn>
+    </template>
+  </dialog-base>
+</template>
 
 <style lang="css" scoped>
 

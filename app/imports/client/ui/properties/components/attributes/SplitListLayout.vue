@@ -1,12 +1,15 @@
+<script setup lang="ts">
+</script>
+
 <template lang="html">
   <div
     v-if="$vuetify.display.smAndUp"
     class="d-flex split"
   >
     <v-list
-      class="left"
+      class="float-left"
       subheader
-      two-line
+      lines="two"
       density="compact"
     >
       <v-slide-x-transition
@@ -21,9 +24,9 @@
       vertical
     />
     <v-list
-      class="right"
+      class="float-right"
       subheader
-      two-line
+      lines="two"
       density="compact"
     >
       <v-slide-x-transition
@@ -38,7 +41,7 @@
     v-else
     class="small"
     subheader
-    two-line
+    lines="two"
     density="compact"
   >
     <v-slide-x-transition
@@ -50,9 +53,6 @@
     </v-slide-x-transition>
   </v-list>
 </template>
-
-<script setup lang="ts">
-</script>
 
 <style lang="css" scoped>
 .split{

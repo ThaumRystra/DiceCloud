@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { autorun } from 'vue-meteor-tracker';
+
+defineProps<{
+  users: any[];
+  owner: string;
+  role: string;
+  editPermission: boolean;
+}>();
+
+const { result: currentUserId } = autorun(() => Meteor.userId());
+</script>
+
 <template lang="html">
   <v-list
     class="sharedWith"
@@ -15,8 +28,8 @@
         </v-list-item-title>
         <template #append>
           <v-menu
-            bottom
-            left
+            location="bottom left"
+            
             :data-id="'menu-' + user._id"
           >
             <template #activator="{ props }">
@@ -88,16 +101,3 @@
     </v-slide-x-transition>
   </v-list>
 </template>
-
-<script setup lang="ts">
-import { autorun } from 'vue-meteor-tracker';
-
-defineProps<{
-  users: any[];
-  owner: string;
-  role: string;
-  editPermission: boolean;
-}>();
-
-const { result: currentUserId } = autorun(() => Meteor.userId());
-</script>

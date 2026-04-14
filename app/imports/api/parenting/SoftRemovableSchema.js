@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
-let SoftRemovableSchema = TypedSimpleSchema.from({
+const SoftRemovableSchema = TypedSimpleSchema.from({
   'removed': {
     type: Boolean,
     optional: true,

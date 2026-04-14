@@ -3,7 +3,7 @@ import stripFloatingPointOddities from '/imports/api/engine/computation/utility/
 export default function getAggregatorResult(node) {
   // Work out the base value as the greater of the deining stat value
   // This baseValue comes from aggregating definitions
-  let statBase = node.data.baseValue;
+  const statBase = node.data.baseValue;
 
   // get a reference to the  aggregator
   const aggregator = node.data.effectAggregator;

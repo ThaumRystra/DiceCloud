@@ -1,15 +1,3 @@
-<template>
-  <v-icon
-    class="handle"
-    v-bind="$attrs"
-    @click="e => { }"
-    @touchstart.stop="e => { }"
-    @touchend="portalEvent"
-  >
-    mdi-drag
-  </v-icon>
-</template>
-
 <script setup lang="ts">
 import { defer } from 'lodash';
 
@@ -22,6 +10,18 @@ function portalEvent(e: TouchEvent) {
   });
 }
 </script>
+
+<template>
+  <v-icon
+    class="handle"
+    v-bind="$attrs"
+    @click="e => { }"
+    @touchstart.stop="e => { }"
+    @touchend="portalEvent"
+  >
+    mdi-drag
+  </v-icon>
+</template>
 
 <style scoped>
 .handle {

@@ -1,43 +1,3 @@
-<template lang="html">
-  <v-snackbar
-    location="bottom start"
-    color="accent"
-    v-bind="$attrs"
-    :model-value="isShown"
-    :timeout="timeout"
-    @input="value => isShown = value"
-  >
-    <div class="d-flex align-center">
-      <template v-if="snackbar && snackbar.data">
-        <div v-if="snackbar.data.text">
-          {{ snackbar.data.text }}
-        </div>
-        <template v-else-if="snackbar.data.content">
-          <log-content :model="snackbar.data.content" />
-        </template>
-        <v-spacer />
-        <v-btn
-          v-if="snackbar.data.callback"
-          color="primary"
-          variant="text"
-          @click="closeSnackbar(); snackbar.data.callback()"
-        >
-          {{ snackbar.data.callbackName }}
-        </v-btn>
-      </template>
-    </div>
-    <template #actions="{ isActive }">
-      <v-btn
-        icon
-        v-bind="isActive"
-        @click="closeSnackbar"
-      >
-        <v-icon>mdi-close</v-icon>
-      </v-btn>
-    </template>
-  </v-snackbar>
-</template>
-
 <script setup lang="ts">
 // Modified from https://gitlab.com/tozd/vue/snackbar-queue
 import { ref, watch, watchEffect, onMounted } from 'vue';
@@ -113,3 +73,43 @@ onMounted(() => {
   showNextSnackbar();
 });
 </script>
+
+<template lang="html">
+  <v-snackbar
+    location="bottom start"
+    color="accent"
+    v-bind="$attrs"
+    :model-value="isShown"
+    :timeout="timeout"
+    @update:model-value="value => isShown = value"
+  >
+    <div class="d-flex align-center">
+      <template v-if="snackbar && snackbar.data">
+        <div v-if="snackbar.data.text">
+          {{ snackbar.data.text }}
+        </div>
+        <template v-else-if="snackbar.data.content">
+          <log-content :model="snackbar.data.content" />
+        </template>
+        <v-spacer />
+        <v-btn
+          v-if="snackbar.data.callback"
+          color="primary"
+          variant="text"
+          @click="closeSnackbar(); snackbar.data.callback()"
+        >
+          {{ snackbar.data.callbackName }}
+        </v-btn>
+      </template>
+    </div>
+    <template #actions="{ isActive }">
+      <v-btn
+        icon
+        v-bind="isActive"
+        @click="closeSnackbar"
+      >
+        <v-icon>mdi-close</v-icon>
+      </v-btn>
+    </template>
+  </v-snackbar>
+</template>

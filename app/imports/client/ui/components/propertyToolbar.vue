@@ -1,3 +1,86 @@
+<script setup lang="ts">
+import { computed, inject } from 'vue';
+import { useStore } from 'vuex';
+import { autorun } from 'vue-meteor-tracker';
+import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
+import { getPropertyName } from '/imports/constants/PROPERTIES';
+import getThemeColor from '/imports/client/ui/utility/getThemeColor';
+import PROPERTIES from '/imports/constants/PROPERTIES';
+import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
+import { key } from '/imports/client/ui/vuexStore';
+
+const context = inject<{ editPermission?: boolean; copyPermission?: boolean }>('context', {});
+const store = useStore(key);
+
+const props = defineProps<{
+  model?: Record<string, any>;
+  flat?: boolean;
+  editing?: boolean;
+  embedded?: boolean;
+}>();
+
+const emit = defineEmits<{
+  'color-changed': [value: string];
+  'toggle-editing': [];
+  duplicate: [];
+  copy: [];
+  'make-reference': [];
+  move: [];
+  'copy-to-library': [];
+  remove: [];
+}>();
+
+const { result: userPaid } = autorun(() => {
+  try {
+    assertUserHasPaidBenefits(Meteor.user());
+    return true;
+  } catch (e) {
+    return false;
+  }
+});
+
+const color = computed(() => props.model?.color || getThemeColor('secondary'));
+const isDark = computed(() => isDarkColor(color.value));
+
+const title = computed(() => {
+  const model = props.model;
+  if (!model) return '';
+  if (model.quantity !== 1 && model.quantity !== undefined) {
+    if (model.plural) {
+      return `${model.quantity} ${model.plural}`;
+    } else if (model.name) {
+      return `${model.quantity} ${model.name}`;
+    } else {
+      return `${model.quantity} × ${getPropertyName(model.type)}`;
+    }
+  }
+  return model.name || getPropertyName(model.type);
+});
+
+const docsPath = computed(() => {
+  if (!props.model) return undefined;
+  const propDef = (PROPERTIES as Record<string, { docsPath?: string }>)[props.model.type];
+  return propDef?.docsPath;
+});
+
+function colorChanged(value: string) {
+  emit('color-changed', value);
+}
+
+function back() {
+  store.dispatch('popDialogStack');
+}
+
+function helpDialog() {
+  store.commit('pushDialogStack', {
+    component: 'help-dialog',
+    elementId: 'property-toolbar-menu-button',
+    data: { path: docsPath.value },
+  });
+}
+</script>
+
 <template lang="html">
   <v-toolbar
     :color="color || 'secondary'"
@@ -32,8 +115,8 @@
             $attrs.onDuplicate ||
             $attrs.onRemove
           )"
-          bottom
-          left
+          location="bottom left"
+          
           transition="slide-y-transition"
         >
           <template #activator="{ props }">
@@ -149,14 +232,14 @@
         <v-icon
           v-if="editing"
           key="doneIcon"
-          right
+          end
         >
           mdi-check
         </v-icon>
         <v-icon
           v-else
           key="createIcon"
-          right
+          end
         >
           mdi-pencil
         </v-icon>
@@ -164,88 +247,5 @@
     </v-btn>
   </v-toolbar>
 </template>
-
-<script setup lang="ts">
-import { computed, inject } from 'vue';
-import { useStore } from 'vuex';
-import { autorun } from 'vue-meteor-tracker';
-import isDarkColor from '/imports/client/ui/utility/isDarkColor';
-import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
-import getThemeColor from '/imports/client/ui/utility/getThemeColor';
-import PROPERTIES from '/imports/constants/PROPERTIES';
-import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
-import { key } from '/imports/client/ui/vuexStore';
-
-const context = inject<{ editPermission?: boolean; copyPermission?: boolean }>('context', {});
-const store = useStore(key);
-
-const props = defineProps<{
-  model?: Record<string, any>;
-  flat?: boolean;
-  editing?: boolean;
-  embedded?: boolean;
-}>();
-
-const emit = defineEmits<{
-  'color-changed': [value: string];
-  'toggle-editing': [];
-  duplicate: [];
-  copy: [];
-  'make-reference': [];
-  move: [];
-  'copy-to-library': [];
-  remove: [];
-}>();
-
-const { result: userPaid } = autorun(() => {
-  try {
-    assertUserHasPaidBenefits(Meteor.user());
-    return true;
-  } catch (e) {
-    return false;
-  }
-});
-
-const color = computed(() => props.model?.color || getThemeColor('secondary'));
-const isDark = computed(() => isDarkColor(color.value));
-
-const title = computed(() => {
-  const model = props.model;
-  if (!model) return '';
-  if (model.quantity !== 1 && model.quantity !== undefined) {
-    if (model.plural) {
-      return `${model.quantity} ${model.plural}`;
-    } else if (model.name) {
-      return `${model.quantity} ${model.name}`;
-    } else {
-      return `${model.quantity} × ${getPropertyName(model.type)}`;
-    }
-  }
-  return model.name || getPropertyName(model.type);
-});
-
-const docsPath = computed(() => {
-  if (!props.model) return undefined;
-  const propDef = (PROPERTIES as Record<string, { docsPath?: string }>)[props.model.type];
-  return propDef?.docsPath;
-});
-
-function colorChanged(value: string) {
-  emit('color-changed', value);
-}
-
-function back() {
-  store.dispatch('popDialogStack');
-}
-
-function helpDialog() {
-  store.commit('pushDialogStack', {
-    component: 'help-dialog',
-    elementId: 'property-toolbar-menu-button',
-    data: { path: docsPath.value },
-  });
-}
-</script>
 
 <style lang="css" scoped></style>
