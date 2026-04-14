@@ -34,9 +34,7 @@
       class="add-image-text d-flex align-center justify-center"
     >
       Add image
-      <v-icon
-        right
-      >
+      <v-icon right>
         mdi-image-outline
       </v-icon>
     </div>
@@ -48,11 +46,12 @@ import { ref, computed, inject, useAttrs } from 'vue';
 import { useStore } from 'vuex';
 import { useSmartInput } from '/imports/client/ui/components/global/useSmartInput';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 defineOptions({ inheritAttrs: false });
 
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
-const store = useStore();
+const store = useStore(key);
 
 const props = defineProps<{
   value?: string | number | Date | unknown[] | object | boolean;
@@ -116,26 +115,32 @@ function uploadFile(_file: File) {
   cursor: pointer;
   overflow: hidden;
 }
+
 .image {
   min-height: 100px;
   max-height: 300px;
   max-width: 100%;
   margin-bottom: -7px;
 }
+
 .clear-button {
   position: absolute;
   top: 0;
   right: 0;
 }
+
 .dragging {
   border-style: dashed;
 }
+
 .outlined-input.dragging.v-theme--dark:not(.no-hover) {
   border-color: #fff;
 }
+
 .outlined-input.dragging.v-theme--light:not(.no-hover) {
-  border-color: rgba(0,0,0,.86);
+  border-color: rgba(0, 0, 0, .86);
 }
+
 .image-overlay {
   position: absolute;
   top: 0;
@@ -143,16 +148,20 @@ function uploadFile(_file: File) {
   left: 0;
   right: 0;
 }
+
 .image-overlay.v-theme--dark {
-  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%);
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
 }
+
 .image-overlay.v-theme--light {
-  background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
 }
+
 .add-image-text {
   opacity: 0.7;
-  height: 118px; 
+  height: 118px;
 }
+
 .smart-image-input:hover .add-image-text {
   opacity: 1;
 }
@@ -163,7 +172,8 @@ function uploadFile(_file: File) {
   position: relative;
   z-index: 1;
 }
+
 .smart-image-input .clear-button i {
-  text-shadow: 0 0 4px #000, 0 0 4px #000 ;
+  text-shadow: 0 0 4px #000, 0 0 4px #000;
 }
 </style>

@@ -13,7 +13,7 @@
           style="flex-basis: 320px;"
           :value="model.name"
           :error-messages="errors.name"
-          @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['name'], value, ack })"
         />
         <icon-color-menu
           :model="model"
@@ -46,7 +46,7 @@
               label="Can fill slots"
               :value="model.fillSlots"
               :error-messages="errors.fillSlots"
-              @change="(value, ack) => $emit('change', {path: ['fillSlots'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['fillSlots'], value, ack })"
             />
           </v-col>
           <v-col
@@ -57,7 +57,7 @@
               label="Searchable from character sheet"
               :value="model.searchable"
               :error-messages="errors.searchable"
-              @change="(value, ack) => $emit('change', {path: ['searchable'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['searchable'], value, ack })"
             />
           </v-col>
           <v-col
@@ -72,7 +72,7 @@
               :items="slotTypes"
               :value="model.slotFillerType"
               :error-messages="errors.slotFillerType"
-              @change="(value, ack) => $emit('change', {path: ['slotFillerType'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['slotFillerType'], value, ack })"
             />
           </v-col>
           <v-col
@@ -86,7 +86,7 @@
               hint="How many properties this counts as when filling a slot"
               :value="model.slotQuantityFilled"
               :error-messages="errors.slotQuantityFilled"
-              @change="(value, ack) => $emit('change', {path: ['slotQuantityFilled'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['slotQuantityFilled'], value, ack })"
             />
           </v-col>
           <v-col
@@ -100,7 +100,7 @@
               placeholder="Always active"
               :value="model.slotFillerCondition"
               :error-messages="errors.slotFillerCondition"
-              @change="(value, ack) => $emit('change', {path: ['slotFillerCondition'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['slotFillerCondition'], value, ack })"
             />
           </v-col>
           <v-col
@@ -114,12 +114,10 @@
               placeholder="Always active"
               :value="model.slotFillerConditionNote"
               :error-messages="errors.slotFillerConditionNote"
-              @change="(value, ack) => $emit('change', {path: ['slotFillerConditionNote'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['slotFillerConditionNote'], value, ack })"
             />
           </v-col>
-          <v-col
-            cols="12"
-          >
+          <v-col cols="12">
             <smart-combobox
               label="Library Tags"
               multiple
@@ -128,19 +126,15 @@
               hint="Used to let slots find this property in a library"
               :value="model.libraryTags"
               :error-messages="errors.libraryTags"
-              @change="(value, ack) => $emit('change', {path: ['libraryTags'], value, ack})"
+              @change="(value, ack) => $emit('change', { path: ['libraryTags'], value, ack })"
             />
           </v-col>
         </v-row>
       </form-section>
     </component>
-    <v-divider
-      class="mt-10 mb-8"
-    />
+    <v-divider class="mt-10 mb-8" />
     <v-row>
-      <v-col
-        cols="12"
-      >
+      <v-col cols="12">
         <smart-combobox
           label="Tags"
           multiple
@@ -149,7 +143,7 @@
           hint="Tags let other properties target this property with interactions"
           :value="model.tags"
           :error-messages="errors.tags"
-          @change="(value, ack) => $emit('change', {path: ['tags'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['tags'], value, ack })"
         />
       </v-col>
     </v-row>
@@ -182,7 +176,7 @@
             rounded="0"
             plain
             :data-id="`insert-${suggestion.type}-property-btn`"
-            @click="$event => $emit('add-child', {suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn`})"
+            @click="$event => $emit('add-child', { suggestedType: suggestion.type, elementId: `insert-${suggestion.type}-property-btn` })"
             prepend-icon="mdi-plus"
           >
             {{ suggestion.details.name }}
@@ -192,7 +186,7 @@
             rounded="0"
             plain
             data-id="insert-any-property-btn"
-            @click="$event => $emit('add-child', {elementId: 'insert-any-property-btn'})"
+            @click="$event => $emit('add-child', { elementId: 'insert-any-property-btn' })"
           >
             <v-icon
               v-if="!suggestedChildren.length"
@@ -224,6 +218,7 @@ import OutlinedInput from '/imports/client/ui/properties/viewers/shared/Outlined
 import { getSuggestedChildren } from '/imports/constants/PROPERTIES';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model?: Record<string, any> | any[];
@@ -241,7 +236,7 @@ const props = withDefaults(defineProps<{
 
 defineEmits(['change', 'push', 'pull']);
 
-const store = useStore();
+const store = useStore(key);
 const context = inject<any>('context', {});
 
 const slotTypes: Array<{ text: string; value: string }> = [];

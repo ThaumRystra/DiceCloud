@@ -26,11 +26,11 @@
         <v-list-item>
           <smart-toggle
             label="Theme"
-            :value="darkMode === true ? 'true' : darkMode === false ? 'false' : darkMode === null ? 'unset': undefined"
+            :value="darkMode === true ? 'true' : darkMode === false ? 'false' : darkMode === null ? 'unset' : undefined"
             :options="[
-              {name: 'Dark', value: 'true', icon: 'mdi-brightness-5'},
-              {name: 'Match device theme', value: 'unset'},
-              {name: 'Light', value: 'false', icon: 'mdi-brightness-7'},
+              { name: 'Dark', value: 'true', icon: 'mdi-brightness-5' },
+              { name: 'Match device theme', value: 'unset' },
+              { name: 'Light', value: 'false', icon: 'mdi-brightness-7' },
             ]"
             @change="setDarkMode"
           />
@@ -38,10 +38,9 @@
         <v-list-item>
           <smart-switch
             label="Swap ability scores and modifiers"
-            :value="
-              user &&
-                user.preferences &&
-                user.preferences.swapAbilityScoresAndModifiers
+            :value="user &&
+              user.preferences &&
+              user.preferences.swapAbilityScoresAndModifiers
             "
             @change="swapAbilityScoresAndModifiers"
           />
@@ -77,7 +76,10 @@
           v-for="email in emails"
           :key="email.address"
         >
-          <template v-if="emails.length > 1" #prepend>
+          <template
+            v-if="emails.length > 1"
+            #prepend
+          >
             <v-btn
               icon
               size="small"
@@ -98,9 +100,7 @@
             {{ removeEmailError }}
           </v-alert>
         </v-expand-transition>
-        <v-slide-x-transition
-          hide-on-leave
-        >
+        <v-slide-x-transition hide-on-leave>
           <v-text-field
             v-if="showEmailInput"
             v-model="inputEmail"
@@ -173,9 +173,7 @@
           </v-btn>
         </v-list-item>
       </v-list>
-      <div
-        class="d-flex justify-end"
-      >
+      <div class="d-flex justify-end">
         <v-btn
           color="accent"
           @click="signOut"
@@ -200,20 +198,17 @@
               @click="clickInvite(invite)"
             >
               <v-list-item-title>
-                  {{ invite.inviteeName || invite.invitee || 'Available' }}
-                </v-list-item-title>
+                {{ invite.inviteeName || invite.invitee || 'Available' }}
+              </v-list-item-title>
               <template #append>
                 <v-icon>mdi-email-outline</v-icon>
               </template>
             </v-list-item>
-            <v-divider
-            />
+            <v-divider />
           </template>
         </v-list>
       </template>
-      <div
-        class="d-flex justify-end mt-3"
-      >
+      <div class="d-flex justify-end mt-3">
         <v-btn
           color="error"
           data-id="delete-account-btn"
@@ -239,8 +234,9 @@ import addEmail from '/imports/api/users/methods/addEmail';
 import removeEmail from '/imports/api/users/methods/removeEmail';
 import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
 import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const { result: user } = autorun(() => Meteor.user());

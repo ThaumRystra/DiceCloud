@@ -36,6 +36,7 @@ import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   itemIds?: string[];
@@ -50,7 +51,7 @@ const props = withDefaults(defineProps<{
 });
 
 const context = inject('context', {} as any);
-const store = useStore();
+const store = useStore(key);
 const dataItems = ref<string[]>([]);
 
 onMounted(() => {

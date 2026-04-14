@@ -7,7 +7,7 @@
       v-for="library in librariesWithoutCollection"
       :key="library._id"
       :model="library"
-      :to="{ name: 'singleLibrary', params: { id: library._id }}"
+      :to="{ name: 'singleLibrary', params: { id: library._id } }"
       :selection="selection"
       :single-select="singleSelect"
       :is-selected="librariesSelected && librariesSelected.includes(library._id)"
@@ -37,7 +37,7 @@
         v-for="library in libraryCollection.libraryDocuments"
         :key="library._id"
         :model="library"
-        :to="{ name: 'singleLibrary', params: { id: library._id }}"
+        :to="{ name: 'singleLibrary', params: { id: library._id } }"
         :selection="selection"
         :single-select="singleSelect"
         :is-selected="librariesSelected && librariesSelected.includes(library._id)"
@@ -72,6 +72,7 @@ import { getUserTier } from '/imports/api/users/patreon/tiers';
 import LibraryListTile from '/imports/client/ui/library/LibraryListTile.vue';
 import LibraryCollectionHeader from '/imports/client/ui/library/LibraryCollectionHeader.vue';
 import { autorunAsync } from '/imports/client/ui/autorunAsync';
+import { key } from '/imports/client/ui/vuexStore';
 
 defineProps<{
   selection?: boolean;
@@ -82,7 +83,7 @@ defineProps<{
   librariesSelectedByCollections?: string[];
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const openCollections = ref<string[]>([]);
@@ -181,4 +182,3 @@ function insertLibraryCollectionFn() {
   });
 }
 </script>
-

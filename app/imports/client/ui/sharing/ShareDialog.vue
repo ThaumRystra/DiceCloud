@@ -9,21 +9,21 @@
       <smart-select
         label="Who can view"
         :items="[
-          {text: 'Only people I share with', value: 'false'},
-          {text: 'Anyone with link', value: 'true'}
+          { text: 'Only people I share with', value: 'false' },
+          { text: 'Anyone with link', value: 'true' }
         ]"
         :value="!!model.public + ''"
-        @change="(value, ack) => setSheetPublic({value, ack})"
+        @change="(value, ack) => setSheetPublic({ value, ack })"
       />
       <smart-select
         v-if="docRef.collection === 'libraries'"
         label="Who can copy from this library"
         :items="[
-          {text: 'Only people with edit permission', value: 'false'},
-          {text: 'Anyone with read permission', value: 'true'}
+          { text: 'Only people with edit permission', value: 'false' },
+          { text: 'Anyone with read permission', value: 'true' }
         ]"
         :value="!!model.readersCanCopy + ''"
-        @change="(value, ack) => setReadersCanCopyFn({value, ack})"
+        @change="(value, ack) => setReadersCanCopyFn({ value, ack })"
       />
       <text-field
         v-if="model.public && docRef.collection === 'libraries'"
@@ -39,7 +39,7 @@
           label="Username or email"
           :value="userSearched"
           :debounce-time="300"
-          @change="(value, ack) => getUser({value, ack})"
+          @change="(value, ack) => getUser({ value, ack })"
         />
         <v-btn
           class="ml-2 mt-2"
@@ -49,9 +49,7 @@
           Share
         </v-btn>
       </div>
-      <v-list
-        class="sharedWith"
-      >
+      <v-list class="sharedWith">
         <v-list-item
           v-for="user in sharedUsers"
           :key="user._id"
@@ -146,19 +144,20 @@ import {
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import type { Shared } from '/imports/api/sharing/SharingSchema';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   docRef: any;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const userSearched = ref<string | undefined>(undefined);
 const userFoundState = ref<'idle' | 'found' | 'notFound' | 'failed'>('idle');
 const userId = ref<string | undefined>(undefined);
 
 const { result: model } = autorun(() => {
   if (!props.docRef || !props.docRef.id) return undefined;
-  return fetchDocByRef<Shared & {_id: string}>(props.docRef);
+  return fetchDocByRef<Shared & { _id: string }>(props.docRef);
 });
 
 const { ready: userProfilesReady } = subscribe(() => {

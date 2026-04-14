@@ -13,9 +13,7 @@
       A set of properties may have been calculated incorrectly, because they form an infinite loop:
     </p>
     <div class="d-flex align-center flex-wrap">
-      <template
-        v-for="(prop, index) in loopProperties"
-      >
+      <template v-for="(prop, index) in loopProperties">
         <v-icon
           v-if="index !== 0"
           :key="index"
@@ -51,6 +49,7 @@ import { autorun } from 'vue-meteor-tracker';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { reverse } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model?: any;
@@ -58,7 +57,7 @@ const props = withDefaults(defineProps<{
   model: undefined,
 });
 
-const store = useStore();
+const store = useStore(key);
 
 const { result: loopProperties } = autorun(() => {
   if (!props.model) return undefined;
@@ -86,5 +85,4 @@ function click(id: string) {
 }
 </script>
 
-<style>
-</style>
+<style></style>

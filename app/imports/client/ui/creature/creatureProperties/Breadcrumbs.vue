@@ -1,11 +1,9 @@
 <template lang="html">
   <div
     class="breadcrumbs layout align-center wrap"
-    :class="{'no-icons': noIcons}"
+    :class="{ 'no-icons': noIcons }"
   >
-    <span
-      v-if="noLinks || embedded || collection !== 'creatureProperties'"
-    >
+    <span v-if="noLinks || embedded || collection !== 'creatureProperties'">
       <v-icon v-if="collection === 'creatureProperties'">
         mdi-account
       </v-icon>
@@ -21,15 +19,15 @@
       <v-icon color="accent">
         mdi-account
       </v-icon>
-    </a> 
-    <template v-for="(prop, index) in props" :key="index">
-      <v-icon
-      >
+    </a>
+    <template
+      v-for="(prop, index) in props"
+      :key="index"
+    >
+      <v-icon>
         mdi-chevron-right
       </v-icon>
-      <span
-        v-if="noLinks"
-      >
+      <span v-if="noLinks">
         <tree-node-view
           :model="prop"
           class="breadcrumb-tree-node-view"
@@ -56,6 +54,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { Mongo } from 'meteor/mongo';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
@@ -67,7 +66,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{ (e: 'select-sub-property', id: string): void }>();
-const store = useStore();
+const store = useStore(key);
 
 const { result: breadcrumbProps } = autorun(() => {
   const col = props.collection ?? 'creatureProperties';
@@ -101,7 +100,7 @@ function click(id: string) {
     const component = (props.collection ?? 'creatureProperties') === 'creatureProperties'
       ? 'creature-property-dialog'
       : (props.collection ?? '') === 'libraryNodes' ? 'library-node-dialog'
-      : undefined;
+        : undefined;
     store.commit('pushDialogStack', {
       component,
       elementId: `breadcrumb-${id}`,
@@ -141,7 +140,7 @@ function clickRootCreature() {
 </style>
 
 <style lang="css">
-  .no-icons .breadcrumb-tree-node-view .v-icon {
-    display: none;
-  }
+.no-icons .breadcrumb-tree-node-view .v-icon {
+  display: none;
+}
 </style>

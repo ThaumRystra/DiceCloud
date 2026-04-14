@@ -1,9 +1,8 @@
-import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-let CreatureFolders = new Mongo.Collection('creatureFolders');
 
-let creatureFolderSchema = new SimpleSchema({
+const creatureFolderSchema = TypedSimpleSchema.from({
   name: {
     type: String,
     trim: false,
@@ -31,6 +30,10 @@ let creatureFolderSchema = new SimpleSchema({
     defaultValue: 0,
   },
 });
+
+export type CreatureFolder = InferType<typeof creatureFolderSchema>
+
+const CreatureFolders = new Mongo.Collection<CreatureFolder>('creatureFolders');
 
 CreatureFolders.attachSchema(creatureFolderSchema);
 

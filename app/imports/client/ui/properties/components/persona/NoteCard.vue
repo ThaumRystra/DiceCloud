@@ -35,7 +35,7 @@ const props = defineProps<{
   model: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const theme = inject('theme', { isDark: false } as any);
 const hover = ref(false);
 
@@ -50,6 +50,4 @@ function clickProperty(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

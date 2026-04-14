@@ -9,7 +9,7 @@
           data-id="change-ref"
           style="cursor: pointer;"
           @click="changeReference"
-        > 
+        >
           <v-progress-circular
             v-if="linkLoading"
             indeterminate
@@ -70,6 +70,7 @@ import { useStore } from 'vuex';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 import updateReferenceNodeMethod from '/imports/api/library/methods/updateReferenceNode';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -80,7 +81,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits(['change']);
 
-const store = useStore();
+const store = useStore(key);
 const linkLoading = ref(false);
 
 function changeReference() {
@@ -115,5 +116,4 @@ async function updateReferenceNode() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

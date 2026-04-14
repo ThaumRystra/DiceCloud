@@ -2,54 +2,54 @@
   <v-list-item
     class="skill-list-tile pl-0"
     style="min-height: 36px;"
-    v-on="hasClickListener ? {click} : {}"
+    v-on="hasClickListener ? { click } : {}"
   >
     <v-list-item-title class="d-flex align-center">
-        <v-btn
-          v-if="!hideModifier"
-          variant="text"
-          rounded="0"
-          :loading="checkLoading"
-          :disabled="!context.editPermission"
-          :data-id="`check-btn-${model._id}`"
-          class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
-          @click.stop="check"
-        >
-          <proficiency-icon
-            :value="model.proficiency"
-            class="prof-icon"
-          />
-          <div class="prof-mod">
-            {{ displayedModifier }}
-          </div>
-          <v-icon
-            v-if="model.advantage > 0"
-            size="20px"
-          >
-            mdi-chevron-double-up
-          </v-icon>
-          <v-icon
-            v-if="model.advantage < 0"
-            size="20px"
-          >
-            mdi-chevron-double-down
-          </v-icon>
-        </v-btn>
+      <v-btn
+        v-if="!hideModifier"
+        variant="text"
+        rounded="0"
+        :loading="checkLoading"
+        :disabled="!context.editPermission"
+        :data-id="`check-btn-${model._id}`"
+        class="pl-3 pr-2 prof-mod mr-1 flex-shrink-0"
+        @click.stop="check"
+      >
         <proficiency-icon
-          v-else
           :value="model.proficiency"
-          class="prof-icon ml-3 mr-2"
+          class="prof-icon"
         />
-        <div class="text-truncate">
-          {{ model.name }}
-          <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
-            *
-          </template>
-          <template v-if="'passiveBonus' in model">
-            ({{ passiveScore }})
-          </template>
+        <div class="prof-mod">
+          {{ displayedModifier }}
         </div>
-      </v-list-item-title>
+        <v-icon
+          v-if="model.advantage > 0"
+          size="20px"
+        >
+          mdi-chevron-double-up
+        </v-icon>
+        <v-icon
+          v-if="model.advantage < 0"
+          size="20px"
+        >
+          mdi-chevron-double-down
+        </v-icon>
+      </v-btn>
+      <proficiency-icon
+        v-else
+        :value="model.proficiency"
+        class="prof-icon ml-3 mr-2"
+      />
+      <div class="text-truncate">
+        {{ model.name }}
+        <template v-if="model.conditionalBenefits && model.conditionalBenefits.length">
+          *
+        </template>
+        <template v-if="'passiveBonus' in model">
+          ({{ passiveScore }})
+        </template>
+      </div>
+    </v-list-item-title>
   </v-list-item>
 </template>
 
@@ -60,6 +60,7 @@ import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIco
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -69,7 +70,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits(['click']);
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {} as any);
 const attrs = useAttrs();
 

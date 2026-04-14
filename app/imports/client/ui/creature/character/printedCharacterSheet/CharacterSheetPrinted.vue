@@ -47,7 +47,7 @@
                 Level {{ level }} {{ classes[0].name }}
               </div>
               <div v-else-if="level">
-                Level {{ level }} ({{ classes.map(c => `${c.name} ${c.level}`).join(', ') }})
+                Level {{ level }} ({{classes.map(c => `${c.name} ${c.level}`).join(', ')}})
               </div>
             </div>
             <qrcode-vue
@@ -69,7 +69,7 @@
           />
           <printed-spells
             v-if="!creature.settings.hideSpellsTab"
-            class="page-break-before" 
+            class="page-break-before"
             :creature-id="creatureId"
           />
         </div>
@@ -92,8 +92,9 @@ import { assertEditPermission } from '/imports/api/creature/creatures/creaturePe
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import QrcodeVue from 'qrcode.vue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 const router = useRouter();
 
@@ -244,8 +245,9 @@ onBeforeUnmount(() => {
   margin-bottom: 8px;
 }
 
-.character-sheet-printed .column-layout, .character-sheet-printed .column-layout.wide-columns {
-  position:relative;
+.character-sheet-printed .column-layout,
+.character-sheet-printed .column-layout.wide-columns {
+  position: relative;
   width: 100%;
   widows: 0;
   orphans: 0;
@@ -257,12 +259,13 @@ onBeforeUnmount(() => {
   column-width: 200px;
 }
 
-.character-sheet-printed .column-layout>div {
+.character-sheet-printed .column-layout > div {
   position: relative;
   display: inline-block;
   margin-top: 4px;
   margin-bottom: 4px;
 }
+
 .character-sheet-printed .column-layout > div > * {
   page-break-inside: avoid;
 }
@@ -270,6 +273,7 @@ onBeforeUnmount(() => {
 .character-sheet-printed .inactive {
   opacity: 1 !important;
 }
+
 .character-sheet-printed .creature-name {
   font-size: 16pt;
   background-color: white;
@@ -285,7 +289,7 @@ onBeforeUnmount(() => {
 }
 
 .character-sheet-printed .v-divider {
-  border-color: rgba(0,0,0,0.3);
+  border-color: rgba(0, 0, 0, 0.3);
   max-width: unset;
 }
 
@@ -318,6 +322,7 @@ onBeforeUnmount(() => {
   page-break-after: avoid;
   break-after: avoid;
 }
+
 .span-all + div {
   page-break-before: avoid;
   break-before: avoid;
@@ -353,40 +358,56 @@ onBeforeUnmount(() => {
     flex-direction: column;
     align-items: center;
   }
+
   .character-sheet-printed .page {
     width: 210mm;
   }
 }
+
 @media print {
-  @page { 
-      size: auto;
-      margin: 8mm;  
+  @page {
+    size: auto;
+    margin: 8mm;
   }
-  body {  
-      margin: 0;
-      padding: 2mm;
+
+  body {
+    margin: 0;
+    padding: 2mm;
   }
+
   .character-sheet-printed .page {
     width: 100%;
     padding: 0 !important;
   }
+
   .character-sheet-printed .column-layout {
     padding: 4px 0 !important;
   }
+
   .character-sheet-printed .title-block {
     padding-left: 0 !important;
     padding-right: 4px !important;
   }
-  .v-main, .v-application, .v-application--wrap, .character-sheet-printed {
+
+  .v-main,
+  .v-application,
+  .v-application--wrap,
+  .character-sheet-printed {
     display: block !important;
     background-color: white !important;
   }
+
   html {
     background-color: white !important;
   }
-  header, nav, .v-snack, .dialog-stack {
+
+  header,
+  nav,
+  .v-snack,
+  .dialog-stack {
     display: none !important;
   }
+
   .v-main {
     padding: 0 !important;
   }

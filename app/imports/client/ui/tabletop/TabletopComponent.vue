@@ -3,9 +3,7 @@
     class="tabletop layout column"
     style="height: 100%;"
   >
-    <v-container
-      fluid
-    >
+    <v-container fluid>
       <v-row
         density="compact"
         class="initiative-row flex-grow-0 overflow-x-auto"
@@ -43,9 +41,7 @@
           @target="targets.push(creature._id)"
           @untarget="untarget(creature._id)"
         />
-        <div
-          class="d-flex flex-column ma-1 flex-grow-0 flex-shrink-0"
-        >
+        <div class="d-flex flex-column ma-1 flex-grow-0 flex-shrink-0">
           <v-btn
             data-id="select-creatures"
             class="mb-2"
@@ -131,6 +127,7 @@ import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/add
 import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 function getProperties(creatureId: string, selector: any = {}) {
   return CreatureProperties.find({
@@ -148,7 +145,7 @@ function getProperties(creatureId: string, selector: any = {}) {
 
 const props = defineProps<{ model: any; }>();
 
-const store = useStore();
+const store = useStore(key);
 const selectedCreatureBarRef = ref<InstanceType<typeof SelectedCreatureBar>>();
 
 const activeCreatureId = ref<string | undefined>(undefined);
@@ -286,13 +283,14 @@ async function removeCreature(creatureId: string) {
 </script>
 
 <style lang="css" scoped>
-.initiative-row>.v-card {
+.initiative-row > .v-card {
   flex-grow: 0;
   flex-shrink: 0;
   height: 162px;
   width: 100px;
   margin: 4px;
 }
+
 .action-row > div {
   flex-grow: 0;
   flex-shrink: 0;

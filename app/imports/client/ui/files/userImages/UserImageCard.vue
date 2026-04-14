@@ -54,12 +54,13 @@ import { useStore } from 'vuex';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import removeUserImage from '/imports/api/files/userImages/methods/removeUserImage';
 import { thumbHashToDataURL } from 'thumbhash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: any;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const removeLoading = ref(false);
 
 const thumbHashDataUrl = computed(() => {
@@ -91,13 +92,14 @@ function previewImage() {
 </script>
 
 <style scoped>
-  .no-wrap {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .user-image-card {
-    height: 100%;
-  }
+.no-wrap {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-image-card {
+  height: 100%;
+}
 </style>

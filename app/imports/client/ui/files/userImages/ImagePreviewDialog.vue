@@ -10,13 +10,14 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
+import { key } from '/imports/client/ui/vuexStore';
 
 defineProps<{
   href: string;
 }>();
 
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
-const store = useStore();
+const store = useStore(key);
 
 const themeClasses = computed(() => ({
   'v-theme--dark': theme.isDark,

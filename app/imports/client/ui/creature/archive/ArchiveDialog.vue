@@ -9,10 +9,16 @@
         v-model="mode"
         mandatory
       >
-        <v-btn value="archive" append-icon="mdi-archive-arrow-down">
+        <v-btn
+          value="archive"
+          append-icon="mdi-archive-arrow-down"
+        >
           <span>Archive</span>
         </v-btn>
-        <v-btn value="restore" append-icon="mdi-archive-arrow-up-outline">
+        <v-btn
+          value="restore"
+          append-icon="mdi-archive-arrow-up-outline"
+        >
           <span>Restore</span>
         </v-btn>
       </v-btn-toggle>
@@ -64,8 +70,9 @@ import restoreCreatureFromFile from '/imports/api/creature/archive/methods/resto
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import { useStore } from 'vuex';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const characterTransform = (char: any) => {
   char.url = `/character/${char._id}/${char.urlName || '-'}`;
@@ -125,9 +132,9 @@ const { result: folders } = autorun(() => {
         _id: { $in: folder.creatures || [] },
         owner: userId,
       }, {
-        sort: { name: 1 },
-        fields: creatureFields,
-      }
+      sort: { name: 1 },
+      fields: creatureFields,
+    }
     ).map(characterTransform);
     return folder;
   });
@@ -144,9 +151,9 @@ const { result: CreaturesWithNoParty } = autorun(() => {
       _id: { $nin: folderChars },
       owner: userId,
     }, {
-      sort: { name: 1 },
-      fields: creatureFields,
-    }
+    sort: { name: 1 },
+    fields: creatureFields,
+  }
   ).map(characterTransform);
 });
 
@@ -161,8 +168,8 @@ const { result: archivefolders } = autorun(() => {
         'meta.creatureId': { $in: folder.creatures || [] },
         userId,
       }, {
-        sort: { 'meta.creatureName': 1 },
-      }
+      sort: { 'meta.creatureName': 1 },
+    }
     ).map(fileTransform);
     return folder;
   });
@@ -178,8 +185,8 @@ const { result: archiveCreaturesWithNoParty } = autorun(() => {
       'meta.creatureId': { $nin: folderChars },
       userId,
     }, {
-      sort: { 'meta.creatureName': 1 },
-    }
+    sort: { 'meta.creatureName': 1 },
+  }
   ).map(fileTransform);
 });
 
@@ -201,5 +208,4 @@ async function archiveAction() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

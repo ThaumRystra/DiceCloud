@@ -47,8 +47,9 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const props = defineProps<{
   typeName?: string;
@@ -65,6 +66,4 @@ const nameMatch = computed(() => {
 });
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

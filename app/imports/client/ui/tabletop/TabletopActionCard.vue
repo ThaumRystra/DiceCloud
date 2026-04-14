@@ -5,9 +5,7 @@
     :class="cardClasses"
   >
     <div class="d-flex align-center px-3">
-      <div
-        class="avatar"
-      >
+      <div class="avatar">
         <v-btn
           icon
           variant="outlined"
@@ -58,10 +56,8 @@
       </div>
     </div>
     <div class="px-3 pb-3">
-      <template
-        v-if="model.resources && model.resources.attributesConsumed.length ||
-          model.resources.itemsConsumed.length"
-      >
+      <template v-if="model.resources && model.resources.attributesConsumed.length ||
+        model.resources.itemsConsumed.length">
         <attribute-consumed-view
           v-for="attributeConsumed in model.resources.attributesConsumed"
           :key="attributeConsumed._id"
@@ -80,7 +76,7 @@
           class="my-2"
         />
       </template>
-      <template v-if=" model.summary">
+      <template v-if="model.summary">
         <markdown-text :markdown="model.summary.value || model.summary.text" />
       </template>
       <v-divider v-if="children && children.length" />
@@ -111,6 +107,7 @@ import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: any;
@@ -120,7 +117,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['click', 'close-menu']);
 
-const store = useStore();
+const store = useStore(key);
 const context = inject<any>('context', {});
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
 
@@ -214,6 +211,7 @@ function shwing() {
   position: relative;
   max-height: calc(100vh - 144px);
 }
+
 .action-card.tabletop-active {
   margin-top: -100px;
   width: 320px;
@@ -223,6 +221,7 @@ function shwing() {
 .action-card.active {
   transform: scale(0.92);
 }
+
 .action-card-container {
   transition: width .3s ease;
 }
@@ -279,7 +278,7 @@ function shwing() {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 
-.action-card .property-description>p:last-of-type {
+.action-card .property-description > p:last-of-type {
   margin-bottom: 0;
 }
 

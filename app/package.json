@@ -75,71 +75,19 @@
     "@types/meteor-mdg-validated-method": "^1.2.10",
     "@types/mocha": "^10.0.6",
     "@types/simpl-schema": "^1.12.7",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^8.58.2",
+    "@typescript-eslint/parser": "^8.58.2",
     "@vue/compiler-dom": "^3.5.0",
     "@vue/runtime-dom": "^3.5.0",
     "chai": "^4.4.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.28.0",
-    "eslint-plugin-vuetify": "^2.4.0",
-    "sass": "^1.77.0",
-    "sass-loader": "^16.0.0",
+    "eslint": "^10.2.0",
+    "eslint-plugin-vue": "^10.8.0",
+    "eslint-plugin-vuetify": "^2.7.2",
+    "sass": "^1.99.0",
+    "sass-loader": "^16.0.7",
     "typescript": "^5.3.3",
+    "typescript-eslint": "^8.58.2",
     "vue-loader": "^17.4.2"
-  },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:vue/recommended",
-      "plugin:vue/base",
-      "plugin:@typescript-eslint/eslint-recommended",
-      "plugin:@typescript-eslint/recommended"
-    ],
-    "plugins": [
-      "vue",
-      "vuetify",
-      "@typescript-eslint"
-    ],
-    "overrides": [
-      {
-        "files": [
-          "*.vue"
-        ],
-        "parser": "vue-eslint-parser",
-        "rules": {
-          "vue/component-tags-order": [
-            "error",
-            {
-              "order": [
-                "template",
-                "script",
-                "style"
-              ]
-            }
-          ]
-        }
-      }
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2020
-    },
-    "env": {
-      "es2021": true,
-      "es2020": true,
-      "browser": true,
-      "node": true,
-      "meteor": true,
-      "mocha": true
-    },
-    "rules": {
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "@typescript-eslint/no-this-alias": "off",
-      "@typescript-eslint/no-explicit-any": "off"
-    }
   },
   "meteor": {
     "mainModule": {

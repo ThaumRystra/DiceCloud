@@ -24,9 +24,7 @@
         <span style="width: 44px;">
           {{ editing ? 'Done' : 'Edit' }}
         </span>
-        <v-slide-y-transition
-          hide-on-leave
-        >
+        <v-slide-y-transition hide-on-leave>
           <v-icon
             v-if="editing"
             key="doneIcon"
@@ -44,9 +42,7 @@
         </v-slide-y-transition>
       </v-btn>
     </template>
-    <v-fade-transition
-      mode="out-in"
-    >
+    <v-fade-transition mode="out-in">
       <tabletop-form
         v-if="editing"
         key="tabletop-form"
@@ -64,9 +60,7 @@
       />
     </v-fade-transition>
     <template #actions>
-      <div
-        class="layout"
-      >
+      <div class="layout">
         <v-btn
           variant="text"
           @click="$store.dispatch('popDialogStack')"
@@ -106,13 +100,14 @@ import { assertCanEditTabletop } from '/imports/api/tabletop/methods/shared/tabl
 import updateTabletop from '/imports/api/tabletop/methods/updateTabletop';
 import removeTabletop from '/imports/api/tabletop/methods/removeTabletop';
 import updateTabletopSharing from '/imports/api/tabletop/methods/updateTabletopSharing';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   tabletopId: string;
   startInEditTab?: boolean;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 const editing = ref(!!props.startInEditTab);
 
@@ -192,4 +187,3 @@ function removeTabletopFn() {
   });
 }
 </script>
-

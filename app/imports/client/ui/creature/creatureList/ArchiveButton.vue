@@ -19,9 +19,10 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { Random } from 'meteor/random';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ text?: boolean }>();
-const store = useStore();
+const store = useStore(key);
 const randomId = ref(Random.id());
 
 function openArchive() {
@@ -32,5 +33,4 @@ function openArchive() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

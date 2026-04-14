@@ -3,7 +3,7 @@
     <v-row dense>
       <property-field
         v-if="context.creatureId"
-        :name="model.type === 'spell'? 'Cast spell' : 'Apply action'"
+        :name="model.type === 'spell' ? 'Cast spell' : 'Apply action'"
         center
       >
         <v-btn
@@ -127,13 +127,14 @@ import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue'
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import doActionFn from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
   attack?: boolean;
 }>();
 const context = inject<any>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 const doActionLoading = ref(false);
 

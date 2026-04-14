@@ -16,6 +16,7 @@
 import { ref, inject } from 'vue';
 import { useStore } from 'vuex';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   type: string;
@@ -23,7 +24,7 @@ const props = defineProps<{
 }>();
 
 const context = inject('context', {} as any);
-const store = useStore();
+const store = useStore(key);
 const loading = ref(false);
 
 async function rest() {

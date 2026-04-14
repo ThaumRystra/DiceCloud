@@ -35,9 +35,7 @@
       </v-slide-x-reverse-transition>
     </template>
     <template #toolbar-extension>
-      <v-tabs
-        v-model="tab"
-      >
+      <v-tabs v-model="tab">
         <v-tab :disabled="!!forcedType">
           {{ typeName || 'Type' }}
         </v-tab>
@@ -57,107 +55,107 @@
         v-model="tab"
         class="fill-height overflow-y-auto"
       >
-      <v-window-item :disabled="!!forcedType">
-        <property-selector
-          :no-library-only-props="!showLibraryOnlyProps"
-          :parent-type="parentDoc && parentDoc.type"
-          :current-type="type"
-          @select="e => type = e"
-        />
-      </v-window-item>
-      <v-window-item
-        :disabled="!type"
-        class="dialog-background"
-        style="min-height: 100%;"
-      >
-        <v-card-text
-          v-if="!$slots['unwrapped-content']"
-          class="dialog-background"
-        >
-          <property-form
-            v-if="type"
-            class="creature-property-form"
-            no-child-insert
-            :model="model"
-            :errors="errors"
-            :collection="collection"
-            @change="change"
-            @push="push"
-            @pull="pull"
+        <v-window-item :disabled="!!forcedType">
+          <property-selector
+            :no-library-only-props="!showLibraryOnlyProps"
+            :parent-type="parentDoc && parentDoc.type"
+            :current-type="type"
+            @select="e => type = e"
           />
-        </v-card-text>
-      </v-window-item>
-      <v-window-item
-        v-if="!hideLibraryTab"
-        :disabled="!type"
-      >
-        <v-expansion-panels
-          accordion
-          rounded="0"
-          multiple
-          hover
+        </v-window-item>
+        <v-window-item
+          :disabled="!type"
+          class="dialog-background"
+          style="min-height: 100%;"
         >
-          <v-expansion-panel
-            v-for="libraryNode in libraryNodes"
-            :key="libraryNode._id"
-            :model="libraryNode"
-            :data-id="libraryNode._id"
+          <v-card-text
+            v-if="!$slots['unwrapped-content']"
+            class="dialog-background"
           >
-            <v-expansion-panel-title>
-              <template #default="{ open }">
-                <v-checkbox
-                  v-model="selectedNodeIds"
-                  class="my-0 py-0 mr-2 flex-grow-0"
-                  hide-details
-                  :value="libraryNode._id"
-                  :disabled="!selectedNodeIds.includes(libraryNode._id) &&
-                    selectedNodeIds.length >= 20"
-                  @click.stop
-                />
-                <div class="d-flex flex-column">
-                  <tree-node-view :model="libraryNode" />
-                  <div class="text-caption">
-                    {{ libraryNames[libraryNode.ancestors[0].id ] }}
-                  </div>
-                </div>
-                <template v-if="open">
-                  <v-spacer />
-                  <v-btn
-                    icon
-                    class="flex-grow-0"
-                    @click.stop="openPropertyDetails(libraryNode._id)"
-                  >
-                    <v-icon>mdi-window-restore</v-icon>
-                  </v-btn>
-                </template>
-              </template>
-            </v-expansion-panel-title>
-            <v-expansion-panel-text>
-              <library-node-expansion-content :model="libraryNode" />
-            </v-expansion-panel-text>
-          </v-expansion-panel>
-        </v-expansion-panels>
-        <div class="d-flex justify-center">
-          <v-fade-transition mode="out-in">
-            <div
-              v-if="hasMore"
-              class="d-flex justify-center align-stretch"
+            <property-form
+              v-if="type"
+              class="creature-property-form"
+              no-child-insert
+              :model="model"
+              :errors="errors"
+              :collection="collection"
+              @change="change"
+              @push="push"
+              @pull="pull"
+            />
+          </v-card-text>
+        </v-window-item>
+        <v-window-item
+          v-if="!hideLibraryTab"
+          :disabled="!type"
+        >
+          <v-expansion-panels
+            accordion
+            rounded="0"
+            multiple
+            hover
+          >
+            <v-expansion-panel
+              v-for="libraryNode in libraryNodes"
+              :key="libraryNode._id"
+              :model="libraryNode"
+              :data-id="libraryNode._id"
             >
-              <v-btn
+              <v-expansion-panel-title>
+                <template #default="{ open }">
+                  <v-checkbox
+                    v-model="selectedNodeIds"
+                    class="my-0 py-0 mr-2 flex-grow-0"
+                    hide-details
+                    :value="libraryNode._id"
+                    :disabled="!selectedNodeIds.includes(libraryNode._id) &&
+                      selectedNodeIds.length >= 20"
+                    @click.stop
+                  />
+                  <div class="d-flex flex-column">
+                    <tree-node-view :model="libraryNode" />
+                    <div class="text-caption">
+                      {{ libraryNames[libraryNode.ancestors[0].id] }}
+                    </div>
+                  </div>
+                  <template v-if="open">
+                    <v-spacer />
+                    <v-btn
+                      icon
+                      class="flex-grow-0"
+                      @click.stop="openPropertyDetails(libraryNode._id)"
+                    >
+                      <v-icon>mdi-window-restore</v-icon>
+                    </v-btn>
+                  </template>
+                </template>
+              </v-expansion-panel-title>
+              <v-expansion-panel-text>
+                <library-node-expansion-content :model="libraryNode" />
+              </v-expansion-panel-text>
+            </v-expansion-panel>
+          </v-expansion-panels>
+          <div class="d-flex justify-center">
+            <v-fade-transition mode="out-in">
+              <div
                 v-if="hasMore"
-                key="load-more-btn"
-                :loading="!searchLibraryNodesReady"
-                color="accent"
-                class="ma-4"
-                @click="loadMore"
+                class="d-flex justify-center align-stretch"
               >
-                Load More
-              </v-btn>
-            </div>
-          </v-fade-transition>
-        </div>
-      </v-window-item>
-    </v-window>
+                <v-btn
+                  v-if="hasMore"
+                  key="load-more-btn"
+                  :loading="!searchLibraryNodesReady"
+                  color="accent"
+                  class="ma-4"
+                  @click="loadMore"
+                >
+                  Load More
+                </v-btn>
+              </div>
+            </v-fade-transition>
+          </div>
+        </v-window-item>
+      </v-window>
     </template>
     <template #actions>
       <v-btn
@@ -207,6 +205,7 @@ import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import PropertySelector from '/imports/client/ui/properties/shared/PropertySelector.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   creatureId?: string;
@@ -232,7 +231,7 @@ const props = withDefaults(defineProps<{
   showLibraryOnlyProps: false,
 });
 
-const store = useStore();
+const store = useStore(key);
 
 const selectedNodeIds = ref<string[]>([]);
 const type = ref<string | undefined>(props.forcedType || props.suggestedType || props.prop?.type || undefined);

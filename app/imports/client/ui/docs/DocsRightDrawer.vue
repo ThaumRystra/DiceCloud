@@ -9,7 +9,7 @@
       :children="docs"
       :organize="true"
       :selected-node="undefined"
-      :root="{collection: 'docs', id: 'DDDDDDDDDDDDDDDDD'}"
+      :root="{ collection: 'docs', id: 'DDDDDDDDDDDDDDDDD' }"
       group="docs"
       @move-within-root="moveWithinRoot"
       @selected="selected"
@@ -26,8 +26,9 @@ import Docs, { organizeDoc } from '/imports/api/docs/Docs';
 import { docsToForest } from '/imports/api/parenting/parentingFunctions';
 import { useRouter } from 'vue-router';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 const refreshTree = ref(0);
 
@@ -60,5 +61,4 @@ function moveWithinRoot({ doc, newPosition }: { doc: any; newPosition: number })
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

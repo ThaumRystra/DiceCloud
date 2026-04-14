@@ -10,9 +10,7 @@
     @mouseleave="hover = false"
     @click="fillSlot"
   >
-    <card-highlight 
-      :active="hover"
-    />
+    <card-highlight :active="hover" />
     <v-card-title>
       {{ model.name }}
     </v-card-title>
@@ -45,12 +43,13 @@ import PropertyDescription from '/imports/client/ui/properties/viewers/shared/Pr
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ model?: Record<string, any> }>();
 
 const theme = inject('theme', { isDark: false } as any);
 const context = inject('context', {} as any);
-const store = useStore();
+const store = useStore(key);
 const vuetifyTheme = useTheme();
 const hover = ref(false);
 

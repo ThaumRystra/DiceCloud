@@ -17,9 +17,11 @@
       <template v-else>
         <p>
           Are you sure you want to transfer ownership to {{ user.username || user._id }}?
-        </p><p>
+        </p>
+        <p>
           This can only be undone by the user you are transferring ownership to.
-        </p><p>
+        </p>
+        <p>
           You will still have edit permission.
         </p>
       </template>
@@ -43,13 +45,14 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { transferOwnership } from '/imports/api/sharing/sharing';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   docRef: object;
   user: object;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const error = ref<string | undefined>(undefined);
 
 async function transfer() {
@@ -66,5 +69,4 @@ async function transfer() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

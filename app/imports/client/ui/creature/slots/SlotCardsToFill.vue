@@ -42,9 +42,10 @@ import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/Poin
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const context = inject('context', {} as any);
-const store = useStore();
+const store = useStore(key);
 
 const { result: slots } = autorun(() => {
   const folderIds = CreatureProperties.find({
@@ -97,5 +98,4 @@ function editPointBuy(_id: string) {
 }
 </script>
 
-<style>
-</style>
+<style></style>

@@ -17,7 +17,7 @@
       <v-btn
         variant="text"
         color="primary"
-        @click="$store.dispatch('popDialogStack', node)"
+        @click="store.dispatch('popDialogStack', node)"
       >
         Insert
       </v-btn>
@@ -30,11 +30,10 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const node = ref<any>(undefined);
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

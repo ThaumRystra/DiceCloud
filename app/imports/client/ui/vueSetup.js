@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import store from '/imports/client/ui/vuexStore';
+import store, { key } from '/imports/client/ui/vuexStore';
 import { VueMeteor as VueMeteorTracker } from 'vue-meteor-tracker';
 import AppLayout from '/imports/client/ui/layouts/AppLayout.vue';
 import router from '/imports/client/ui/router';
@@ -17,7 +17,7 @@ Meteor.startup(() => {
   const app = createApp(AppLayout);
   app.use(VueMeteorTracker);
   app.use(router);
-  app.use(store);
+  app.use(store, key);
   app.use(vuetify);
   registerGlobalComponents(app);
   app.mount('#app');

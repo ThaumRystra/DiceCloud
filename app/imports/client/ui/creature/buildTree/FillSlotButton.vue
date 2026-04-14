@@ -17,13 +17,14 @@
 import { inject } from 'vue';
 import { useStore } from 'vuex';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
 }>();
 
 const context = inject('context', {} as any);
-const store = useStore();
+const store = useStore(key);
 
 function fillSlot() {
   const slotId = props.model._id;
@@ -50,6 +51,4 @@ function fillSlot() {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

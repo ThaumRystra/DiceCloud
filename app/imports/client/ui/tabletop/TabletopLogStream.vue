@@ -7,7 +7,7 @@
       v-for="log in logs"
       :key="log._id"
       class="stream-entry"
-      :class="{'hidden': hideAction(log.actionId)}"
+      :class="{ 'hidden': hideAction(log.actionId) }"
       :model="log"
     />
   </div>
@@ -19,12 +19,13 @@ import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   tabletopId?: string;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 const openActionDialogs = computed(() => {
   const dialogs = store.state.dialogStack.dialogs;

@@ -43,7 +43,7 @@
         <v-btn
           icon
           style="flex-grow: 0"
-          :to="{name: 'libraryCollection', params: {id: model._id}}"
+          :to="{ name: 'libraryCollection', params: { id: model._id } }"
           @click.stop
         >
           <v-icon>
@@ -61,6 +61,7 @@ import { Meteor } from 'meteor/meteor';
 import { useStore } from 'vuex';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
@@ -72,7 +73,7 @@ const props = defineProps<{
   disabled?: boolean;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 const { result: canEdit } = autorun(() => {
   try {
@@ -92,5 +93,4 @@ function editLibraryCollection() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

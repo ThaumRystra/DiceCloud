@@ -7,7 +7,7 @@
     class="mb-3"
   >
     <fieldset
-      :class="theme.isDark? 'v-theme--dark' :'v-theme--light'"
+      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
       class="rounded v-sheet--outlined pa-2 layout column align-start fill-height"
       @click="$emit('click', $event)"
     >
@@ -32,7 +32,7 @@
             'flex-wrap': wrap,
             'mono': isMono,
             'flex-grow-0': hasEffectsOrProficiencies,
-            'flex-grow-1': !hasEffectsOrProficiencies, 
+            'flex-grow-1': !hasEffectsOrProficiencies,
             'ma-3': hasEffectsOrProficiencies,
             ...$attrs.class,
           }"
@@ -86,8 +86,9 @@ import { useStore } from 'vuex';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import InlineEffect from '/imports/client/ui/properties/components/effects/InlineEffect.vue';
 import InlineProficiency from '/imports/client/ui/properties/components/proficiencies/InlineProficiency.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
 
 const props = withDefaults(defineProps<{
@@ -177,11 +178,13 @@ function clickEffect(id: string) {
 
 <style lang="css" scoped>
 .name {
-  color: rgba(0,0,0,.6);
+  color: rgba(0, 0, 0, .6);
 }
+
 .v-theme--dark .name {
-  color: rgba(255,255,255,.6);
+  color: rgba(255, 255, 255, .6);
 }
+
 .mono {
   font-family: monospace !important;
 }

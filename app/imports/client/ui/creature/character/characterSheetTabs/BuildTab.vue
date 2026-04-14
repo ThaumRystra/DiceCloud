@@ -20,13 +20,11 @@
         <folder-group-card
           :model="folder"
           @click-property="clickProperty"
-          @sub-click="_id => clickTreeProperty({_id})"
+          @sub-click="_id => clickTreeProperty({ _id })"
           @remove="softRemove"
         />
       </v-col>
-      <v-col
-        v-bind="cols"
-      >
+      <v-col v-bind="cols">
         <v-card class="pb-4">
           <v-card-title style="height: 68px;">
             Slots
@@ -85,13 +83,11 @@
           <build-tree-node-list
             :children="slotBuildTree"
             class="mx-2"
-            @selected="_id => propertyClicked({_id, prefix: 'tree-node-'})"
+            @selected="_id => propertyClicked({ _id, prefix: 'tree-node-' })"
           />
         </v-card>
       </v-col>
-      <v-col
-        v-bind="cols"
-      >
+      <v-col v-bind="cols">
         <v-card class="class-details mb-2">
           <v-card-title
             v-if="variables.level"
@@ -101,28 +97,24 @@
           </v-card-title>
           <v-list lines="two">
             <v-list-item>
-              <v-list-item-title
-                  v-if="
-                    variables.milestoneLevels &&
-                      variables.milestoneLevels.value
-                  "
-                >
-                  {{ variables.milestoneLevels.value }} Milestone levels
-                </v-list-item-title>
-                <v-list-item-title
-                  v-if="
-                    !(variables.milestoneLevels &&
-                      variables.milestoneLevels.value) ||
-                      (variables.xp &&
-                        variables.xp.value)
-                  "
-                >
-                  {{
-                    variables.xp &&
-                      variables.xp.value ||
-                      0
-                  }} XP
-                </v-list-item-title>
+              <v-list-item-title v-if="
+                variables.milestoneLevels &&
+                variables.milestoneLevels.value
+              ">
+                {{ variables.milestoneLevels.value }} Milestone levels
+              </v-list-item-title>
+              <v-list-item-title v-if="
+                !(variables.milestoneLevels &&
+                  variables.milestoneLevels.value) ||
+                (variables.xp &&
+                  variables.xp.value)
+              ">
+                {{
+                  variables.xp &&
+                  variables.xp.value ||
+                  0
+                }} XP
+              </v-list-item-title>
               <template #append>
                 <v-btn
                   icon
@@ -144,11 +136,11 @@
               v-for="cls in classes"
               :key="cls._id"
               :data-id="`class-${cls._id}`"
-              v-on="cls.type === 'class' ? {click: () => propertyClicked({_id: cls._id, prefix: 'class-'})} : {}"
+              v-on="cls.type === 'class' ? { click: () => propertyClicked({ _id: cls._id, prefix: 'class-' }) } : {}"
             >
               <v-list-item-title>
-                  {{ cls.name }}
-                </v-list-item-title>
+                {{ cls.name }}
+              </v-list-item-title>
               <template #prepend>
                 {{ cls.level }}
               </template>
@@ -163,11 +155,11 @@
                   prepend-icon="mdi-plus"
                 >
                   <template v-if="cls.missingLevels && cls.missingLevels.length">
-                    Get Missing Levels 
+                    Get Missing Levels
                   </template>
                   <template v-else>
                     Level Up
-                  </template> 
+                  </template>
                 </v-btn>
               </template>
             </v-list-item>
@@ -182,7 +174,7 @@
         <folder-group-card
           :model="folder"
           @click-property="clickProperty"
-          @sub-click="_id => clickTreeProperty({_id})"
+          @sub-click="_id => clickTreeProperty({ _id })"
           @remove="softRemove"
         />
       </v-col>
@@ -207,6 +199,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
+import { key } from '/imports/client/ui/vuexStore';
 
 function traverse(tree: any[], callback: (node: any, parents: any[]) => void, parents: any[] = []) {
   tree.forEach(node => {
@@ -216,7 +209,7 @@ function traverse(tree: any[], callback: (node: any, parents: any[]) => void, pa
 }
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'build';
 const cols = { cols: '12', md: '6', xl: '4' };
 
@@ -465,5 +458,4 @@ async function unhideProp(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

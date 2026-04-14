@@ -12,9 +12,7 @@
       style="margin-left: -4px; margin-right: 8px;"
       :model="model"
     />
-    <div
-      class="text-truncate"
-    >
+    <div class="text-truncate">
       {{ model.name }}
     </div>
   </v-btn>
@@ -26,12 +24,13 @@ import { useStore } from 'vuex';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {});
 
 const hovering = ref(false);

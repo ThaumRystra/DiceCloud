@@ -1,9 +1,7 @@
 <template lang="html">
   <dialog-base>
     <template #toolbar>
-      <v-icon
-        class="mr-2"
-      >
+      <v-icon class="mr-2">
         mdi-help
       </v-icon>
       <v-toolbar-title>
@@ -46,8 +44,9 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { propsByDocsPath } from '/imports/constants/PROPERTIES';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import Docs from '/imports/api/docs/Docs';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const props = defineProps<{
   path: string;
@@ -92,7 +91,3 @@ function linkClick(e: Event) {
   });
 }
 </script>
-
-<style lang="css" scoped>
-
-</style>

@@ -40,12 +40,13 @@ import restoreCreatureFromFile from '/imports/api/creature/archive/methods/resto
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { characterSlotsRemainingAsync } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import removeArchiveCreature from '/imports/api/creature/archive/methods/removeArchiveCreature';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: any;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const restoreLoading = ref(false);
 const removeLoading = ref(false);
 

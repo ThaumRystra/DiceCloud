@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="dialog-stack"
-  >
+  <div class="dialog-stack">
     <transition name="backdrop-fade">
       <div
         v-if="dialogs.length"
@@ -12,7 +10,7 @@
     <transition-group
       name="dialog-list"
       class="dialog-transition-group"
-      :class="{shake}"
+      :class="{ shake }"
       tag="div"
       @enter="enter"
       @leave="leave"
@@ -21,7 +19,7 @@
         <component
           :is="dialog.component"
           v-if="isUnsizedDialog(dialog.component)"
-          :key="dialog._id"
+          :key="dialog._id + '-unsized'"
           :ref="(el: any) => { if (el) dialogRefs[index] = el; else delete dialogRefs[index]; }"
           v-bind="dialog.data"
           class="unsized-dialog dialog-component"
@@ -64,6 +62,7 @@ import '/imports/client/ui/dialogStack/dialogStackWindowEvents';
 import mockElement from '/imports/client/ui/dialogStack/mockElement';
 import DialogComponentIndex from '/imports/client/ui/dialogStack/DialogComponentIndex';
 import timeout from '/imports/api/utility/timeout';
+import { key } from '/imports/client/ui/vuexStore';
 
 const OFFSET = 16;
 const animationSpeed = 1;
@@ -72,7 +71,7 @@ const unsizedDialogs = new Set(['image-preview-dialog', 'action-dialog']);
 
 defineOptions({ components: { ...DialogComponentIndex } });
 
-const store = useStore();
+const store = useStore(key);
 
 const hiddenElements = ref<HTMLElement[]>([]);
 const shake = ref(false);
@@ -81,7 +80,7 @@ let top = 0;
 
 const dialogs = computed(() => store.state.dialogStack.dialogs);
 
-watch(dialogs, async (newDialogs: any[]) => {
+watch(dialogs, async (newDialogs) => {
   const el = document.documentElement;
   if (newDialogs.length) {
     top = el.scrollTop;
@@ -144,8 +143,8 @@ function getTopElementByDataId(elementId: string, offset = 0) {
   }
 }
 
-async function enter(target: HTMLElement, done: () => void) {
-  if (!target || !target.attributes.getNamedItem('data-element-id')) {
+async function enter(target: Element, done: () => void) {
+  if (!target || !target.attributes.getNamedItem('data-element-id') || !(target instanceof HTMLElement)) {
     done();
     return;
   }
@@ -189,7 +188,7 @@ async function enter(target: HTMLElement, done: () => void) {
   setTimeout(done, 300 / animationSpeed);
 }
 
-async function leave(target: HTMLElement, done: () => void) {
+async function leave(target: Element, done: () => void) {
   await new Promise(requestAnimationFrame);
   let elementId: string | undefined;
   const hiddenElement = hiddenElements.value.pop();
@@ -204,18 +203,23 @@ async function leave(target: HTMLElement, done: () => void) {
     elementId = target.attributes.getNamedItem('data-element-id')!.value;
   }
   const replacing = store.state.dialogStack.replacingDialog === target.attributes.getNamedItem('data-id')?.value;
-  const source = getTopElementByDataId(elementId) as HTMLElement | null;
+  const source = (elementId && getTopElementByDataId(elementId)) ?? null as HTMLElement | null;
+  const htmlTarget = target instanceof HTMLElement ? target : null;
   if (!source || replacing) {
     if (hiddenElement) hiddenElement.style.opacity = '';
-    target.style.transition = 'all 0.3s ease';
-    target.style.opacity = '0';
+    if (htmlTarget) {
+      htmlTarget.style.transition = 'all 0.3s ease';
+      htmlTarget.style.opacity = '0';
+    }
     await timeout(300 / animationSpeed);
     done();
     return;
   }
   const index = target.attributes.getNamedItem('data-index')?.value;
 
-  target.style.pointerEvents = 'none';
+  if (htmlTarget) {
+    htmlTarget.style.pointerEvents = 'none';
+  }
 
   if (index !== '0') {
     mockElement({ source, target, offset: { x: OFFSET, y: OFFSET } });
@@ -245,109 +249,134 @@ async function leave(target: HTMLElement, done: () => void) {
 </script>
 
 <style scoped>
-  .backdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.4);
-    z-index: 6;
-    pointer-events: initial;
-    opacity: 1;
-  }
-  .backdrop-fade-enter-active, .backdrop-fade-leave-active {
-    transition: opacity 0.3s;
-  }
-  .backdrop-fade-enter, .backdrop-fade-leave-to {
-    opacity: 0;
-  }
-  .dialog-stack {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    pointer-events: none;
-    z-index: 6;
+.backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 6;
+  pointer-events: initial;
+  opacity: 1;
+}
+
+.backdrop-fade-enter-active,
+.backdrop-fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.backdrop-fade-enter,
+.backdrop-fade-leave-to {
+  opacity: 0;
+}
+
+.dialog-stack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.shake {
+  animation: shake 0.2s;
+}
+
+@keyframes shake {
+  0% {
+    transform: scale(1);
   }
 
-  .shake {
-    animation: shake 0.2s;
+  50% {
+    transform: scale(1.02);
   }
 
-  @keyframes shake {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
+  100% {
+    transform: scale(1);
   }
+}
 
-  .dialog-transition-group {
-    position: relative;
-    z-index: 7;
-    height: 100%;
-    width: 100%;
-  }
+.dialog-transition-group {
+  position: relative;
+  z-index: 7;
+  height: 100%;
+  width: 100%;
+}
 
-  /*
-    Fade in and out the dialog contents as it is animating
-  */
-  .dialog-list-enter .sized-dialog, .dialog-list-leave-to .sized-dialog {
-    opacity: 0;
-  }
-  .dialog-list-enter-active .sized-dialog, .dialog-list-leave-active .sized-dialog {
-    transition: opacity 0.3s;
-  }
+/*
+  Fade in and out the dialog contents as it is animating
+*/
+.dialog-list-enter .sized-dialog,
+.dialog-list-leave-to .sized-dialog {
+  opacity: 0;
+}
 
-  /*
-    Enter and leave with no shadow
-  */
-  .dialog-list-enter, .dialog-list-leave-to {
-    box-shadow: none;
-  }
+.dialog-list-enter-active .sized-dialog,
+.dialog-list-leave-active .sized-dialog {
+  transition: opacity 0.3s;
+}
 
-  /*
-    Leave to no opacity
-  */
-  .dialog-list-leave-to {
-    opacity: 0;
-  }
+/*
+  Enter and leave with no shadow
+*/
+.dialog-list-enter,
+.dialog-list-leave-to {
+  box-shadow: none;
+}
 
-  .dialog.dialog-list-enter-active, .unsized-dialog.dialog-list-enter-active {
-    transition: all 0.3s, box-shadow 0.1s, opacity 0s, pointer-events 0s;
-  }
-  .dialog.dialog-list-leave-active, .unsized-dialog.dialog-list-leave-active {
-    transition: all 0.3s, box-shadow 0.1s 0.3s, opacity 0.1s 0.3s, pointer-events 0s;
-  }
+/*
+  Leave to no opacity
+*/
+.dialog-list-leave-to {
+  opacity: 0;
+}
 
-  /**
+.dialog.dialog-list-enter-active,
+.unsized-dialog.dialog-list-enter-active {
+  transition: all 0.3s, box-shadow 0.1s, opacity 0s, pointer-events 0s;
+}
+
+.dialog.dialog-list-leave-active,
+.unsized-dialog.dialog-list-leave-active {
+  transition: all 0.3s, box-shadow 0.1s 0.3s, opacity 0.1s 0.3s, pointer-events 0s;
+}
+
+/**
   Only the top dialog should be clickable
-  */
-  .dialog:last-child, .unsized-dialog:last-child {
-    pointer-events: initial;
-  }
+*/
+.dialog:last-child,
+.unsized-dialog:last-child {
+  pointer-events: initial;
+}
 
-  .dialog {
-    height: 100%;
-    width: 100%;
-    max-height: 800px;
-    max-width: 1000px;
+.dialog {
+  height: 100%;
+  width: 100%;
+  max-height: 800px;
+  max-width: 1000px;
+}
+
+.dialog,
+.unsized-dialog {
+  transform-origin: center;
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+@media only screen and (min-width: 601px) {
+  .dialog-stack {
+    padding: 32px;
   }
-  .dialog, .unsized-dialog {
-    transform-origin: center;
-    position: absolute;
-    z-index: 1;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  @media only screen and  (min-width:  601px){
-    .dialog-stack {
-      padding: 32px;
-    }
-  }
-  .dialog > * {
-    height: 100%;
-    width: 100%;
-  }
+}
+
+.dialog > * {
+  height: 100%;
+  width: 100%;
+}
 </style>

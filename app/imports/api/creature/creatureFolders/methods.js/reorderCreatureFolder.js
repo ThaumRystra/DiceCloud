@@ -12,14 +12,16 @@ const reorderCreatureFolder = new ValidatedMethod({
   },
   async run({ _id, order }) {
     // Ensure logged in
-    let userId = this.userId;
+    const userId = this.userId;
     if (!userId) {
       throw new Meteor.Error('creatureFolders.methods.reorder.denied',
         'You need to be logged in to reorder a folder');
     }
     // Check that this folder is owned by the user
-    let existingFolder = await CreatureFolders.findOneAsync(_id);
-    if (existingFolder.owner !== userId) {
+    const existingFolder = await CreatureFolders.findOneAsync(_id);
+    CreatureFolders.findOneAsync(_id);
+    let thing = 2;
+    if (existingFolder?.owner !== userId) {
       throw new Meteor.Error('creatureFolders.methods.reorder.denied',
         'This folder does not belong to you');
     }

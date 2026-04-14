@@ -1,8 +1,6 @@
 <template lang="html">
   <single-card-layout>
-    <library-and-node
-      :library-id="route.params.id"
-    />
+    <library-and-node :library-id="route.params.id" />
   </single-card-layout>
 </template>
 
@@ -14,8 +12,9 @@ import { autorun } from 'vue-meteor-tracker';
 import SingleCardLayout from '/imports/client/ui/layouts/SingleCardLayout.vue';
 import LibraryAndNode from '/imports/client/ui/library/LibraryAndNode.vue';
 import Libraries from '/imports/api/library/Libraries';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 
 const { result: library } = autorun(() => {

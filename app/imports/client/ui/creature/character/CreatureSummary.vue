@@ -25,12 +25,13 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   creature: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const hover = ref(false);
 
 function showCharacterForm() {
@@ -42,6 +43,4 @@ function showCharacterForm() {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -1,6 +1,6 @@
 <template lang="html">
   <dialog-base>
-    <template #replace-toolbar="{flat}">
+    <template #replace-toolbar="{ flat }">
       <property-toolbar
         :model="model"
         :editing="editing"
@@ -14,9 +14,7 @@
       />
     </template>
     <template v-if="model">
-      <div
-        class="d-flex mb-4"
-      >
+      <div class="d-flex mb-4">
         <breadcrumbs
           :model="model"
           :editing="editing"
@@ -28,9 +26,7 @@
           {{ typeName }}
         </v-chip>
       </div>
-      <v-fade-transition
-        mode="out-in"
-      >
+      <v-fade-transition mode="out-in">
         <div v-if="editing">
           <property-form
             :key="_id"
@@ -44,7 +40,7 @@
             @select-sub-property="selectSubProperty"
           />
         </div>
-        <property-viewer 
+        <property-viewer
           v-else
           :key="_id"
           :model="model"
@@ -100,6 +96,7 @@ import insertPropertyFromLibraryNode from '/imports/api/creature/creaturePropert
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import copyPropertyToLibrary from '/imports/api/creature/creatureProperties/methods/copyPropertyToLibrary';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   _id?: string;
@@ -113,7 +110,7 @@ const emit = defineEmits<{
   (e: 'select-sub-property', id: string): void;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const editing = ref(!!props.startInEditTab);
 const currentId = ref<string | undefined>(undefined);
 
@@ -307,5 +304,4 @@ function addProperty({ elementId, suggestedType }: any) {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

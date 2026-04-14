@@ -6,7 +6,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div
@@ -24,7 +24,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -41,9 +41,10 @@ import FolderGroupCard from '/imports/client/ui/properties/components/folders/Fo
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'features';
 
 const { result: startFolders } = autorun(() =>
@@ -123,6 +124,4 @@ function featureClicked({ _id }: { _id: string }) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

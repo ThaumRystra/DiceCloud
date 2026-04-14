@@ -51,12 +51,13 @@ import ItemList from '/imports/client/ui/properties/components/inventory/ItemLis
 import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 const weight = computed(() => {
   const contentWeight = props.model.contentsWeightless ? 0 : props.model.contentsWeight || 0;
@@ -101,6 +102,4 @@ function clickProperty(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

@@ -1,7 +1,5 @@
 <template lang="html">
-  <dialog-base
-    dark-body
-  >
+  <dialog-base dark-body>
     <template #toolbar>
       <v-toolbar-title>
         Insert creatures
@@ -43,13 +41,11 @@
           :key="libraryNode._id"
           :model="libraryNode"
           :data-id="libraryNode._id"
-          :class="{disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition}"
+          :class="{ disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition }"
         >
           <v-expansion-panel-title>
             <template #default="{ open }">
-              <div
-                class="d-flex align-center flex-grow-0 mr-2"
-              >
+              <div class="d-flex align-center flex-grow-0 mr-2">
                 <v-checkbox
                   v-if="libraryNode._disabledByAlreadyAdded"
                   class="my-0 py-0"
@@ -79,7 +75,7 @@
                   </div>
                 </div>
                 <div class="text-caption text-no-wrap text-truncate">
-                  {{ libraryNames[libraryNode.root.id ] }}
+                  {{ libraryNames[libraryNode.root.id] }}
                 </div>
               </div>
               <div
@@ -122,14 +118,10 @@
         Load More
       </v-btn>
     </div>
-    <div
-      class="d-flex align-center justify-center text-caption text-disabled mt-8 mb-2"
-    >
+    <div class="d-flex align-center justify-center text-caption text-disabled mt-8 mb-2">
       Can't find what you're looking for?
     </div>
-    <div
-      class="d-flex align-center justify-center flex-wrap mx-4 mb-4"
-    >
+    <div class="d-flex align-center justify-center flex-wrap mx-4 mb-4">
       <v-btn
         v-if="!dummySlot"
         variant="text"
@@ -149,7 +141,7 @@
         Insert New Creature
       </v-btn> -->
     </div>
-    
+
     <template #actions>
       <v-btn
         variant="text"
@@ -174,16 +166,13 @@
 import { ref, reactive, computed, watch, toRef, provide } from 'vue';
 import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import Libraries from '/imports/api/library/Libraries';
 import LibraryNodeExpansionContent from '/imports/client/ui/library/LibraryNodeExpansionContent.vue';
-import { clone, difference } from 'lodash';
-import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
-import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
+import { difference } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   slotId?: string;
@@ -191,7 +180,7 @@ const props = defineProps<{
   dummySlot?: object;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 provide('context', reactive({ creatureId: toRef(props, 'creatureId') }));
 
@@ -279,4 +268,3 @@ function insertCustomFiller() {
   opacity: 0.7;
 }
 </style>
-

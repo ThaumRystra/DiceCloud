@@ -6,7 +6,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div>
@@ -34,7 +34,7 @@
               </v-list-item-title>
               <template #append>
                 <v-list-item-title>
-                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value|| 0" />
+                  <coin-value :value="variables && variables.valueTotal && variables.valueTotal.value || 0" />
                 </v-list-item-title>
               </template>
             </v-list-item>
@@ -96,7 +96,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -122,9 +122,10 @@ import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'inventory';
 const organize = ref(false);
 
@@ -265,6 +266,4 @@ function softRemove(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

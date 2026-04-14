@@ -1,6 +1,6 @@
 <template lang="html">
   <dialog-base>
-    <template #replace-toolbar="{flat}">
+    <template #replace-toolbar="{ flat }">
       <property-toolbar
         :model="creature"
         :editing="editing"
@@ -11,15 +11,13 @@
       />
     </template>
     <template v-if="_id">
-      <v-fade-transition
-        mode="out-in"
-      >
+      <v-fade-transition mode="out-in">
         <div v-if="editing">
           <creature-properties-tree
             style="width: 100%;"
             class="mb-2"
             organize
-            :root="{collection: 'creatures', id: _id}"
+            :root="{ collection: 'creatures', id: _id }"
             @length="childrenLength = $event"
             @selected="selectSubProperty"
           />
@@ -38,25 +36,26 @@
         <div v-else>
           <creature-properties-tree
             style="width: 100%;"
-            :root="{collection: 'creatures', id: _id}"
+            :root="{ collection: 'creatures', id: _id }"
             @length="childrenLength = $event"
             @selected="selectSubProperty"
           />
         </div>
       </v-fade-transition>
     </template>
-    <template v-if="!embedded" #actions>
-      <div
-        class="layout"
-      >
+    <template
+      v-if="!embedded"
+      #actions
+    >
+      <div class="layout">
         <v-spacer />
-      <v-btn
-        variant="text"
-        color="accent"
-        @click="$store.dispatch('popDialogStack')"
-      >
-        Close
-      </v-btn>
+        <v-btn
+          variant="text"
+          color="accent"
+          @click="$store.dispatch('popDialogStack')"
+        >
+          Close
+        </v-btn>
       </div>
     </template>
   </dialog-base>
@@ -77,6 +76,7 @@ import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperti
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   _id?: string;
@@ -88,7 +88,7 @@ const props = withDefaults(defineProps<{
   startInEditTab: false,
 });
 
-const store = useStore();
+const store = useStore(key);
 
 const editing = ref(!!props.startInEditTab);
 const currentId = ref<string | undefined>(undefined);
@@ -153,5 +153,4 @@ function addProperty() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

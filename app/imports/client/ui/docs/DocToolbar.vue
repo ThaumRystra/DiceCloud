@@ -27,8 +27,9 @@
 import { autorun } from 'vue-meteor-tracker';
 import { useStore } from 'vuex';
 import { Session } from 'meteor/session';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const { result: editing } = autorun(() => Session.get('editingDocs'));
 const { result: canEdit } = autorun(() => {

@@ -90,13 +90,14 @@ import { format } from 'date-fns';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { Meteor } from 'meteor/meteor';
 import Experiences, { removeExperience as removeExperienceMethod, recomputeExperiences } from '/imports/api/creature/experience/Experiences';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   creatureId: string;
   startAsMilestone?: boolean;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const experiencesRemovalLoading = ref(new Set<string>());
 const recomputeLoading = ref(false);
 
@@ -155,7 +156,8 @@ function addExperience() {
 </script>
 
 <style lang="css">
-.big-icon, .big-icon * {
+.big-icon,
+.big-icon * {
   width: 240px !important;
   height: 240px !important;
 }

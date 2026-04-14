@@ -1,4 +1,8 @@
-import SimpleSchema, { SimpleSchemaDefinition, SchemaDefinition, SchemaDefinitionType } from 'simpl-schema';
+import SimpleSchema, {
+  type SimpleSchemaDefinition,
+  type SchemaDefinition,
+  type SchemaDefinitionType,
+} from 'simpl-schema';
 import type {
   FieldToCalculate, CalculatedOnlyField
 } from '/imports/api/properties/subSchemas/computedField';

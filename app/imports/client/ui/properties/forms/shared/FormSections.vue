@@ -13,14 +13,16 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue';
 import { useStore } from 'vuex';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
-  type?: string;
+  type?: CreatureProperty['type'];
 }>(), {
   type: undefined,
 });
 
-const store = useStore();
+const store = useStore(key);
 
 const expand = ref(store.getters.formExpansionByType(props.type));
 

@@ -17,6 +17,7 @@ import { useStore } from 'vuex';
 import { Meteor } from 'meteor/meteor';
 import { insertNode } from '/imports/api/library/LibraryNodes';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   libraryId: string;
@@ -25,7 +26,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{ (e: 'selected', id: string): void }>();
-const store = useStore();
+const store = useStore(key);
 
 function insertLibraryNode() {
   const libraryId = props.libraryId;
@@ -58,5 +59,4 @@ function insertLibraryNode() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

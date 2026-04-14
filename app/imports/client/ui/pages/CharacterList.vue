@@ -94,8 +94,9 @@ import CreatureFolderList from '/imports/client/ui/creature/creatureList/Creatur
 import ArchiveButton from '/imports/client/ui/creature/creatureList/ArchiveButton.vue';
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
 import { uniq, flatten } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const characterTransform = function (char: any) {
   char.url = `/character/${char._id}/${getCreatureUrlName(char)}`;

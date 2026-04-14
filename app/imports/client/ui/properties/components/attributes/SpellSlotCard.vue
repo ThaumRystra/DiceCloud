@@ -11,7 +11,7 @@
         :key="spellSlot._id"
         :model="spellSlot"
         :data-id="`spell-slot-card-${spellSlot._id}`"
-        @click="clickProperty({_id: spellSlot._id})"
+        @click="clickProperty({ _id: spellSlot._id })"
       />
     </v-list>
     <div
@@ -35,6 +35,7 @@
 import { ref } from 'vue';
 import { useStore } from 'vuex';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   creatureId: string;
@@ -45,7 +46,7 @@ const props = withDefaults(defineProps<{
   spellSlots: () => [],
 });
 
-const store = useStore();
+const store = useStore(key);
 const castSpellLoading = ref(false);
 
 function castSpell() {

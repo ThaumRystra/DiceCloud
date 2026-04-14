@@ -15,7 +15,7 @@
             class="d-flex align-center justify-center"
           >
             <v-progress-circular
-              indeterminate 
+              indeterminate
               color="primary"
               size="64"
             />
@@ -102,8 +102,9 @@ import Tabletops from '/imports/api/tabletop/Tabletops';
 import insertTabletop from '/imports/api/tabletop/methods/insertTabletop';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const { ready: tabletopsReady } = subscribe('tabletops');
 const addTabletopLoading = ref(false);
 
@@ -133,6 +134,6 @@ function clickTabletop(tabletopId: string) {
 .line-clamp {
   display: -webkit-box;
   -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
 }
 </style>

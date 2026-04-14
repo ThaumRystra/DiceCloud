@@ -5,15 +5,13 @@
     @toolbarclick="clickSpellList(model._id)"
   >
     <template #toolbar>
-      <v-toolbar-title
-        v-if="!preparingSpells"
-      >
+      <v-toolbar-title v-if="!preparingSpells">
         {{ model.name }}
       </v-toolbar-title>
       <v-spacer v-if="!preparingSpells && preparedError" />
       <v-toolbar-title
         v-if="preparingSpells || preparedError"
-        :class="{'text-error' : preparedError}"
+        :class="{ 'text-error': preparedError }"
       >
         {{ numPrepared }}/{{ model.maxPrepared && model.maxPrepared.value || 0 }} spells prepared
       </v-toolbar-title>
@@ -66,6 +64,7 @@ import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -74,7 +73,7 @@ const props = withDefaults(defineProps<{
   organize: false,
 });
 
-const store = useStore();
+const store = useStore(key);
 const preparingSpells = ref(false);
 
 const { result: spells } = autorun(() => {
@@ -130,6 +129,4 @@ function clickSpellList(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

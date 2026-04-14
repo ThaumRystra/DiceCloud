@@ -30,8 +30,9 @@ import { ref } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const valid = ref(true);
 const newUsername = ref<string | null>(null);
@@ -76,5 +77,4 @@ async function setUsername() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

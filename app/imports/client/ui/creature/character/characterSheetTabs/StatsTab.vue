@@ -13,7 +13,7 @@
           :key="healthBar._id"
           :model="healthBar"
           @change="({ type, value }) => incrementChange(healthBar._id, { type, value })"
-          @click="clickProperty({_id: healthBar._id})"
+          @click="clickProperty({ _id: healthBar._id })"
         />
       </v-card>
     </div>
@@ -24,7 +24,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div
@@ -60,7 +60,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
 
@@ -82,7 +82,7 @@
               :key="buff._id"
               :data-id="buff._id"
               :model="buff"
-              @click="clickProperty({_id: buff._id})"
+              @click="clickProperty({ _id: buff._id })"
               @remove="softRemove(buff._id)"
             />
           </v-list>
@@ -95,14 +95,15 @@
       >
         <v-card>
           <v-list>
-            <template v-for="(ability, index) in properties.attribute.ability" :key="ability._id">
-              <v-divider
-                v-if="index !== 0"
-              />
+            <template
+              v-for="(ability, index) in properties.attribute.ability"
+              :key="ability._id"
+            >
+              <v-divider v-if="index !== 0" />
               <ability-list-tile
                 :model="ability"
                 :data-id="ability._id"
-                @click="clickProperty({_id: ability._id})"
+                @click="clickProperty({ _id: ability._id })"
               />
             </template>
           </v-list>
@@ -117,7 +118,7 @@
         <toggle-card
           :model="toggle"
           :data-id="toggle._id"
-          @click="clickProperty({_id: toggle._id})"
+          @click="clickProperty({ _id: toggle._id })"
         />
       </div>
 
@@ -129,7 +130,7 @@
         <attribute-card
           :model="stat"
           :data-id="stat._id"
-          @click="clickProperty({_id: stat._id})"
+          @click="clickProperty({ _id: stat._id })"
         />
       </div>
 
@@ -141,7 +142,7 @@
         <attribute-card
           :model="modifier"
           :data-id="modifier._id"
-          @click="clickProperty({_id: modifier._id})"
+          @click="clickProperty({ _id: modifier._id })"
         />
       </div>
 
@@ -154,7 +155,7 @@
           modifier
           :model="check"
           :data-id="check._id"
-          @click="clickProperty({_id: check._id})"
+          @click="clickProperty({ _id: check._id })"
         />
       </div>
 
@@ -165,14 +166,15 @@
         <v-card>
           <v-list>
             <v-list-subheader>Hit Dice</v-list-subheader>
-            <template v-for="(hitDie, index) in properties.attribute.hitDice" :key="hitDie._id">
-              <v-divider
-                v-if="index !== 0"
-              />
+            <template
+              v-for="(hitDie, index) in properties.attribute.hitDice"
+              :key="hitDie._id"
+            >
+              <v-divider v-if="index !== 0" />
               <hit-dice-list-tile
                 :model="hitDie"
                 :data-id="hitDie._id"
-                @click="clickProperty({_id: hitDie._id})"
+                @click="clickProperty({ _id: hitDie._id })"
                 @change="e => incrementChange(hitDie._id, e)"
               />
             </template>
@@ -188,7 +190,7 @@
         <resource-card
           :model="resource"
           :data-id="resource._id"
-          @click="clickProperty({_id: resource._id})"
+          @click="clickProperty({ _id: resource._id })"
           @change="e => incrementChange(resource._id, e)"
         />
       </div>
@@ -208,7 +210,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
 
@@ -224,14 +226,14 @@
               :key="save._id"
               :model="save"
               :data-id="save._id"
-              @click="clickProperty({_id: save._id})"
+              @click="clickProperty({ _id: save._id })"
             />
             <v-list-item
               v-for="(effect, index) in saveConditionals"
               :key="effect._id"
               :data-id="effect._id"
-              :class="{'mt-2': !index}"
-              @click="clickProperty({_id: effect._id})"
+              :class="{ 'mt-2': !index }"
+              @click="clickProperty({ _id: effect._id })"
             >
               <v-list-item-subtitle style="white-space: unset;">
                 {{ effect.text }}
@@ -253,14 +255,14 @@
               :key="skill._id"
               :model="skill"
               :data-id="skill._id"
-              @click="clickProperty({_id: skill._id})"
+              @click="clickProperty({ _id: skill._id })"
             />
             <v-list-item
               v-for="(effect, index) in skillConditionals"
               :key="effect._id"
               :data-id="effect._id"
-              :class="{'mt-2': !index}"
-              @click="clickProperty({_id: effect._id})"
+              :class="{ 'mt-2': !index }"
+              @click="clickProperty({ _id: effect._id })"
             >
               <v-list-item-subtitle style="white-space: unset;">
                 {{ effect.text }}
@@ -275,7 +277,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
 
@@ -294,7 +296,7 @@
               hide-modifier
               :model="weapon"
               :data-id="weapon._id"
-              @click="clickProperty({_id: weapon._id})"
+              @click="clickProperty({ _id: weapon._id })"
             />
           </v-list>
         </v-card>
@@ -314,7 +316,7 @@
               hide-modifier
               :model="armor"
               :data-id="armor._id"
-              @click="clickProperty({_id: armor._id})"
+              @click="clickProperty({ _id: armor._id })"
             />
           </v-list>
         </v-card>
@@ -334,7 +336,7 @@
               hide-modifier
               :model="tool"
               :data-id="tool._id"
-              @click="clickProperty({_id: tool._id})"
+              @click="clickProperty({ _id: tool._id })"
             />
           </v-list>
         </v-card>
@@ -354,7 +356,7 @@
               hide-modifier
               :model="language"
               :data-id="language._id"
-              @click="clickProperty({_id: language._id})"
+              @click="clickProperty({ _id: language._id })"
             />
           </v-list>
         </v-card>
@@ -365,7 +367,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
 
@@ -374,7 +376,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -407,6 +409,7 @@ import { get, set, uniqBy } from 'lodash';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
 
 function walkDown(forest: any[], callback: (node: any) => { skipChildren?: boolean } | void) {
   const stack = [...forest].reverse();
@@ -453,7 +456,7 @@ const propertyHandlers: Record<string, (prop: any) => { propPath: any; skipChild
 };
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 
 const { result: creature } = autorun(() =>
   Creatures.findOne(props.creatureId, { fields: { settings: 1 } })

@@ -35,7 +35,7 @@
       </div>
     </div>
     <div class="px-3 pb-3">
-      <template v-if=" model.description">
+      <template v-if="model.description">
         <markdown-text :markdown="model.description.value || model.description.text" />
       </template>
     </div>
@@ -60,6 +60,7 @@ import softRemoveProperty from '/imports/api/creature/creatureProperties/methods
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import restoreProperty from '/imports/api/creature/creatureProperties/methods/restoreProperty';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: any;
@@ -70,7 +71,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['click', 'close-menu', 'removed']);
 
-const store = useStore();
+const store = useStore(key);
 const context = inject<any>('context', {});
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
 
@@ -177,6 +178,7 @@ function shwing() {
   max-width: 100vw;
   position: relative;
 }
+
 .action-card.tabletop-active {
   margin-top: -100px;
   width: 320px;
@@ -186,6 +188,7 @@ function shwing() {
 .action-card.active {
   transform: scale(0.92);
 }
+
 .action-card-container {
   transition: width .3s ease;
 }
@@ -242,7 +245,7 @@ function shwing() {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 
-.action-card .property-description>p:last-of-type {
+.action-card .property-description > p:last-of-type {
   margin-bottom: 0;
 }
 

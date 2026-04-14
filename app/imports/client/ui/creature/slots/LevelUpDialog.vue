@@ -49,13 +49,11 @@
           :key="libraryNode._id"
           :model="libraryNode"
           :data-id="libraryNode._id"
-          :class="{disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition}"
+          :class="{ disabled: isDisabled(libraryNode) || libraryNode._disabledBySlotFillerCondition }"
         >
           <v-expansion-panel-title>
             <template #default="{ open }">
-              <div
-                class="d-flex align-center flex-grow-0 mr-2"
-              >
+              <div class="d-flex align-center flex-grow-0 mr-2">
                 <v-checkbox
                   v-if="libraryNode._disabledByAlreadyAdded"
                   class="my-0 py-0"
@@ -85,7 +83,7 @@
                   </div>
                 </div>
                 <div class="text-caption text-no-wrap text-truncate">
-                  {{ libraryNames[libraryNode.root.id ] }}
+                  {{ libraryNames[libraryNode.root.id] }}
                 </div>
               </div>
               <div
@@ -129,9 +127,7 @@
       </v-btn>
     </div>
     <template v-if="!showDisabled && disabledNodeCount">
-      <div
-        class="d-flex flex-column align-center justify-center ma-3"
-      >
+      <div class="d-flex flex-column align-center justify-center ma-3">
         <div>
           Requirements of {{ disabledNodeCount }} properties were not met
         </div>
@@ -194,6 +190,7 @@ import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import nodeToString from '/imports/parser/toString';
 import { ComputedClassSchema } from '/imports/api/properties/Classes';
 import type { InferType } from '/imports/api/utility/TypedSimpleSchema';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   classId: string;
@@ -201,7 +198,7 @@ const props = defineProps<{
   dummySlot?: InferType<typeof ComputedClassSchema>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 provide('context', reactive({ creatureId: toRef(props, 'creatureId') }));
 

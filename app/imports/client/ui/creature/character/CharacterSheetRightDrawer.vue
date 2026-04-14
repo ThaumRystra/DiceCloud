@@ -11,8 +11,9 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import CharacterLog from '/imports/client/ui/log/CharacterLog.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const drawer = computed({
   get() {
@@ -24,5 +25,4 @@ const drawer = computed({
 });
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

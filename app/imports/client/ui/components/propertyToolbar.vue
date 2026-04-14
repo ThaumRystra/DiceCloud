@@ -19,9 +19,7 @@
       {{ title }}
     </v-toolbar-title>
     <v-spacer />
-    <v-slide-y-transition
-      hide-on-leave
-    >
+    <v-slide-y-transition hide-on-leave>
       <div
         v-if="editing && model"
         key="edit-buttons"
@@ -147,9 +145,7 @@
       <span style="width: 44px;">
         {{ editing ? 'Done' : 'Edit' }}
       </span>
-      <v-slide-y-transition
-        hide-on-leave
-      >
+      <v-slide-y-transition hide-on-leave>
         <v-icon
           v-if="editing"
           key="doneIcon"
@@ -179,9 +175,10 @@ import { getPropertyName } from '/imports/constants/PROPERTIES';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
+import { key } from '/imports/client/ui/vuexStore';
 
 const context = inject<{ editPermission?: boolean; copyPermission?: boolean }>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 const props = defineProps<{
   model?: Record<string, any>;
@@ -251,5 +248,4 @@ function helpDialog() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

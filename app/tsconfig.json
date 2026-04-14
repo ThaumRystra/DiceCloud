@@ -9,7 +9,6 @@
     ],
     "jsx": "preserve",
     "strict": true,
-    "noImplicitAny": false,
     "preserveSymlinks": true,
     "allowJs": true,
     "checkJs": true,
@@ -17,6 +16,7 @@
     "outDir": "build",
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "verbatimModuleSyntax": true,
     "paths": {
       "/imports/*": [
         "./imports/*"
@@ -24,6 +24,9 @@
       "meteor/*": [
         "./node_modules/@types/meteor/*",
         "./.meteor/local/types/packages.d.ts"
+      ],
+      "vuex": [
+        "./node_modules/vuex/types/index.d.ts"
       ]
     },
     "moduleResolution": "bundler",

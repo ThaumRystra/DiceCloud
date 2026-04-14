@@ -31,6 +31,7 @@ import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
 import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   spells?: any[];
@@ -40,7 +41,7 @@ const props = withDefaults(defineProps<{
   preparingSpells: false,
 });
 
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {});
 
 const computedSpells = computed(() => spellsWithSubheaders(props.spells));

@@ -4,14 +4,14 @@ import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileS
 import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { CreatureSchema } from '/imports/api/creature/creatures/Creatures';
 import assertUserHasFileSpace from '/imports/api/files/assertUserHasFileSpace';
-let createS3FilesCollection;
+let s3FilesStorage;
 if (Meteor.isServer) {
-  createS3FilesCollection = require('/imports/api/files/server/s3FileStorage').createS3FilesCollection
+  s3FilesStorage = import('/imports/api/files/server/s3FileStorage');
 } else {
-  createS3FilesCollection = require('/imports/api/files/client/s3FileStorage').createS3FilesCollection
+  s3FilesStorage = import('/imports/api/files/client/s3FileStorage');
 }
 
-const ArchiveCreatureFiles = createS3FilesCollection({
+const ArchiveCreatureFiles = await s3FilesStorage.then((storage) => storage.createS3FilesCollection({
   collectionName: 'archiveCreatureFiles',
   storagePath: Meteor.isDevelopment ? '../../../../../fileStorage/archiveCreatures' : 'assets/app/archiveCreatures',
   onBeforeUpload(file) {
@@ -30,7 +30,7 @@ const ArchiveCreatureFiles = createS3FilesCollection({
   onAfterUpload(file) {
     if (Meteor.isServer) incrementFileStorageUsed(file.userId, file.size);
   }
-});
+}));
 
 let archiveSchema = new SimpleSchema({
   meta: {

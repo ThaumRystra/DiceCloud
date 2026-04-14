@@ -1,7 +1,7 @@
 <template lang="html">
   <v-list-item
     class="ability-list-tile pl-0"
-    v-on="hasClickListener ? {click} : {}"
+    v-on="hasClickListener ? { click } : {}"
   >
     <template #prepend>
       <v-btn
@@ -16,7 +16,7 @@
         <div>
           <div class="text-h4 mod">
             <template v-if="swapScoresAndMods">
-              <span :class="{'text-primary': model.total !== model.value}">
+              <span :class="{ 'text-primary': model.total !== model.value }">
                 {{ model.value }}
               </span>
             </template>
@@ -29,7 +29,7 @@
               {{ numberToSignedString(model.modifier) }}
             </template>
             <template v-else>
-              <span :class="{'text-primary': model.total !== model.value}">
+              <span :class="{ 'text-primary': model.total !== model.value }">
                 {{ model.value }}
               </span>
             </template>
@@ -39,20 +39,20 @@
     </template>
 
     <v-list-item-title>
-        {{ model.name }}
-        <v-icon
-          v-if="model.advantage > 0"
-          right
-        >
-          mdi-chevron-double-up
-        </v-icon>
-        <v-icon
-          v-if="model.advantage < 0"
-          right
-        >
-          mdi-chevron-double-down
-        </v-icon>
-      </v-list-item-title>
+      {{ model.name }}
+      <v-icon
+        v-if="model.advantage > 0"
+        right
+      >
+        mdi-chevron-double-up
+      </v-icon>
+      <v-icon
+        v-if="model.advantage < 0"
+        right
+      >
+        mdi-chevron-double-down
+      </v-icon>
+    </v-list-item-title>
   </v-list-item>
 </template>
 
@@ -63,13 +63,14 @@ import { useStore } from 'vuex';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
 }>();
 
 const emit = defineEmits(['click']);
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {} as any);
 const attrs = useAttrs();
 

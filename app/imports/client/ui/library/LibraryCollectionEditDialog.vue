@@ -43,18 +43,18 @@
       <text-field
         label="name"
         :value="model.name"
-        @change="(name, ack) => updateLibraryCollection({name}, ack)"
+        @change="(name, ack) => updateLibraryCollection({ name }, ack)"
       />
       <text-area
         label="Description"
         :value="model.description"
-        @change="(description, ack) => updateLibraryCollection({description}, ack)"
+        @change="(description, ack) => updateLibraryCollection({ description }, ack)"
       />
       <smart-switch
         :value="model.showInMarket"
         :disabled="!isOwner"
         label="Show in community library browser"
-        @change="(showInMarket, ack) => updateLibraryCollection({showInMarket}, ack)"
+        @change="(showInMarket, ack) => updateLibraryCollection({ showInMarket }, ack)"
       />
       <smart-select
         label="Libraries"
@@ -65,7 +65,7 @@
         chips
         deletable-chips
         no-data-text="No libraries found"
-        @change="(libraries, ack) => updateLibraryCollection({libraries}, ack)"
+        @change="(libraries, ack) => updateLibraryCollection({ libraries }, ack)"
       />
     </template>
     <template #actions>
@@ -90,9 +90,10 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import LibraryCollections, { updateLibraryCollection, removeLibraryCollection } from '/imports/api/library/LibraryCollections';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import Libraries from '/imports/api/library/Libraries';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ _id: string }>();
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 autorun(() => {
@@ -164,6 +165,4 @@ function share() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

@@ -14,9 +14,7 @@
       @pull="pull"
     />
     <template #actions>
-      <div
-        class="d-flex justify-end"
-      >
+      <div class="d-flex justify-end">
         <v-btn
           variant="text"
           :disabled="!valid"
@@ -36,13 +34,14 @@ import { get, toPath } from 'lodash';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ExperienceForm from '/imports/client/ui/creature/experiences/ExperienceForm.vue';
 import { ExperienceSchema, insertExperience } from '/imports/api/creature/experience/Experiences';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   creatureIds: string[];
   startAsMilestone?: boolean;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 provide('context', { debounceTime: 0 });
 
@@ -120,6 +119,4 @@ async function insertExperienceFn() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

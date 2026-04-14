@@ -1,7 +1,7 @@
 <template>
   <div
     class="d-flex align-center"
-    @click="$emit('click')" 
+    @click="$emit('click')"
     @mouseover="$emit('mouseover')"
     @mouseleave="$emit('mouseleave')"
   >
@@ -49,12 +49,13 @@ import { useStore } from 'vuex';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import doAction from '/imports/client/ui/creature/actions/doAction';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {} as any);
 
 const checkLoading = ref(false);
@@ -94,8 +95,8 @@ async function check() {
 </script>
 
 <style lang="css" scoped>
-  .value {
-    min-width: 72px;
-    justify-content: center;
-  }
+.value {
+  min-width: 72px;
+  justify-content: center;
+}
 </style>

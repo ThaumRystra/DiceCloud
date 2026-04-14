@@ -38,8 +38,8 @@
           persistent-placeholder
           :model="model.quantityExpected"
           :error-messages="errors.quantityExpected"
-          @change="({path, value, ack}) =>
-            $emit('change', {path: ['quantityExpected', ...path], value, ack})"
+          @change="({ path, value, ack }) =>
+            $emit('change', { path: ['quantityExpected', ...path], value, ack })"
         />
       </v-col>
       <v-col
@@ -53,8 +53,8 @@
           persistent-placeholder
           :model="model.slotCondition"
           :error-messages="errors.slotCondition"
-          @change="({path, value, ack}) =>
-            $emit('change', {path: ['slotCondition', ...path], value, ack})"
+          @change="({ path, value, ack }) =>
+            $emit('change', { path: ['slotCondition', ...path], value, ack })"
         />
       </v-col>
       <v-col
@@ -101,8 +101,8 @@
       label="Description"
       :model="model.description"
       :error-messages="errors['description.text']"
-      @change="({path, value, ack}) =>
-        $emit('change', {path: ['description', ...path], value, ack})"
+      @change="({ path, value, ack }) =>
+        $emit('change', { path: ['description', ...path], value, ack })"
     />
 
     <form-sections type="slot">
@@ -149,6 +149,7 @@ import { useStore } from 'vuex';
 import TagTargeting from '/imports/client/ui/properties/forms/shared/TagTargeting.vue';
 import OutlinedInput from '/imports/client/ui/properties/viewers/shared/OutlinedInput.vue';
 import PROPERTIES from '/imports/constants/PROPERTIES';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -158,7 +159,7 @@ const props = withDefaults(defineProps<{
 const emit = defineEmits(['change']);
 
 const context = inject<any>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 function change(path: string | string[], value: any, ack?: Function) {
   const pathArray = Array.isArray(path) ? path : [path];

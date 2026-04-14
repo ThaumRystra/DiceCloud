@@ -6,7 +6,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div v-if="creature">
@@ -16,16 +16,14 @@
         v-for="note in notes"
         :key="note._id"
       >
-        <note-card
-          :model="note"
-        />
+        <note-card :model="note" />
       </div>
       <folder-group-card
         v-for="folder in endFolders"
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -40,13 +38,14 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureProperties, { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'journal';
 
 const { result: startFolders } = autorun(() =>
@@ -129,6 +128,4 @@ function softRemove(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

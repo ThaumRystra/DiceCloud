@@ -5,21 +5,21 @@
       :disabled="!editPermission"
       :value="model.name"
       :error-messages="errors.name"
-      @change="(value, ack) => $emit('change', {path: ['name'], value, ack})"
+      @change="(value, ack) => $emit('change', { path: ['name'], value, ack })"
     />
     <text-field
       label="Alignment"
       :disabled="!editPermission"
       :value="model.alignment"
       :error-messages="errors.alignment"
-      @change="(value, ack) => $emit('change', {path: ['alignment'], value, ack})"
+      @change="(value, ack) => $emit('change', { path: ['alignment'], value, ack })"
     />
     <text-field
       label="Gender"
       :disabled="!editPermission"
       :value="model.gender"
       :error-messages="errors.gender"
-      @change="(value, ack) => $emit('change', {path: ['gender'], value, ack})"
+      @change="(value, ack) => $emit('change', { path: ['gender'], value, ack })"
     />
     <v-row>
       <v-col
@@ -32,7 +32,7 @@
           :disabled="!editPermission"
           :value="model.picture"
           :error-messages="errors.picture"
-          @change="(value, ack) => $emit('change', {path: ['picture'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['picture'], value, ack })"
         />
       </v-col>
       <v-col
@@ -45,7 +45,7 @@
           :disabled="!editPermission"
           :value="model.avatarPicture"
           :error-messages="errors.avatarPicture"
-          @change="(value, ack) => $emit('change', {path: ['avatarPicture'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['avatarPicture'], value, ack })"
         />
       </v-col>
     </v-row>
@@ -55,13 +55,13 @@
           label="Hide redundant stats"
           :disabled="!editPermission"
           :model-value="model.settings.hideUnusedStats"
-          @change="value => $emit('change', {path: ['settings','hideUnusedStats'], value: !!value})"
+          @change="value => $emit('change', { path: ['settings', 'hideUnusedStats'], value: !!value })"
         />
         <v-switch
           label="Hide rest buttons"
           :disabled="!editPermission"
           :model-value="model.settings.hideRestButtons"
-          @change="value => $emit('change', {path: ['settings','hideRestButtons'], value: !!value})"
+          @change="value => $emit('change', { path: ['settings', 'hideRestButtons'], value: !!value })"
         />
         <v-switch
           label="Show spells tab"
@@ -85,7 +85,7 @@
           step="0.1"
           :disabled="!editPermission"
           :value="model.settings.hitDiceResetMultiplier"
-          @change="(value, ack) => $emit('change', {path: ['settings','hitDiceResetMultiplier'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['settings', 'hitDiceResetMultiplier'], value, ack })"
         />
         <text-field
           label="Discord Webhook URL"
@@ -93,7 +93,7 @@
           placeholder="https://discordapp.com/api/webhooks/<id>/<token>"
           :disabled="!editPermission"
           :value="model.settings.discordWebhook"
-          @change="(value, ack) => $emit('change', {path: ['settings','discordWebhook'], value, ack})"
+          @change="(value, ack) => $emit('change', { path: ['settings', 'discordWebhook'], value, ack })"
         />
         <!--
         <v-switch
@@ -169,6 +169,7 @@ import LibraryCollections from '/imports/api/library/LibraryCollections';
 import { changeAllowedLibraries, toggleAllUserLibraries } from '/imports/api/creature/creatures/methods/changeAllowedLibraries';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import SmartImageInput from '/imports/client/ui/components/global/SmartImageInput.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   stored?: boolean;
@@ -185,7 +186,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits(['change']);
-const store = useStore();
+const store = useStore(key);
 
 const libraryCollections = ref(props.model.allowedLibraryCollections);
 const libraries = ref(props.model.allowedLibraries);
@@ -318,6 +319,4 @@ function showDependencyGraph() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

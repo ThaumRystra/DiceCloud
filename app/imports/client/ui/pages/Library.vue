@@ -9,7 +9,7 @@
           cols="12"
           xl="8"
         >
-          <v-card :class="{'mb-4': libraryCollections && libraryCollections.length}">
+          <v-card :class="{ 'mb-4': libraryCollections && libraryCollections.length }">
             <v-fade-transition
               hide-on-leave
               leave-absolute
@@ -75,8 +75,9 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
 import LibraryList from '/imports/client/ui/library/LibraryList.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const { ready: librariesReady } = subscribe('libraries');

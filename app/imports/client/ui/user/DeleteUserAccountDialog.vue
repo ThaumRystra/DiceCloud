@@ -47,9 +47,7 @@
           />
         </v-list>
       </template>
-      <div
-        class="d-flex flex-column align-start"
-      >
+      <div class="d-flex flex-column align-start">
         <v-text-field
           v-if="user.username"
           v-model="usernameInput"
@@ -76,9 +74,7 @@
       </div>
     </div>
     <template #actions>
-      <div
-        class="d-flex justify-end"
-      >
+      <div class="d-flex justify-end">
         <v-btn
           variant="text"
           @click="$store.dispatch('popDialogStack')"
@@ -99,8 +95,9 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import Libraries from '/imports/api/library/Libraries';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const usernameInput = ref('');
@@ -133,6 +130,4 @@ function deleteAccount() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

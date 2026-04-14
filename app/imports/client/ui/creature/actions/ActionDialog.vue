@@ -22,7 +22,7 @@
           <tabletop-log-stream-entry :model="simulatedLog" />
         </div>
         <v-btn
-          v-if="!activeInput" 
+          v-if="!activeInput"
           size="large"
           variant="text"
           color="accent"
@@ -44,17 +44,11 @@ import { useRouter } from 'vue-router';
 import { autorun } from 'vue-meteor-tracker';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
-import AdvantageInput from '/imports/client/ui/creature/actions/input/AdvantageInput.vue';
-import CheckInput from '/imports/client/ui/creature/actions/input/CheckInput.vue';
-import ChoiceInput from '/imports/client/ui/creature/actions/input/ChoiceInput.vue';
-import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import EngineActions from '/imports/api/engine/action/EngineActions';
-import LogContent from '/imports/client/ui/log/LogContent.vue';
-import TargetsInput from '/imports/client/ui/creature/actions/input/TargetsInput.vue';
-import CastSpellInput from '/imports/client/ui/creature/actions/input/CastSpellInput.vue';
 import { runAction } from '/imports/api/engine/action/methods/runAction';
 import TabletopLogStreamEntry from '/imports/client/ui/tabletop/TabletopLogStreamEntry.vue';
 import mutationToLogUpdates from '/imports/api/engine/action/functions/mutationToLogUpdates';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   actionId: string;
@@ -62,7 +56,7 @@ const props = defineProps<{
   actionFinishedCallback?: Function;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const loading = ref(false);
@@ -216,5 +210,4 @@ function cancel() {
   overflow-y: auto;
   flex-basis: 300px;
 }
- 
 </style>

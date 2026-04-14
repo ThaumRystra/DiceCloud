@@ -6,7 +6,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div
@@ -23,7 +23,7 @@
         <v-card>
           <spell-list
             :spells="spellsWithoutList"
-            :parent-ref="{id: creatureId, collection: 'creatures'}"
+            :parent-ref="{ id: creatureId, collection: 'creatures' }"
           />
         </v-card>
       </div>
@@ -41,7 +41,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -61,9 +61,10 @@ import SpellSlotCard from '/imports/client/ui/properties/components/attributes/S
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'spells';
 
 const { result: startFolders } = autorun(() =>
@@ -207,6 +208,4 @@ function softRemove(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-model="drawer"
-    >
+    <v-navigation-drawer v-model="drawer">
       <Sidebar />
     </v-navigation-drawer>
     <router-view name="toolbar" />
@@ -33,18 +31,18 @@
         </div>
       </v-fade-transition>
       <template #extension>
-      <v-fade-transition
-        v-if="display.smAndUp"
-        mode="out-in"
-      >
-        <div
-          :key="route.path"
-          style="width: 100%"
+        <v-fade-transition
+          v-if="display.smAndUp"
+          mode="out-in"
         >
-          <router-view name="toolbarExtension" />
-        </div>
-      </v-fade-transition>
-    </template>
+          <div
+            :key="route.path"
+            style="width: 100%"
+          >
+            <router-view name="toolbarExtension" />
+          </div>
+        </v-fade-transition>
+      </template>
     </v-app-bar>
     <v-main>
       <connection-banner />
@@ -71,8 +69,9 @@ import Sidebar from '/imports/client/ui/layouts/Sidebar.vue';
 import DialogStack from '/imports/client/ui/dialogStack/DialogStack.vue';
 import SnackbarQueue from '/imports/client/ui/components/snackbars/SnackbarQueue.vue';
 import ConnectionBanner from '/imports/client/ui/layouts/ConnectionBanner.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 const theme = useTheme();
 const display = useDisplay();
@@ -115,6 +114,4 @@ function toggleDrawer() {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

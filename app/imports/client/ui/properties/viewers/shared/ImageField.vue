@@ -4,7 +4,7 @@
     v-bind="cols"
   >
     <fieldset
-      :class="theme.isDark? 'v-theme--dark' :'v-theme--light'"
+      :class="theme.isDark ? 'v-theme--dark' : 'v-theme--light'"
       class="d-flex rounded v-sheet--outlined pt-4 layout column align-center justify-center fill-height"
       style="overflow: hidden"
       @click="$emit('click', $event)"
@@ -16,8 +16,8 @@
       >
         {{ name }}
       </legend>
- 
-      <img 
+
+      <img
         :src="href"
         class="image"
         :data-id="`image-${href}`"
@@ -30,8 +30,9 @@
 <script setup lang="ts">
 import { inject } from 'vue';
 import { useStore } from 'vuex';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const theme = inject<{ isDark: boolean }>('theme', { isDark: false });
 
 const props = withDefaults(defineProps<{
@@ -67,4 +68,3 @@ function previewImage() {
   max-width: 100%;
 }
 </style>
-

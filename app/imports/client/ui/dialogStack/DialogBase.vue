@@ -36,7 +36,7 @@
     <v-card-text
       v-else
       id="base-dialog-body"
-      :class="{'dark-body': darkBody}"
+      :class="{ 'dark-body': darkBody }"
       @scroll.passive="onScroll"
     >
       <slot />
@@ -52,8 +52,9 @@ import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import isDarkColor from '/imports/client/ui/utility/isDarkColor';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const props = defineProps<{
   color?: string;

@@ -15,64 +15,60 @@
         v-model="tab"
         class="file-input-content fill-height"
       >
-      <v-window-item
-        class="fill-height"
-        style="overflow: auto;"
-      >
-        <div
-          class="user-image-list pa-4 d-flex flex-wrap"
+        <v-window-item
+          class="fill-height"
+          style="overflow: auto;"
         >
-          <image-upload-input
-            class="ma-1"
-            style="height: 250px;"
-            @uploaded="link => selectUserImage(link)"
-          />
-          <v-img
-            v-for="file in userImages"
-            :key="file._id"
-            :data-id="file._id"
-            class="user-image ma-1 v-sheet"
-            :class="{'elevation-4': file.link === href}"
-            height="250"
-            :src="file.link"
-            :lazy-src="file.thumbHashDataUrl"
-            @click="selectUserImage(file.link)"
-          >
-            <v-btn
-              class="zoom-button"
-              icon
-              @click.stop="previewImage(file)"
+          <div class="user-image-list pa-4 d-flex flex-wrap">
+            <image-upload-input
+              class="ma-1"
+              style="height: 250px;"
+              @uploaded="link => selectUserImage(link)"
+            />
+            <v-img
+              v-for="file in userImages"
+              :key="file._id"
+              :data-id="file._id"
+              class="user-image ma-1 v-sheet"
+              :class="{ 'elevation-4': file.link === href }"
+              height="250"
+              :src="file.link"
+              :lazy-src="file.thumbHashDataUrl"
+              @click="selectUserImage(file.link)"
             >
-              <v-icon>mdi-magnify-plus</v-icon>
-            </v-btn>
-          </v-img>
-          <div
-            style="height: 0;"
-            class="ma-1"
-          />
-          <div
-            style="height: 0;"
-            class="ma-1"
-          />
-          <div
-            style="height: 0;"
-            class="ma-1"
-          />
-        </div>
-      </v-window-item>
-      <v-window-item
-        class="fill-height"
-      >
-        <v-card-text class="fill-height d-flex flex-column justify-center align-center">
-          <v-text-field
-            v-model="inputHref"
-            label="Direct link to image"
-            class="flex-grow-0"
-            style="width: 100%"
-          />
-        </v-card-text>
-      </v-window-item>
-    </v-window>
+              <v-btn
+                class="zoom-button"
+                icon
+                @click.stop="previewImage(file)"
+              >
+                <v-icon>mdi-magnify-plus</v-icon>
+              </v-btn>
+            </v-img>
+            <div
+              style="height: 0;"
+              class="ma-1"
+            />
+            <div
+              style="height: 0;"
+              class="ma-1"
+            />
+            <div
+              style="height: 0;"
+              class="ma-1"
+            />
+          </div>
+        </v-window-item>
+        <v-window-item class="fill-height">
+          <v-card-text class="fill-height d-flex flex-column justify-center align-center">
+            <v-text-field
+              v-model="inputHref"
+              label="Direct link to image"
+              class="flex-grow-0"
+              style="width: 100%"
+            />
+          </v-card-text>
+        </v-window-item>
+      </v-window>
     </template>
     <template #actions>
       <v-spacer />
@@ -106,12 +102,13 @@ import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import ImageUploadInput from '/imports/client/ui/components/ImageUploadInput.vue';
 import prettyBytes from 'pretty-bytes';
 import { thumbHashToDataURL } from 'thumbhash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   href?: string;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const tab = ref(0);
 const progress = ref(0);
 const inputHref = ref(props.href);
@@ -154,15 +151,19 @@ function selectUserImage(href: string) {
   flex-grow: 1;
   flex-shrink: 1;
 }
+
 .user-image-list > .upload-image-button {
   height: 250px;
 }
+
 .user-image {
   cursor: pointer;
 }
+
 .user-image.elevation-4 {
   border: 2px solid #f44336;
 }
+
 .zoom-button {
   position: absolute;
   cursor: zoom-in;

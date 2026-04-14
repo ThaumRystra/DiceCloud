@@ -76,6 +76,7 @@ import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
 import { getUserTier } from '/imports/api/users/patreon/tiers';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import InsertLibraryNodeButton from '/imports/client/ui/library/InsertLibraryNodeButton.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   organizeMode?: boolean;
@@ -84,7 +85,7 @@ const props = defineProps<{
   filter?: Record<string, any>;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 
 const expandedLibrary = ref<string[]>([]);
 const expandedLibraryContent = ref<string[]>([]);
@@ -141,7 +142,8 @@ function editLibrary(_id: string) {
 </script>
 
 <style lang="css">
-.library-browser .v-expansion-panel-text__wrapper, .library-browser .v-expansion-panel-title {
+.library-browser .v-expansion-panel-text__wrapper,
+.library-browser .v-expansion-panel-title {
   padding: 0 !important;
 }
 </style>

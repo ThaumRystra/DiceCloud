@@ -49,13 +49,11 @@
       />
       <property-field
         v-if="model.overridden"
-        :cols="{cols: 6, md: 12}"
+        :cols="{ cols: 6, md: 12 }"
         name="Overridden"
         value="Overriden by another property with the same variable name"
       />
-      <property-target-tags
-        :model="model"
-      />
+      <property-target-tags :model="model" />
     </v-row>
     <v-row dense>
       <property-description
@@ -68,7 +66,7 @@
       density="compact"
     >
       <property-field
-        :cols="{col: 12}"
+        :cols="{ col: 12 }"
         name="Effects"
       >
         <v-list style="width: 100%">
@@ -96,7 +94,7 @@
       density="compact"
     >
       <property-field
-        :cols="{col: 12}"
+        :cols="{ col: 12 }"
         name="Proficiencies"
       >
         <v-list style="width: 100%">
@@ -125,10 +123,11 @@ import SkillProficiency from '/imports/client/ui/properties/components/skills/Sk
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 import sortEffects from '/imports/client/ui/utility/sortEffects';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ model: Record<string, any> }>();
 const context = inject<any>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 const isFinite = Number.isFinite;
 
@@ -213,6 +212,4 @@ function clickEffect(id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

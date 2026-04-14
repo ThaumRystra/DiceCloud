@@ -32,7 +32,7 @@
           <creature-properties-tree
             class="pt-2 flex"
             style="overflow-y: auto;"
-            :root="{collection: 'creatures', id: creatureId}"
+            :root="{ collection: 'creatures', id: creatureId }"
             :organize="organize"
             :selected-node="selectedNode"
             :filter="filter"
@@ -63,10 +63,10 @@ import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperti
 import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
 import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { getPropertyName } from '/imports/constants/PROPERTIES';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const display = useDisplay();
 const context = inject('context', {} as any);
 
@@ -122,5 +122,4 @@ function editCreatureProperty() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

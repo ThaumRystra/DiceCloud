@@ -110,61 +110,61 @@
         v-if="$vuetify.display.smAndUp"
         mode="out-in"
       >
-      <div
-        :key="$route.meta.title"
-        class="layout"
-      >
-        <v-tabs
-          v-if="creature && creature.settings"
-          :key=" '' +
-            creature.settings.hideSpellsTab +
-            creature.settings.showTreeTab
-          "
-          class="flex"
-          style="min-width: 0"
-          centered
-          grow
-          :color="$vuetify.theme.themes?.dark?.colors?.primary"
-          :model-value="$store.getters.tabById($route.params.id)"
-          :bg-color="toolbarColor"
-          @update:model-value="e => $store.commit(
-            'setTabForCharacterSheet',
-            {id: $route.params.id, tab: e}
-          )"
+        <div
+          :key="$route.meta.title"
+          class="layout"
         >
-          <v-tab>
-            Stats
-          </v-tab>
-          <v-tab>
-            Actions
-          </v-tab>
-          <v-tab v-if="!creature.settings.hideSpellsTab">
-            Spells
-          </v-tab>
-          <v-tab>
-            Inventory
-          </v-tab>
-          <v-tab>
-            Features
-          </v-tab>
-          <v-tab>
-            Journal
-          </v-tab>
-          <v-tab>
-            Build
-          </v-tab>
-          <v-tab v-if="creature.settings.showTreeTab">
-            Tree
-          </v-tab>
-        </v-tabs>
-        <v-spacer />
-        <character-sheet-fab
-          direction="bottom"
-          class="character-sheet-extension-fab"
-          :edit-permission="editPermission"
-        />
-      </div>
-    </v-fade-transition>
+          <v-tabs
+            v-if="creature && creature.settings"
+            :key="'' +
+              creature.settings.hideSpellsTab +
+              creature.settings.showTreeTab
+              "
+            class="flex"
+            style="min-width: 0"
+            centered
+            grow
+            :color="$vuetify.theme.themes?.dark?.colors?.primary"
+            :model-value="$store.getters.tabById($route.params.id)"
+            :bg-color="toolbarColor"
+            @update:model-value="e => $store.commit(
+              'setTabForCharacterSheet',
+              { id: $route.params.id, tab: e }
+            )"
+          >
+            <v-tab>
+              Stats
+            </v-tab>
+            <v-tab>
+              Actions
+            </v-tab>
+            <v-tab v-if="!creature.settings.hideSpellsTab">
+              Spells
+            </v-tab>
+            <v-tab>
+              Inventory
+            </v-tab>
+            <v-tab>
+              Features
+            </v-tab>
+            <v-tab>
+              Journal
+            </v-tab>
+            <v-tab>
+              Build
+            </v-tab>
+            <v-tab v-if="creature.settings.showTreeTab">
+              Tree
+            </v-tab>
+          </v-tabs>
+          <v-spacer />
+          <character-sheet-fab
+            direction="bottom"
+            class="character-sheet-extension-fab"
+            :edit-permission="editPermission"
+          />
+        </div>
+      </v-fade-transition>
     </template>
   </v-app-bar>
 </template>
@@ -183,8 +183,9 @@ import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSh
 import getThemeColor from '/imports/client/ui/utility/getThemeColor';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 import getCreatureUrlName from '/imports/api/creature/creatures/getCreatureUrlName';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 const router = useRouter();
 

@@ -42,8 +42,9 @@ import { autorun, subscribe } from 'vue-meteor-tracker';
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import Docs from '/imports/api/docs/Docs';
 import { propsByDocsPath } from '/imports/constants/PROPERTIES';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 const router = useRouter();
 

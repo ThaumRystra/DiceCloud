@@ -5,87 +5,87 @@
     :disabled="disabled"
     class="spell-slot-list-tile"
     v-bind="$attrs"
-    v-on="hasClickListener ? {click} : {}"
+    v-on="hasClickListener ? { click } : {}"
   >
     <v-list-item-title v-if="Number.isFinite(model.total)">
+      <div
+        v-if="model.total <= 0 || model.total > 5 || model.value > model.total || model.value < 0"
+        class="d-flex value"
+        style="align-items: baseline;"
+      >
         <div
-          v-if="model.total <= 0 || model.total > 5 || model.value > model.total || model.value < 0"
-          class="d-flex value"
-          style="align-items: baseline;"
+          style="font-weight: 500; font-size: 24px"
+          class="current-value"
         >
-          <div
-            style="font-weight: 500; font-size: 24px"
-            class="current-value"
-          >
-            {{ model.value }}
-          </div>
-          <div
-            v-if="model.total"
-            class="ml-2 max-value"
-          >
-            /{{ model.total }}
-          </div>
+          {{ model.value }}
         </div>
         <div
-          v-else-if="canEdit"
-          class="d-flex align-center slot-bubbles"
+          v-if="model.total"
+          class="ml-2 max-value"
         >
-          <smart-btn
-            v-for="i in model.total"
-            :key="i"
-            icon
-            single-click
-            @click="ack => damageProperty({
-              type: 'increment',
-              value: i <= model.value ? 1 : -1,
-              ack
-            })"
-          >
-            <v-icon>
-              {{
-                i > model.value ?
-                  'mdi-radiobox-blank' :
-                  'mdi-radiobox-marked'
-              }}
-            </v-icon>
-          </smart-btn>
+          /{{ model.total }}
         </div>
-        <div
-          v-else
-          class="d-flex align-center slot-bubbles view-only"
-          :class="{'disabled-icon': disabled}"
+      </div>
+      <div
+        v-else-if="canEdit"
+        class="d-flex align-center slot-bubbles"
+      >
+        <smart-btn
+          v-for="i in model.total"
+          :key="i"
+          icon
+          single-click
+          @click="ack => damageProperty({
+            type: 'increment',
+            value: i <= model.value ? 1 : -1,
+            ack
+          })"
         >
-          <v-icon
-            v-for="i in model.total"
-            :key="i"
-            class="ma-1"
-          >
+          <v-icon>
             {{
               i > model.value ?
                 'mdi-radiobox-blank' :
                 'mdi-radiobox-marked'
             }}
           </v-icon>
-        </div>
-      </v-list-item-title>
-      <v-list-item-title v-else>
-        <code>
+        </smart-btn>
+      </div>
+      <div
+        v-else
+        class="d-flex align-center slot-bubbles view-only"
+        :class="{ 'disabled-icon': disabled }"
+      >
+        <v-icon
+          v-for="i in model.total"
+          :key="i"
+          class="ma-1"
+        >
+          {{
+            i > model.value ?
+              'mdi-radiobox-blank' :
+              'mdi-radiobox-marked'
+          }}
+        </v-icon>
+      </div>
+    </v-list-item-title>
+    <v-list-item-title v-else>
+      <code>
           {{ model.total }}
         </code>
-      </v-list-item-title>
-      <v-list-item-subtitle>
-        {{ model.name }}
-      </v-list-item-subtitle>
+    </v-list-item-title>
+    <v-list-item-subtitle>
+      {{ model.name }}
+    </v-list-item-subtitle>
   </v-list-item>
 </template>
 
 <script setup lang="ts">
 import { computed, inject, useAttrs } from 'vue';
 import { useStore } from 'vuex';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -99,7 +99,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits(['click']);
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {} as any);
 const attrs = useAttrs();
 

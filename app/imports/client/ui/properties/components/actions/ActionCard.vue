@@ -55,9 +55,7 @@
       </div>
     </div>
     <div class="px-3 pb-3">
-      <template
-        v-if="showResources"
-      >
+      <template v-if="showResources">
         <action-condition-view
           v-for="condition in model.resources.conditions"
           :key="condition._id"
@@ -115,6 +113,7 @@ import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { getFilter, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   model: Record<string, any>;
@@ -125,7 +124,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits(['click']);
 
-const store = useStore();
+const store = useStore(key);
 const context = inject('context', {} as any);
 const theme = inject('theme', { isDark: false } as any);
 
@@ -273,7 +272,7 @@ async function doActionClick() {
   color: hsla(0, 0%, 100%, .3) !important;
 }
 
-.action-card .property-description>p:last-of-type {
+.action-card .property-description > p:last-of-type {
   margin-bottom: 0;
 }
 </style>

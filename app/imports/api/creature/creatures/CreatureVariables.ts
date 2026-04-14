@@ -1,10 +1,10 @@
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type ParseNode from '/imports/parser/parseTree/ParseNode';
 import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 
 //set up the collection for creature variables
-const CreatureVariables = new Mongo.Collection<Record<string, any>>('creatureVariables');
+const CreatureVariables = new Mongo.Collection<Record<string, unknown>>('creatureVariables');
 
 /** No schema because the structure isn't known until compute time
  * Expect documents to look like:

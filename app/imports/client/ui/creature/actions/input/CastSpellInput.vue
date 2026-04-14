@@ -19,7 +19,7 @@
       <template #activator="{ props }">
         <v-btn
           icon
-          :class="{'text-primary': filtersApplied}"
+          :class="{ 'text-primary': filtersApplied }"
           v-bind="props"
         >
           <v-icon>mdi-filter</v-icon>
@@ -67,40 +67,40 @@
         >
           Slot
         </div>
-          <v-list-item
-            key="cantrip-dummy-slot"
-            class="spell-slot-list-tile"
-            :class="{ 'text-primary': selectedSlotId === 'no-slot' }"
-            value="no-slot"
-            :disabled="!canCastSpellWithSlot(selectedSpell, 'no-slot')"
-            @click="selectedSlotId = 'no-slot'"
-          >
-            <v-list-item-title>
-              Cast without spell slot
-            </v-list-item-title>
-          </v-list-item>
-          <v-list-item
-            key="ritual-dummy-slot"
-            class="spell-slot-list-tile"
-            :class="{ 'text-primary': selectedSlotId === 'ritual' }"
-            value="ritual"
-            :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
-            @click="selectedSlotId = 'ritual'"
-          >
-            <v-list-item-title>
-              Cast as ritual
-            </v-list-item-title>
-          </v-list-item>
-          <spell-slot-list-tile
-            v-for="spellSlot in spellSlots"
-            :key="spellSlot._id"
-            :model="spellSlot"
-            :class="{ 'text-primary': selectedSlotId === spellSlot._id }"
-            :value="spellSlot._id"
-            :disabled="!canCastSpellWithSlot(selectedSpell, spellSlot._id, spellSlot)"
-            hide-cast-button
-            @click="selectedSlotId = spellSlot._id"
-          />
+        <v-list-item
+          key="cantrip-dummy-slot"
+          class="spell-slot-list-tile"
+          :class="{ 'text-primary': selectedSlotId === 'no-slot' }"
+          value="no-slot"
+          :disabled="!canCastSpellWithSlot(selectedSpell, 'no-slot')"
+          @click="selectedSlotId = 'no-slot'"
+        >
+          <v-list-item-title>
+            Cast without spell slot
+          </v-list-item-title>
+        </v-list-item>
+        <v-list-item
+          key="ritual-dummy-slot"
+          class="spell-slot-list-tile"
+          :class="{ 'text-primary': selectedSlotId === 'ritual' }"
+          value="ritual"
+          :disabled="!canCastSpellWithSlot(selectedSpell, 'ritual')"
+          @click="selectedSlotId = 'ritual'"
+        >
+          <v-list-item-title>
+            Cast as ritual
+          </v-list-item-title>
+        </v-list-item>
+        <spell-slot-list-tile
+          v-for="spellSlot in spellSlots"
+          :key="spellSlot._id"
+          :model="spellSlot"
+          :class="{ 'text-primary': selectedSlotId === spellSlot._id }"
+          :value="spellSlot._id"
+          :disabled="!canCastSpellWithSlot(selectedSpell, spellSlot._id, spellSlot)"
+          hide-cast-button
+          @click="selectedSlotId = spellSlot._id"
+        />
       </template>
       <template #right>
         <div
@@ -109,26 +109,26 @@
         >
           Spell
         </div>
-          <template v-for="spell in computedSpells">
-            <v-list-subheader
-              v-if="spell.isSubheader"
-              :key="`${spell.level}-header`"
-              class="item"
-            >
-              {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
-            </v-list-subheader>
-            <spell-list-tile
-              v-else
-              :key="spell._id"
-              hide-handle
-              show-info-button
-              :model="spell"
-              :value="spell._id"
-              :class="{ 'text-primary': selectedSpellId === spell._id }"
-              :disabled="!canCastSpellWithSlot(spell, selectedSlotId, selectedSlot)"
-              @show-info="spellDialog(spell._id)"
-            />
-          </template>
+        <template v-for="spell in computedSpells">
+          <v-list-subheader
+            v-if="spell.isSubheader"
+            :key="`${spell.level}-header`"
+            class="item"
+          >
+            {{ spell.level === 0 ? 'Cantrips' : `Level ${spell.level}` }}
+          </v-list-subheader>
+          <spell-list-tile
+            v-else
+            :key="spell._id"
+            hide-handle
+            show-info-button
+            :model="spell"
+            :value="spell._id"
+            :class="{ 'text-primary': selectedSpellId === spell._id }"
+            :disabled="!canCastSpellWithSlot(spell, selectedSlotId, selectedSlot)"
+            @show-info="spellDialog(spell._id)"
+          />
+        </template>
       </template>
     </split-list-layout>
   </div>
@@ -146,6 +146,7 @@ import SpellSlotListTile from '/imports/client/ui/properties/components/attribut
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';
 import { find } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const slotFilter = {
   type: 'attribute',
@@ -162,7 +163,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['input']);
-const store = useStore();
+const store = useStore(key);
 const goTo = useGoTo();
 
 const searchString = ref<string | undefined>(undefined);

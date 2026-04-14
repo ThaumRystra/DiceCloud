@@ -48,8 +48,9 @@ import { Meteor } from 'meteor/meteor';
 import Libraries from '/imports/api/library/Libraries';
 import formatter from '/imports/client/ui/utility/numberFormatter';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 const route = useRoute();
 const loading = ref(false);
@@ -116,6 +117,4 @@ function toggleDrawer() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

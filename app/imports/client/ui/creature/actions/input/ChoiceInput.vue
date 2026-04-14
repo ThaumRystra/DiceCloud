@@ -54,8 +54,9 @@ import { ref, computed, watch } from 'vue';
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import { useStore } from 'vuex';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 
 const props = withDefaults(defineProps<{
   choices: any[];
@@ -64,7 +65,7 @@ const props = withDefaults(defineProps<{
   quantity: () => ({ min: 0, max: 1 }),
 });
 
-const emit = defineEmits <{
+const emit = defineEmits<{
   input: any;
   continue: [];
 }>();

@@ -13,7 +13,7 @@
       <property-field
         v-if="(model.slotTags && model.slotTags.length) || (model.extraTags && model.extraTags.length)"
         name="Tags Required"
-        :cols="{cols: 12}"
+        :cols="{ cols: 12 }"
       >
         <div>
           <property-tags :tags="model.slotTags" />
@@ -34,7 +34,7 @@
         :value="model.missingLevels &&
           (model.missingLevels.length || undefined) &&
           model.missingLevels.join(', ')
-        "
+          "
       />
       <property-field
         v-if="context.creatureId"
@@ -44,7 +44,7 @@
       <property-field
         v-if="context.creatureId"
         name="Level Up"
-        :cols="{cols: 12}"
+        :cols="{ cols: 12 }"
       >
         <v-btn
           variant="outlined"
@@ -55,11 +55,11 @@
           prepend-icon="mdi-plus"
         >
           <template v-if="model.missingLevels && model.missingLevels.length">
-            Get Missing Levels 
+            Get Missing Levels
           </template>
           <template v-else>
             Level Up
-          </template> 
+          </template>
         </v-btn>
       </property-field>
       <property-description
@@ -74,10 +74,11 @@
 import { inject } from 'vue';
 import { useStore } from 'vuex';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ model: Record<string, any> }>();
 const context = inject<any>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 function levelUpDialog() {
   const classId = props.model._id;
@@ -103,5 +104,4 @@ function levelUpDialog() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

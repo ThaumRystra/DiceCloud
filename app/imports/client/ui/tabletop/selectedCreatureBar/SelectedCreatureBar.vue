@@ -77,12 +77,8 @@
         </v-card-title>
       </v-card>
     </v-menu>
-    <v-card
-      class="delete-card"
-    >
-      <div
-        class="d-flex"
-      >
+    <v-card class="delete-card">
+      <div class="d-flex">
         <creature-bar-icon
           icon="mdi-delete"
           data-id="trashIcon"
@@ -131,9 +127,7 @@
         class="fill-height d-flex align-center justify-center"
         style="opacity: 0.2;"
       >
-        <v-icon
-          size="90"
-        >
+        <v-icon size="90">
           mdi-account
         </v-icon>
       </div>
@@ -176,6 +170,7 @@ import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.v
 import TabletopBuffCard from '/imports/client/ui/tabletop/TabletopBuffCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';
 import { compact, chunk } from 'lodash';
+import { key } from '/imports/client/ui/vuexStore';
 
 function splitToNChunks(inputArray: any[], n: number) {
   return chunk(inputArray, Math.ceil(inputArray.length / n));
@@ -188,7 +183,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['active-action-change']);
 
-const store = useStore();
+const store = useStore(key);
 
 const rows = ref(2);
 const hoveredIcon = ref<any>(undefined);
@@ -411,20 +406,24 @@ const { result: iconGroups } = autorun(() => {
 </script>
 
 <style lang="css">
-  .tabletop-prop-menu {
-    top: unset !important;
-    transition: all 0.2s ease;
-  }
-  .tabletop-prop-menu.rows-1 {
-    bottom: 80px;
-  }
-  .tabletop-prop-menu.rows-2 {
-    bottom: 124px;
-  }
-  .tabletop-prop-menu.rows-3 {
-    bottom: 168px;
-  }
-  .tabletop-prop-menu.rows-4 {
-    bottom: 212px;
-  }
+.tabletop-prop-menu {
+  top: unset !important;
+  transition: all 0.2s ease;
+}
+
+.tabletop-prop-menu.rows-1 {
+  bottom: 80px;
+}
+
+.tabletop-prop-menu.rows-2 {
+  bottom: 124px;
+}
+
+.tabletop-prop-menu.rows-3 {
+  bottom: 168px;
+}
+
+.tabletop-prop-menu.rows-4 {
+  bottom: 212px;
+}
 </style>

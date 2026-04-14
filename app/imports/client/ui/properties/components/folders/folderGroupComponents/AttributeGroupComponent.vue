@@ -67,13 +67,14 @@ import FolderGroupChildren from '/imports/client/ui/properties/components/folder
 import doAction from '/imports/client/ui/creature/actions/doAction';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   model: Record<string, any>;
   dataId: string;
 }>();
 
-const store = useStore();
+const store = useStore(key);
 const hover = ref(false);
 
 async function damageProperty({ value, type, ack }: { value: any; type: string; ack?: Function }) {
@@ -108,10 +109,11 @@ async function damageProperty({ value, type, ack }: { value: any; type: string; 
 </script>
 
 <style lang="css" scoped>
-  .attribute {
-    position: relative;
-  }
-  .pointer {
-    cursor: pointer;
-  }
+.attribute {
+  position: relative;
+}
+
+.pointer {
+  cursor: pointer;
+}
 </style>

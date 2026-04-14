@@ -1,6 +1,6 @@
 <template lang="html">
   <dialog-base>
-    <template #replace-toolbar="{flat}">
+    <template #replace-toolbar="{ flat }">
       <property-toolbar
         :model="model"
         :editing="editing"
@@ -12,7 +12,7 @@
         @remove="remove"
         @make-reference="makeReference"
         @toggle-editing="editing = !editing"
-        @color-changed="value => change({path: ['color'], value})"
+        @color-changed="value => change({ path: ['color'], value })"
       />
     </template>
     <v-fade-transition>
@@ -33,9 +33,7 @@
         </v-chip>
       </div>
     </v-fade-transition>
-    <v-fade-transition
-      mode="out-in"
-    >
+    <v-fade-transition mode="out-in">
       <div v-if="!_id" />
       <div
         v-else-if="!ready"
@@ -60,7 +58,7 @@
         @add-child="addLibraryNode"
         @select-sub-property="selectSubProperty"
       />
-      <property-viewer 
+      <property-viewer
         v-else-if="model + '-viewing'"
         :key="_id"
         :model="model"
@@ -68,32 +66,33 @@
         @select-sub-property="selectSubProperty"
       />
     </v-fade-transition>
-    <template v-if="!embedded" #actions>
-      <div
-        class="d-flex justify-end"
-      >
+    <template
+      v-if="!embedded"
+      #actions
+    >
+      <div class="d-flex justify-end">
         <template v-if="selection">
+          <v-btn
+            variant="text"
+            @click="store.dispatch('popDialogStack', false)"
+          >
+            Cancel
+          </v-btn>
+          <v-spacer />
+          <v-btn
+            variant="text"
+            @click="store.dispatch('popDialogStack', true)"
+          >
+            Select
+          </v-btn>
+        </template>
         <v-btn
+          v-else
           variant="text"
-          @click="store.dispatch('popDialogStack', false)"
+          @click="store.dispatch('popDialogStack')"
         >
-          Cancel
+          Done
         </v-btn>
-        <v-spacer />
-        <v-btn
-          variant="text"
-          @click="store.dispatch('popDialogStack', true)"
-        >
-          Select
-        </v-btn>
-      </template>
-      <v-btn
-        v-else
-        variant="text"
-        @click="store.dispatch('popDialogStack')"
-      >
-        Done
-      </v-btn>
       </div>
     </template>
   </dialog-base>
@@ -126,6 +125,7 @@ import { getUserTier } from '/imports/api/users/patreon/tiers';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
   _id?: string;
@@ -135,7 +135,7 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits(['duplicated', 'removed', 'select-sub-property']);
-const store = useStore();
+const store = useStore(key);
 
 const editing = ref(!!props.startInEditTab);
 // currentId lags behind _id by one tick so that events fired by destroying
@@ -364,5 +364,4 @@ function remove() {
 }
 </script>
 
-<style lang="css" scoped>
-</style>
+<style lang="css" scoped></style>

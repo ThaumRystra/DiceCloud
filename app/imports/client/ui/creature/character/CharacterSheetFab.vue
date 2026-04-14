@@ -49,9 +49,10 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ editPermission?: boolean }>();
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 
 const fab = ref(false);
@@ -146,7 +147,7 @@ function addProperty(forcedType: string | null) {
 </script>
 
 <style lang="css" scoped>
-  .insert-creature-property-fab {
-    transition: transform 0.07s cubic-bezier(0.5, 0.2, 0.8, 0.4) 0s;
-  }
+.insert-creature-property-fab {
+  transition: transform 0.07s cubic-bezier(0.5, 0.2, 0.8, 0.4) 0s;
+}
 </style>

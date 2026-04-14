@@ -1,14 +1,12 @@
 <template lang="html">
-  <div
-    class="actions-tab ma-2"
-  >
+  <div class="actions-tab ma-2">
     <column-layout wide-columns>
       <folder-group-card
         v-for="folder in startFolders"
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
       <div
@@ -19,8 +17,8 @@
         <action-card
           :model="action"
           :data-id="action._id"
-          @click="clickProperty({_id: action._id})"
-          @sub-click="_id => clickTreeProperty({_id})"
+          @click="clickProperty({ _id: action._id })"
+          @sub-click="_id => clickTreeProperty({ _id })"
         />
       </div>
       <folder-group-card
@@ -28,7 +26,7 @@
         :key="folder._id"
         :model="folder"
         @click-property="clickProperty"
-        @sub-click="_id => clickTreeProperty({_id})"
+        @sub-click="_id => clickTreeProperty({ _id })"
         @remove="softRemove"
       />
     </column-layout>
@@ -45,9 +43,10 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 const tabName = 'actions';
 
 const { result: startFolders } = autorun(() =>

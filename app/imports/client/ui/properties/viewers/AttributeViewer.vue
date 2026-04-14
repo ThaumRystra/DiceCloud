@@ -9,7 +9,7 @@
       <property-field
         v-if="model.value !== undefined ||
           fallbackValue !== undefined"
-        :name="model.damage !== undefined ? 'Value / Total': 'Value'"
+        :name="model.damage !== undefined ? 'Value / Total' : 'Value'"
         center
       >
         <v-spacer />
@@ -105,7 +105,7 @@
       />
       <property-field
         v-if="model.overridden"
-        :cols="{cols: 6, md: 12}"
+        :cols="{ cols: 6, md: 12 }"
         name="Overridden"
         value="Overriden by another property with the same variable name"
       />
@@ -119,7 +119,7 @@
     <v-row dense>
       <property-field
         v-if="effects && effects.length"
-        :cols="{col: 12}"
+        :cols="{ col: 12 }"
         name="Effects"
       >
         <v-list style="width: 100%;">
@@ -151,10 +151,11 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import sortEffects from '/imports/client/ui/utility/sortEffects';
 import doActionFn from '/imports/client/ui/creature/actions/doAction';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ model: Record<string, any> }>();
 const context = inject<any>('context', {});
-const store = useStore();
+const store = useStore(key);
 
 const attributeTypes: Record<string, string> = {
   ability: 'Ability score',
@@ -233,19 +234,23 @@ async function damageProperty({ type, value }: { type: string; value: number }) 
 </script>
 
 <style lang="css" scoped>
-  .ability-value {
-    font-weight: 600;
-    font-size: 24px !important;
-    color: rgba(0, 0, 0, 0.54);
-  }
-  .mod, .ability-value {
-    text-align: center;
-    width: 100%;
-  }
-  .attribute-value {
-    text-align: center;
-  }
-  .mono {
-    font-family: monospace !important;
-  }
+.ability-value {
+  font-weight: 600;
+  font-size: 24px !important;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.mod,
+.ability-value {
+  text-align: center;
+  width: 100%;
+}
+
+.attribute-value {
+  text-align: center;
+}
+
+.mono {
+  font-family: monospace !important;
+}
 </style>

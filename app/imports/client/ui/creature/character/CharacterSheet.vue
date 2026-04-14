@@ -18,14 +18,14 @@
         class="card-background fill-height"
       >
         <v-window
-          :key=" '' +
+          :key="'' +
             creature.settings.hideSpellsTab +
             creature.settings.showTreeTab
-          "
+            "
           :model-value="$store.getters.tabById(creatureId)"
           @update:model-value="e => $store.commit(
             'setTabForCharacterSheet',
-            {id: creatureId, tab: e}
+            { id: creatureId, tab: e }
           )"
         >
           <v-window-item>
@@ -73,7 +73,7 @@
       :value="$store.getters.tabById(creatureId)"
       @change="e => $store.commit(
         'setTabForCharacterSheet',
-        {id: creatureId, tab: e}
+        { id: creatureId, tab: e }
       )"
     >
       <v-btn>
@@ -130,6 +130,7 @@ import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue'
 import CharacterSheetFab from '/imports/client/ui/creature/character/CharacterSheetFab.vue';
 import ActionsTab from '/imports/client/ui/creature/character/characterSheetTabs/ActionsTab.vue';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   creatureId: string;
@@ -141,7 +142,7 @@ const props = withDefaults(defineProps<{
 });
 
 const emit = defineEmits(['update:tabs']);
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 
 const { result: creature } = autorun(() =>
@@ -201,12 +202,13 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.bottom-nav-btns > .v-btn{
+.bottom-nav-btns > .v-btn {
   min-width: 0 !important;
   padding: 0 !important;
   flex: 1 1 auto !important;
   font-size: 0.6rem !important;
 }
+
 .character-sheet-bottom-fab {
   z-index: 5;
   bottom: 50px;

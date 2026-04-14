@@ -42,6 +42,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import removeCreature from '/imports/api/creature/creatures/methods/removeCreature';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{
   id?: string;
@@ -49,7 +50,7 @@ const props = withDefaults(defineProps<{
   id: undefined,
 });
 
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 const inputName = ref<string | undefined>(undefined);
 
@@ -77,6 +78,4 @@ async function remove() {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

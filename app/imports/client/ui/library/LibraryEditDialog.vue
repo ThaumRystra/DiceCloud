@@ -65,8 +65,8 @@
           :key="model._id"
         >
           <v-list-item-title>
-              <tree-node-view :model="model" />
-            </v-list-item-title>
+            <tree-node-view :model="model" />
+          </v-list-item-title>
           <template #append>
             <v-btn
               color="accent"
@@ -108,9 +108,10 @@ import LibraryNodes, { restoreLibraryNode } from '/imports/api/library/LibraryNo
 import TreeNodeView from '/imports/client/ui/properties/treeNodeViews/TreeNodeView.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ _id: string }>();
-const store = useStore();
+const store = useStore(key);
 const router = useRouter();
 
 const { ready: softRemovedReady } = subscribe(() => ['softRemovedLibraryNodes', props._id]);
@@ -195,6 +196,4 @@ function restore(_id: string) {
 }
 </script>
 
-<style lang="css" scoped>
-
-</style>
+<style lang="css" scoped></style>

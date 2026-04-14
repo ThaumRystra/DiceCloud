@@ -1,7 +1,5 @@
 <template lang="html">
-  <div
-    class="inventory"
-  >
+  <div class="inventory">
     <div class="double-border my-2">
       <div class="label text-center">
         Inventory
@@ -16,7 +14,7 @@
         Net worth:
         <coin-value
           class="ml-2"
-          :value="variables && variables.valueTotal && variables.valueTotal.value|| 0"
+          :value="variables && variables.valueTotal && variables.valueTotal.value || 0"
         />
       </div>
       <div
@@ -57,9 +55,7 @@
       :key="container._id"
       class="double-border my-2"
     >
-      <printed-container
-        :model="container"
-      />
+      <printed-container :model="container" />
       <column-layout wide-columns>
         <printed-item
           v-for="item in container.items"
@@ -86,9 +82,10 @@ import PrintedItem from '/imports/client/ui/creature/character/printedCharacterS
 import PrintedContainer from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();
-const store = useStore();
+const store = useStore(key);
 
 const { result: containers } = autorun(() =>
   CreatureProperties.find({
@@ -186,10 +183,12 @@ function clickProperty(_id: string) {
 .inventory .double-border {
   box-decoration-break: slice;
 }
+
 .inventory-stat {
   font-size: 11pt;
   line-height: 32px;
 }
+
 .inventory-stat > .v-icon {
   margin-right: 8px;
 }

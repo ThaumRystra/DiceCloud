@@ -1,10 +1,10 @@
 import { parse, stringify } from 'css-box-shadow';
 
 // Only supports border radius defined like "20px" or "100%"
-const transformedRadius = (radiusString, deltaWidth, deltaHeight) => {
+const transformedRadius = (radiusString: string, deltaWidth: number, deltaHeight: number) => {
   if (/^\d+\.?\d*px$/.test(radiusString)) {
     //The radius is defined in pixel units, so get the radius as a number
-    const rad = +radiusString.match(/\d+\.?\d*/)[0];
+    const rad = +(radiusString.match(/\d+\.?\d*/)?.[0] ?? 0);
     // Set the x and y radius of the "to" element, compensating for scale
     return `${rad / deltaWidth}px / ${rad / deltaHeight}px`;
   } else if (/^\d+\.?\d*%$/.test(radiusString)) {
@@ -13,32 +13,37 @@ const transformedRadius = (radiusString, deltaWidth, deltaHeight) => {
   }
 };
 
-const transformedBoxShadow = (shadowString, deltaWidth, deltaHeight) => {
+const transformedBoxShadow = (shadowString: string, deltaWidth: number, deltaHeight: number) => {
   if (shadowString === 'none') return shadowString;
   if (shadowString[0] === 'r') {
-    let strings = shadowString.match(/rgba\([^)]+\)[^,]+/g);
-    strings = strings.map(string => {
+    const strings = Array.from(
+      shadowString.match(/rgba\([^)]+\)[^,]+/g) ?? []
+    ).map(string => {
       // Move color to end
-      let m = string.match(/(rgba\([^)]+\))([^,]+)/);
-      return `${m[2].trim()} ${m[1]}`;
+      const m = string.match(/(rgba\([^)]+\))([^,]+)/) ?? [];
+      return `${m[2]?.trim() ?? ''} ${m[1] ?? ''}`;
     });
     shadowString = strings.join(', ');
   }
-  let scaleAverage = (deltaWidth + deltaHeight) / 2;
-  let shadows = parse(shadowString);
+  const scaleAverage = (deltaWidth + deltaHeight) / 2;
+  const shadows = parse(shadowString);
   shadows.forEach(shadow => {
     shadow.offsetX /= deltaWidth;
     shadow.offsetY /= deltaHeight;
     shadow.blurRadius /= scaleAverage;
-    shadow.spreadRadius /= scaleAverage;
+    if (shadow.spreadRadius) shadow.spreadRadius /= scaleAverage;
   })
   return stringify(shadows);
 }
 
-export default function mockElement({ source, target, offset = { x: 0, y: 0 } }) {
+export default function mockElement({ source, target, offset = { x: 0, y: 0 } }: {
+  source: HTMLElement,
+  target: HTMLElement,
+  offset: { x: number, y: number },
+}) {
   if (!source || !target) throw `Can't mock without ${source ? 'target' : 'source'}`;
-  let sourceRect = source.getBoundingClientRect();
-  let targetRect = target.getBoundingClientRect();
+  const sourceRect = source.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
 
   // The dialogs are transformed from their centers, so we need to find the center of each
   const sourceCenter = {
@@ -59,17 +64,17 @@ export default function mockElement({ source, target, offset = { x: 0, y: 0 } })
   target.style.transform = `translate(calc(-50% + ${deltaLeft}px), calc(-50% + ${deltaTop}px)) ` +
     `scale(${deltaWidth}, ${deltaHeight})`;
   // Mock the background color unless it's completely transparent
-  let backgroundColor = getComputedStyle(source).backgroundColor
+  const backgroundColor = getComputedStyle(source).backgroundColor
   if (backgroundColor !== 'rgba(0, 0, 0, 0)') {
     target.style.backgroundColor = backgroundColor;
   }
   // Edge might not combine all border radii into a single value,
   // So we just sample the top left one if we need to
-  let oldRadius = getComputedStyle(source).borderRadius ||
+  const oldRadius = getComputedStyle(source).borderRadius ||
     getComputedStyle(source).borderTopLeftRadius;
-  let borderRadius = transformedRadius(oldRadius, deltaWidth, deltaHeight);
-  target.style.borderRadius = borderRadius;
-  let boxShadow = transformedBoxShadow(
+  const borderRadius = transformedRadius(oldRadius, deltaWidth, deltaHeight);
+  target.style.borderRadius = borderRadius ?? '';
+  const boxShadow = transformedBoxShadow(
     getComputedStyle(source).boxShadow, deltaWidth, deltaHeight
   );
   target.style.setProperty('box-shadow', boxShadow, 'important');

@@ -1,8 +1,6 @@
 <template>
   <v-container class="documentation">
-    <v-row
-      justify="center"
-    >
+    <v-row justify="center">
       <v-col
         cols="12"
         md="8"
@@ -57,8 +55,9 @@ import Docs from '/imports/api/docs/Docs';
 import DocEditForm from '/imports/client/ui/docs/DocEditForm.vue';
 import DocViewer from '/imports/client/ui/docs/DocViewer.vue';
 import DocBreadcrumbs from '/imports/client/ui/docs/DocBreadcrumbs.vue';
+import { key } from '/imports/client/ui/vuexStore';
 
-const store = useStore();
+const store = useStore(key);
 const route = useRoute();
 
 const { ready: docsReady } = subscribe('docs');
@@ -135,6 +134,7 @@ watch(title, (value) => {
 .documentation .fade-transition-enter-active {
   transition: all .25s linear !important;
 }
+
 .documentation .fade-transition-leave-active {
   transition: all .1s linear !important;
 }
