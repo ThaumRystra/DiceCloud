@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "esNext",
+    "module": "esnext",
     "target": "es2018",
     "lib": [
       "esnext",

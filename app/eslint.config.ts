@@ -45,6 +45,6 @@ export default defineConfig(
       'vue/block-order': ['error', {
         order: ['script', 'template', 'style']
       }]
-    }
+    },
   },
 );

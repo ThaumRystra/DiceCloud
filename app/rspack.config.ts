@@ -1,14 +1,11 @@
-const { defineConfig } = require('@meteorjs/rspack');
-const { VueLoaderPlugin } = require('vue-loader');
+import { defineConfig } from '@meteorjs/rspack';
+import { VueLoaderPlugin } from 'vue-loader';
 
-module.exports = defineConfig(Meteor => {
-  const config = {
-    devtool: 'source-map',
-  };
-
-  if (Meteor.isClient) {
-    config.plugins = [new VueLoaderPlugin()];
-    config.module = {
+export default defineConfig(Meteor => ({
+  devtool: 'source-map',
+  ...Meteor.isClient && {
+    plugins: [new VueLoaderPlugin()],
+    module: {
       rules: [
         {
           test: /\.vue$/,
@@ -27,8 +24,6 @@ module.exports = defineConfig(Meteor => {
           type: 'css',
         },
       ],
-    };
-  }
-
-  return config;
-});
+    }
+  },
+}));

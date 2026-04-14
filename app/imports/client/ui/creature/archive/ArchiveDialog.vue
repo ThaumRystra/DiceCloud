@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import { uniq, flatten } from 'lodash';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
-import Creatures from '/imports/api/creature/creatures/Creatures';
+import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
@@ -16,10 +16,10 @@ import { key } from '/imports/client/ui/vuexStore';
 
 const store = useStore(key);
 
-const characterTransform = (char: any) => {
+const characterTransform = (char: Creature & {url?: string, urlName?: string, initial?: string}) => {
   char.url = `/character/${char._id}/${char.urlName || '-'}`;
   char.initial = char.name && char.name[0] || '?';
-  return char;
+  return char as Creature & {url: string, urlName: string, initial: string};
 };
 
 const fileTransform = (file: any) => ({
@@ -65,11 +65,11 @@ const { result: characterSlots } = autorun(() =>
 const { result: folders } = autorun(() => {
   const userId = Meteor.userId();
   if (!userId) return [];
-  const result = CreatureFolders.find(
+  return CreatureFolders.find(
     { owner: userId, archived: { $ne: true } },
     { sort: { left: 1 } },
-  ).map((folder: any) => {
-    folder.creatures = Creatures.find(
+  ).map((folder) => {
+    const creatures = Creatures.find(
       {
         _id: { $in: folder.creatures || [] },
         owner: userId,
@@ -78,9 +78,11 @@ const { result: folders } = autorun(() => {
       fields: creatureFields,
     }
     ).map(characterTransform);
-    return folder;
-  });
-  return result.filter((folder: any) => !!folder.creatures.length);
+    return {
+      ...folder,
+      creatures,
+    }
+  }).filter((folder) => !!folder.creatures.length);
 });
 
 const { result: CreaturesWithNoParty } = autorun(() => {
@@ -101,11 +103,12 @@ const { result: CreaturesWithNoParty } = autorun(() => {
 
 const { result: archivefolders } = autorun(() => {
   const userId = Meteor.userId();
+  if (!userId) return [];
   const result = CreatureFolders.find(
     { owner: userId },
     { sort: { left: 1 } },
-  ).map((folder: any) => {
-    folder.creatures = ArchiveCreatureFiles.find(
+  ).map((folder) => {
+    const creatures = ArchiveCreatureFiles.find(
       {
         'meta.creatureId': { $in: folder.creatures || [] },
         userId,
@@ -113,7 +116,10 @@ const { result: archivefolders } = autorun(() => {
       sort: { 'meta.creatureName': 1 },
     }
     ).map(fileTransform);
-    return folder;
+    return {
+      ...folder,
+      creatures,
+    };
   });
   return result.filter((folder: any) => !!folder.creatures.length);
 });

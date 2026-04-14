@@ -37,14 +37,9 @@
     "Vuex",
     "walkdown"
   ],
-  "javascript.preferences.importModuleSpecifier": "non-relative",
-  "javascript.preferences.importModuleSpecifierEnding": "minimal",
-  "javascript.preferences.organizeImports": {
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.importModuleSpecifierEnding": "minimal",
+  "js/ts.preferences.organizeImports": {
     "enabled": true,
   },
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.preferences.organizeImports": {
-    "enabled": true,
-  }
 }

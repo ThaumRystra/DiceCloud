@@ -83,6 +83,7 @@
     "eslint": "^10.2.0",
     "eslint-plugin-vue": "^10.8.0",
     "eslint-plugin-vuetify": "^2.7.2",
+    "jiti": "^2.6.1",
     "sass": "^1.99.0",
     "sass-loader": "^16.0.7",
     "typescript": "^5.3.3",

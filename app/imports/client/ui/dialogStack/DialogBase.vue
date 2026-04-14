@@ -31,7 +31,7 @@ function back() {
 }
 
 function close() {
-  store.dispatch('popDialogStack');
+  void store.dispatch('popDialogStack');
 }
 </script>
 
