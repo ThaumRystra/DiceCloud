@@ -16,7 +16,7 @@ declare namespace Mongo {
      * Set to `true` to replace any existing schema instead of combining
      */
     replace?: boolean
-    selector?: any;
+    selector?: Record<string, unknown>;
   }
 
   interface Collection<T> {
@@ -38,9 +38,9 @@ declare namespace Mongo {
       options?: {
         multi?: boolean | undefined;
         upsert?: boolean | undefined;
-        arrayFilters?: Array<{ [identifier: string]: any }> | undefined;
+        arrayFilters?: Array<{ [identifier: string]: unknown }> | undefined;
         // Add Collection2 options
-        selector?: Record<string, any>;
+        selector?: Record<string, unknown>;
         getAutoValues?: boolean;
       },
       callback?: FunctionConstructor,
@@ -52,13 +52,13 @@ declare namespace Mongo {
         multi?: boolean | undefined;
         upsert?: boolean | undefined;
         arrayFilters?: {
-          [identifier: string]: any;
+          [identifier: string]: unknown;
         }[] | undefined;
         // Add Collection2 options
-        selector?: Record<string, any>;
+        selector?: Record<string, unknown>;
         getAutoValues?: boolean;
-      }  ,
-      callback?: Function
+      },
+      callback?: () => unknown,
     ): Promise<number>
   }
   interface Cursor<T, U = T> {

@@ -10,7 +10,7 @@ const removeCreatureFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     // Ensure logged in
     const userId = this.userId;
     if (!userId) {

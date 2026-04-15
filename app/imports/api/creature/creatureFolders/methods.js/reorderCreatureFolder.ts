@@ -10,7 +10,7 @@ const reorderCreatureFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, order }) {
+  async run({ _id, order }: { _id: string, order: number }) {
     // Ensure logged in
     const userId = this.userId;
     if (!userId) {
@@ -19,8 +19,6 @@ const reorderCreatureFolder = new ValidatedMethod({
     }
     // Check that this folder is owned by the user
     const existingFolder = await CreatureFolders.findOneAsync(_id);
-    CreatureFolders.findOneAsync(_id);
-    const thing = 2;
     if (existingFolder?.owner !== userId) {
       throw new Meteor.Error('creatureFolders.methods.reorder.denied',
         'This folder does not belong to you');
@@ -29,16 +27,17 @@ const reorderCreatureFolder = new ValidatedMethod({
     await CreatureFolders.updateAsync(_id, { $set: { order } });
     this.unblock();
     // Reorder all the folders with integer numbers in this new order
-    await CreatureFolders.find({
+    const updates = await CreatureFolders.find({
       owner: userId
     }, {
       fields: { order: 1, },
       sort: { order: 1 }
-    }).forEachAsync((folder, index) => {
+    }).mapAsync(async (folder, index) => {
       if (folder.order !== index) {
         return CreatureFolders.updateAsync(_id, { $set: { order: index } });
       }
     });
+    await Promise.all(updates);
   },
 });
 

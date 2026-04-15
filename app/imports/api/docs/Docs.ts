@@ -9,7 +9,8 @@ import '/imports/api/library/methods/index';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
 import { getFilter, rebuildNestedSets, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions';
-import ChildSchema, { TreeDoc } from '/imports/api/parenting/ChildSchema';
+import ChildSchema, { type TreeDoc } from '/imports/api/parenting/ChildSchema';
+import { Roles } from 'meteor/roles';
 
 // Give the docs a common root, so they can share parenting logic
 export const DOC_ROOT_ID = 'DDDDDDDDDDDDDDDDD'
@@ -68,14 +69,14 @@ const schema = new SimpleSchema({});
 schema.extend(DocSchema);
 schema.extend(ChildSchema);
 schema.extend(SoftRemovableSchema);
-// @ts-expect-error No attach schema in types
 Docs.attachSchema(schema);
 
-async function assertDocsEditPermission(userId) {
+async function assertDocsEditPermission(userId: string | null) {
   if (!userId || typeof userId !== 'string') throw new Meteor.Error('No user id provided');
-  const user = await Meteor.users.findOneAsync(userId);
-  if (!user) throw new Meteor.Error('User does not exist');
-  if (!user?.roles?.includes?.('docsWriter')) throw ('Permission denied')
+  const canEdit = await Roles.userIsInRoleAsync(userId, 'DOCS_EDIT');
+  if (!canEdit) {
+    throw new Meteor.Error('permission-denied', 'You don\'t have permission to edit the docs');
+  }
 }
 
 async function getDocLink(doc: Doc, urlName?: string) {
@@ -98,8 +99,8 @@ if (Meteor.isClient) {
   Meteor.startup(async () => {
     if (!await Docs.findOneAsync()) {
       console.info('No docs found, filling documentation with defaults');
-      const string = Assets.getText('docs/defaultDocs.json');
-      const docs = JSON.parse(string);
+      const string = Assets.getText('docs/defaultDocs.json') ?? '[]';
+      const docs = JSON.parse(string) as Doc[];
       for (const doc of docs) {
         await Docs.insertAsync(doc);
       }
@@ -116,25 +117,30 @@ const insertDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ doc, parentId }) {
-    delete doc._id;
+  async run({ doc, parentId }: { doc: Omit<Doc, '_id'>, parentId: string | undefined }) {
     await assertDocsEditPermission(this.userId);
 
+    // @ts-expect-error _id shoudn't exist
+    delete doc._id;
     doc.parentId = parentId;
     doc.root = {
       collection: 'docs',
       id: DOC_ROOT_ID,
     };
 
-    const lastDocs = await Docs.find({}, { sort: { left: -1 }, limit: 1 }).fetchAsync();
-    const lastOrder = lastDocs[0]?.left || 0;
+    const previousDoc = parentId
+      ? await Docs.findOneAsync(parentId)
+      : await Docs.findOneAsync({}, { sort: { left: -1 }, limit: 1 });
+    const lastOrder = previousDoc?.left || 0;
     doc.urlName = 'new-doc-' + (lastOrder + 1);
-    doc.href = await getDocLink(doc);
+    doc.href = await getDocLink(doc as Doc);
+    doc.left = lastOrder + 0.5;
+    doc.right = doc.left;
     if (await Docs.findOneAsync({ href: doc.href })) {
       throw new Meteor.Error('Link collision', 'A document with the same URL already exists');
     }
 
-    const docId = await Docs.insertAsync(doc);
+    const docId = await Docs.insertAsync(doc as Doc);
     await rebuildNestedSets(Docs, DOC_ROOT_ID);
     return docId;
   },
@@ -142,7 +148,7 @@ const insertDoc = new ValidatedMethod({
 
 const updateDoc = new ValidatedMethod({
   name: 'docs.update',
-  validate({ _id, path }) {
+  validate({ _id, path }: { _id: string, path: string[], value: unknown }) {
     if (!_id) return false;
     // We cannot change these fields with a simple update
     switch (path[0]) {
@@ -168,7 +174,7 @@ const updateDoc = new ValidatedMethod({
     if (pathString === 'urlName') {
       const doc = await Docs.findOneAsync(_id);
       if (!doc) throw new Meteor.Error('Not Found', 'The document you are trying to edit was not found');
-      const newLink = await getDocLink(doc, value);
+      const newLink = await getDocLink(doc, value as string);
       if (await Docs.findOneAsync({ href: newLink })) {
         throw new Meteor.Error('Link collision', 'A document with the same URL already exists');
       }
@@ -189,7 +195,7 @@ const pushToDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, value }) {
+  async run({ _id, path, value }: { _id: string, path: string[], value: unknown }) {
     await assertDocsEditPermission(this.userId);
     return await Docs.updateAsync(_id, {
       $push: { [path.join('.')]: value },
@@ -205,7 +211,7 @@ const pullFromDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, itemId }) {
+  async run({ _id, path, itemId }: { _id: string, path: string[], itemId: string }) {
     await assertDocsEditPermission(this.userId);
     return await Docs.updateAsync(_id, {
       $pull: { [path.join('.')]: { _id: itemId } },
@@ -223,9 +229,9 @@ const softRemoveDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     await assertDocsEditPermission(this.userId);
-    softRemove(Docs, _id);
+    await softRemove(Docs, _id);
     await rebuildNestedSets(Docs, DOC_ROOT_ID);
   }
 });
@@ -240,9 +246,9 @@ const restoreDoc = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     await assertDocsEditPermission(this.userId);
-    restore('docs', _id);
+    await restore('docs', _id);
     await rebuildNestedSets(Docs, DOC_ROOT_ID);
   }
 });

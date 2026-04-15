@@ -12,6 +12,7 @@ import removeEmail from '/imports/api/users/methods/removeEmail';
 import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
 import FileStorageStats from '/imports/client/ui/files/FileStorageStats.vue';
 import { key } from '/imports/client/ui/vuexStore';
+import { setDarkMode as setUserDarkMode } from '/imports/api/users/Users';
 
 const store = useStore(key);
 const router = useRouter();
@@ -115,9 +116,9 @@ async function setDarkMode(value: string, ack?: (err?: string) => void) {
     dm = null;
   }
   try {
-    await (Meteor.users as any).setDarkMode.callAsync({ darkMode: dm });
+    await setUserDarkMode.callAsync({ darkMode: dm });
     if (ack) ack();
-  } catch (error: any) {
+  } catch (error) {
     if (ack) ack(error.reason || error.message || error);
     else console.error(error);
   }
@@ -145,9 +146,9 @@ async function generateKey() {
   showApiKey.value = true;
 }
 
-async function verifyEmail(address: string) {
+async function verifyEmail(email: string) {
   try {
-    await (Meteor.users as any).sendVerificationEmail.callAsync({ address });
+    await sendVerificationEmail.callAsync({ address });
   } catch (error: any) {
     emailVerificationError.value = error.reason;
   }

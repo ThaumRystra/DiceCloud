@@ -1,11 +1,15 @@
+import type { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default function getSlotFillFilter({ slot, libraryIds }) {
+export default function getSlotFillFilter({ slot, libraryIds }: {
+  slot: CreaturePropertyTypes['propertySlot'] | CreaturePropertyTypes['class'],
+  libraryIds: string[],
+}) {
 
-  if (!slot) throw 'Slot is required for getSlotFillFilter';
-  if (!libraryIds) throw 'LibraryIds is required for getSlotFillFilter';
+  if (!slot) throw new Meteor.Error('defect', 'Slot is required for getSlotFillFilter');
+  if (!libraryIds) throw new Meteor.Error('defect', 'LibraryIds is required for getSlotFillFilter');
 
-  const filter = {
+  const filter: Mongo.Selector<CreatureProperty> = {
     fillSlots: true,
     removed: { $ne: true },
     $and: [],
@@ -16,19 +20,19 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       getFilter.descendantsOfAllRoots(libraryIds)
     );
   }
-  if (slot.slotType) {
-    filter.$and.push({
+  if ('slotType' in slot && slot.slotType) {
+    filter.$and?.push({
       $or: [{
-        type: slot.slotType
+        type: slot.slotType as never
       }, {
         slotFillerType: slot.slotType,
       }]
     });
   } else if (slot.type === 'class') {
-    const classLevelFilter = {
+    const classLevelFilter: Mongo.Selector<CreatureProperty> = {
       type: 'classLevel',
     };
-    const slotFillerFilter = {
+    const slotFillerFilter: Mongo.Selector<CreatureProperty> = {
       slotFillerType: 'classLevel',
     };
 
@@ -47,12 +51,12 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
       slotFillerFilter['cache.node.level'] = { $gt: slot.level || 0 };
     }
 
-    filter.$and.push({
+    filter.$and?.push({
       $or: [classLevelFilter, slotFillerFilter]
     });
   }
-  const tagsOr = [];
-  const tagsNin = [];
+  const tagsOr: Mongo.Selector<CreatureProperty>[] = [];
+  const tagsNin: string[] = [];
   if (slot.slotTags && slot.slotTags.length) {
     tagsOr.push({ libraryTags: { $all: slot.slotTags } });
   }
@@ -70,9 +74,9 @@ export default function getSlotFillFilter({ slot, libraryIds }) {
     filter.$or = tagsOr;
   }
   if (tagsNin.length) {
-    filter.$and.push({ libraryTags: { $nin: tagsNin } });
+    filter.$and?.push({ libraryTags: { $nin: tagsNin } });
   }
-  if (!filter.$and.length) {
+  if (!filter.$and?.length) {
     delete filter.$and;
   }
   return filter;

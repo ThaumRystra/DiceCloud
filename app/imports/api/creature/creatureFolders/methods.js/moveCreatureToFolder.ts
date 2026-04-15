@@ -10,7 +10,7 @@ const moveCreatureToFolder = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ creatureId, folderId }) {
+  async run({ creatureId, folderId }: { creatureId: string, folderId: string }) {
     // Ensure logged in
     const userId = this.userId;
     if (!userId) {

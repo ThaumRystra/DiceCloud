@@ -1,12 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { fetchDocByRefAsync, rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import getParentRefByTag from './getParentByTag';
-import { RefSchema } from '/imports/api/parenting/ChildSchema';
+import getParentByTag from './getParentByTag';
+import { RefSchema, type Reference, type TreeDoc } from '/imports/api/parenting/ChildSchema';
+import type { Creature } from '/imports/api/creature/creatures/Creatures';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -22,18 +23,25 @@ const insertProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ creatureProperty, parentRef }) {
-    let rootCreature;
-    const parentDoc = await fetchDocByRefAsync(parentRef);
+  async run({ creatureProperty, parentRef }: {
+    creatureProperty: Partial<CreatureProperty>,
+    parentRef: Reference,
+  }) {
+    let rootCreature: Creature | undefined;
+    const parentDoc = await fetchDocByRefAsync<TreeDoc | Creature>(parentRef);
 
     // Check permission to edit
-    if (parentRef.collection === 'creatures') {
+    if (parentRef.collection === 'creatures' && 'owner' in parentDoc) {
       rootCreature = parentDoc;
-    } else if (parentRef.collection === 'creatureProperties') {
+    } else if (parentRef.collection === 'creatureProperties' && 'root' in parentDoc) {
       rootCreature = getRootCreatureAncestor(parentDoc);
       creatureProperty.parentId = parentDoc._id;
-    } else {
-      throw `${parentRef.collection} is not a valid parent collection`
+    }
+
+    if (!rootCreature) {
+      throw new Meteor.Error('invalid-collection',
+        `${parentRef.collection} is not a valid parent collection`
+      );
     }
     await assertEditPermission(rootCreature, this.userId);
 
@@ -69,11 +77,19 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ creatureProperty, creatureId, tag, tagDefaultName }) {
-    let parentRef = getParentRefByTag(creatureId, tag);
+  async run({ creatureProperty, creatureId, tag, tagDefaultName }: {
+    creatureProperty: Partial<CreatureProperty>;
+    creatureId: string;
+    tag: string;
+    tagDefaultName: string;
+  }) {
+    const parent = await getParentByTag(creatureId, tag);
     let insertFolderFirst = false;
 
-    if (!parentRef) {
+    let parentRef;
+    if (parent) {
+      parentRef = { id: parent._id, collection: 'creatureProperties' };
+    } else {
       // Use the creature as the parent and mark that we need to insert the folder first later
       insertFolderFirst = true;
       parentRef = { id: creatureId, collection: 'creatures' };

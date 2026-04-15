@@ -5,19 +5,19 @@ describe('Slot fill filter', function () {
 
   it('Gives error if arguments aren\'t provided', function () {
     assert.throws(
-      () => getSlotFillFilter(undefined),
+      () => getSlotFillFilter(undefined as never),
       null, null, 'Passing undefined should give an error'
     );
     assert.throws(
       () => getSlotFillFilter({
         slot: { slotTags: ['tag1'] },
-      }),
+      } as never),
       null, null, 'Passing no libraryIds should give an error'
     );
     assert.throws(
       () => getSlotFillFilter({
         libraryIds: ['libraryId1'],
-      }),
+      } as never),
       null, null, 'Passing no slot should give an error'
     );
   });
@@ -26,7 +26,7 @@ describe('Slot fill filter', function () {
     const filter = getSlotFillFilter({
       slot: {
         slotTags: ['tag1', 'tag2']
-      },
+      } as never,
       libraryIds: ['libraryId1', 'libraryId2'],
     });
     assert.deepStrictEqual(filter, {
@@ -44,7 +44,7 @@ describe('Slot fill filter', function () {
       slot: {
         slotTags: ['tag1', 'tag2'],
         slotType: 'feature',
-      },
+      } as never,
       libraryIds: ['libraryId1', 'libraryId2']
     });
     assert.deepStrictEqual(filter.$and, [{
@@ -61,11 +61,11 @@ describe('Slot fill filter', function () {
       slot: {
         slotTags: ['tag1', 'tag2'],
         extraTags: [
-          { operation: 'OR', tags: ['tag3', 'tag4'] },
-          { operation: 'NOT', tags: ['tag5', 'tag6'] },
-          { operation: 'NOT', tags: ['tag7', 'tag8'] },
+          { _id: '1', operation: 'OR', tags: ['tag3', 'tag4'] },
+          { _id: '2', operation: 'NOT', tags: ['tag5', 'tag6'] },
+          { _id: '3', operation: 'NOT', tags: ['tag7', 'tag8'] },
         ],
-      },
+      } as never,
       libraryIds: ['libraryId1', 'libraryId2'],
     });
     assert.deepStrictEqual(filter, {

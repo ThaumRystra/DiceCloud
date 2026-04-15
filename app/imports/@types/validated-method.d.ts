@@ -1,16 +1,16 @@
 declare module 'meteor/mdg:validated-method' {
-  type Mixin = (options: ValidatedMethodOptions<any>) => ValidatedMethodOptions<any>;
+  type Mixin = (options: ValidatedMethodOptions<unknown, unknown>) => ValidatedMethodOptions<unknown, unknown>;
 
-  interface ValidatedMethodOptions<TArgs> {
+  interface ValidatedMethodOptions<TArgs, TResult> {
     name: string;
     validate: ((args: TArgs) => void) | null;
-    run: (this: MethodContext, args: TArgs) => any;
+    run: (this: MethodContext, args: TArgs) => TResult;
     mixins?: Mixin[];
     rateLimit?: {
       numRequests: number;
       timeInterval: number;
     };
-    [key: string]: any;
+    [key: string]: unknown;
   }
 
   interface MethodContext {
@@ -21,8 +21,8 @@ declare module 'meteor/mdg:validated-method' {
     unblock(): void;
   }
 
-  export class ValidatedMethod<TArgs = any, TResult = any> {
-    constructor(options: ValidatedMethodOptions<TArgs>);
+  export class ValidatedMethod<TArgs, TResult> {
+    constructor(options: ValidatedMethodOptions<TArgs, TResult>);
     name: string;
     call(args: TArgs, callback?: (error: Meteor.Error | undefined, result?: TResult) => void): TResult | undefined;
     callAsync(args: TArgs): Promise<TResult>;
@@ -31,5 +31,5 @@ declare module 'meteor/mdg:validated-method' {
 }
 
 declare module 'ddp-rate-limiter-mixin' {
-  export const RateLimiterMixin: (options: any) => any;
+  export const RateLimiterMixin: <T>(options: T) => T;
 }

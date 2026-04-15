@@ -5,8 +5,8 @@ import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
 import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
 import { storedIconsSchema } from '/imports/api/icons/Icons';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { ConvertToUnion, InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
-import { Simplify } from 'type-fest';
+import { type ConvertToUnion, type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { type Simplify } from 'type-fest';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 
 const PreComputeCreaturePropertySchema = TypedSimpleSchema.from({

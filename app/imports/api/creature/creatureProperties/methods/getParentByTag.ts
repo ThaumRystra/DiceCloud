@@ -1,7 +1,7 @@
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-export default function getParentByTag(creatureId, tag) {
+export default function getParentByTag(creatureId: string, tag: string) {
   return CreatureProperties.findOneAsync({
     ...getFilter.descendantsOfRoot(creatureId),
     removed: { $ne: true },

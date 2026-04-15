@@ -10,7 +10,7 @@ type QueueItem = {
 const globalState = reactive({ queue: [] as QueueItem[] });
 let lastSnackbarId = 0;
 
-function snackbar(data) {
+function snackbar(data: unknown) {
   globalState.queue.push({
     data, //{text OR content, callback, callbackName} // content is logContent
     id: ++lastSnackbarId,

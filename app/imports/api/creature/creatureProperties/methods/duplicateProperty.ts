@@ -9,11 +9,13 @@ import {
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-var snackbar;
+
+import { type snackbar as snackbarType } from '../../../../client/ui/components/snackbars/SnackbarQueue';
+let snackbar: typeof snackbarType | undefined;
 if (Meteor.isClient) {
-  snackbar = require(
-    '/imports/client/ui/components/snackbars/SnackbarQueue'
-  ).snackbar
+  snackbar = (await import(
+    '../../../../client/ui/components/snackbars/SnackbarQueue'
+  )).snackbar
 }
 
 const DUPLICATE_CHILDREN_LIMIT = 50;
@@ -31,7 +33,7 @@ const duplicateProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     const property = await CreatureProperties.findOneAsync(_id);
     if (!property) throw new Meteor.Error('not-found', 'The source property was not found');
 
@@ -61,7 +63,7 @@ const duplicateProperty = new ValidatedMethod({
     // Alert the user if the limit was hit
     if (nodes.length > DUPLICATE_CHILDREN_LIMIT) {
       nodes.pop();
-      if (Meteor.isClient) {
+      if (snackbar) {
         snackbar({
           text: `Only the first ${DUPLICATE_CHILDREN_LIMIT} children were duplicated`,
         });

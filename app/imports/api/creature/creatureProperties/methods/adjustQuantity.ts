@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
@@ -20,9 +20,10 @@ const adjustQuantity = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, operation, value }) {
+  async run({ _id, operation, value }: { _id: string, operation: 'set' | 'increment', value: number }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
+    if (!property) throw new Meteor.Error('not-found', 'The property to adjust the quantity of was not found')
     const rootCreature = getRootCreatureAncestor(property);
     await assertEditPermission(rootCreature, this.userId);
 
@@ -31,7 +32,11 @@ const adjustQuantity = new ValidatedMethod({
   },
 });
 
-export async function adjustQuantityWork({ property, operation, value }) {
+export async function adjustQuantityWork({ property, operation, value }: {
+  property: CreatureProperty,
+  operation: 'set' | 'increment',
+  value: number
+}) {
   // Check if property has quantity
   const schema = CreatureProperties.simpleSchema(property);
   if (!schema.allowsKey('quantity')) {
@@ -49,7 +54,7 @@ export async function adjustQuantityWork({ property, operation, value }) {
   } else if (operation === 'increment') {
     // value here is 'damage'
     value = -value;
-    const currentQuantity = property.quantity;
+    const currentQuantity = 'quantity' in property ? property.quantity : 0;
     if (currentQuantity + value < 0) value = -currentQuantity;
     await CreatureProperties.updateAsync(property._id, {
       $inc: { quantity: value },

@@ -4,6 +4,8 @@ import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import { key } from '/imports/client/ui/vuexStore';
+import { canPickUsername, setUsername } from '/imports/api/users/Users';
+import errorToString from '/imports/api/utility/errorToString';
 
 const store = useStore(key);
 
@@ -17,10 +19,10 @@ const { result: username } = autorun(() => {
   return user && user.username;
 });
 
-async function change(username: string, ack: Function) {
+async function change(username: string, ack: (error?: unknown) => void) {
   loading.value = true;
   try {
-    const result = await Meteor.users.canPickUsername.callAsync({ username });
+    const result = await canPickUsername.callAsync({ username });
     loading.value = false;
     if (result) {
       valid.value = false;
@@ -30,22 +32,23 @@ async function change(username: string, ack: Function) {
       newUsername.value = username;
       ack();
     }
-  } catch (e: any) {
+  } catch (e) {
     loading.value = false;
     valid.value = false;
-    ack(e.message || e);
+    ack(e);
   }
 }
 
-async function setUsername() {
+async function updateUsername() {
+  if (!newUsername.value) return;
   loading.value = true;
   try {
-    await Meteor.users.setUsername.callAsync({ username: newUsername.value });
+    await setUsername.callAsync({ username: newUsername.value });
     loading.value = false;
-    store.dispatch('popDialogStack');
-  } catch (e: any) {
+    await store.dispatch('popDialogStack');
+  } catch (e) {
     loading.value = false;
-    error.value = e.message || e;
+    error.value = errorToString(e);
   }
 }
 </script>
@@ -69,7 +72,7 @@ async function setUsername() {
         variant="text"
         :disabled="!valid"
         :loading="loading"
-        @click="setUsername"
+        @click="updateUsername"
       >
         Update
       </v-btn>

@@ -45,6 +45,7 @@
     "marked": "^4.3.0",
     "meteor-node-stubs": "^1.2.7",
     "minify-css-string": "^1.0.0",
+    "mongodb": "^4.17.2",
     "moo": "^0.5.2",
     "nearley": "^2.19.1",
     "ngraph.graph": "^20.1.2",

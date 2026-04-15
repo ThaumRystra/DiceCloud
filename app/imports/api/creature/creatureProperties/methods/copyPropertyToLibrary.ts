@@ -1,9 +1,9 @@
 import SimpleSchema from 'simpl-schema';
-import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { ValidatedMethod, type MethodContext } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { RefSchema } from '/imports/api/parenting/ChildSchema';
+import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
+import { RefSchema, type Reference } from '/imports/api/parenting/ChildSchema';
 import {
   assertEditPermission,
   assertDocEditPermission,
@@ -15,7 +15,7 @@ import {
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import Libraries from '/imports/api/library/Libraries';
+import Libraries, { type Library } from '/imports/api/library/Libraries';
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const copyPropertyToLibrary = new ValidatedMethod({
@@ -38,18 +38,20 @@ const copyPropertyToLibrary = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 5000,
   },
-  async run({ propId, parentRef, order }) {
+  async run({ propId, parentRef, order }: { propId: string, parentRef: Reference, order: number }) {
     // get the new ancestry for the properties
-    const parentDoc = fetchDocByRef(parentRef);
+    const parentDoc = fetchDocByRef<Library | LibraryNode>(parentRef);
 
     // Check permission to edit the destination
-    let rootLibrary;
+    let rootLibrary: Library | undefined;
     if (parentRef.collection === 'libraries') {
-      rootLibrary = parentDoc;
-    } else if (parentRef.collection === 'libraryNodes') {
+      rootLibrary = parentDoc as Library;
+    } else if ('root' in parentDoc) {
       rootLibrary = await Libraries.findOneAsync(parentDoc.root.id)
-    } else {
-      throw `${parentRef.collection} is not a valid parent collection`
+    }
+
+    if (!rootLibrary) {
+      throw new Meteor.Error('invalid-reference', `${parentRef.collection} is not a valid parent collection`)
     }
     await assertEditPermission(rootLibrary, this.userId);
 
@@ -63,7 +65,7 @@ const copyPropertyToLibrary = new ValidatedMethod({
   },
 });
 
-async function insertNodeFromProperty(propId, order, method) {
+async function insertNodeFromProperty(propId: string, order: number, method: MethodContext) {
   // Fetch the property and its descendants, provided they have not been
   // removed
   const prop = await CreatureProperties.findOneAsync({
@@ -83,7 +85,6 @@ async function insertNodeFromProperty(propId, order, method) {
   // Make sure we can edit this property
   await assertDocEditPermission(prop, method.userId);
 
-  const oldParentId = prop.parentId;
   const descCount = await CreatureProperties.find({
     ...getFilter.descendants(prop),
     removed: { $ne: true },
@@ -106,7 +107,7 @@ async function insertNodeFromProperty(propId, order, method) {
 
   // If the docs came from a library, that library must consent to this user copying their
   // properties
-  assertSourceLibraryCopyPermission(props, method);
+  await assertSourceLibraryCopyPermission(props, method);
 
   // Give the docs new IDs without breaking internal references
   renewDocIds({
@@ -119,10 +120,10 @@ async function insertNodeFromProperty(propId, order, method) {
   prop.right = Number.MAX_SAFE_INTEGER;
 
   // Clean the props
-  props = cleanProps(props);
+  const cleanedProps = cleanProps(props);
 
   // Insert the props as library nodes
-  for (const p of props) {
+  for (const p of cleanedProps) {
     await LibraryNodes.insertAsync(p);
   }
   return prop;
@@ -134,29 +135,29 @@ async function insertNodeFromProperty(propId, order, method) {
  * @param userId The userId trying to copy these properties to a library
  * Checks that every property can be copied out of the library that originated it by this user
  */
-function assertSourceLibraryCopyPermission(props, method) {
+async function assertSourceLibraryCopyPermission(props: CreatureProperty[], method: MethodContext) {
   // Skip on the client
   if (method.isSimulation) return;
 
   // Get all the library node ids that are sources for these properties
-  const libraryNodeIds = [];
+  const libraryNodeIds: string[] = [];
   props.forEach(prop => {
     if (prop.libraryNodeId) libraryNodeIds.push(prop.libraryNodeId);
   });
   if (!libraryNodeIds.length) return;
 
   // Get the actual library Ids that each of these source nodes came from
-  const sourceLibIds = new Set();
-  LibraryNodes.find({
+  const sourceLibIds = new Set<string>();
+  await LibraryNodes.find({
     _id: { $in: libraryNodeIds }
   }, {
     fields: { root: 1 }
-  }).forEach(node => {
+  }).forEachAsync(node => {
     sourceLibIds.add(node.root.id);
   });
 
   // Assert copy permission on each of those libraries
-  Libraries.find({
+  const assertions = await Libraries.find({
     _id: { $in: Array.from(sourceLibIds) }
   }, {
     fields: {
@@ -167,20 +168,22 @@ function assertSourceLibraryCopyPermission(props, method) {
       public: 1,
       readersCanCopy: 1,
     }
-  }).forEach(lib => {
-    try {
-      assertCopyPermission(lib, method.userId);
-    } catch (e) {
-      throw new Meteor.Error('Copy permission denied',
-        `One of the properties you are copying comes from ${lib.name}, which you do not have permission to copy from`);
-    }
+  }).mapAsync(async (lib) => {
+    return assertCopyPermission(lib, method.userId);
   });
+  try {
+    await Promise.all(assertions);
+  } catch (e) {
+    console.error(e);
+    throw new Meteor.Error('Copy permission denied',
+      'One of the properties you are copying comes from a library you do not have permission to copy from');
+  }
 }
 
-export function cleanProps(props) {
+export function cleanProps(props: CreatureProperty[]) {
   return props.map(prop => {
     const schema = LibraryNodes.simpleSchema(prop);
-    return schema.clean(prop);
+    return schema.clean(prop) as CreatureProperty;
   });
 }
 

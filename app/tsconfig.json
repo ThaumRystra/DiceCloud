@@ -31,7 +31,8 @@
     },
     "moduleResolution": "bundler",
     "types": [
-      "meteor"
+      "meteor",
+      "mocha"
     ]
   },
   "vueCompilerOptions": {

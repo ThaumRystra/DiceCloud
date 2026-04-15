@@ -6,7 +6,7 @@ import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/ge
 
 const flipToggle = new ValidatedMethod({
   name: 'creatureProperties.flipToggle',
-  validate({ _id }) {
+  validate({ _id }: { _id: string }) {
     if (!_id) throw new Meteor.Error('No _id', '_id is required');
   },
   mixins: [RateLimiterMixin],
@@ -19,6 +19,9 @@ const flipToggle = new ValidatedMethod({
     const property = await CreatureProperties.findOneAsync(_id, {
       fields: { type: 1, root: 1, enabled: 1, disabled: 1 }
     });
+    if (!property) {
+      throw new Meteor.Error('not-found', 'The toggle could not be found')
+    }
     if (property.type !== 'toggle') {
       throw new Meteor.Error('wrong property',
         'This method can only be applied to toggles');

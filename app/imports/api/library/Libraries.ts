@@ -8,19 +8,13 @@ import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { getUserTier } from '/imports/api/users/patreon/tiers'
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-/**
- * Libraries are trees of library nodes where each node represents a character
- * property.
- *
- * Libraries can be shared, have multiple readers and writers, and can be
- * subscribed to.
- *
- * Permissions to library nodes are controlled by the libraries they belong to.
- */
-const Libraries = new Mongo.Collection('libraries');
-
-const LibrarySchema = new SimpleSchema({
+const BaseLibrarySchema = TypedSimpleSchema.from({
+  _id: {
+    type: String,
+    max: 32,
+  },
   name: {
     type: String,
     max: STORAGE_LIMITS.name,
@@ -40,8 +34,20 @@ const LibrarySchema = new SimpleSchema({
   },
 });
 
-LibrarySchema.extend(SharingSchema);
+const LibrarySchema = BaseLibrarySchema.extend(SharingSchema);
 
+export type Library = InferType<typeof LibrarySchema>
+
+/**
+ * Libraries are trees of library nodes where each node represents a character
+ * property.
+ *
+ * Libraries can be shared, have multiple readers and writers, and can be
+ * subscribed to.
+ *
+ * Permissions to library nodes are controlled by the libraries they belong to.
+ */
+const Libraries = new Mongo.Collection<Library>('libraries');
 Libraries.attachSchema(LibrarySchema);
 
 export default Libraries;
@@ -51,19 +57,21 @@ const insertLibrary = new ValidatedMethod({
   mixins: [
     simpleSchemaMixin,
   ],
-  schema: LibrarySchema.omit('owner'),
-  async run(library) {
+  validate: LibrarySchema.omit('owner').validator(),
+  async run(library: Omit<Library, 'owner' | '_id'>) {
     if (!this.userId) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         'You need to be logged in to insert a library');
     }
-    const tier = getUserTier(this.userId);
+    const tier = await getUserTier(this.userId);
     if (!tier.paidBenefits) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         `The ${tier.name} tier does not allow you to insert a library`);
     }
-    library.owner = this.userId;
-    return await Libraries.insertAsync(library);
+    return await Libraries.insertAsync({
+      ...library,
+      owner: this.userId,
+    });
   },
 });
 
@@ -72,7 +80,7 @@ const updateLibraryName = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.id
+      regEx: SimpleSchema.RegEx.Id
     },
     name: {
       type: String,
@@ -83,7 +91,7 @@ const updateLibraryName = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, name }) {
+  async run({ _id, name }: { _id: string, name: string }) {
     const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { name } });
@@ -95,7 +103,7 @@ const updateLibraryDescription = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.id
+      regEx: SimpleSchema.RegEx.Id
     },
     description: {
       type: String,
@@ -106,7 +114,7 @@ const updateLibraryDescription = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, description }) {
+  async run({ _id, description }: { _id: string, description: string }) {
     const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { description } });
@@ -118,7 +126,7 @@ const updateLibraryShowInMarket = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.id
+      regEx: SimpleSchema.RegEx.Id
     },
     value: {
       type: Boolean,
@@ -129,7 +137,7 @@ const updateLibraryShowInMarket = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, value }) {
+  async run({ _id, value }: { _id: string, value: boolean }) {
     const library = await Libraries.findOneAsync(_id);
     await assertEditPermission(library, this.userId);
     await Libraries.updateAsync(_id, { $set: { showInMarket: value } });
@@ -141,7 +149,7 @@ const removeLibrary = new ValidatedMethod({
   validate: new SimpleSchema({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.id
+      regEx: SimpleSchema.RegEx.Id
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -149,7 +157,7 @@ const removeLibrary = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     const library = await Libraries.findOneAsync(_id);
     assertOwnership(library, this.userId);
     this.unblock();
@@ -157,7 +165,7 @@ const removeLibrary = new ValidatedMethod({
   }
 });
 
-export async function removeLibaryWork(libraryId) {
+export async function removeLibaryWork(libraryId: string) {
   await Libraries.removeAsync(libraryId);
   await LibraryNodes.removeAsync(getFilter.descendantsOfRoot(libraryId));
 }

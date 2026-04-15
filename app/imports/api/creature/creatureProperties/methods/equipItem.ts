@@ -10,7 +10,7 @@ import getParentRefByTag from './getParentByTag';
 // Equipping or unequipping an item will also change its parent
 const equipItem = new ValidatedMethod({
   name: 'creatureProperties.equip',
-  validate({ _id, equipped }) {
+  validate({ _id, equipped }: { _id: string, equipped: boolean }) {
     if (!_id) throw new Meteor.Error('No _id', '_id is required');
     if (equipped !== true && equipped !== false) {
       throw new Meteor.Error('No equipped', 'equipped is required to be true or false');
@@ -39,10 +39,10 @@ const equipItem = new ValidatedMethod({
     });
     const tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
     let newPosition = 0.5;
-    const newParent = getParentRefByTag(creature._id, tag);
+    const newParent = await getParentRefByTag(creature._id, tag);
     if (newParent) newPosition = newParent.left + 0.5;
 
-    moveWithinRoot.callAsync({
+    await moveWithinRoot.callAsync({
       docRef: {
         id: _id,
         collection: 'creatureProperties',
