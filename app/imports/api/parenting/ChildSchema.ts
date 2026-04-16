@@ -1,24 +1,9 @@
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 import type { Simplify } from 'type-fest';
+import type { ReferenceCollection } from '/imports/api/parenting/reference';
 
-export interface Reference {
-  collection: string,
-  id: string,
-}
-
-const RefSchema = TypedSimpleSchema.from({
-  id: {
-    type: String,
-    max: 32,
-  },
-  collection: {
-    type: String,
-    max: STORAGE_LIMITS.collectionName,
-  },
-});
-
-const ChildSchema = TypedSimpleSchema.from({
+const ChildSchema = <T extends ReferenceCollection>(rootCollections: T[]) => TypedSimpleSchema.from({
   root: {
     type: Object,
   },
@@ -29,6 +14,7 @@ const ChildSchema = TypedSimpleSchema.from({
   'root.collection': {
     type: String,
     max: STORAGE_LIMITS.collectionName,
+    allowedValues: rootCollections,
   },
   // Parent id of a document in the same collection
   // Undefined parent id implies the root is the parent
@@ -72,7 +58,6 @@ export const treeDocFields = {
   right: 1,
 }
 
-export type TreeDoc = Simplify<{ _id: string } & InferType<typeof ChildSchema>>;
+export type TreeDoc = Simplify<{ _id: string } & InferType<ReturnType<typeof ChildSchema>>>;
 
 export default ChildSchema;
-export { RefSchema };

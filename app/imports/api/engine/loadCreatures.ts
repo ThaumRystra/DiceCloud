@@ -1,7 +1,7 @@
 import { debounce } from 'lodash';
-import Creatures, { Creature } from '/imports/api/creature/creatures/Creatures';
+import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
 import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
-import CreatureProperties, { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreatureProperty, type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeCreature from './computeCreature';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
@@ -139,14 +139,14 @@ export function getPropertiesByFilter(
   return props;
 }
 
-export function getCreature(creatureId: string) {
+export async function getCreature(creatureId: string) {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedCreatureDoc = loadedCreature?.creature;
   if (loadedCreatureDoc) {
     return EJSON.clone(loadedCreatureDoc);
   }
   console.time(`Cache miss on Creature: ${creatureId}`);
-  const creature = Creatures.findOne(creatureId);
+  const creature = await Creatures.findOneAsync(creatureId);
   console.timeEnd(`Cache miss on Creature: ${creatureId}`);
   return creature;
 }

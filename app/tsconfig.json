@@ -17,6 +17,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
     "paths": {
       "/imports/*": [
         "./imports/*"

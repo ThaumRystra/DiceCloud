@@ -1,17 +1,10 @@
-import { getCollectionByName, getFilter } from '/imports/api/parenting/parentingFunctions';
-import { TreeDoc } from '/imports/api/parenting/ChildSchema';
+import { getFilter } from '/imports/api/parenting/parentingFunctions';
+import type { SoftRemovableTreeDoc } from '/imports/api/parenting/SoftRemovableSchema';
 
-export async function softRemove(collectionOrName: Mongo.Collection<TreeDoc> | string, docOrId?: TreeDoc | string) {
+export async function softRemove(collection: Mongo.Collection<SoftRemovableTreeDoc>, docOrId?: SoftRemovableTreeDoc | string) {
   const removalDate = new Date();
 
-  let collection: Mongo.Collection<TreeDoc>;
-  if (typeof collectionOrName === 'string') {
-    collection = getCollectionByName(collectionOrName);
-  } else {
-    collection = collectionOrName;
-  }
-
-  let doc: TreeDoc | undefined;
+  let doc: SoftRemovableTreeDoc | undefined;
   if (typeof docOrId === 'string') {
     doc = await collection.findOneAsync(docOrId);
   } else {
@@ -56,16 +49,12 @@ const restoreError = function () {
   );
 };
 
-export async function restore(collectionOrName: Mongo.Collection<TreeDoc> | string, docOrId: TreeDoc | string, extraUpdates?) {
-
-  let collection: Mongo.Collection<TreeDoc>;
-  if (typeof collectionOrName === 'string') {
-    collection = getCollectionByName(collectionOrName);
-  } else {
-    collection = collectionOrName;
-  }
-
-  let doc: TreeDoc | undefined;
+export async function restore(
+  collection: Mongo.Collection<SoftRemovableTreeDoc>,
+  docOrId: SoftRemovableTreeDoc | string,
+  extraUpdates?: Mongo.Modifier<SoftRemovableTreeDoc>
+) {
+  let doc: SoftRemovableTreeDoc | undefined;
   if (typeof docOrId === 'string') {
     doc = await collection.findOneAsync(docOrId);
   } else {

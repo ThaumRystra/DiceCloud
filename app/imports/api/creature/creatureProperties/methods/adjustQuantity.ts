@@ -2,8 +2,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',
@@ -24,8 +24,8 @@ const adjustQuantity = new ValidatedMethod({
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
     if (!property) throw new Meteor.Error('not-found', 'The property to adjust the quantity of was not found')
-    const rootCreature = getRootCreatureAncestor(property);
-    await assertEditPermission(rootCreature, this.userId);
+    const rootDoc = await getDocByRefAsync(property.root);
+    await assertEditPermission(rootDoc, this.userId);
 
     // Do work
     await adjustQuantityWork({ property, operation, value });

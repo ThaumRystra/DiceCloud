@@ -1,8 +1,10 @@
 import { includes } from 'lodash';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import type { Shared } from '/imports/api/sharing/SharingSchema';
 import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
 import { Roles } from 'meteor/roles';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
+import type { Library } from '/imports/api/library/Libraries';
+import type { Creature } from '/imports/api/creature/creatures/Creatures';
 
 function assertIdValid(userId: string | undefined | null): asserts userId {
   if (!userId || typeof userId !== 'string') {
@@ -39,18 +41,14 @@ export function assertOwnership(doc: Shared | undefined, userId: string | undefi
 export async function assertEditPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
   assertIdValid(userId);
   assertDocExists(doc);
-  const user = await Meteor.users.findOneAsync(userId, {
-    fields: {
-      'roles': 1,
-    }
-  });
+  const user = await Meteor.users.findOneAsync(userId);
   if (!user) {
     throw new Meteor.Error('Edit permission denied',
       'No such user exists');
   }
 
   // Admin override
-  if (Roles.userIsInRole(user, 'admin')) {
+  if (await Roles.userIsInRoleAsync(user, 'admin')) {
     return;
   }
 
@@ -72,7 +70,7 @@ export async function assertEditPermission(doc: Shared | undefined, userId: stri
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertCopyPermission(doc: Shared, userId: string | undefined | null): Promise<void> {
+export async function assertCopyPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
   assertIdValid(userId);
   assertDocExists(doc);
   const user = await Meteor.users.findOneAsync(userId, {
@@ -108,10 +106,10 @@ export async function assertCopyPermission(doc: Shared, userId: string | undefin
   }
 }
 
-function getRoot(doc: TreeDoc | Shared | undefined) {
+async function getRoot(doc: TreeDoc | Shared | undefined): Promise<Shared | undefined> {
   assertDocExists(doc);
   if ('root' in doc) {
-    return fetchDocByRef<Shared>(doc.root);
+    return await getDocByRefAsync(doc.root) as Library | Creature;
   } else {
     return doc;
   }
@@ -124,7 +122,7 @@ function getRoot(doc: TreeDoc | Shared | undefined) {
  * Warning: the doc and userId must be set by a trusted source
  */
 export async function assertDocEditPermission(doc: TreeDoc | Shared | undefined, userId: string | null): Promise<void> {
-  const root = getRoot(doc);
+  const root = await getRoot(doc);
   await assertEditPermission(root, userId);
 }
 
@@ -135,11 +133,11 @@ export async function assertDocEditPermission(doc: TreeDoc | Shared | undefined,
  * Warning: the doc and userId must be set by a trusted source
  */
 export async function assertDocCopyPermission(doc: TreeDoc, userId: string): Promise<void> {
-  const root = getRoot(doc);
+  const root = await getRoot(doc);
   await assertCopyPermission(root, userId);
 }
 
-export async function assertViewPermission(doc: Shared, userId: string | undefined | null): Promise<void> {
+export async function assertViewPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
   assertDocExists(doc);
   if (doc.public) return;
   assertIdValid(userId);
@@ -169,7 +167,7 @@ export async function assertViewPermission(doc: Shared, userId: string | undefin
  * Warning: the doc and userId must be set by a trusted source
  */
 export async function assertDocViewPermission(doc: Shared, userId: string | undefined | null): Promise<void> {
-  const root = getRoot(doc);
+  const root = await getRoot(doc);
   await assertViewPermission(root, userId);
 }
 

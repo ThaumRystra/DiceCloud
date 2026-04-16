@@ -16,7 +16,7 @@ const pushToProperty = new ValidatedMethod({
   async run({ _id, path, value }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
-    const rootCreature = getRootCreatureAncestor(property);
+    const rootCreature = await getDocByRefAsync(property);
     await assertEditPermission(rootCreature, this.userId);
 
     const joinedPath = path.join('.');

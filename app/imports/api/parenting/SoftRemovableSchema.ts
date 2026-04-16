@@ -1,5 +1,5 @@
-import SimpleSchema from 'simpl-schema';
-import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
 const SoftRemovableSchema = TypedSimpleSchema.from({
   'removed': {
@@ -16,5 +16,8 @@ const SoftRemovableSchema = TypedSimpleSchema.from({
     max: 32,
   },
 });
+
+export type SoftRemovable = InferType<typeof SoftRemovableSchema>;
+export type SoftRemovableTreeDoc = SoftRemovable & TreeDoc;
 
 export default SoftRemovableSchema;

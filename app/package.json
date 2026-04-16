@@ -13,6 +13,7 @@
     "debug": "meteor --inspect",
     "bundle-viz": "meteor --extra-packages bundle-visualizer --production",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "test": "meteor test --driver-package meteortesting:mocha --port 3001 --raw-logs",
     "test:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ meteor test --once --raw-logs --driver-package meteortesting:mocha",
     "test:watch:coverage": "COVERAGE=1 COVERAGE_OUT_LCOVONLY=1 COVERAGE_OUT_REMAP=1 COVERAGE_APP_FOLDER=$PWD/ TEST_WATCH=1 meteor test --raw-logs --driver-package meteortesting:mocha",

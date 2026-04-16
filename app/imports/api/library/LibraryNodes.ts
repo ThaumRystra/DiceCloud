@@ -3,9 +3,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
-import ChildSchema, { RefSchema } from '/imports/api/parenting/ChildSchema';
+import ChildSchema from '/imports/api/parenting/ChildSchema';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex';
-import Libraries from '/imports/api/library/Libraries';
 import { assertDocEditPermission, assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { softRemove } from '/imports/api/parenting/softRemove';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
@@ -14,11 +13,12 @@ import '/imports/api/library/methods/index';
 import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import { ConvertToUnion, InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { type ConvertToUnion, type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
-import { Simplify } from 'type-fest';
+import type { Simplify } from 'type-fest';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
+
 
 const LibraryNodeSchema = TypedSimpleSchema.from({
   _id: {
@@ -98,6 +98,8 @@ const LibraryNodeSchema = TypedSimpleSchema.from({
   },
 });
 
+export const libraryNodeRootCollections = ['libraries' as const];
+
 export type LibraryNodeTypes = {
   [T in PropertyType]: Simplify<
     { type: T }
@@ -105,7 +107,7 @@ export type LibraryNodeTypes = {
   > & Simplify<
     Exclude<InferType<typeof LibraryNodeSchema>, 'type'>
     & InferType<typeof ColorSchema>
-    & InferType<typeof ChildSchema>
+    & InferType<ReturnType<typeof ChildSchema<typeof libraryNodeRootCollections[number]>>>
     & InferType<typeof SoftRemovableSchema>
   >
 }
@@ -116,7 +118,7 @@ const LibraryNodes = new Mongo.Collection<LibraryNode>('libraryNodes');
 
 // Set up server side search index
 if (Meteor.isServer) {
-  LibraryNodes.createIndexAsync({
+  await LibraryNodes.createIndexAsync({
     'name': 'text',
     'tags': 'text',
   });
@@ -125,7 +127,7 @@ if (Meteor.isServer) {
 const genericLibraryNodeSchema = TypedSimpleSchema.from({})
   .extend(LibraryNodeSchema)
   .extend(ColorSchema)
-  .extend(ChildSchema)
+  .extend(ChildSchema(libraryNodeRootCollections))
   .extend(SoftRemovableSchema);
 
 // Attach the default schema
@@ -149,57 +151,49 @@ const insertNode = new ValidatedMethod({
       type: Object,
       blackbox: true,
     },
-    parentRef: RefSchema,
+    parentId: {
+      type: String,
+    },
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ libraryNode, parentRef }) {
-    // get the new ancestry
-    const parentDoc = fetchDocByRef(parentRef);
+  async run({ libraryNode }: { libraryNode: Partial<LibraryNode>, parentId: string }) {
 
-    // Check permission to edit
-    let rootLibrary;
-    if (parentRef.collection === 'libraries') {
-      rootLibrary = parentDoc;
-    } else if (parentRef.collection === 'libraryNodes') {
-      rootLibrary = await Libraries.findOneAsync(parentDoc.root.id);
-      libraryNode.parentId = parentRef.id;
-    } else {
-      throw `${parentRef.collection} is not a valid parent collection`
+    if (!libraryNode.root) {
+      throw new Meteor.Error('no-root', 'Root must be defined');
     }
-    await assertEditPermission(rootLibrary, this.userId);
 
-    // Set the root of the node we are inserting
-    libraryNode.root = { collection: 'libraries', id: rootLibrary._id };
+    const rootDoc = await getDocByRefAsync(libraryNode.root);
+    await assertEditPermission(rootDoc, this.userId);
 
     // Remove its ID if it came with one to force a random one to be generated
     // server-side
     delete libraryNode._id;
 
     // Insert the node
-    const nodeId = await LibraryNodes.insertAsync(libraryNode);
+    const nodeId = await LibraryNodes.insertAsync(libraryNode as LibraryNode);
 
     // Update the node if it was a reference node
     if (libraryNode.type == 'reference') {
       libraryNode._id = nodeId;
-      updateReferenceNodeWork(libraryNode, this.userId);
+      await updateReferenceNodeWork(libraryNode, this.userId);
     }
 
     // Tree structure changed by insert, reorder the tree
-    await rebuildNestedSets(LibraryNodes, rootLibrary._id);
+    await rebuildNestedSets(LibraryNodes, rootDoc!._id);
 
     // Return the id of the inserted node
     return nodeId;
   },
 });
 
-const updateLibraryNode = new ValidatedMethod({
+const updateLibraryNode = new ValidatedMethod<{ _id: string, path: string[], value: unknown }, Promise<number>>({
   name: 'libraryNodes.update',
-  validate({ _id, path }) {
-    if (!_id) return false;
+  validate: ({ _id, path }) => {
+    if (!_id) throw new Meteor.Error('id-required', '_id is required');
     // We cannot change these fields with a simple update
     switch (path[0]) {
       case 'type':
@@ -207,7 +201,7 @@ const updateLibraryNode = new ValidatedMethod({
       case 'left':
       case 'right':
       case 'parentId':
-        return false;
+        throw new Meteor.Error('invalid-update', 'Can\'t update tree with a simple update, use the dedicated method');
     }
   },
   mixins: [RateLimiterMixin],
@@ -227,11 +221,11 @@ const updateLibraryNode = new ValidatedMethod({
       modifier = { $set: { [pathString]: value } };
     }
     const numUpdated = await LibraryNodes.updateAsync(_id, modifier, {
-      selector: { type: node.type },
+      selector: { type: node!.type },
     });
-    if (node.type == 'reference') {
+    if (node!.type == 'reference') {
       node = await LibraryNodes.findOneAsync(_id);
-      updateReferenceNodeWork(node, this.userId);
+      await updateReferenceNodeWork(node, this.userId);
     }
     return numUpdated;
   },
@@ -245,13 +239,13 @@ const pushToLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, value }) {
+  async run({ _id, path, value }: { _id: string, path: string[], value: unknown }) {
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
     return await LibraryNodes.updateAsync(_id, {
       $push: { [path.join('.')]: value },
     }, {
-      selector: { type: node.type },
+      selector: { type: node!.type },
     });
   }
 });
@@ -264,13 +258,13 @@ const pullFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, itemId }) {
+  async run({ _id, path, itemId }: { _id: string, path: string[], itemId: string }) {
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
     return await LibraryNodes.updateAsync(_id, {
       $pull: { [path.join('.')]: { _id: itemId } },
     }, {
-      selector: { type: node.type },
+      selector: { type: node!.type },
       getAutoValues: false,
     });
   }
@@ -286,10 +280,10 @@ const softRemoveLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
-    softRemove(LibraryNodes, node);
+    return softRemove(LibraryNodes, node);
   }
 });
 
@@ -303,13 +297,13 @@ const restoreLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     // Permissions
     const node = await LibraryNodes.findOneAsync(_id);
     if (!node) return;
     await assertDocEditPermission(node, this.userId);
     // Do work
-    restore(LibraryNodes, node);
+    await restore(LibraryNodes, node);
   }
 });
 

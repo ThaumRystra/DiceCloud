@@ -3,9 +3,9 @@ type TypedSimpleSchema<T> = import('/imports/api/utility/TypedSimpleSchema').Typ
 
 declare namespace Mongo {
   interface CollectionStatic {
-    get: <T>(
+    get: (
       collectionName: string, options?: { connection: Meteor.Connection }
-    ) => Mongo.Collection<T>;
+    ) => Mongo.Collection<unknown>;
   }
   type SchemaOptions = {
     /**

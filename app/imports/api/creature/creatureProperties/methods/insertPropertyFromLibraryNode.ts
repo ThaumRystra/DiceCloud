@@ -1,32 +1,36 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { RefSchema } from '/imports/api/parenting/ChildSchema';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
+import CreatureProperties, { creaturePropertyRootCollections, type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import {
   renewDocIds,
-  fetchDocByRef,
   rebuildNestedSets,
   getFilter
 } from '/imports/api/parenting/parentingFunctions';
 import { union } from 'lodash';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
+import errorToString from '/imports/api/utility/errorToString';
 
 const insertPropertyFromLibraryNode = new ValidatedMethod({
   name: 'creatureProperties.insertPropertyFromLibraryNode',
   validate: new SimpleSchema({
     nodeIds: {
       type: Array,
-      max: 20,
+      maxCount: 20,
+      minCount: 1,
     },
     'nodeIds.$': {
       type: String,
       max: 32,
     },
-    parentRef: {
-      type: RefSchema,
+    root: {
+      type: Object,
+    },
+    'root.collection': {
+      type: String,
+      allowedValues: creaturePropertyRootCollections,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -34,47 +38,49 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ nodeIds, parentRef }) {
-    // get the new ancestry for the properties
-    const parentDoc = fetchDocByRef(parentRef);
+  async run({ nodeIds, root, parentId }: {
+    nodeIds: string[];
+    root: CreatureProperty['root'];
+    parentId: string | null;
+  }) {
+    const rootDoc = await getDocByRefAsync(root);
+    await assertEditPermission(rootDoc, this.userId);
 
-    // Check permission to edit
-    let rootCreature;
-    if (parentRef.collection === 'creatures') {
-      rootCreature = parentDoc;
-    } else if (parentRef.collection === 'creatureProperties') {
-      rootCreature = getRootCreatureAncestor(parentDoc);
-    } else {
-      throw `${parentRef.collection} is not a valid parent collection`
+    let parent: CreatureProperty | null = null;
+    if (parentId) {
+      parent = await CreatureProperties.findOneAsync(parentId) ?? null;
+      if (!parent) throw new Meteor.Error('not-found', 'The parent you are tyring to add a property to could not be found');
     }
-    await assertEditPermission(rootCreature, this.userId);
 
-    const root = { collection: 'creatures', id: rootCreature._id };
-    const parentId = parentRef.id;
-
-    let node;
-    for (const nodeId of nodeIds) {
-      node = await insertPropertyFromNode(nodeId, root, parentId);
-    }
+    const insertedIds = await Promise.all(nodeIds.map((nodeId, index) => insertPropertyFromNode({
+      nodeId,
+      root,
+      parentId,
+      // Add the properties to the end of the parent's children, in nodeId order
+      left: (parent?.right || 1) - 0.5 + (0.001 * index)
+    })));
 
     // Tree structure changed by inserts, reorder the tree
-    await rebuildNestedSets(CreatureProperties, rootCreature._id);
+    await rebuildNestedSets(CreatureProperties, rootDoc!._id);
 
-    // get one of the root inserted docs
-    const lastInsertedId = node?._id;
-    return lastInsertedId;
+    return insertedIds;
   },
 });
 
-async function insertPropertyFromNode(nodeId, root, parentId) {
+async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
+  nodeId: string,
+  root: CreatureProperty['root'],
+  parentId: string | null,
+  left: number,
+}): Promise<string> {
   // Fetch the library node and its descendants, provided they have not been
   // removed
-  let node = await LibraryNodes.findOneAsync({
+  const node = await LibraryNodes.findOneAsync({
     _id: nodeId,
     removed: { $ne: true },
   });
   if (!node) {
-    if (Meteor.isClient) return {};
+    if (Meteor.isClient) return '';
     else {
       throw new Meteor.Error(
         'Insert property from library failed',
@@ -94,8 +100,6 @@ async function insertPropertyFromNode(nodeId, root, parentId) {
 
   // Convert all references into actual nodes
   nodes = await reifyNodeReferences(nodes);
-  // Refetch the root node, it might have been reified
-  node = nodes[0] || node;
 
   // set libraryNodeIds
   storeLibraryNodeReferences(nodes);
@@ -106,20 +110,30 @@ async function insertPropertyFromNode(nodeId, root, parentId) {
     collectionMap: { 'libraryNodes': 'creatureProperties' }
   });
 
+  const props: CreatureProperty[] = nodes as unknown as CreatureProperty[];
+  const rootProp = props[0];
+
   // Mark root node as dirty
-  node.dirty = true;
+  rootProp.dirty = true;
 
   // Move the root node to the end of the order
-  node.left = Number.MAX_SAFE_INTEGER;
+  rootProp.left = left;
+  rootProp.right = left;
+  rootProp.parentId = parentId ?? undefined;
+
+  //set the roots
+  props.forEach(prop => {
+    prop.root = root;
+  });
 
   // Insert the creature properties
-  for (const n of nodes) {
+  for (const n of props) {
     await CreatureProperties.insertAsync(n);
   }
-  return node;
+  return rootProp._id;
 }
 
-export function storeLibraryNodeReferences(nodes) {
+export function storeLibraryNodeReferences(nodes: (LibraryNode & { libraryNodeId?: string })[]) {
   nodes.forEach(node => {
     if (node.libraryNodeId) return;
     node.libraryNodeId = node._id;
@@ -128,13 +142,13 @@ export function storeLibraryNodeReferences(nodes) {
 
 // Covert node references into actual nodes
 // TODO: check permissions for each library a reference node references
-export async function reifyNodeReferences(nodes, visitedRefs = new Set(), depth = 0) {
+export async function reifyNodeReferences(nodes: LibraryNode[], visitedRefs = new Set<string>(), depth = 0) {
   depth += 1;
   // New nodes added this function
-  const newNodes = [];
+  const newNodes: LibraryNode[] = [];
 
   // Filter out the reference nodes we replace
-  const resultingNodes = [];
+  const resultingNodes: LibraryNode[] = [];
   for (const node of nodes) {
     // This isn't a reference node, continue as normal
     if (node.type !== 'reference') {
@@ -150,14 +164,16 @@ export async function reifyNodeReferences(nodes, visitedRefs = new Set(), depth 
       continue;
     }
 
-    let referencedNode;
+    let referencedNode: LibraryNode | undefined;
     try {
-      referencedNode = fetchDocByRef(node.ref);
+      if (!node.ref.collection || !node.ref.id) continue;
+      referencedNode = await getDocByRefAsync({ id: node.ref.id, collection: node.ref.collection });
+      if (!referencedNode) throw new Error('The referenced library property does not exist');
       referencedNode.tags = union(node.tags, referencedNode.tags);
       // We are definitely replacing this node, so add it to the list
       visitedRefs.add(node._id);
     } catch (e) {
-      node.cache = { error: e.reason || e.message || e.toString() };
+      node.cache = { error: errorToString(e) };
       resultingNodes.push(node);
       continue;
     }

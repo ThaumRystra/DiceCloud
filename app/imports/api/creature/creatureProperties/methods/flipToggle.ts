@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
 const flipToggle = new ValidatedMethod({
   name: 'creatureProperties.flipToggle',
@@ -30,8 +30,8 @@ const flipToggle = new ValidatedMethod({
       throw new Meteor.Error('Computed toggle',
         'Can\'t flip a toggle that is computed')
     }
-    const rootCreature = getRootCreatureAncestor(property);
-    await assertEditPermission(rootCreature, this.userId);
+    const rootDoc = await getDocByRefAsync(property.root);
+    await assertEditPermission(rootDoc, this.userId);
 
     // Invert the current value, disabled is the canonical store of value
     const currentValue = !property.disabled;

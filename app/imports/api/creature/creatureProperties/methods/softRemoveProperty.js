@@ -19,7 +19,7 @@ const softRemoveProperty = new ValidatedMethod({
   async run({ _id }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
-    const rootCreature = getRootCreatureAncestor(property);
+    const rootCreature = await getDocByRefAsync(property);
     await assertEditPermission(rootCreature, this.userId);
 
     // Do work

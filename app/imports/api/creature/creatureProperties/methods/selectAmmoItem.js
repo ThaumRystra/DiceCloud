@@ -20,7 +20,7 @@ const selectAmmoItem = new ValidatedMethod({
   async run({ actionId, itemId, itemConsumedIndex }) {
     // Permissions
     const action = await CreatureProperties.findOneAsync(actionId);
-    const rootCreature = getRootCreatureAncestor(action);
+    const rootCreature = await getDocByRefAsync(action);
     await assertEditPermission(rootCreature, this.userId);
 
     // Check that this index has a document to edit

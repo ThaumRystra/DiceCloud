@@ -1,6 +1,8 @@
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
 
+export const allowedLibraryNodeReferenceCollections = ['libraryNodes' as const];
+
 const ReferenceSchema = createPropertySchema({
   ref: {
     type: Object,
@@ -14,6 +16,7 @@ const ReferenceSchema = createPropertySchema({
     type: String,
     optional: true,
     max: STORAGE_LIMITS.collectionName,
+    allowedValues: allowedLibraryNodeReferenceCollections,
   },
   // Denormalised store of referenced property's details
   cache: {

@@ -131,6 +131,8 @@ const DenormalisedOnlyCreaturePropertySchema = TypedSimpleSchema.from({
 
 const CreaturePropertySchema = PreComputeCreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
 
+export const creaturePropertyRootCollections = ['creatures' as const];
+
 export type CreaturePropertyTypes = {
   [T in PropertyType]: Simplify<
     { type: T }
@@ -138,7 +140,7 @@ export type CreaturePropertyTypes = {
   > & Simplify<
     Exclude<InferType<typeof CreaturePropertySchema>, 'type'>
     & InferType<typeof ColorSchema>
-    & InferType<typeof ChildSchema>
+    & InferType<ReturnType<typeof ChildSchema<typeof creaturePropertyRootCollections[number]>>>
     & InferType<typeof SoftRemovableSchema>
   >
 }
@@ -150,7 +152,7 @@ const CreatureProperties = new Mongo.Collection<CreatureProperty>('creaturePrope
 const genericCreaturePropertySchema = TypedSimpleSchema.from({})
   .extend(CreaturePropertySchema)
   .extend(ColorSchema)
-  .extend(ChildSchema)
+  .extend(ChildSchema(creaturePropertyRootCollections))
   .extend(SoftRemovableSchema);
 
 // Attach the default schema

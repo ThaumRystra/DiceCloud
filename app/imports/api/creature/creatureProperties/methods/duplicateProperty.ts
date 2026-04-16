@@ -3,7 +3,6 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import {
   getFilter,
   renewDocIds
@@ -11,6 +10,7 @@ import {
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
 import { type snackbar as snackbarType } from '../../../../client/ui/components/snackbars/SnackbarQueue';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
 let snackbar: typeof snackbarType | undefined;
 if (Meteor.isClient) {
   snackbar = (await import(
@@ -37,9 +37,9 @@ const duplicateProperty = new ValidatedMethod({
     const property = await CreatureProperties.findOneAsync(_id);
     if (!property) throw new Meteor.Error('not-found', 'The source property was not found');
 
-    const creature = getRootCreatureAncestor(property);
+    const rootDoc = await getDocByRefAsync(property.root);
 
-    await assertEditPermission(creature, this.userId);
+    await assertEditPermission(rootDoc, this.userId);
 
     // Renew the doc ID
     const randomSrc = DDP.randomStream('duplicateProperty');

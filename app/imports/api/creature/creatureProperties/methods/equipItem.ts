@@ -3,9 +3,9 @@ import CreatureProperties from '/imports/api/creature/creatureProperties/Creatur
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import getParentRefByTag from './getParentByTag';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
 // Equipping or unequipping an item will also change its parent
 const equipItem = new ValidatedMethod({
@@ -27,11 +27,11 @@ const equipItem = new ValidatedMethod({
       'Could not find the item to equip or unequip');
     if (item.type !== 'item') throw new Meteor.Error('wrong type',
       'Equip and unequip can only be performed on items');
-    const creature = getRootCreatureAncestor(item);
-    if (!creature) throw new Meteor.Error('creature not found',
+    const rootDoc = await getDocByRefAsync(item.root);
+    if (!rootDoc) throw new Meteor.Error('creature not found',
       'The item you are trying to equip is not on a creature'
     );
-    await assertEditPermission(creature, this.userId);
+    await assertEditPermission(rootDoc, this.userId);
     await CreatureProperties.updateAsync(_id, {
       $set: { equipped, dirty: true },
     }, {
@@ -39,7 +39,7 @@ const equipItem = new ValidatedMethod({
     });
     const tag = equipped ? BUILT_IN_TAGS.equipment : BUILT_IN_TAGS.carried;
     let newPosition = 0.5;
-    const newParent = await getParentRefByTag(creature._id, tag);
+    const newParent = await getParentRefByTag(rootDoc._id, tag);
     if (newParent) newPosition = newParent.left + 0.5;
 
     await moveWithinRoot.callAsync({

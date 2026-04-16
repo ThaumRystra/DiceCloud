@@ -1,38 +1,18 @@
 import { chain, reverse } from 'lodash';
-import { type TreeDoc, treeDocFields, type Reference } from '/imports/api/parenting/ChildSchema';
+import { type TreeDoc, treeDocFields } from '/imports/api/parenting/ChildSchema';
 import { getProperties } from '/imports/api/engine/loadCreatures';
 import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import type { AnyBulkWriteOperation, Collection as MongoCollection } from 'mongodb';
+import type { Reference, ReferenceCollection } from '/imports/api/parenting/reference';
 
-export function getCollectionByName<T = TreeDoc>(name: string): Mongo.Collection<T> {
-  const collection = Mongo.Collection.get<T>(name)
+export function getCollectionByName(name: string): Mongo.Collection<unknown> {
+  const collection = Mongo.Collection.get(name)
   if (!collection) {
     throw new Meteor.Error('bad-collection-reference',
       `Parent references collection ${name}, which does not exist`
     );
   }
   return collection;
-}
-
-function assertDocFound(doc: object | undefined, ref: Reference): asserts doc {
-  if (!doc) {
-    throw new Meteor.Error('document-not-found',
-      `No document could be found with id: ${ref.id} in ${ref.collection}`
-    );
-  }
-}
-
-export async function fetchDocByRefAsync<T extends object = TreeDoc>(ref: Reference): Promise<T> {
-  const collection = getCollectionByName<T>(ref.collection);
-  const doc = await collection.findOneAsync(ref.id);
-  assertDocFound(doc, ref);
-  return doc;
-}
-
-export function fetchDocByRef<T extends object>(ref: Reference): T {
-  const doc = getCollectionByName<T>(ref.collection).findOne(ref.id);
-  assertDocFound(doc, ref);
-  return doc;
 }
 
 export interface TreeNode<T> {
@@ -319,7 +299,7 @@ export const getFilter = {
  */
 export function renewDocIds({ docArray, collectionMap = {}, idMap = {} }: {
   docArray: TreeDoc[],
-  collectionMap?: Record<string, string>,
+  collectionMap?: Partial<Record<ReferenceCollection, ReferenceCollection>>,
   idMap?: Record<string, string>,
 }) {
   // idMap is a map of {oldId: newId}

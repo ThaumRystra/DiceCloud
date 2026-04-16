@@ -26,6 +26,7 @@ export default defineConfig(
       quotes: ['error', 'single'],
       'prefer-const': 'error',
       '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/switch-exhaustiveness-check': 'error'
     }
   },
   pluginVue.configs['flat/recommended'],
