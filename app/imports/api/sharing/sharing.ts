@@ -1,15 +1,32 @@
-import SimpleSchema from 'simpl-schema';
 import { assertOwnership } from '/imports/api/sharing/sharingPermissions';
-import { getCollectionByName, fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
-import { RefSchema } from '/imports/api/parenting/ChildSchema';
+import { getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
+import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+
+const sharableCollections = ['libraries' as const, 'creatures' as const];
+
+const sharableCollectionReference = TypedSimpleSchema.from({
+  id: {
+    type: String,
+    max: 32,
+  },
+  collection: {
+    type: String,
+    max: STORAGE_LIMITS.collectionName,
+    allowedValues: sharableCollections,
+  },
+})
 
 const setPublic = new ValidatedMethod({
   name: 'sharing.setPublic',
-  validate: new SimpleSchema({
-    docRef: RefSchema,
+  validate: TypedSimpleSchema.from({
+    docRef: {
+      type: sharableCollectionReference,
+    },
     isPublic: { type: Boolean },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -18,7 +35,7 @@ const setPublic = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, isPublic }) {
-    const doc = fetchDocByRef(docRef);
+    const doc = await getDocByRefAsync(docRef);
     assertOwnership(doc, this.userId);
     return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { public: isPublic },
@@ -28,8 +45,10 @@ const setPublic = new ValidatedMethod({
 
 const setReadersCanCopy = new ValidatedMethod({
   name: 'sharing.setReadersCanCopy',
-  validate: new SimpleSchema({
-    docRef: RefSchema,
+  validate: TypedSimpleSchema.from({
+    docRef: {
+      type: sharableCollectionReference
+    },
     readersCanCopy: { type: Boolean },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -38,7 +57,7 @@ const setReadersCanCopy = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, readersCanCopy }) {
-    const doc = fetchDocByRef(docRef);
+    const doc = await getDocByRefAsync(docRef);
     assertOwnership(doc, this.userId);
     return await getCollectionByName(docRef.collection).updateAsync(docRef.id, {
       $set: { readersCanCopy },
@@ -48,8 +67,10 @@ const setReadersCanCopy = new ValidatedMethod({
 
 const updateUserSharePermissions = new ValidatedMethod({
   name: 'sharing.updateUserSharePermissions',
-  validate: new SimpleSchema({
-    docRef: RefSchema,
+  validate: TypedSimpleSchema.from({
+    docRef: {
+      type: sharableCollectionReference,
+    },
     userId: {
       type: String,
       max: 32,
@@ -65,7 +86,7 @@ const updateUserSharePermissions = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, userId, role }) {
-    const doc = fetchDocByRef(docRef);
+    const doc = await getDocByRefAsync(docRef);
     if (role === 'none') {
       // only assert ownership if you aren't removing yourself
       if (this.userId !== userId) {
@@ -75,7 +96,7 @@ const updateUserSharePermissions = new ValidatedMethod({
         $pullAll: { readers: userId, writers: userId },
       });
     }
-    if (doc.owner === userId) {
+    if (doc?.owner === userId) {
       throw new Meteor.Error('Sharing update failed',
         'User is already the owner of this document');
     }
@@ -96,8 +117,10 @@ const updateUserSharePermissions = new ValidatedMethod({
 
 const transferOwnership = new ValidatedMethod({
   name: 'sharing.transferOwnership',
-  validate: new SimpleSchema({
-    docRef: RefSchema,
+  validate: TypedSimpleSchema.from({
+    docRef: {
+      type: sharableCollectionReference,
+    },
     userId: {
       type: String,
       max: 32,
@@ -109,12 +132,12 @@ const transferOwnership = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ docRef, userId }) {
-    const doc = fetchDocByRef(docRef);
+    const doc = await getDocByRefAsync(docRef);
     assertOwnership(doc, this.userId);
 
     const collection = getCollectionByName(docRef.collection);
 
-    const tier = getUserTier(userId);
+    const tier = await getUserTierAsync(userId);
     if (docRef.collection === 'creatures') {
       const currentCharacterCount = await collection.find({
         owner: userId,

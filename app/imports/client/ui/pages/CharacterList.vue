@@ -4,7 +4,7 @@ import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
@@ -72,7 +72,7 @@ const { result: creatureCount } = autorun(() => {
 
 const { result: tier } = autorun(() => {
   const userId = Meteor.userId();
-  return getUserTier(userId);
+  return getUserTierAsync(userId);
 });
 
 const characterSpaceLeft = computed(() => {

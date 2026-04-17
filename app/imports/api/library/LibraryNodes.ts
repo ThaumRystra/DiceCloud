@@ -19,7 +19,6 @@ import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 import type { Simplify } from 'type-fest';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
-
 const LibraryNodeSchema = TypedSimpleSchema.from({
   _id: {
     type: String,
@@ -136,7 +135,7 @@ LibraryNodes.attachSchema(genericLibraryNodeSchema);
 // Attach the schemas for each type
 let key: keyof typeof propertySchemasIndex;
 for (key in propertySchemasIndex) {
-  const schema = TypedSimpleSchema.from({})
+  const schema = new SimpleSchema({})
     .extend(propertySchemasIndex[key])
     .extend(genericLibraryNodeSchema);
   LibraryNodes.attachSchema(schema, {

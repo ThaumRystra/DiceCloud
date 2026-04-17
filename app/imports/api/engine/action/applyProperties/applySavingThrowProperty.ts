@@ -1,4 +1,4 @@
-import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getFromScope } from '../../shared/scope';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { applyDefaultAfterPropTasks, applyTaskToEachTarget } from '/imports/api/engine/action/functions/applyTaskGroups';

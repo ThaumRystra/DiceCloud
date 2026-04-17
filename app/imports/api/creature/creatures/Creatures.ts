@@ -2,7 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
 import SharingSchema from '/imports/api/sharing/SharingSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 import type { Simplify } from 'type-fest';
 
 const CreatureSettingsSchema = TypedSimpleSchema.from({

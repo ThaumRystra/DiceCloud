@@ -21,7 +21,7 @@ import {
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import copyLibraryNodeTo from '/imports/api/library/methods/copyLibraryNodeTo';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
@@ -212,7 +212,7 @@ async function pull({ path, ack }: { path: string[]; ack?: Function }) {
 }
 
 function addLibraryNode({ elementId, suggestedType }: { elementId: string; suggestedType?: string }) {
-  const tier = getUserTier(Meteor.userId());
+  const tier = getUserTierAsync(Meteor.userId());
   if (!(tier && tier.paidBenefits)) {
     store.commit('pushDialogStack', {
       component: 'tier-too-low-dialog',

@@ -3,7 +3,7 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 
-const updateCreature = new ValidatedMethod({
+const updateCreature = new ValidatedMethod<{ _id: string, path: string[], value: unknown }, Promise<number>>({
   name: 'creatures.update',
   validate({ _id, path }) {
     if (!_id) return false;
@@ -31,11 +31,11 @@ const updateCreature = new ValidatedMethod({
     const creature = await Creatures.findOneAsync(_id);
     await assertEditPermission(creature, this.userId);
     if (value === undefined || value === null) {
-      await Creatures.updateAsync(_id, {
+      return await Creatures.updateAsync(_id, {
         $unset: { [path.join('.')]: 1 },
       });
     } else {
-      await Creatures.updateAsync(_id, {
+      return await Creatures.updateAsync(_id, {
         $set: { [path.join('.')]: value },
       });
     }

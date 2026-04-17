@@ -1,8 +1,10 @@
+import type { OptionalId } from 'mongodb';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 
-export default function defaultCharacterProperties(creatureId) {
-  if (!creatureId) throw 'creatureId is required';
-  const creatureRef = { collection: 'creatures', id: creatureId };
+export default function defaultCharacterProperties(creatureId: string): OptionalId<CreatureProperty>[] {
+  if (!creatureId) throw new Meteor.Error('invalid-argument', 'creatureId is required');
+  const creatureRef = { collection: 'creatures' as const, id: creatureId };
   const randomSrc = DDP.randomStream('defaultProperties');
   const inventoryId = randomSrc.id();
   return [
@@ -20,6 +22,7 @@ export default function defaultCharacterProperties(creatureId) {
       right: 2,
       parentId: creatureId,
       root: creatureRef,
+      extraTags: [],
     }, {
       _id: inventoryId,
       type: 'folder',
@@ -43,7 +46,7 @@ export default function defaultCharacterProperties(creatureId) {
       tags: [BUILT_IN_TAGS.carried],
       left: 6,
       right: 7,
-      parent: inventoryId,
+      parentId: inventoryId,
       root: creatureRef,
     },
   ];

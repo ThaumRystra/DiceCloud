@@ -2,7 +2,7 @@
 import { useStore } from 'vuex';
 import { Meteor } from 'meteor/meteor';
 import { insertNode } from '/imports/api/library/LibraryNodes';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{
@@ -16,7 +16,7 @@ const store = useStore(key);
 
 function insertLibraryNode() {
   const libraryId = props.libraryId;
-  const tier = getUserTier(Meteor.userId());
+  const tier = getUserTierAsync(Meteor.userId());
   if (!(tier && tier.paidBenefits)) {
     store.commit('pushDialogStack', {
       component: 'tier-too-low-dialog',

@@ -2,10 +2,9 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import SharingSchema from '/imports/api/sharing/SharingSchema';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin';
 import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { getUserTier } from '/imports/api/users/patreon/tiers'
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers'
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
@@ -54,16 +53,13 @@ export default Libraries;
 
 const insertLibrary = new ValidatedMethod({
   name: 'libraries.insert',
-  mixins: [
-    simpleSchemaMixin,
-  ],
-  validate: LibrarySchema.omit('owner').validator(),
-  async run(library: Omit<Library, 'owner' | '_id'>) {
+  validate: LibrarySchema.omit('owner', '_id').validator(),
+  async run(library) {
     if (!this.userId) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         'You need to be logged in to insert a library');
     }
-    const tier = await getUserTier(this.userId);
+    const tier = await getUserTierAsync(this.userId);
     if (!tier.paidBenefits) {
       throw new Meteor.Error('Libraries.methods.insert.denied',
         `The ${tier.name} tier does not allow you to insert a library`);

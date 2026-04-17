@@ -6,7 +6,7 @@ import { autorun, subscribe } from 'vue-meteor-tracker';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
 import Invites from '/imports/api/users/Invites';
 import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import addEmail from '/imports/api/users/methods/addEmail';
 import removeEmail from '/imports/api/users/methods/removeEmail';
 import CreatureStorageStats from '/imports/client/ui/creature/creatureList/CreatureStorageStats.vue';
@@ -45,7 +45,7 @@ subscribe(() => [
 const entitledCents = computed(() => getEntitledCents(user.value));
 const tier = computed(() => {
   if (!user.value) return {};
-  return getUserTier(user.value);
+  return getUserTierAsync(user.value);
 });
 
 const showApiKey = ref(false);

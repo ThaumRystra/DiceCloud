@@ -1,5 +1,4 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import SimpleSchema from 'simpl-schema';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
@@ -9,18 +8,20 @@ import {
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 
-var snackbar;
+import { type snackbar as snackbarType } from '../../../client/ui/components/snackbars/SnackbarQueue';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+let snackbar: typeof snackbarType | undefined;
 if (Meteor.isClient) {
-  snackbar = require(
-    '/imports/client/ui/components/snackbars/SnackbarQueue'
-  ).snackbar
+  snackbar = (await import(
+    '../../../client/ui/components/snackbars/SnackbarQueue'
+  )).snackbar
 }
 
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const duplicateLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.duplicate',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     _id: {
       type: String,
       max: 32,
@@ -47,11 +48,9 @@ const duplicateLibraryNode = new ValidatedMethod({
 
     if (nodes.length > DUPLICATE_CHILDREN_LIMIT) {
       nodes.pop();
-      if (Meteor.isClient) {
-        snackbar({
-          text: `Only the first ${DUPLICATE_CHILDREN_LIMIT} children were duplicated`,
-        });
-      }
+      snackbar?.({
+        text: `Only the first ${DUPLICATE_CHILDREN_LIMIT} children were duplicated`,
+      });
     }
 
     // Give the docs new IDs without breaking internal references

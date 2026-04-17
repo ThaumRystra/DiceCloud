@@ -3,7 +3,7 @@ import { ref, computed, reactive, watch, toRef, provide } from 'vue';
 import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../../../api/engine/shared/scope';
 import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import Libraries from '/imports/api/library/Libraries';

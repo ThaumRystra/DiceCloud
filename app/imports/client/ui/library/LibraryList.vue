@@ -8,7 +8,7 @@ import { union } from 'lodash';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import LibraryCollections, { insertLibraryCollection } from '/imports/api/library/LibraryCollections';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import LibraryListTile from '/imports/client/ui/library/LibraryListTile.vue';
 import LibraryCollectionHeader from '/imports/client/ui/library/LibraryCollectionHeader.vue';
 import { autorunAsync } from '/imports/client/ui/autorunAsync';
@@ -31,7 +31,7 @@ const openCollections = ref<string[]>([]);
 const { ready: librariesReady } = subscribe('libraries');
 
 const { result: paidBenefits } = autorunAsync(async () => {
-  const tier = await getUserTier(Meteor.userId());
+  const tier = await getUserTierAsync(Meteor.userId());
   return tier && tier.paidBenefits;
 });
 

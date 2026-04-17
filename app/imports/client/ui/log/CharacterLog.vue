@@ -4,7 +4,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { Tracker } from 'meteor/tracker';
 import CreatureLogs, { logRoll } from '/imports/api/creature/log/CreatureLogs';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../../api/engine/shared/scope';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import { parse, prettifyParseError } from '/imports/parser/parser';
 import resolve from '/imports/parser/resolve';

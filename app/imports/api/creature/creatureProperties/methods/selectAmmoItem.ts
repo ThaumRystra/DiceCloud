@@ -2,8 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
 
 const selectAmmoItem = new ValidatedMethod({
   name: 'creatureProperties.selectAmmoItem',
@@ -17,11 +16,21 @@ const selectAmmoItem = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ actionId, itemId, itemConsumedIndex }) {
+  async run({ actionId, itemId, itemConsumedIndex }: {
+    actionId: string,
+    itemId: string,
+    itemConsumedIndex: number,
+  }) {
     // Permissions
     const action = await CreatureProperties.findOneAsync(actionId);
-    const rootCreature = await getDocByRefAsync(action);
-    await assertEditPermission(rootCreature, this.userId);
+    assertDocExists(action);
+    await assertDocEditPermission(action, this.userId);
+
+    // Check that the property is an action
+    if (action.type !== 'action') {
+      throw new Meteor.Error('Invalid property type',
+        'Could not set ammo, because the property is not an action');
+    }
 
     // Check that this index has a document to edit
     const itemConsumed = action.resources.itemsConsumed[itemConsumedIndex];

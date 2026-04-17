@@ -9,7 +9,7 @@ import PrintedStats from '/imports/client/ui/creature/character/printedCharacter
 import PrintedInventory from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedInventory.vue';
 import PrintedSpells from '/imports/client/ui/creature/character/printedCharacterSheet/PrintedSpells.vue';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../../../../api/engine/shared/scope';
 import QrcodeVue from 'qrcode.vue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import { key } from '/imports/client/ui/vuexStore';

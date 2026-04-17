@@ -1,7 +1,7 @@
-import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-const ExperienceSchema = new SimpleSchema({
+export const JournalEntrySchema = TypedSimpleSchema.from({
   title: {
     type: String,
     optional: true,
@@ -46,4 +46,4 @@ const ExperienceSchema = new SimpleSchema({
   }
 });
 
-export { ExperienceSchema };
+export type JournalEntry = InferType<typeof JournalEntrySchema>;

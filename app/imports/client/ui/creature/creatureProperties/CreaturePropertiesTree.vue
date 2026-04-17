@@ -2,7 +2,7 @@
 import { autorun } from 'vue-meteor-tracker';
 import { filterToForest, getCollectionByName } from '/imports/api/parenting/parentingFunctions';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
-import { moveBetweenRoots as moveBetweenRootsMethod, moveWithinRoot as moveWithinRootMethod } from '/imports/api/parenting/organizeMethods';
+import { moveBetweenRoots as moveBetweenRootsMethod, moveWithinRoot as moveWithinRootMethod } from '../../../../api/creature/creatureProperties/methods/organizeProperty';
 
 const props = defineProps<{
   root?: Record<string, any>;

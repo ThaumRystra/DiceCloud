@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
-import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
+import TIERS, { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import linkWithPatreon from '/imports/api/users/methods/linkWithPatreon';
 
@@ -10,7 +10,7 @@ const linkPatreonError = ref('');
 const { result: tier } = autorun(() => {
   const user = Meteor.user();
   if (!user) return TIERS[0];
-  return getUserTier(user);
+  return getUserTierAsync(user);
 });
 
 const { result: user } = autorun(() => Meteor.user());

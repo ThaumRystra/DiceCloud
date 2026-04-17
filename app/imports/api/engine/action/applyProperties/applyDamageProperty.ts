@@ -1,6 +1,6 @@
 import { some, includes, difference, intersection } from 'lodash';
 
-import { getConstantValueFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getConstantValueFromScope } from '../../shared/scope';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { applyDefaultAfterPropTasks } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';

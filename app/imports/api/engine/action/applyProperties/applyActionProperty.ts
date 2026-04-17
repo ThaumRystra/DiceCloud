@@ -1,19 +1,19 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import { PropTask } from '../tasks/Task';
-import TaskResult, { LogContent } from '../tasks/TaskResult';
-import { getVariables } from '/imports/api/engine/loadCreatures';
-import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
+import type { PropTask } from '../tasks/Task';
+import TaskResult, { type LogContent } from '../tasks/TaskResult';
+import type { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { getNumberFromScope } from '../../shared/scope';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
+import { applyAfterChildrenTriggers, applyAfterTriggers, applyChildren } from '/imports/api/engine/action/functions/applyTaskGroups';
+import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
+import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
 import spendResources from '/imports/api/engine/action/functions/spendResources';
-import { applyAfterChildrenTriggers, applyAfterTriggers, applyChildren } from '/imports/api/engine/action/functions/applyTaskGroups';
-import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
-import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import { getNumberFromScope } from '/imports/api/creature/creatures/CreatureVariables';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
-import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+import type InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
-import { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { getVariables } from '/imports/api/engine/loadCreatures';
+import type { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
+import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
+import numberToSignedString from '/imports/api/utility/numberToSignedString';
 
 export default async function applyActionProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider

@@ -20,7 +20,6 @@ declare namespace Mongo {
   }
 
   interface Collection<T> {
-    schema: TypedSimpleSchema<T>;
     simpleSchema<U extends Partial<T>>(selector?: U): TypedSimpleSchema<T & U>;
     /**
      * Use this method to attach a schema to a collection created by another package,

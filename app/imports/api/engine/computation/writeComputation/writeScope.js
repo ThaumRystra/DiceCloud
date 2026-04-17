@@ -1,4 +1,4 @@
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../shared/scope';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { EJSON } from 'meteor/ejson';
 

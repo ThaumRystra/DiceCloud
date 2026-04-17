@@ -1,37 +1,36 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin';
 import Creatures, { CreatureSchema } from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import defaultCharacterProperties from '/imports/api/creature/creatures/defaultCharacterProperties';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter';
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { insertExperienceForCreature } from '/imports/api/creature/experience/Experiences';
+import { insertExperienceWork } from '/imports/api/creature/experience/Experiences';
 import SimpleSchema from 'simpl-schema';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
 const insertCreature = new ValidatedMethod({
   name: 'creatures.insertCreature',
-  mixins: [RateLimiterMixin, simpleSchemaMixin],
+  mixins: [RateLimiterMixin],
   validate: CreatureSchema.pick(
-    'name',
-    'gender',
-    'alignment',
-    'allowedLibraries',
-    'allowedLibraryCollections',
-  ).extend({
+    'name' as const,
+    'gender' as const,
+    'alignment' as const,
+    'allowedLibraries' as const,
+    'allowedLibraryCollections' as const,
+  ).extend(TypedSimpleSchema.from({
     'startingLevel': {
       type: SimpleSchema.Integer,
       min: 0,
     },
-  }).validator(),
+  })).validator(),
   rateLimit: {
     numRequests: 5,
     timeInterval: 5000,
   },
-
   async run({ name, gender, alignment, startingLevel,
     allowedLibraries, allowedLibraryCollections }) {
     const userId = this.userId
@@ -55,34 +54,38 @@ const insertCreature = new ValidatedMethod({
       readers: [],
       writers: [],
       public: false,
+      propCount: 0,
+      denormalizedStats: { xp: 0, milestoneLevels: 0 },
     });
 
     // Insert experience to get character to starting level
     if (startingLevel) {
-      await insertExperienceForCreature({
-        experience: {
-          name: 'Starting level',
-          levels: startingLevel,
-          creatureId
-        },
+      await insertExperienceWork({
+        date: new Date(),
+        name: 'Starting level',
+        levels: startingLevel,
         creatureId,
       });
     }
 
     // Insert the default properties
     // Not batchInsert because we want the properties cleaned by the schema
-    let baseId, rulesetSlot;
+    let baseId: string | undefined;
+    let rulesetSlot: CreaturePropertyTypes['propertySlot'] | undefined = undefined;
     for (const prop of defaultCharacterProperties(creatureId)) {
       const id = await CreatureProperties.insertAsync(prop);
-      if (prop.name === 'Ruleset') {
+      if (prop.type === 'propertySlot' && prop.name === 'Ruleset') {
         baseId = id;
-        rulesetSlot = prop;
+        rulesetSlot = {
+          _id: id,
+          ...prop,
+        };
       }
     }
 
     // If the user only has a single ruleset subscribed, use it by default
-    if (Meteor.isServer) {
-      await insertDefaultRuleset(creatureId, baseId, userId, rulesetSlot);
+    if (Meteor.isServer && rulesetSlot && baseId) {
+      await insertDefaultRuleset({ creatureId, baseId, userId, slot: rulesetSlot });
     }
 
     return creatureId;
@@ -90,15 +93,25 @@ const insertCreature = new ValidatedMethod({
 });
 
 // If the user only has a single ruleset subscribed, insert it by default
-async function insertDefaultRuleset(creatureId, baseId, userId, slot) {
+async function insertDefaultRuleset({ creatureId, baseId, userId, slot }: {
+  creatureId: string,
+  baseId: string,
+  userId: string,
+  slot: CreaturePropertyTypes['propertySlot'],
+}) {
   const libraryIds = await getCreatureLibraryIds(creatureId, userId);
   const filter = getSlotFillFilter({ slot, libraryIds });
   const numRulesets = await LibraryNodes.find(filter, { fields: { _id: 1 } }).countAsync();
   if (numRulesets === 1) {
     const ruleset = await LibraryNodes.findOneAsync(filter, { fields: { _id: 1 } });
-    insertPropertyFromLibraryNode.call({
+    if (!ruleset) return;
+    await insertPropertyFromLibraryNode.callAsync({
       nodeIds: [ruleset._id],
-      parentRef: { id: baseId, collection: 'creatureProperties' },
+      root: {
+        collection: 'creatures',
+        id: creatureId,
+      },
+      parentId: baseId,
     });
   }
 }

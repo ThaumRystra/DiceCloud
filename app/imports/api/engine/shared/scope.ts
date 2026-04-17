@@ -1,60 +1,45 @@
+import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import type ParseNode from '/imports/parser/parseTree/ParseNode';
 import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 
-//set up the collection for creature variables
-const CreatureVariables = new Mongo.Collection<Record<string, unknown>>('creatureVariables');
-
-/** No schema because the structure isn't known until compute time
- * Expect documents to look like:
- * {
- *   _id: "nE8Ngd6K4L4jSxLY2",
- *   _creatureId: "nE8Ngd6K4L4jSxLY2", // indexed reference to the creature
- *   explicitlyDefinedVariableName: {...some creatureProperty},
- *   // Must be found in CreatureProperties before using:
- *   linkedProperty: { _propId: "nE8Ngd6K1234SxLY2" } 
- *   implicitVariableName: {value: 10},
- *   undefinedVariableName: {},
- * }
- * Where top level fields that don't start with `_` are variables on the sheet
-**/
-
 /**
  * Get the property from the given scope, respecting properties that are just a link to the actual
  * property document
  */
-export function getFromScope(name: string, scope) {
-  let value = scope?.[name];
-  if (value?._propId) {
-    const [propId, rowIdentifier, rowNumber] = value._propId.split('_');
-    value = getSingleProperty(scope._creatureId, propId);
-    if (rowIdentifier === 'row' && value?.type === 'pointBuy') {
-      value = value.values[rowNumber];
+export async function getFromScope(name: string, scope: Variables) {
+  if (name === '_creatureId') return;
+  const scopeValue = scope?.[name];
+  if (scopeValue && '_propId' in scopeValue) {
+    const [propId, rowIdentifier, rowNumber] = scopeValue._propId.split('_');
+    const prop = await getSingleProperty(scope._creatureId, propId);
+    if (rowIdentifier === 'row' && prop?.type === 'pointBuy') {
+      return prop.values[+rowNumber];
+    } else {
+      return prop;
     }
   }
-  return value;
+  return scopeValue;
 }
 
-export function getNumberFromScope(name, scope) {
-  const parseNode = getParseNodeFromScope(name, scope);
+export async function getNumberFromScope(name: string, scope: Variables) {
+  const parseNode = await getParseNodeFromScope(name, scope);
   if (!parseNode || !isFiniteNode(parseNode)) {
     return undefined;
   }
   return parseNode.value;
 }
 
-export async function getConstantValueFromScope(
-  name, scope
-) {
-  const parseNode = getParseNodeFromScope(name, scope);
+export async function getConstantValueFromScope(name: string, scope: Variables) {
+  const parseNode = await getParseNodeFromScope(name, scope);
   if (!parseNode) return;
   if (parseNode.parseType !== 'constant') return;
   return parseNode.value;
 }
 
-export function getParseNodeFromScope(name, scope): ParseNode | undefined {
-  let value = getFromScope(name, scope);
+export async function getParseNodeFromScope(name, scope): Promise<ParseNode | undefined> {
+  let value = await getFromScope(name, scope);
   if (!value) return;
   let valueType = getType(value);
   // Iterate into object.values

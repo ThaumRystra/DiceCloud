@@ -1,10 +1,10 @@
 import { debounce } from 'lodash';
 import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
 import CreatureProperties, { type CreatureProperty, type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeCreature from './computeCreature';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
+import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 
 const COMPUTE_DEBOUNCE_TIME = 100; // ms
 export const loadedCreatures: Map<string, LoadedCreature> = new Map(); // creatureId => {creature, properties, etc.}
@@ -18,7 +18,7 @@ function logLoadedCreatures() {
 }
 
 export async function loadCreature(creatureId: string, subscription: Subscription) {
-  if (!creatureId) throw 'creatureId is required';
+  if (!creatureId) throw new Meteor.Error('invalid-argument', 'creatureId is required');
   let creature = loadedCreatures.get(creatureId);
   if (!creature?.subs.has(subscription)) {
     subscription.onStop(() => {
@@ -42,7 +42,7 @@ export function unloadAllCreatures() {
 }
 
 function unloadCreature(creatureId: string, subscription: Subscription) {
-  if (!creatureId) throw 'creatureId is required';
+  if (!creatureId) throw new Meteor.Error('invalid-argument', 'creatureId is required');
   const creature = loadedCreatures.get(creatureId);
   if (!creature) return;
   creature.subs.delete(subscription);
@@ -101,10 +101,10 @@ export function getPropertiesOfType<T extends PropertyType>(creatureId: string, 
   const props: CreaturePropertyTypes[T][] = CreatureProperties.find({
     'root.id': creatureId,
     'removed': { $ne: true },
-    'type': propType as any,
+    'type': propType as never,
   }, {
     sort: { left: 1 },
-  }).fetch() as unknown as CreaturePropertyTypes[T][];
+  }).fetch() as CreaturePropertyTypes[T][];
   console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return props;
 }
@@ -132,7 +132,7 @@ export function getPropertiesByFilter(
     'root.id': creatureId,
     'removed': { $ne: true },
     ...mongoFilter
-  } as any, {
+  }, {
     sort: { left: 1 },
   }).fetch();
   console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
@@ -151,24 +151,14 @@ export async function getCreature(creatureId: string) {
   return creature;
 }
 
-export async function getVariables(creatureId: string) {
+export function getVariables(creatureId: string): Variables {
   const loadedCreature = loadedCreatures.get(creatureId);
   const loadedVariables = loadedCreature?.variables;
   if (loadedVariables) {
     return EJSON.clone(loadedVariables);
-  }
-  console.time(`Cache miss on variables: ${creatureId}`);
-  const variables = CreatureVariables.findOneAsync({ _creatureId: creatureId });
-  console.timeEnd(`Cache miss on variables: ${creatureId}`);
-  return variables;
-}
-
-export function replaceLinkedVariablesWithProps(variables: any) {
-  for (const key in variables) {
-    const propId = variables[key]?._propId;
-    if (!propId) continue;
-    variables[key] = getSingleProperty(variables._creatureId, propId);
-  }
+  } else {
+    return {}
+  };
 }
 
 export async function getPropertyAncestors(creatureId: string, propertyId: string) {
@@ -264,7 +254,7 @@ class LoadedCreature {
   variablesObserver!: Meteor.LiveQueryHandle;
   properties: Map<string, CreatureProperty>;
   creature?: Creature;
-  variables: Record<string, any>;
+  variables: Variables;
 
   private constructor(sub: Subscription) {
     this.subs = new Set([sub]);
@@ -282,25 +272,30 @@ class LoadedCreature {
         // It's possible that the creature was unloaded before we get around to computing it
         if (!loadedCreatures.has(creatureId)) return;
         console.log('Computing: ', creatureId)
-        await computeCreature(creatureId);
+        try {
+          await computeCreature(creatureId);
+        } catch (e) {
+          console.error(e);
+          throw e;
+        }
       }, COMPUTE_DEBOUNCE_TIME);
 
       // Observe all creature properties which are needed for computation
       loaded.propertyObserver = await CreatureProperties.find({
         'root.id': creatureId,
       }).observeChangesAsync({
-        async added(id, fields: CreatureProperty) {
+        added(id, fields: CreatureProperty) {
           fields._id = id;
           loaded.addProperty(fields);
-          if (fields.dirty) await compute();
+          if (fields.dirty) void compute();
         },
-        async changed(id, fields) {
+        changed(id, fields) {
           loaded.changeProperty(id, fields);
-          if (fields.dirty) await compute();
+          if (fields.dirty) void compute();
         },
-        async removed(id) {
+        removed(id) {
           loaded.removeProperty(id);
-          await compute();
+          void compute();
         },
       });
 
@@ -308,35 +303,17 @@ class LoadedCreature {
       loaded.creatureObserver = await Creatures.find({
         _id: creatureId,
       }).observeChangesAsync({
-        async added(id, fields: Creature) {
+        added(id, fields: Creature) {
           fields._id = id;
           loaded.addCreature(fields)
-          if (fields.dirty) await compute();
-        },
-        async changed(id, fields) {
-          loaded.changeCreature(id, fields);
-          if (fields.dirty) await compute();
-        },
-        async removed() {
-          loaded.removeCreature();
-        },
-      });
-
-      // Observe the creature's variables
-      loaded.variablesObserver = await CreatureVariables.find({
-        _creatureId: creatureId,
-      }, {
-        fields: { _creatureId: 0 },
-      }).observeChangesAsync({
-        added(id, fields: any) {
-          fields._id = id;
-          loaded.addVariables(fields)
+          if (fields.dirty) void compute();
         },
         changed(id, fields) {
-          loaded.changeVariables(id, fields);
+          loaded.changeCreature(id, fields);
+          if (fields.dirty) void compute();
         },
         removed() {
-          loaded.removeVariables();
+          loaded.removeCreature();
         },
       });
     });
@@ -360,25 +337,22 @@ class LoadedCreature {
     this.creature = creature;
   }
   changeCreature(id: string, fields: Partial<Creature>) {
-    LoadedCreature.changeDoc(this.creature, fields);
+    if (this.creature) LoadedCreature.changeDoc(this.creature, fields);
   }
   removeCreature() {
     delete this.creature;
   }
-  addVariables(variables: any) {
-    this.variables = variables;
-  }
-  changeVariables(id: string, fields: any) {
+  changeVariables(id: string, fields: Record<string, unknown>) {
     LoadedCreature.changeDoc(this.variables, fields);
   }
   removeVariables() {
     this.variables = {};
   }
-  static changeMap(id: string, fields: any, map: any) {
+  static changeMap(id: string, fields: Record<string, unknown>, map: Map<string, Record<string, unknown>>) {
     const doc = map.get(id);
-    LoadedCreature.changeDoc(doc, fields);
+    if (doc) LoadedCreature.changeDoc(doc, fields);
   }
-  static changeDoc(doc: any, fields: any) {
+  static changeDoc(doc: Record<string, unknown>, fields: Record<string, unknown>) {
     if (!doc) return;
     for (const key in fields) {
       if (key === undefined) {

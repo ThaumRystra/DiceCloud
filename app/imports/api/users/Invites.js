@@ -1,7 +1,7 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 
 const Invites = new Mongo.Collection('invites');
 
@@ -37,7 +37,7 @@ if (Meteor.isServer) {
 }
 
 async function alignInvitesWithPatreonTier(user) {
-  const tier = getUserTier(user);
+  const tier = getUserTierAsync(user);
   const availableInvites = tier.invites;
   const currentlyFundedInvites = [];
   const currenltyUnfundedInvites = [];

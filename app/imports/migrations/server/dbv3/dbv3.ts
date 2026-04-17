@@ -4,7 +4,7 @@ import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import Docs, { DOC_ROOT_ID } from '/imports/api/docs/Docs';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { TreeDoc } from '/imports/api/parenting/ChildSchema';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../../api/engine/shared/scope';
 
 // Git version 2.0.59
 // Database version 3

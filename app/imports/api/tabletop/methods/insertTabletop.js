@@ -1,7 +1,7 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Tabletops from '../Tabletops';
-import { assertUserHasPaidBenefits, getUserTier } from '/imports/api/users/patreon/tiers';
+import { assertUserHasPaidBenefits, getUserTierAsync } from '/imports/api/users/patreon/tiers';
 
 const insertTabletop = new ValidatedMethod({
 
@@ -22,7 +22,7 @@ const insertTabletop = new ValidatedMethod({
         'You need to be logged in to insert a tabletop');
     }
     await assertUserHasPaidBenefits(this.userId);
-    const tier = getUserTier(this.userId);
+    const tier = getUserTierAsync(this.userId);
     const currentTabletopCount = await Tabletops.find({ owner: this.userId }).countAsync();
 
     if (tier.tabletopSlots !== -1 && tier.tabletopSlots <= currentTabletopCount) {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import updateFileStorageUsed from '/imports/api/users/methods/updateFileStorageUsed';
 import prettyBytes from 'pretty-bytes';
@@ -9,7 +9,7 @@ import prettyBytes from 'pretty-bytes';
 const updateStorageUsedLoading = ref(false);
 
 const { result: storageUsed } = autorun(() => Meteor.user()?.fileStorageUsed || 0);
-const { result: storageAllowed } = autorun(() => getUserTier(Meteor.userId()).fileStorage * 1000000);
+const { result: storageAllowed } = autorun(() => getUserTierAsync(Meteor.userId()).fileStorage * 1000000);
 
 const percentFileStorageUsed = computed(() =>
   Math.round(((storageUsed.value ?? 0) / (storageAllowed.value ?? 1)) * 100)

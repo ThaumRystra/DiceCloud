@@ -2,9 +2,8 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
 import { restore } from '/imports/api/parenting/softRemove';
-import getRootCreatureAncestor from '/imports/api/creature/creatureProperties/getRootCreatureAncestor';
 
 const restoreProperty = new ValidatedMethod({
   name: 'creatureProperties.restore',
@@ -16,14 +15,14 @@ const restoreProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id }) {
+  async run({ _id }: { _id: string }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
-    const rootCreature = await getDocByRefAsync(property);
-    await assertEditPermission(rootCreature, this.userId);
+    assertDocExists(property);
+    await assertDocEditPermission(property, this.userId);
 
     // Do work
-    restore(CreatureProperties, property, { $set: { dirty: true } });
+    return restore(CreatureProperties, property, { $set: { dirty: true } });
   }
 });
 

@@ -1,4 +1,4 @@
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import prettyBytes from 'pretty-bytes';
 
 export default async function assertUserHasFileSpace(userId: string | null, spaceRequiredInBytes: number) {
@@ -9,7 +9,7 @@ export default async function assertUserHasFileSpace(userId: string | null, spac
 
   // Work out how much space they have and need
   const fileStorageUsed = user.fileStorageUsed || 0;
-  const fileStorageAllowed = getUserTier(Meteor.userId()).fileStorage * 1000000;
+  const fileStorageAllowed = getUserTierAsync(Meteor.userId()).fileStorage * 1000000;
   let fileStorageLeft = fileStorageAllowed - fileStorageUsed;
   if (fileStorageLeft < 0) fileStorageLeft = 0;
 

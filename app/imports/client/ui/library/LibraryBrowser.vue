@@ -5,7 +5,7 @@ import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import LibraryContentsContainer from '/imports/client/ui/library/LibraryContentsContainer.vue';
 import Libraries, { insertLibrary } from '/imports/api/library/Libraries';
-import { getUserTier } from '/imports/api/users/patreon/tiers';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import InsertLibraryNodeButton from '/imports/client/ui/library/InsertLibraryNodeButton.vue';
 import { key } from '/imports/client/ui/vuexStore';
@@ -33,7 +33,7 @@ const { result: libraries } = autorun(() =>
 );
 
 const { result: paidBenefits } = autorun(() => {
-  const tier = getUserTier(Meteor.userId());
+  const tier = getUserTierAsync(Meteor.userId());
   return tier && tier.paidBenefits;
 });
 

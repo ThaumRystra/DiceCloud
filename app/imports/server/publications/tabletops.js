@@ -2,7 +2,7 @@ import Tabletops from '/imports/api/tabletop/Tabletops';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../api/engine/shared/scope';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';

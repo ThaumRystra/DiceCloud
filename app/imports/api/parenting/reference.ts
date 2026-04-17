@@ -8,6 +8,7 @@ import type { LibraryNode } from '/imports/api/library/LibraryNodes';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 
 export type ReferenceCollection = 'creatures' | 'libraries' | 'libraryNodes' | 'creatureProperties' | 'docs';
+export const referenceCollections: ReferenceCollection[] = ['creatures', 'libraries', 'libraryNodes', 'creatureProperties', 'docs'];
 
 export type Reference = {
   id: string,
@@ -19,6 +20,7 @@ export async function getDocByRefAsync(ref: { id: string, collection: 'creatureP
 export async function getDocByRefAsync(ref: { id: string, collection: 'libraries' }): Promise<Library | undefined>
 export async function getDocByRefAsync(ref: { id: string, collection: 'libraryNodes' }): Promise<LibraryNode | undefined>
 export async function getDocByRefAsync(ref: { id: string, collection: 'docs' }): Promise<never>
+export async function getDocByRefAsync(ref: { id: string, collection: 'creatures' | 'libraries' }): Promise<Creature | Library | undefined>
 export async function getDocByRefAsync(ref: Reference): Promise<Creature | CreatureProperty | Library | LibraryNode | undefined>
 export async function getDocByRefAsync(ref: Reference): Promise<Creature | CreatureProperty | Library | LibraryNode | undefined> {
   switch (ref.collection) {

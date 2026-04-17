@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
-import TIERS, { getUserTier } from '/imports/api/users/patreon/tiers';
+import TIERS, { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 
 const { result: tier } = autorun(() => {
   const user = Meteor.user();
   if (!user) return TIERS[0];
-  return getUserTier(user);
+  return getUserTierAsync(user);
 });
 </script>
 

@@ -3,19 +3,18 @@ import { ValidatedMethod, type MethodContext } from 'meteor/mdg:validated-method
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
-import { RefSchema, type Reference } from '/imports/api/parenting/ChildSchema';
 import {
   assertEditPermission,
   assertDocEditPermission,
-  assertCopyPermission
+  assertCopyPermission,
+  assertDocExists
 } from '/imports/api/sharing/sharingPermissions';
 import {
-  fetchDocByRef,
   getFilter,
   renewDocIds
 } from '/imports/api/parenting/parentingFunctions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
-import Libraries, { type Library } from '/imports/api/library/Libraries';
+import Libraries from '/imports/api/library/Libraries';
 const DUPLICATE_CHILDREN_LIMIT = 500;
 
 const copyPropertyToLibrary = new ValidatedMethod({
@@ -25,10 +24,16 @@ const copyPropertyToLibrary = new ValidatedMethod({
       type: String,
       max: 32,
     },
-    parentRef: {
-      type: RefSchema,
+    libraryId: {
+      type: String,
+      max: 32,
     },
-    order: {
+    parentId: {
+      type: String,
+      max: 32,
+      optional: true,
+    },
+    left: {
       type: Number,
       optional: true,
     },
@@ -38,36 +43,32 @@ const copyPropertyToLibrary = new ValidatedMethod({
     numRequests: 1,
     timeInterval: 5000,
   },
-  async run({ propId, parentRef, order }: { propId: string, parentRef: Reference, order: number }) {
-    // get the new ancestry for the properties
-    const parentDoc = fetchDocByRef<Library | LibraryNode>(parentRef);
+  async run({ propId, libraryId, parentId, left }: { propId: string, libraryId: string, parentId?: string, left: number }) {
+    const property = await CreatureProperties.findOneAsync(propId);
+    assertDocExists(property);
+    await assertDocEditPermission(property, this.userId);
 
-    // Check permission to edit the destination
-    let rootLibrary: Library | undefined;
-    if (parentRef.collection === 'libraries') {
-      rootLibrary = parentDoc as Library;
-    } else if ('root' in parentDoc) {
-      rootLibrary = await Libraries.findOneAsync(parentDoc.root.id)
-    }
+    const newLibrary = await Libraries.findOneAsync(libraryId);
+    await assertEditPermission(newLibrary, this.userId);
 
-    if (!rootLibrary) {
-      throw new Meteor.Error('invalid-reference', `${parentRef.collection} is not a valid parent collection`)
-    }
-    await assertEditPermission(rootLibrary, this.userId);
-
-    const insertedRootNode = await insertNodeFromProperty(propId, order, this);
+    const insertedRootNode = await insertNodeFromProperty({ propId, libraryId, parentId, left, method: this });
 
     // Tree structure changed by inserts, reorder the tree
-    await rebuildNestedSets(LibraryNodes, rootLibrary._id);
+    await rebuildNestedSets(LibraryNodes, libraryId);
 
     // Return the docId of the inserted root property
     return insertedRootNode?._id;
   },
 });
 
-async function insertNodeFromProperty(propId: string, order: number, method: MethodContext) {
-  // Fetch the property and its descendants, provided they have not been
-  // removed
+async function insertNodeFromProperty({ propId, libraryId, parentId, left, method }: {
+  propId: string,
+  libraryId: string,
+  parentId: string | undefined,
+  left: number,
+  method: MethodContext,
+}) {
+  // Fetch the property and its descendants, provided they have not been removed
   const prop = await CreatureProperties.findOneAsync({
     _id: propId,
     removed: { $ne: true },
@@ -81,9 +82,6 @@ async function insertNodeFromProperty(propId: string, order: number, method: Met
       );
     }
   }
-
-  // Make sure we can edit this property
-  await assertDocEditPermission(prop, method.userId);
 
   const descCount = await CreatureProperties.find({
     ...getFilter.descendants(prop),
@@ -112,12 +110,14 @@ async function insertNodeFromProperty(propId: string, order: number, method: Met
   // Give the docs new IDs without breaking internal references
   renewDocIds({
     docArray: props,
-    collectionMap: { 'creatureProperties': 'libraryNodes' }
+    collectionMap: { 'creatureProperties': 'libraryNodes' },
+    idMap: { [prop.root.id]: libraryId }
   });
 
-  // Order the root node
-  prop.left = Number.MAX_SAFE_INTEGER - 1;
-  prop.right = Number.MAX_SAFE_INTEGER;
+  // Order the root node and assign it the correct parent
+  prop.left = left;
+  prop.right = left;
+  prop.parentId = parentId;
 
   // Clean the props
   const cleanedProps = cleanProps(props);
@@ -182,8 +182,8 @@ async function assertSourceLibraryCopyPermission(props: CreatureProperty[], meth
 
 export function cleanProps(props: CreatureProperty[]) {
   return props.map(prop => {
-    const schema = LibraryNodes.simpleSchema(prop);
-    return schema.clean(prop) as CreatureProperty;
+    const schema = LibraryNodes.simpleSchema(prop as unknown as LibraryNode);
+    return schema.clean(prop) as LibraryNode;
   });
 }
 

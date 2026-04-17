@@ -1,14 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import Creatures from '/imports/api/creature/creatures/Creatures';
+import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import SimpleSchema from 'simpl-schema';
-import simpleSchemaMixin from '/imports/api/creature/mixins/simpleSchemaMixin';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
 const changeAllowedLibraries = new ValidatedMethod({
   name: 'creatures.changeAllowedLibraries',
-  mixins: [RateLimiterMixin, simpleSchemaMixin],
-  schema: new SimpleSchema({
+  mixins: [RateLimiterMixin],
+  validate: TypedSimpleSchema.from({
     _id: {
       type: String,
       max: 32,
@@ -31,7 +30,7 @@ const changeAllowedLibraries = new ValidatedMethod({
       type: String,
       max: 32,
     },
-  }),
+  }).validator(),
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,
@@ -39,23 +38,23 @@ const changeAllowedLibraries = new ValidatedMethod({
   async run({ _id, allowedLibraries, allowedLibraryCollections }) {
     const creature = await Creatures.findOneAsync(_id);
     await assertEditPermission(creature, this.userId);
-    let $set;
+    const modifier: Mongo.Modifier<Creature> = { $set: undefined };
     if (allowedLibraries) {
-      $set = { allowedLibraries }
+      modifier.$set = { allowedLibraries }
     }
     if (allowedLibraryCollections) {
-      if (!$set) $set = {};
-      $set.allowedLibraryCollections = allowedLibraryCollections;
+      if (!modifier.$set) modifier.$set = {};
+      modifier.$set.allowedLibraryCollections = allowedLibraryCollections;
     }
-    if (!$set) return;
-    await Creatures.updateAsync(_id, { $set });
+    if (!modifier.$set) return;
+    await Creatures.updateAsync(_id, modifier);
   },
 });
 
 const toggleAllUserLibraries = new ValidatedMethod({
   name: 'creatures.removeLibraryLimits',
-  mixins: [RateLimiterMixin, simpleSchemaMixin],
-  schema: new SimpleSchema({
+  mixins: [RateLimiterMixin],
+  validate: TypedSimpleSchema.from({
     _id: {
       type: String,
       max: 32,
@@ -63,7 +62,7 @@ const toggleAllUserLibraries = new ValidatedMethod({
     value: {
       type: Boolean,
     },
-  }),
+  }).validator(),
   rateLimit: {
     numRequests: 10,
     timeInterval: 5000,

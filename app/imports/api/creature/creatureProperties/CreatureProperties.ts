@@ -161,7 +161,8 @@ CreatureProperties.attachSchema(genericCreaturePropertySchema);
 // Attach the schemas for each type
 let key: keyof typeof propertySchemasIndex;
 for (key in propertySchemasIndex) {
-  const schema = TypedSimpleSchema.from({})
+  if (key === 'reference') continue;
+  const schema = new SimpleSchema({})
     .extend(propertySchemasIndex[key])
     .extend(genericCreaturePropertySchema)
   CreatureProperties.attachSchema(schema, {

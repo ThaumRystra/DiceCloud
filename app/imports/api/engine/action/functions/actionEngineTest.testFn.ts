@@ -2,7 +2,7 @@ import '/imports/api/simpleSchemaConfig.js';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propsFromForest, { ForestProp } from '/imports/api/engine/computation/utility/propsFromForest.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../shared/scope';
 import computeCreature from '/imports/api/engine/computeCreature';
 import { loadCreature, unloadAllCreatures } from '/imports/api/engine/loadCreatures';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';

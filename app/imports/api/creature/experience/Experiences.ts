@@ -4,10 +4,9 @@ import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-const Experiences = new Mongo.Collection('experiences');
-
-const ExperienceSchema = new SimpleSchema({
+const ExperienceSchema = TypedSimpleSchema.from({
   name: {
     type: String,
     optional: true,
@@ -41,29 +40,32 @@ const ExperienceSchema = new SimpleSchema({
   },
 });
 
+type Experience = InferType<typeof ExperienceSchema>;
+
+const Experiences = new Mongo.Collection<Experience>('experiences');
+
 Experiences.attachSchema(ExperienceSchema);
 
-const insertExperienceForCreature = async function ({ experience, creatureId }) {
+const insertExperienceWork = async function (experience: Experience) {
   if (experience.xp) {
-    await Creatures.updateAsync(creatureId, {
+    await Creatures.updateAsync(experience.creatureId, {
       $inc: { 'denormalizedStats.xp': experience.xp },
       $set: { dirty: true },
     });
   }
   if (experience.levels) {
-    await Creatures.updateAsync(creatureId, {
+    await Creatures.updateAsync(experience.creatureId, {
       $inc: { 'denormalizedStats.milestoneLevels': experience.levels },
       $set: { dirty: true },
     });
   }
-  experience.creatureId = creatureId;
   const id = await Experiences.insertAsync(experience);
   return id;
 };
 
 const insertExperience = new ValidatedMethod({
   name: 'experiences.insert',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     experience: {
       type: ExperienceSchema.omit('creatureId'),
     },
@@ -90,7 +92,8 @@ const insertExperience = new ValidatedMethod({
     const insertedIds = [];
     for (const creatureId of creatureIds) {
       await assertEditPermission(creatureId, userId);
-      const id = await insertExperienceForCreature({ experience, creatureId });
+      const newExperience = { ...experience, creatureId }
+      const id = await insertExperienceWork(newExperience);
       insertedIds.push(id);
     }
     return insertedIds;
@@ -99,7 +102,7 @@ const insertExperience = new ValidatedMethod({
 
 const removeExperience = new ValidatedMethod({
   name: 'experiences.remove',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     experienceId: {
       type: String,
       max: 32,
@@ -140,7 +143,7 @@ const removeExperience = new ValidatedMethod({
 
 const recomputeExperiences = new ValidatedMethod({
   name: 'experiences.recompute',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     creatureId: {
       type: String,
       max: 32,
@@ -180,4 +183,4 @@ const recomputeExperiences = new ValidatedMethod({
 });
 
 export default Experiences;
-export { ExperienceSchema, insertExperience, insertExperienceForCreature, removeExperience, recomputeExperiences };
+export { ExperienceSchema, insertExperience, insertExperienceWork, removeExperience, recomputeExperiences };

@@ -2,7 +2,7 @@ import LibraryCollections from '/imports/api/library/LibraryCollections';
 import Libraries from '/imports/api/library/Libraries';
 import { union } from 'lodash';
 
-export default async function getUserLibraryIds(userId) {
+export default async function getUserLibraryIds(userId: string) {
   if (!userId) return [];
   const user = await Meteor.users.findOneAsync(userId);
   let subbedIds = user?.subscribedLibraries || [];

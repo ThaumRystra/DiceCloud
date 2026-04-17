@@ -1,13 +1,14 @@
 import LibraryCollections from '/imports/api/library/LibraryCollections';
-import Creatures from '/imports/api/creature/creatures/Creatures';
+import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
 import getUserLibraryIds from './getUserLibraryIds';
 import { intersection, union } from 'lodash';
 
-export default async function getCreatureLibraryIds(creature, userId) {
+export default async function getCreatureLibraryIds(creature: Creature | string | undefined, userId: string) {
   if (!userId) return [];
 
   // Get the ids of libraries the user is permitted to view
   const userLibIds = await getUserLibraryIds(userId);
+  if (!creature) return userLibIds;
 
   // If given a creature Id, get the creature document
   if (typeof creature === 'string') {

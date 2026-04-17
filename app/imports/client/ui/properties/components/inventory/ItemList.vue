@@ -3,7 +3,7 @@ import { ref, watch, onMounted, inject } from 'vue';
 import { useStore } from 'vuex';
 import { VueDraggable } from 'vue-draggable-plus';
 import ItemListTile from '/imports/client/ui/properties/components/inventory/ItemListTile.vue';
-import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
+import { moveWithinRoot } from '../../../../../api/creature/creatureProperties/methods/organizeProperty';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';

@@ -1,5 +1,5 @@
 import { applyNestedSetProperties } from '/imports/api/parenting/parentingFunctions';
-import { CreatureProperty, DenormalisedOnlyCreaturePropertySchema as denormSchema }
+import { type CreatureProperty, DenormalisedOnlyCreaturePropertySchema as denormSchema }
   from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getProperties, getCreature, getVariables } from '/imports/api/engine/loadCreatures';
 import computedOnlySchemas from '/imports/api/properties/computedOnlyPropertySchemasIndex';
@@ -12,7 +12,7 @@ import computeToggleDependencies from './buildComputation/computeToggleDependenc
 import linkCalculationDependencies from './buildComputation/linkCalculationDependencies';
 import linkTypeDependencies from './buildComputation/linkTypeDependencies';
 import computeSlotQuantityFilled from './buildComputation/computeSlotQuantityFilled';
-import CreatureComputation from './CreatureComputation';
+import CreatureComputation, { type Variables } from './CreatureComputation';
 import removeSchemaFields from './buildComputation/removeSchemaFields';
 import type { Creature } from '/imports/api/creature/creatures/Creatures';
 
@@ -31,21 +31,21 @@ import type { Creature } from '/imports/api/creature/creatures/Creatures';
  */
 
 export default async function buildCreatureComputation(creatureId: string) {
-  const creature = getCreature(creatureId);
+  const creature = await getCreature(creatureId);
   if (!creature) {
     throw new Meteor.Error('not-found',
       'Build computation failed, the creature was not found.' +
       '\nid: ' + creatureId
     );
   }
-  const variables = await getVariables(creatureId);
+  const variables = getVariables(creatureId);
   const properties = await getProperties(creatureId);
   const computation = buildComputationFromProps(properties, creature, variables);
   return computation;
 }
 
 export function buildComputationFromProps(
-  properties: CreatureProperty[], creature: Creature, variables: any
+  properties: CreatureProperty[], creature: Creature, variables: Variables
 ) {
 
   const computation = new CreatureComputation(properties, creature, variables);

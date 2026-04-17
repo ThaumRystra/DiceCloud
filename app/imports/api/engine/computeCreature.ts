@@ -4,6 +4,7 @@ import writeAlteredProperties from './computation/writeComputation/writeAlteredP
 import writeScope from './computation/writeComputation/writeScope';
 import writeErrorsAndPropCount from './computation/writeComputation/writeErrorsAndPropCount';
 import type CreatureComputation from './computation/CreatureComputation';
+import errorToString from '/imports/api/utility/errorToString';
 
 export default async function computeCreature(creatureId: string) {
   if (Meteor.isClient) return;
@@ -17,8 +18,8 @@ async function computeComputation(computation: CreatureComputation, creatureId: 
     const writePromise = writeAlteredProperties(computation);
     const scopeWritePromise = writeScope(creatureId, computation);
     await Promise.all([writePromise, scopeWritePromise]);
-  } catch (e: any) {
-    const errorText = e.reason || e.message || e.toString();
+  } catch (e: unknown) {
+    const errorText = errorToString(e);
     computation.errors.push({
       type: 'crash',
       details: { error: errorText },
@@ -26,7 +27,7 @@ async function computeComputation(computation: CreatureComputation, creatureId: 
     console.error({
       creatureId,
       computeError: errorText,
-      ...e.stack && { location: e.stack.split('\n')[1] },
+      ...(e instanceof Meteor.Error || e instanceof Error) && e.stack && { location: e.stack?.split('\n')[1] },
     });
   } finally {
     checkPropertyCount(computation)

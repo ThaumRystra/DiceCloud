@@ -9,11 +9,6 @@ import { removeCreatureWork } from '/imports/api/creature/creatures/methods/remo
 import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety';
 
-let migrateApiCreature;
-if (Meteor.isServer) {
-  migrateApiCreature = require('/imports/migrations/apiCreature/migrateApiCreature.js').default;
-}
-
 async function importApiCreature(apiCreature, userId) {
   const apiVersion = apiCreature.meta?.schemaVersion ?? 2;
   const creature = apiCreature.creatures[0];
@@ -24,7 +19,10 @@ async function importApiCreature(apiCreature, userId) {
   }
 
   // Migrate and verify the archive meets the current schema
-  migrateApiCreature(apiCreature);
+  if (Meteor.isServer) {
+    const migrateApiCreature = await import('../../../../migrations/apiCreature/migrateApiCreature');
+    migrateApiCreature(apiCreature);
+  }
 
 
   // Asset that the api creature is (mildly) safe

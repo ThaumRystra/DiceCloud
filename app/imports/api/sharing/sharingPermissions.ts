@@ -13,7 +13,7 @@ function assertIdValid(userId: string | undefined | null): asserts userId {
   }
 }
 
-function assertDocExists(doc: Record<string, unknown> | undefined): asserts doc {
+export function assertDocExists(doc: Record<string, unknown> | undefined): asserts doc {
   if (!doc) {
     throw new Meteor.Error('Permission denied',
       'Permission denied: No such document exists');
@@ -132,7 +132,7 @@ export async function assertDocEditPermission(doc: TreeDoc | Shared | undefined,
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertDocCopyPermission(doc: TreeDoc, userId: string): Promise<void> {
+export async function assertDocCopyPermission(doc: TreeDoc, userId: string | undefined | null): Promise<void> {
   const root = await getRoot(doc);
   await assertCopyPermission(root, userId);
 }
@@ -166,7 +166,7 @@ export async function assertViewPermission(doc: Shared | undefined, userId: stri
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertDocViewPermission(doc: Shared, userId: string | undefined | null): Promise<void> {
+export async function assertDocViewPermission(doc: Shared | TreeDoc | undefined, userId: string | undefined | null): Promise<void> {
   const root = await getRoot(doc);
   await assertViewPermission(root, userId);
 }

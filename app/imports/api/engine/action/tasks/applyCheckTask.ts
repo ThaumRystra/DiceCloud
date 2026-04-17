@@ -2,7 +2,7 @@ import { applyTriggers } from '/imports/api/engine/action/functions/applyTaskGro
 import { CheckTask } from '/imports/api/engine/action/tasks/Task';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
-import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
+import { getFromScope } from '../../shared/scope';
 import { getVariables } from '/imports/api/engine/loadCreatures';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';

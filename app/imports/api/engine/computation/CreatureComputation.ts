@@ -1,30 +1,39 @@
 import { EJSON } from 'meteor/ejson';
-import createGraph, { Graph } from 'ngraph.graph';
+import createGraph, { type Graph } from 'ngraph.graph';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 import type { Creature } from '/imports/api/creature/creatures/Creatures';
 import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export type ComputationProperty = CreatureProperty & {
   _computationDetails: {
-    calculations: any[],
-    emptyCalculations: any[],
-    inlineCalculations: any[],
-    toggleAncestors: any[],
+    calculations: { todo: string }[],
+    emptyCalculations: { todo: string }[],
+    inlineCalculations: { todo: string }[],
+    toggleAncestors: { todo: string }[],
   }
 };
+
+type DenormalizedVariable = {
+  baseValue: number;
+  type: '_variable';
+}
+
+export type Variables = Record<string, CreatureProperty | { _propId: string }> & { _creatureId: string };
+
+export type DependencyGraphNode = CreatureProperty | DenormalizedVariable
 
 export default class CreatureComputation {
   originalPropsById: Record<string, CreatureProperty>;
   propsById: Record<string, CreatureProperty>;
   propsWithTag: Record<string, string[]>;
-  scope: Record<string, any>;
+  scope: Record<string, CreatureProperty>;
   props: ComputationProperty[];
-  dependencyGraph: Graph<any, string>;
-  errors: Array<object>;
+  dependencyGraph: Graph<DependencyGraphNode, string>;
+  errors: Array<Meteor.Error>;
   creature: Creature;
-  variables: object;
+  variables: Variables;
 
-  constructor(properties: Array<CreatureProperty>, creature: Creature, variables: object) {
+  constructor(properties: Array<CreatureProperty>, creature: Creature, variables: Variables) {
     // Set up fields
     this.originalPropsById = {};
     this.propsById = {};

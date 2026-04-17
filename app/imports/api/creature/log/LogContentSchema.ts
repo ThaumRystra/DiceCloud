@@ -1,20 +1,9 @@
-import SimpleSchema from 'simpl-schema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
 import RollDetailsSchema from '/imports/api/properties/subSchemas/RollDetailsSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-export interface LogContent {
-  name?: string
-  value?: string
-  inline?: boolean
-  context?: {
-    errors: any[]
-    rolls: any[]
-    doubleRolls?: boolean
-  }
-}
-
-const LogContentSchema = new SimpleSchema({
+const LogContentSchema = TypedSimpleSchema.from({
   // The name of the field, included in discord webhook message
   name: {
     type: String,
@@ -70,5 +59,7 @@ const LogContentSchema = new SimpleSchema({
     type: String,
   }
 });
+
+export type LogContent = InferType<typeof LogContentSchema>
 
 export default LogContentSchema;

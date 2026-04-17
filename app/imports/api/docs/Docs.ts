@@ -9,30 +9,14 @@ import '/imports/api/library/methods/index';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
 import { getFilter, rebuildNestedSets, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions';
-import ChildSchema, { type TreeDoc } from '/imports/api/parenting/ChildSchema';
+import ChildSchema from '/imports/api/parenting/ChildSchema';
 import { Roles } from 'meteor/roles';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
 // Give the docs a common root, so they can share parenting logic
 export const DOC_ROOT_ID = 'DDDDDDDDDDDDDDDDD'
 
-export type Doc = {
-  _id: string,
-  name: string,
-  urlName: string,
-  href: string,
-  description?: string,
-  published?: true,
-  icon?: {
-    name: string,
-    shape: string,
-  },
-} & TreeDoc;
-
-const Docs: Mongo.Collection<Doc> & {
-  getJsonDocs?: () => string
-} = new Mongo.Collection<Doc>('docs');
-
-const DocSchema = new SimpleSchema({
+const BaseDocSchema = TypedSimpleSchema.from({
   _id: {
     type: String,
     max: 32,
@@ -65,11 +49,18 @@ const DocSchema = new SimpleSchema({
   },
 });
 
-const schema = new SimpleSchema({});
-schema.extend(DocSchema);
-schema.extend(ChildSchema);
-schema.extend(SoftRemovableSchema);
-Docs.attachSchema(schema);
+const DocSchema = TypedSimpleSchema.from({})
+  .extend(BaseDocSchema)
+  .extend(ChildSchema(['docs' as const]))
+  .extend(SoftRemovableSchema);
+
+type Doc = InferType<typeof DocSchema>;
+
+const Docs: Mongo.Collection<Doc> & {
+  getJsonDocs?: () => string
+} = new Mongo.Collection<Doc>('docs');
+
+Docs.attachSchema(DocSchema);
 
 async function assertDocsEditPermission(userId: string | null) {
   if (!userId || typeof userId !== 'string') throw new Meteor.Error('No user id provided');
@@ -248,7 +239,7 @@ const restoreDoc = new ValidatedMethod({
   },
   async run({ _id }: { _id: string }) {
     await assertDocsEditPermission(this.userId);
-    await restore('docs', _id);
+    await restore(Docs, _id);
     await rebuildNestedSets(Docs, DOC_ROOT_ID);
   }
 });

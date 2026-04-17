@@ -10,7 +10,7 @@ import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureF
 import archiveCreatureToFile from '/imports/api/creature/archive/methods/archiveCreatureToFile';
 import restoreCreatureFromFile from '/imports/api/creature/archive/methods/restoreCreatureFromFile';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import { characterSlotsRemaining } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
+import { characterSlotsRemainingAsync } from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import { useStore } from 'vuex';
 import { key } from '/imports/client/ui/vuexStore';
 
@@ -59,7 +59,7 @@ autorun(() => {
 });
 
 const { result: characterSlots } = autorun(() =>
-  characterSlotsRemaining(Meteor.userId())
+  characterSlotsRemainingAsync(Meteor.userId())
 );
 
 const { result: folders } = autorun(() => {

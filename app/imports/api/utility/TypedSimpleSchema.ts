@@ -34,10 +34,19 @@ export class TypedSimpleSchema<T> extends SimpleSchema {
   clean(...args: Parameters<SimpleSchema['clean']>): unknown {
     return super.clean(...args);
   }
+  pick<K extends keyof T & string>(...args: K[]): TypedSimpleSchema<Pick<T, K>> {
+    return super.pick(...args) as unknown as TypedSimpleSchema<Pick<T, K>>;
+  }
+  omit<K extends keyof T & string>(...args: K[]): TypedSimpleSchema<Omit<T, K>> {
+    return super.pick(...args) as unknown as TypedSimpleSchema<Omit<T, K>>;
+  }
   // Extending the schema with another schema &'s their definitions
   // In some cases, this is not strictly accurate, use with caution
   extend<U>(otherSchema: TypedSimpleSchema<U>): TypedSimpleSchema<Simplify<T & U>> {
-    return super.extend(otherSchema);
+    return super.extend(otherSchema) as unknown as TypedSimpleSchema<Simplify<T & U>>;
+  }
+  validator(options?: Parameters<SimpleSchema['validator']>[0]): (obj: T) => boolean {
+    return super.validator(options);
   }
 }
 
@@ -66,6 +75,7 @@ export type InferType<T> = T extends TypedSimpleSchema<infer X> ? X : never;
 type InferTypeInner<T> =
   T extends typeof Array ? ArrayMarker :
   T extends typeof Boolean ? boolean :
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   T extends typeof Function ? Function :
   T extends typeof Number ? number :
   T extends typeof SimpleSchema.Integer ? number :

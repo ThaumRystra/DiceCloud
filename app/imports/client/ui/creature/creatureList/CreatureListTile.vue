@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import SharedIcon from '/imports/client/ui/components/SharedIcon.vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import { moveBetweenRoots } from '/imports/api/parenting/organizeMethods';
+import { moveBetweenRoots } from '../../../../api/creature/creatureProperties/methods/organizeProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 const props = defineProps<{

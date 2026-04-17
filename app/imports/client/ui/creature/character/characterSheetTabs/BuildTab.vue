@@ -8,7 +8,7 @@ import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctio
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureVariables from '/imports/api/creature/creatures/CreatureVariables';
+import CreatureVariables from '../../../../../api/engine/shared/scope';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CharacterErrors from '/imports/client/ui/creature/character/errors/CharacterErrors.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';

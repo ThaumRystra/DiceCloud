@@ -1,7 +1,6 @@
-export default function getDefaultSlotFiller(slot) {
-  if (typeof slot !== 'object') throw 'getDefaultSlotFiller requires a slot';
-  if (slot.type !== 'propertySlot') throw 'provided slot must be a propertySlot';
+import type { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
+export default function getDefaultSlotFiller(slot: CreaturePropertyTypes['propertySlot']) {
   let slotType = slot.slotType;
   if (!slotType || slot.slotType === 'slotFiller') {
     slotType = 'folder';

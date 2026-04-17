@@ -5,8 +5,7 @@ import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import getParentByTag from './getParentByTag';
-import { RefSchema, type TreeDoc } from '/imports/api/parenting/ChildSchema';
-import { getDocByRefAsync, type Reference } from '/imports/api/parenting/reference';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
 const insertProperty = new ValidatedMethod({
   name: 'creatureProperties.insert',
@@ -15,7 +14,6 @@ const insertProperty = new ValidatedMethod({
       type: Object,
       blackbox: true,
     },
-    root: RefSchema,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {

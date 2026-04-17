@@ -43,6 +43,7 @@
     "node_modules",
     "**/node_modules/*",
     ".meteor",
+    "_build",
     "./packages/**"
   ]
 }

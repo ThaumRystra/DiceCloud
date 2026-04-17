@@ -1,9 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
 
-const updateCreatureProperty = new ValidatedMethod({
+const updateCreatureProperty = new ValidatedMethod<{
+  _id: string,
+  path: string[],
+  value: unknown,
+}, Promise<number>>({
   name: 'creatureProperties.update',
   validate({ _id, path }) {
     if (!_id) throw new Meteor.Error('No _id', '_id is required');
@@ -28,6 +32,7 @@ const updateCreatureProperty = new ValidatedMethod({
     const property = await CreatureProperties.findOneAsync(_id, {
       fields: { type: 1, root: 1 }
     });
+    assertDocExists(property);
     await assertDocEditPermission(property, this.userId);
 
     const pathString = path.join('.');
@@ -38,7 +43,7 @@ const updateCreatureProperty = new ValidatedMethod({
     } else {
       modifier = { $set: { [pathString]: value, dirty: true } };
     }
-    await CreatureProperties.updateAsync(_id, modifier, {
+    return await CreatureProperties.updateAsync(_id, modifier, {
       selector: { type: property.type },
     });
   },

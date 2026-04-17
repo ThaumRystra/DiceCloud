@@ -1,15 +1,16 @@
-import type { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { LibraryNode } from '/imports/api/library/LibraryNodes';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default function getSlotFillFilter({ slot, libraryIds }: {
   slot: CreaturePropertyTypes['propertySlot'] | CreaturePropertyTypes['class'],
   libraryIds: string[],
-}) {
+}): Mongo.Selector<LibraryNode> {
 
   if (!slot) throw new Meteor.Error('defect', 'Slot is required for getSlotFillFilter');
   if (!libraryIds) throw new Meteor.Error('defect', 'LibraryIds is required for getSlotFillFilter');
 
-  const filter: Mongo.Selector<CreatureProperty> = {
+  const filter: Mongo.Selector<LibraryNode> = {
     fillSlots: true,
     removed: { $ne: true },
     $and: [],
@@ -29,10 +30,10 @@ export default function getSlotFillFilter({ slot, libraryIds }: {
       }]
     });
   } else if (slot.type === 'class') {
-    const classLevelFilter: Mongo.Selector<CreatureProperty> = {
+    const classLevelFilter: Mongo.Selector<LibraryNode> = {
       type: 'classLevel',
     };
-    const slotFillerFilter: Mongo.Selector<CreatureProperty> = {
+    const slotFillerFilter: Mongo.Selector<LibraryNode> = {
       slotFillerType: 'classLevel',
     };
 
@@ -55,7 +56,7 @@ export default function getSlotFillFilter({ slot, libraryIds }: {
       $or: [classLevelFilter, slotFillerFilter]
     });
   }
-  const tagsOr: Mongo.Selector<CreatureProperty>[] = [];
+  const tagsOr: Mongo.Selector<LibraryNode>[] = [];
   const tagsNin: string[] = [];
   if (slot.slotTags && slot.slotTags.length) {
     tagsOr.push({ libraryTags: { $all: slot.slotTags } });

@@ -2,7 +2,7 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
-import { moveWithinRoot } from '/imports/api/parenting/organizeMethods';
+import { moveWithinRoot } from './organizeProperty';
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import getParentRefByTag from './getParentByTag';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
