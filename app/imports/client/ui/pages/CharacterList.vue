@@ -5,7 +5,7 @@ import { autorun, subscribe } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureFolders from '/imports/api/creature/creatureFolders/CreatureFolders';
 import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
-import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/insertCreatureFolder';
+import insertCreatureFolder from '/imports/api/creature/creatureFolders/methods/insertCreatureFolder'; 
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureFolderList from '/imports/client/ui/creature/creatureList/CreatureFolderList.vue';
 import ArchiveButton from '/imports/client/ui/creature/creatureList/ArchiveButton.vue';

@@ -37,5 +37,4 @@ const CreatureFolders = new Mongo.Collection<CreatureFolder>('creatureFolders');
 
 CreatureFolders.attachSchema(creatureFolderSchema);
 
-import '/imports/api/creature/creatureFolders/methods.js/index';
 export default CreatureFolders;

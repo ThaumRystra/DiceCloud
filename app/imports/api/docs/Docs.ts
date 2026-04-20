@@ -88,6 +88,8 @@ if (Meteor.isClient) {
   }
 } else if (Meteor.isServer) {
   Meteor.startup(async () => {
+    return;
+    // TODO this is not working in current meteor
     if (!await Docs.findOneAsync()) {
       console.info('No docs found, filling documentation with defaults');
       const string = Assets.getText('docs/defaultDocs.json') ?? '[]';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
-import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods.js/updateCreatureFolderName';
-import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods.js/removeCreatureFolder';
+import updateCreatureFolderName from '/imports/api/creature/creatureFolders/methods/updateCreatureFolderName';
+import removeCreatureFolder from '/imports/api/creature/creatureFolders/methods/removeCreatureFolder';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 const props = defineProps<{

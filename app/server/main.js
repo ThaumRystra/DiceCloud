@@ -5,7 +5,6 @@ import '/imports/server/rest/index';
 import '/imports/server/config/accountsEmailConfig';
 import '/imports/server/config/simpleSchemaDebug';
 import '/imports/server/config/SyncedCronConfig';
-import '/imports/server/config/redisCaching';
 import '/imports/server/publications/index';
 import '/imports/server/cron/deleteSoftRemovedDocuments';
 import '/imports/api/creature/creatureProperties/methods/organizeProperty';
@@ -19,3 +18,6 @@ import '/imports/api/creature/creatures/methods/index';
 import '/imports/api/engine/action/methods/index';
 import '/imports/api/sharing/sharing';
 import '/imports/server/config/publicationStrategies';
+import '/imports/api/creature/creatureFolders/methods/index';
+
+console.log('\nMain loaded\n')

@@ -1,6 +1,4 @@
-
 import SimpleSchema from 'simpl-schema';
-import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 import { CreaturePropertySchema } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { CreatureSchema } from '/imports/api/creature/creatures/Creatures';
 import assertUserHasFileSpace from '/imports/api/files/assertUserHasFileSpace';
@@ -25,7 +23,9 @@ const ArchiveCreatureFiles = s3FilesStorage.createS3FilesCollection({
     return true;
   },
   onAfterUpload(file) {
-    if (Meteor.isServer) incrementFileStorageUsed(file.userId, file.size);
+    if (Meteor.isServer) import('/imports/api/users/methods/updateFileStorageUsed')
+      .then((m) => m.incrementFileStorageUsed(file.userId, file.size))
+      .catch((e) => console.error(e));
   }
 });
 

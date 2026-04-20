@@ -143,93 +143,6 @@ for (key in propertySchemasIndex) {
   });
 }
 
-const insertNode = new ValidatedMethod({
-  name: 'libraryNodes.insert',
-  validate: new SimpleSchema({
-    libraryNode: {
-      type: Object,
-      blackbox: true,
-    },
-    parentId: {
-      type: String,
-    },
-  }).validator(),
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 5,
-    timeInterval: 5000,
-  },
-  async run({ libraryNode }: { libraryNode: Partial<LibraryNode>, parentId: string }) {
-
-    if (!libraryNode.root) {
-      throw new Meteor.Error('no-root', 'Root must be defined');
-    }
-
-    const rootDoc = await getDocByRefAsync(libraryNode.root);
-    await assertEditPermission(rootDoc, this.userId);
-
-    // Remove its ID if it came with one to force a random one to be generated
-    // server-side
-    delete libraryNode._id;
-
-    // Insert the node
-    const nodeId = await LibraryNodes.insertAsync(libraryNode as LibraryNode);
-
-    // Update the node if it was a reference node
-    if (libraryNode.type == 'reference') {
-      libraryNode._id = nodeId;
-      await updateReferenceNodeWork(libraryNode, this.userId);
-    }
-
-    // Tree structure changed by insert, reorder the tree
-    await rebuildNestedSets(LibraryNodes, rootDoc!._id);
-
-    // Return the id of the inserted node
-    return nodeId;
-  },
-});
-
-const updateLibraryNode = new ValidatedMethod<{ _id: string, path: string[], value: unknown }, Promise<number>>({
-  name: 'libraryNodes.update',
-  validate: ({ _id, path }) => {
-    if (!_id) throw new Meteor.Error('id-required', '_id is required');
-    // We cannot change these fields with a simple update
-    switch (path[0]) {
-      case 'type':
-      case 'root':
-      case 'left':
-      case 'right':
-      case 'parentId':
-        throw new Meteor.Error('invalid-update', 'Can\'t update tree with a simple update, use the dedicated method');
-    }
-  },
-  mixins: [RateLimiterMixin],
-  rateLimit: {
-    numRequests: 15,
-    timeInterval: 5000,
-  },
-  async run({ _id, path, value }) {
-    let node = await LibraryNodes.findOneAsync(_id);
-    await assertDocEditPermission(node, this.userId);
-    const pathString = path.join('.');
-    let modifier;
-    // unset empty values
-    if (value === null || value === undefined) {
-      modifier = { $unset: { [pathString]: 1 } };
-    } else {
-      modifier = { $set: { [pathString]: value } };
-    }
-    const numUpdated = await LibraryNodes.updateAsync(_id, modifier, {
-      selector: { type: node!.type },
-    });
-    if (node!.type == 'reference') {
-      node = await LibraryNodes.findOneAsync(_id);
-      await updateReferenceNodeWork(node, this.userId);
-    }
-    return numUpdated;
-  },
-});
-
 const pushToLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.push',
   validate: null,
@@ -309,8 +222,6 @@ const restoreLibraryNode = new ValidatedMethod({
 export default LibraryNodes;
 export {
   LibraryNodeSchema,
-  insertNode,
-  updateLibraryNode,
   pullFromLibraryNode,
   pushToLibraryNode,
   softRemoveLibraryNode,

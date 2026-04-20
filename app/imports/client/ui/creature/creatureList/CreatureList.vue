@@ -2,7 +2,7 @@
 import { ref, watch, onMounted } from 'vue';
 import CreatureListTile from '/imports/client/ui/creature/creatureList/CreatureListTile.vue';
 import { VueDraggable } from 'vue-draggable-plus';
-import moveCreatureToFolder from '/imports/api/creature/creatureFolders/methods.js/moveCreatureToFolder';
+import moveCreatureToFolder from '/imports/api/creature/creatureFolders/methods/moveCreatureToFolder';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 
 const props = defineProps<{

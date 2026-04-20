@@ -72,6 +72,7 @@
     "@rsdoctor/rspack-plugin": "^1.5.7",
     "@rspack/cli": "^1.7.1",
     "@rspack/core": "^1.7.1",
+    "@swc/core": "^1.15.18",
     "@types/chai": "^4.3.11",
     "@types/lodash": "^4.14.202",
     "@types/meteor-mdg-validated-method": "^1.2.10",
@@ -100,7 +101,7 @@
     },
     "modern": {
       "transpiler": {
-        "verbose": true
+        "verbose": false
       }
     }
   }
