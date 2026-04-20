@@ -2,13 +2,10 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import { autorun } from 'vue-meteor-tracker';
 import LabeledFab from '/imports/client/ui/components/LabeledFab.vue';
 import insertProperty from '/imports/api/creature/creatureProperties/methods/insertProperty';
-import Creatures from '/imports/api/creature/creatures/Creatures';
 import PROPERTIES from '/imports/constants/PROPERTIES';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ editPermission?: boolean }>();

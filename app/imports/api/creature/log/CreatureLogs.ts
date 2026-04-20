@@ -1,5 +1,4 @@
 import Creatures, { type Creature } from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '../../engine/shared/scope';
 import LogContentSchema from '/imports/api/creature/log/LogContentSchema';
 import { ValidatedMethod, type MethodContext } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
@@ -218,7 +217,7 @@ const logRoll = new ValidatedMethod({
     });
     assertDocExists(creature);
     await assertEditPermission(creature, this.userId);
-    const variables = await CreatureVariables.findOneAsync({ _creatureId: creatureId }) || {};
+    const variables = {}; // TODO get variables from scope
     let logContent = []
     let parsedResult = undefined;
     try {

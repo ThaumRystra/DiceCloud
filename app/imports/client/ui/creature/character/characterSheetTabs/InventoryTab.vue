@@ -13,11 +13,11 @@ import getParentByTag from '/imports/api/creature/creatureProperties/methods/get
 import BUILT_IN_TAGS from '/imports/constants/BUILT_IN_TAGS';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
-import CreatureVariables from '../../../../../api/engine/shared/scope';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import { key } from '/imports/client/ui/vuexStore';
+import { CreatureVariables } from '/imports/client/localCollections/CreatureVariables';
 
 const props = defineProps<{ creatureId: string }>();
 const store = useStore(key);

@@ -43,10 +43,7 @@ const equipItem = new ValidatedMethod({
     if (newParent) newPosition = newParent.left + 0.5;
 
     await moveWithinRoot.callAsync({
-      docRef: {
-        id: _id,
-        collection: 'creatureProperties',
-      },
+      propId: _id,
       newPosition,
       skipRecompute: true,
     });

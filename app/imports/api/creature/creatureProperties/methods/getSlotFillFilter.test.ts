@@ -1,5 +1,6 @@
 import { assert } from 'chai';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter';
+import type { LibraryNode } from '/imports/api/library/LibraryNodes';
 
 describe('Slot fill filter', function () {
 
@@ -40,7 +41,7 @@ describe('Slot fill filter', function () {
   });
 
   it('filters using slot type', function () {
-    const filter = getSlotFillFilter({
+    const filter: Mongo.Query<LibraryNode> = getSlotFillFilter({
       slot: {
         slotTags: ['tag1', 'tag2'],
         slotType: 'feature',

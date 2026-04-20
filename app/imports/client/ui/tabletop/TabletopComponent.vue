@@ -10,7 +10,7 @@ import TabletopLogStream from '/imports/client/ui/tabletop/TabletopLogStream.vue
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions.js';
+import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import SelectedCreatureBar from '/imports/client/ui/tabletop/selectedCreatureBar/SelectedCreatureBar.vue';
 import addCreaturesFromLibraryToTabletop from '/imports/api/tabletop/methods/addCreaturesFromLibraryToTabletop';
 import removeCreatureFromTabletop from '/imports/api/tabletop/methods/removeCreatureFromTabletop';

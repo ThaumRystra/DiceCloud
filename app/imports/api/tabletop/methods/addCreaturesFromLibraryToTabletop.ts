@@ -8,7 +8,6 @@ import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { getFilter, renewDocIds } from '/imports/api/parenting/parentingFunctions';
 import { reifyNodeReferences, storeLibraryNodeReferences } from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import CreatureVariables from '../../engine/shared/scope';
 import Tabletops from '/imports/api/tabletop/Tabletops';
 import { assertTabletopHasPropSpace } from '/imports/api/tabletop/methods/shared/tabletopLimits'
 
@@ -75,11 +74,6 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         public: false,
         dirty: true,
         settings: {},
-      });
-
-      // Insert the creature variables
-      await CreatureVariables.insertAsync({
-        _creatureId: creatureId,
       });
 
       await insertSubProperties(creatureNode, creatureId);

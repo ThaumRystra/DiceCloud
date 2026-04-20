@@ -4,7 +4,6 @@ import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import Docs, { DOC_ROOT_ID } from '/imports/api/docs/Docs';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { TreeDoc } from '/imports/api/parenting/ChildSchema';
-import CreatureVariables from '../../../api/engine/shared/scope';
 
 // Git version 2.0.59
 // Database version 3
@@ -21,7 +20,7 @@ Migrations.add({
     console.log('New parenting schema fields added, if it was done correctly remove the old fields manually');
 
     console.log('removing all CreatureVariables, creatures will add them back the next time they recalculate');
-    await CreatureVariables.removeAsync({});
+    // await CreatureVariables.removeAsync({});
 
     console.log('Rebuilding nested sets for all libraries'); // Characters rebuild themselves on recompute
     const libraryIds = await Libraries.find().mapAsync((library) => library._id);

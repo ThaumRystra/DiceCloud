@@ -11,7 +11,7 @@ import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 import PrintedItem from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedLineItem.vue';
 import PrintedContainer from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedContainer.vue';
-import CreatureVariables from '../../../../../api/engine/shared/scope';
+import { CreatureVariables } from '/imports/client/localCollections/CreatureVariables';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import { key } from '/imports/client/ui/vuexStore';
 

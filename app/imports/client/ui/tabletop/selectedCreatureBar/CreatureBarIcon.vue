@@ -18,10 +18,9 @@ const { result: prop } = autorun(() => {
 <template lang="html">
   <v-btn
     icon
-    :variant="!selected ? 'plain' : undefined"
     size="large"
     rounded="0"
-    :variant="selected ? 'outlined' : undefined"
+    :variant="selected ? 'outlined' : 'plain'"
     :color="prop && prop.color"
     @click.prevent="$emit('click', $event)"
     @mouseenter="$emit('mouseenter', $event)"

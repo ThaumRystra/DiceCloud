@@ -7,7 +7,6 @@ import {
   setReadersCanCopy,
   updateUserSharePermissions,
 } from '/imports/api/sharing/sharing';
-import { fetchDocByRef } from '/imports/api/parenting/parentingFunctions';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import type { Shared } from '/imports/api/sharing/SharingSchema';
 import { key } from '/imports/client/ui/vuexStore';

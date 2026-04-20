@@ -8,7 +8,6 @@ import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctio
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureVariables from '../../../../../api/engine/shared/scope';
 import insertPropertyFromLibraryNode from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
 import CharacterErrors from '/imports/client/ui/creature/character/errors/CharacterErrors.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
@@ -16,6 +15,7 @@ import updateCreatureProperty from '/imports/api/creature/creatureProperties/met
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { key } from '/imports/client/ui/vuexStore';
+import { CreatureVariables } from '/imports/client/localCollections/CreatureVariables';
 
 function traverse(tree: any[], callback: (node: any, parents: any[]) => void, parents: any[] = []) {
   tree.forEach(node => {

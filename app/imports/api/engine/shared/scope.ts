@@ -81,5 +81,3 @@ function getType(val) {
   if (val.parseType) return 'parseNode';
   return typeof val;
 }
-
-export default CreatureVariables;

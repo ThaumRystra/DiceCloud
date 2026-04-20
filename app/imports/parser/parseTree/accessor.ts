@@ -1,9 +1,10 @@
-import { getFromScope } from '../../api/engine/shared/scope';
 import array from '/imports/parser/parseTree/array';
 import constant from '/imports/parser/parseTree/constant';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import type { ResolvedResult } from '/imports/parser/types/ResolvedResult';
 import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
+
+const getFromScope = (await import('../../api/engine/shared/scope')).getFromScope;
 
 export type AccessorNode = {
   parseType: 'accessor' | 'symbol';

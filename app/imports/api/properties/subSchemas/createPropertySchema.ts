@@ -6,7 +6,7 @@ import {
   fieldToCompute,
   computedOnlyField,
 } from '/imports/api/properties/subSchemas/computedField';
-import { Definition, InferSchema, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { type Definition, type InferSchema, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 
 // Search through the schema for keys whose type is 'fieldToCompute' etc.
 // replace the type with Object and attach extend the schema with

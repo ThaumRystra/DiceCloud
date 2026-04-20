@@ -3,14 +3,14 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-accounts-password@3.2.3-beta341.1
+accounts-password@3.2.3-rc341.0
 random@1.2.2
 dburles:mongo-collection-instances
 accounts-google@1.4.1
 email@3.1.2
 meteor-base@1.5.2
 mobile-experience@1.1.2
-mongo@2.2.1-beta341.1
+mongo@2.2.1-rc341.0
 session@1.2.2
 tracker@1.3.4
 logging@1.3.6
@@ -37,10 +37,10 @@ simple:rest-json-error-handler
 #mdg:meteor-apm-agent
 #mixmax:smart-disconnect
 zodern:types
-typescript@5.10.0-beta341.1
-ecmascript@0.18.0-beta341.1
-standard-minifier-css@1.10.1-beta341.1
+typescript@5.10.0-rc341.0
+ecmascript@0.18.0-rc341.0
+standard-minifier-css@1.10.1-rc341.0
 standard-minifier-js@3.2.0
-hot-module-replacement@0.5.4
-rspack
-roles
+hot-module-replacement@0.6.0-rc341.0
+rspack@1.1.0-rc341.0
+roles@1.1.0-rc341.0
