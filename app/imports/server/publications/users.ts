@@ -52,7 +52,7 @@ const userIdsSchema = new SimpleSchema({
   }
 });
 
-Meteor.publish('userPublicProfiles', function (ids) {
+Meteor.publish('userPublicProfiles', function (ids: string[]) {
   userIdsSchema.validate({ ids });
   if (!this.userId || !ids) return this.ready();
   return Meteor.users.find({

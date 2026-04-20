@@ -12,5 +12,5 @@ Meteor.publish('userImages', function () {
       'name': 1,
       'size': -1,
     },
-  }).cursor;
+  });
 });

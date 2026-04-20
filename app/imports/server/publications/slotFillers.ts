@@ -1,6 +1,6 @@
 import { check } from 'meteor/check';
 import Libraries from '/imports/api/library/Libraries';
-import LibraryNodes from '/imports/api/library/LibraryNodes';
+import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getSlotFillFilter from '/imports/api/creature/creatureProperties/methods/getSlotFillFilter'
 import getCreatureLibraryIds from '/imports/api/library/getCreatureLibraryIds';
@@ -8,7 +8,7 @@ import { LIBRARY_NODE_TREE_FIELDS } from '/imports/server/publications/library';
 import escapeRegex from '/imports/api/utility/escapeRegex';
 
 // Publish docs the user has already selected so they don't disappear when searching
-Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
+Meteor.publish('selectedFillers', async function (slotId: string, nodeIds: string[], isDummySlot: string) {
   const userId = this.userId;
   if (!userId) {
     return [];
@@ -17,16 +17,16 @@ Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
   // Get the slot from the right collection
   let slot;
   if (isDummySlot) {
-    slot = LibraryNodes.findOne(slotId);
+    slot = await LibraryNodes.findOneAsync(slotId);
   } else {
-    slot = CreatureProperties.findOne(slotId);
+    slot = await CreatureProperties.findOneAsync(slotId);
   }
 
   if (!slot) return [];
 
   // Get all the ids of libraries the user can access
   const creatureId = slot.root.id;
-  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraryIds = await getCreatureLibraryIds(creatureId, userId);
   const libraries = Libraries.find({
     $or: [
       { owner: userId },
@@ -38,7 +38,7 @@ Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
     sort: { name: 1 }
   });
 
-  const filter = { _id: { $in: nodeIds } };
+  const filter: Mongo.Selector<LibraryNode> = { _id: { $in: nodeIds } };
   // Get the limit of the documents the user can fetch
   const options = {
     sort: {
@@ -54,7 +54,7 @@ Meteor.publish('selectedFillers', function (slotId, nodeIds, isDummySlot) {
   ];
 });
 
-Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) {
+Meteor.publish('slotFillers', async function (slotId: string, searchTerm: string, isDummySlot: boolean, limit: number) {
   if (searchTerm) check(searchTerm, String);
   limit = limit || 50;
   check(limit, Number);
@@ -72,11 +72,17 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
     slot = CreatureProperties.findOne(slotId);
   }
 
+
   if (!slot) return [];
+  if (slot.type !== 'propertySlot' && slot.type !== 'class') {
+    const error = new Meteor.Error('unexpected-type', `unexpected type in slot fillers subscription ${slot.type}`)
+    console.warn(error);
+    return this.error(error)
+  }
 
   // Get all the ids of libraries the user can access
   const creatureId = slot.root.id;
-  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraryIds = await getCreatureLibraryIds(creatureId, userId);
   const libraries = Libraries.find({
     $or: [
       { owner: userId },
@@ -89,9 +95,9 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   });
 
   // Build a filter for nodes in those libraries that match the slot
-  const filter = getSlotFillFilter({ slot, libraryIds });
+  const filter = getSlotFillFilter({ slot, libraryIds }) as Mongo.Query<LibraryNode>;
 
-  let options = undefined;
+  let options: Mongo.Options<LibraryNode> | undefined = undefined;
   if (searchTerm) {
     if (!filter.$and) filter.$and = [];
     filter.$and.push({
@@ -126,12 +132,15 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   }
   options.limit = limit;
 
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
+  // @ts-expect-error doing crime
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
   const cursor = LibraryNodes.find(filter, options);
   const observeHandle = cursor.observeChanges({
-    added: function (id, fields) {
+    added: function (id, fields: Partial<LibraryNode> & { _slotFillerResult?: boolean }) {
       fields._slotFillerResult = true;
       self.added('libraryNodes', id, fields);
     },
@@ -151,7 +160,7 @@ Meteor.publish('slotFillers', function (slotId, searchTerm, isDummySlot, limit) 
   self.ready();
 });
 
-Meteor.publish('classFillers', function (classId, searchTerm, limit) {
+Meteor.publish('classFillers', async function (classId: string, searchTerm: string, limit: number) {
   if (!classId) return [];
   if (searchTerm) check(searchTerm, String);
   limit = limit || 50;
@@ -166,10 +175,13 @@ Meteor.publish('classFillers', function (classId, searchTerm, limit) {
   if (!classProp) {
     return [];
   }
+  if (classProp.type !== 'class') {
+    return [];
+  }
 
   // Get all the ids of libraries the user can access
   const creatureId = classProp.root.id;
-  const libraryIds = getCreatureLibraryIds(creatureId, userId);
+  const libraryIds = await getCreatureLibraryIds(creatureId, userId);
   const libraries = Libraries.find({
     $or: [
       { owner: userId },
@@ -194,12 +206,15 @@ Meteor.publish('classFillers', function (classId, searchTerm, limit) {
     limit,
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
+  // @ts-expect-error doing crime
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
   const cursor = LibraryNodes.find(filter, options);
   const observeHandle = cursor.observeChanges({
-    added: function (id, fields) {
+    added: function (id, fields: Partial<LibraryNode> & { _classFillerResult?: boolean }) {
       fields._classFillerResult = true;
       self.added('libraryNodes', id, fields);
     },

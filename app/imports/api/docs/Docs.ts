@@ -54,7 +54,7 @@ const DocSchema = TypedSimpleSchema.from({})
   .extend(ChildSchema(['docs' as const]))
   .extend(SoftRemovableSchema);
 
-type Doc = InferType<typeof DocSchema>;
+export type Doc = InferType<typeof DocSchema>;
 
 const Docs: Mongo.Collection<Doc> & {
   getJsonDocs?: () => string

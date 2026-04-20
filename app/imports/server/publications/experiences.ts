@@ -2,6 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
+import { assertDocExists } from '/imports/api/sharing/sharingPermissions';
 
 const schema = new SimpleSchema({
   creatureId: {
@@ -10,7 +11,7 @@ const schema = new SimpleSchema({
   },
 });
 
-Meteor.publish('experiences', async function (creatureId) {
+Meteor.publish('experiences', async function (creatureId: string) {
   schema.validate({ creatureId });
   const userId = this.userId;
   if (!userId) {
@@ -18,6 +19,7 @@ Meteor.publish('experiences', async function (creatureId) {
   }
   const creature = await Creatures.findOneAsync(creatureId);
   try {
+    assertDocExists(creature);
     await assertViewPermission(creature, userId);
   } catch (e) {
     console.warn(e);

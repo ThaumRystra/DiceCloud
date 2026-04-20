@@ -1,3 +1,3 @@
-export default function escapeRegex(string) {
+export default function escapeRegex(string: string) {
   return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }

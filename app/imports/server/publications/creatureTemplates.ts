@@ -6,12 +6,12 @@ import escapeRegex from '/imports/api/utility/escapeRegex';
 import getUserLibraryIds from '/imports/api/library/getUserLibraryIds';
 
 // Publish docs the user has already selected so they don't disappear when searching
-Meteor.publish('selectedCreatureTemplates', async function (nodeIds) {
-  // TODO
-  return [];
-});
+// TODO
+// Meteor.publish('selectedCreatureTemplates', async function (nodeIds) {
+//   return [];
+// });
 
-Meteor.publish('creatureTemplates', async function (searchTerm, limit) {
+Meteor.publish('creatureTemplates', async function (searchTerm: string, limit: number) {
   if (searchTerm) check(searchTerm, String);
   limit = limit || 50;
   check(limit, Number);
@@ -73,8 +73,10 @@ Meteor.publish('creatureTemplates', async function (searchTerm, limit) {
   }
   options.limit = limit;
 
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
-  //@ts-expect-error Doing crime
+  // @ts-expect-error Doing crime
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
   const cursor = LibraryNodes.find(filter, options);

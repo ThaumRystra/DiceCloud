@@ -1,9 +1,9 @@
 import type { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
-import type { LibraryNode } from '/imports/api/library/LibraryNodes';
+import type { LibraryNode, LibraryNodeTypes } from '/imports/api/library/LibraryNodes';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
 export default function getSlotFillFilter({ slot, libraryIds }: {
-  slot: CreaturePropertyTypes['propertySlot'] | CreaturePropertyTypes['class'],
+  slot: CreaturePropertyTypes['propertySlot'] | CreaturePropertyTypes['class'] | LibraryNodeTypes['propertySlot'] | LibraryNodeTypes['class'],
   libraryIds: string[],
 }): Mongo.Selector<LibraryNode> {
 
@@ -44,10 +44,10 @@ export default function getSlotFillFilter({ slot, libraryIds }: {
     }
 
     // Only search for levels the class needs
-    if (slot.missingLevels && slot.missingLevels.length) {
+    if ('missingLevels' in slot && slot.missingLevels && slot.missingLevels.length) {
       classLevelFilter.level = { $in: slot.missingLevels };
       slotFillerFilter['cache.node.level'] = { $in: slot.missingLevels };
-    } else {
+    } else if ('level' in slot) {
       classLevelFilter.level = { $gt: slot.level || 0 };
       slotFillerFilter['cache.node.level'] = { $gt: slot.level || 0 };
     }

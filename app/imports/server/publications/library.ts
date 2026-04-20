@@ -2,7 +2,7 @@ import SimpleSchema from 'simpl-schema';
 import Libraries from '/imports/api/library/Libraries';
 import LibraryCollections from '/imports/api/library/LibraryCollections';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { assertViewPermission, assertDocViewPermission } from '/imports/api/sharing/sharingPermissions';
+import { assertViewPermission, assertDocViewPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
 import { union } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
@@ -61,7 +61,7 @@ const LIBRARY_NODE_TREE_FIELDS = {
 
 export { LIBRARY_NODE_TREE_FIELDS };
 
-Meteor.publish('libraryCollection', async function (libraryCollectionId) {
+Meteor.publish('libraryCollection', async function (libraryCollectionId: string) {
   const userId = this.userId;
   if (!userId) {
     return this.error(new Meteor.Error('logged-out', 'You must be logged in to view your library collections'));
@@ -75,7 +75,7 @@ Meteor.publish('libraryCollection', async function (libraryCollectionId) {
       { public: true },
     ]
   });
-  const libraryCollection = await libraryCollectionCursor.fetchAsync()[0];
+  const libraryCollection = (await libraryCollectionCursor.fetchAsync())[0];
   if (!libraryCollection) return [libraryCollectionCursor];
   const libraryCursor = Libraries.find({
     _id: { $in: libraryCollection.libraries },
@@ -108,7 +108,7 @@ Meteor.publish('libraries', async function () {
   });
 
   // Get the collections the user is subscribed to
-  const subCollections = user && (user as any).subscribedLibraryCollections || [];
+  const subCollections = user?.subscribedLibraryCollections || [];
   const libraryCollectionsCursor = LibraryCollections.find({
     $or: [
       { owner: userId },
@@ -121,13 +121,13 @@ Meteor.publish('libraries', async function () {
   });
 
   // Collate all the libraryIds in those collections
-  let collectionLibIds = [];
+  let collectionLibIds: string[] = [];
   await libraryCollectionsCursor.forEachAsync(libCollection => {
     collectionLibIds = union(collectionLibIds, libCollection.libraries);
   });
 
   // Get the libraries the user is subscribed to directly
-  const subs = user && (user as any).subscribedLibraries || [];
+  const subs = user?.subscribedLibraries || [];
 
   // Combine all the library Ids
   const libIds = union(collectionLibIds, subs);
@@ -173,7 +173,7 @@ Meteor.publish('browseLibraries', function () {
   ];
 });
 
-Meteor.publish('library', async function (libraryId) {
+Meteor.publish('library', async function (libraryId: string) {
   if (!libraryId) return [];
   try {
     libraryIdSchema.validate({ libraryId });
@@ -184,6 +184,7 @@ Meteor.publish('library', async function (libraryId) {
   const userId = this.userId;
   const library = await Libraries.findOneAsync(libraryId);
   try {
+    assertDocExists(library);
     await assertViewPermission(library, userId)
   }
   catch (e) {
@@ -230,12 +231,12 @@ Meteor.publish('libraryNodes', async function (libraryId: string, extraFields: s
   const userId = this.userId;
   const library = await Libraries.findOneAsync(libraryId);
   try {
-    assertViewPermission(library, userId)
+    await assertViewPermission(library, userId)
   } catch (e) {
     console.warn(e);
     return this.error(e as Error);
   }
-  const fields = { ...LIBRARY_NODE_TREE_FIELDS };
+  const fields: Mongo.FieldSpecifier = { ...LIBRARY_NODE_TREE_FIELDS };
   extraFields?.forEach(field => {
     fields[field] = 1;
   });
@@ -256,14 +257,14 @@ const nodeIdSchema = new SimpleSchema({
   },
 });
 
-Meteor.publish('libraryNode', async function (libraryNodeId) {
+Meteor.publish('libraryNode', async function (libraryNodeId: string) {
   if (!libraryNodeId) return [];
   nodeIdSchema.validate({ libraryNodeId });
   const userId = this.userId;
   const nodeCursor = LibraryNodes.find({ _id: libraryNodeId });
-  const node = await nodeCursor.fetchAsync()[0];
+  const node = (await nodeCursor.fetchAsync())[0];
   try {
-    assertDocViewPermission(node, userId);
+    await assertDocViewPermission(node, userId);
   }
   catch (e) {
     console.warn(e);
@@ -272,12 +273,14 @@ Meteor.publish('libraryNode', async function (libraryNodeId) {
   return [nodeCursor];
 });
 
-Meteor.publish('softRemovedLibraryNodes', async function (libraryId) {
+Meteor.publish('softRemovedLibraryNodes', async function (libraryId: string) {
   if (!libraryId) return [];
   libraryIdSchema.validate({ libraryId });
   const userId = this.userId;
   const library = await Libraries.findOneAsync(libraryId);
-  try { assertViewPermission(library, userId) }
+  try {
+    await assertViewPermission(library, userId);
+  }
   catch (e) {
     console.warn(e);
     return this.error(e as Error);
@@ -293,13 +296,13 @@ Meteor.publish('softRemovedLibraryNodes', async function (libraryId) {
   ];
 });
 
-Meteor.publish('descendantLibraryNodes', async function (nodeId) {
+Meteor.publish('descendantLibraryNodes', async function (nodeId: string) {
   const node = await LibraryNodes.findOneAsync(nodeId);
   const libraryId = node?.root.id;
   if (!libraryId || !node) return [];
   const userId = this.userId;
   try {
-    assertDocViewPermission(node, userId);
+    await assertDocViewPermission(node, userId);
   }
   catch (e) {
     console.warn(e);

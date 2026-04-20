@@ -2,13 +2,12 @@ import Tabletops from '/imports/api/tabletop/Tabletops';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
-import CreatureVariables from '../../api/engine/shared/scope';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions from '/imports/api/engine/action/EngineActions';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
 
 Meteor.publish('tabletops', function () {
-  var userId = this.userId;
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -22,9 +21,9 @@ Meteor.publish('tabletops', function () {
   });
 });
 
-Meteor.publish('tabletopUsers', function (tabletopId) {
+Meteor.publish('tabletopUsers', async function (tabletopId: string) {
   if (!tabletopId) return [];
-  const tabletop = Tabletops.findOne(tabletopId);
+  const tabletop = await Tabletops.findOneAsync(tabletopId);
   if (!tabletop) return [];
   const userIds = [
     tabletop.owner,
@@ -42,10 +41,10 @@ Meteor.publish('tabletopUsers', function (tabletopId) {
   });
 });
 
-Meteor.publish('otherTabletopCreatures', function (creatureId) {
+Meteor.publish('otherTabletopCreatures', async function (creatureId: string) {
   const userId = this.userId;
   if (!userId) return [];
-  const permissionCreature = Creatures.findOne({
+  const permissionCreature = await Creatures.findOneAsync({
     _id: creatureId,
   }, {
     fields: {
@@ -57,7 +56,7 @@ Meteor.publish('otherTabletopCreatures', function (creatureId) {
       tabletopId: 1,
     }
   });
-  assertViewPermission(creatureId, this.userId);
+  await assertViewPermission(creatureId, this.userId);
   return Creatures.find({
     tabletopId: permissionCreature?.tabletopId,
   }, {
@@ -75,8 +74,8 @@ Meteor.publish('otherTabletopCreatures', function (creatureId) {
   });
 });
 
-Meteor.publish('tabletop', async function (tabletopId) {
-  var userId = this.userId;
+Meteor.publish('tabletop', async function (tabletopId: string) {
+  const userId = this.userId;
   if (!userId) {
     return [];
   }
@@ -122,11 +121,6 @@ Meteor.publish('tabletop', async function (tabletopId) {
   for (const creatureId of creatureIds) {
     await loadCreature(creatureId, this);
   }
-  const variablesCursor = CreatureVariables.find({
-    _creatureId: { $in: creatureIds }
-  }, {
-    limit: 110,
-  });
   const propertiesCursor = CreatureProperties.find({
     'root.id': { $in: creatureIds },
     removed: { $ne: true },
@@ -148,7 +142,6 @@ Meteor.publish('tabletop', async function (tabletopId) {
     creatureSummariesCursor,
     propertiesCursor,
     logsCursor,
-    variablesCursor,
     actionsCursor
   ];
 });

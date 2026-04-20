@@ -1,6 +1,5 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureVariables from '../../api/engine/shared/scope';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
@@ -9,6 +8,7 @@ import VERSION from '/imports/constants/VERSION';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import { rebuildCreatureNestedSets } from '/imports/api/parenting/parentingFunctions';
 import EngineActions from '/imports/api/engine/action/EngineActions';
+import { assertDocExists } from '/imports/api/sharing/sharingPermissions';
 
 const schema = new SimpleSchema({
   creatureId: {
@@ -17,7 +17,7 @@ const schema = new SimpleSchema({
   },
 });
 
-Meteor.publish('singleCharacter', async function (creatureId) {
+Meteor.publish('singleCharacter', async function (creatureId: string) {
   try {
     schema.validate({ creatureId });
   } catch (e) {
@@ -38,6 +38,7 @@ Meteor.publish('singleCharacter', async function (creatureId) {
     }
   });
   try {
+    assertDocExists(permissionCreature);
     await assertViewPermission(permissionCreature, userId);
   }
   catch (e) {
@@ -56,9 +57,6 @@ Meteor.publish('singleCharacter', async function (creatureId) {
   return [
     Creatures.find({
       _id: creatureId,
-    }),
-    CreatureVariables.find({
-      _creatureId: creatureId,
     }),
     CreatureProperties.find({
       'root.id': creatureId,

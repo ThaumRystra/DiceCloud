@@ -7,13 +7,13 @@ import { assertViewPermission } from '/imports/api/sharing/sharingPermissions';
 import escapeRegex from '/imports/api/utility/escapeRegex';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 
-Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds) {
+Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds: string[]) {
   check(selectedNodeIds, Array);
   // Limit to 20 selected nodes
   if (selectedNodeIds.length > 20) {
     selectedNodeIds = selectedNodeIds.slice(0, 20);
   }
-  const libraryViewPermissions = {};
+  const libraryViewPermissions: Record<string, boolean> = {};
   const nodes: LibraryNode[] = [];
   // Check view permissions of all libraries
   for (const id of selectedNodeIds) {
@@ -53,7 +53,7 @@ Meteor.publish('selectedLibraryNodes', async function (selectedNodeIds) {
   })];
 });
 
-Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTerm, limit) {
+Meteor.publish('searchLibraryNodes', async function (creatureId: string, type: string, searchTerm: string, limit: number) {
   if (!type) return [];
 
   const userId = this.userId;
@@ -68,9 +68,9 @@ Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTer
   // Get all the ids of libraries the user can access
   let libraryIds;
   if (creatureId) {
-    libraryIds = getCreatureLibraryIds(creatureId, userId)
+    libraryIds = await getCreatureLibraryIds(creatureId, userId)
   } else {
-    libraryIds = getUserLibraryIds(userId)
+    libraryIds = await getUserLibraryIds(userId)
   }
 
   // Build a filter for nodes in those libraries that match the type
@@ -81,7 +81,7 @@ Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTer
   };
   if (type) {
     filter.$or = [{
-      type,
+      type: type as never,
     }, {
       slotFillerType: type,
     }];
@@ -115,11 +115,13 @@ Meteor.publish('searchLibraryNodes', async function (creatureId, type, searchTer
   }
   options.limit = limit;
 
+  // eslint-disable-next-line @typescript-eslint/no-this-alias
   const self = this;
   const cursor = LibraryNodes.find(filter, options);
   const libraries = Libraries.find({ _id: { $in: libraryIds } });
 
   // @ts-expect-error Doing crimes
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   Mongo.Collection._publishCursor(libraries, self, 'libraries');
 
   const observeHandle = await cursor.observeChangesAsync({
