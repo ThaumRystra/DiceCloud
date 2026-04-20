@@ -1,6 +1,5 @@
- 
 import factories from './parseTree';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 
 export default function traverse(node: ParseNode, fn: (ParseNode) => any): ReturnType<typeof fn> {
   if (!node) return;

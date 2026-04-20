@@ -1,15 +1,14 @@
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import Context from './Context';
-import ResolvedResult from './ResolvedResult';
-import ResolveOthersFunction from './ResolveOthersFunction';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type Context from './Context';
+import type { ResolvedResult } from './ResolvedResult';
+import type { ResolveOthersFunction } from './ResolveOthersFunction';
+import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 
-type ResolveLevelFunction<T extends ParseNode> = (
+export type ResolveLevelFunction<T extends ParseNode> = (
   node: T,
-  scope: Record<string, any>,
+  scope: Variables,
   context: Context,
   input: InputProvider,
   resolveOthers: ResolveOthersFunction,
 ) => Promise<ResolvedResult>;
-
-export default ResolveLevelFunction;

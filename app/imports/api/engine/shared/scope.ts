@@ -1,6 +1,8 @@
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
-import type ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { PointBuyRow } from '/imports/api/properties/PointBuys';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import array from '/imports/parser/parseTree/array';
 import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
 
@@ -8,7 +10,7 @@ import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
  * Get the property from the given scope, respecting properties that are just a link to the actual
  * property document
  */
-export async function getFromScope(name: string, scope: Variables) {
+export async function getFromScope(name: string, scope: Variables): Promise<CreatureProperty | PointBuyRow | undefined> {
   if (name === '_creatureId') return;
   const scopeValue = scope?.[name];
   if (scopeValue && '_propId' in scopeValue) {

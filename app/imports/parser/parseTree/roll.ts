@@ -1,11 +1,11 @@
 import error from '/imports/parser/parseTree/error';
 import rollArray from '/imports/parser/parseTree/rollArray';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 import Context from '/imports/parser/types/Context';
 
 export type RollNode = {

@@ -1,8 +1,9 @@
-import constant from '/imports/parser/parseTree/constant';
-import array from '/imports/parser/parseTree/array';
-import ResolvedResult from '/imports/parser/types/ResolvedResult';
 import { getFromScope } from '../../api/engine/shared/scope';
-import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
+import array from '/imports/parser/parseTree/array';
+import constant from '/imports/parser/parseTree/constant';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolvedResult } from '/imports/parser/types/ResolvedResult';
+import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
 
 export type AccessorNode = {
   parseType: 'accessor' | 'symbol';
@@ -18,6 +19,8 @@ type AccessorFactory = {
   toString(node: AccessorNode): string;
 }
 
+type ValueType = undefined | Record<string, unknown> | number | string | boolean | unknown[];
+
 const accessor: AccessorFactory = {
   create({
     name, path, isUndefined
@@ -32,61 +35,61 @@ const accessor: AccessorFactory = {
     };
   },
   async compile(node, scope, context) {
-    let value = getFromScope(node.name, scope);
     // Get the value from the given path
+    let value: ValueType = await getFromScope(node.name, scope);
     node.path?.forEach(name => {
       if (name === 'isUndefined') {
         value = value === undefined;
         return;
       }
-      if (value === undefined) {
+      if (value === undefined || value === null) {
         return;
       }
-      value = value[name];
+      value = (value as Record<string, unknown>)[name] as ValueType;
     });
-    let valueType = getType(value);
     // If the accessor returns an object, get the object's value instead
-    while (valueType === 'object') {
+    while (value && typeof value === 'object' && !Array.isArray(value)) {
       // Prefer the valueNode over the value
       if (value.valueNode) {
-        value = value.valueNode;
+        value = value.valueNode as ValueType;
+      } else if (value.valueNode) {
+        value = value.value as ValueType;
       } else {
-        value = value.value;
+        break;
       }
-      valueType = getType(value);
     }
     // Return a discovered parse node
-    if (valueType === 'parseNode') {
+    if (isParseNode(value)) {
       return {
         result: value,
         context,
       };
     }
     // Return a parse node based on the constant type returned
-    if (valueType === 'string' || valueType === 'number' || valueType === 'boolean') {
+    if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
       return {
         result: constant.create({ value }),
         context,
       };
     }
     // Return a parser array
-    if (valueType === 'array') {
+    if (Array.isArray(value)) {
       // If the first value is a parse node, assume all the values are
-      if (getType(value[0]) === 'parseNode') {
+      if (isParseNode(value[0])) {
         return {
           result: array.create({
-            values: value,
+            values: value as ParseNode[],
           }),
           context,
         };
       }
       // Create the array from js primitives instead
       return {
-        result: array.fromConstantArray(value),
+        result: array.fromConstantArray(value as number[]),
         context,
       };
     }
-    if (valueType === 'undefined') {
+    if (typeof value === 'undefined') {
       // Replace unknown variables with zero marked isUndefined
       return {
         result: constant.create({
@@ -94,16 +97,6 @@ const accessor: AccessorFactory = {
           isUndefined: true,
         }),
         context
-      };
-      // Old Behavior
-      // We are only at compile, if it isn't defined in the scope, return a copy of the accessor
-      return {
-        result: accessor.create({
-          name: node.name,
-          path: node.path,
-          isUndefined: true,
-        }),
-        context,
       };
     }
     // The type being accessed isn't supported above, make an error and return a copy of the node
@@ -137,11 +130,8 @@ const accessor: AccessorFactory = {
   }
 }
 
-function getType(val) {
-  if (!val) return typeof val;
-  if (Array.isArray(val)) return 'array';
-  if (val.parseType) return 'parseNode';
-  return typeof val;
+function isParseNode(val: unknown): val is ParseNode {
+  return !!val && typeof val === 'object' && 'parseType' in val && typeof val.parseType === 'string' && !!val.parseType
 }
 
 export default accessor;

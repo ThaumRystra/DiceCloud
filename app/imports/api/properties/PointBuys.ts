@@ -1,9 +1,8 @@
-import SimpleSchema from 'simpl-schema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
 import createPropertySchema from '/imports/api/properties/subSchemas/createPropertySchema';
 import ErrorSchema from '/imports/api/properties/subSchemas/ErrorSchema';
-import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
 /*
  * PointBuys are reason-value attached to skills and abilities
@@ -131,5 +130,7 @@ const ComputedOnlyPointBuySchema = createPropertySchema({
 const ComputedPointBuySchema = TypedSimpleSchema.from({})
   .extend(ComputedOnlyPointBuySchema)
   .extend(PointBuySchema);
+
+export type PointBuyRow = InferType<typeof ComputedPointBuySchema>['values'][number];
 
 export { PointBuySchema, ComputedPointBuySchema, ComputedOnlyPointBuySchema };

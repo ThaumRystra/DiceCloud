@@ -1,18 +1,18 @@
-import { AccessorNode } from './accessor';
-import { ArrayNode } from './array';
-import { CallNode } from './call';
-import { ConstantNode } from './constant';
-import { ErrorNode } from './error';
-import { IfNode } from './if';
-import { IndexNode } from './indexNode';
-import { NotNode } from './not';
-import { OperatorNode } from './operator';
-import { ParenthesisNode } from './parenthesis';
-import { RollNode } from './roll';
-import { RollArrayNode } from './rollArray';
-import { UnaryOperatorNode } from './unaryOperator';
+import type { AccessorNode } from './accessor';
+import type { ArrayNode } from './array';
+import type { CallNode } from './call';
+import type { ConstantNode } from './constant';
+import type { ErrorNode } from './error';
+import type { IfNode } from './if';
+import type { IndexNode } from './indexNode';
+import type { NotNode } from './not';
+import type { OperatorNode } from './operator';
+import type { ParenthesisNode } from './parenthesis';
+import type { RollNode } from './roll';
+import type { RollArrayNode } from './rollArray';
+import type { UnaryOperatorNode } from './unaryOperator';
 
-type ParseNode = AccessorNode
+export type ParseNode = AccessorNode
   | ArrayNode
   | CallNode
   | ConstantNode
@@ -25,5 +25,3 @@ type ParseNode = AccessorNode
   | RollNode
   | RollArrayNode
   | UnaryOperatorNode
-
-export default ParseNode;

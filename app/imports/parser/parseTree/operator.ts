@@ -1,9 +1,9 @@
-import constant, { ConstantValueType, isFiniteNode } from '/imports/parser/parseTree/constant';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import constant, { type ConstantValueType, isFiniteNode } from '/imports/parser/parseTree/constant';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 type OperatorSymbol = '*' | '/' | '^' | '+' | '-' | '%' | '&' | '&&' | '|' | '||' | '=' |
   '==' | '===' | '!=' | '!==' | '>' | '<' | '>=' | '<=';
@@ -93,8 +93,8 @@ const operator: OperatorFactory = {
   },
 }
 
-function applyOperator(operator: OperatorSymbol, left: ConstantValueType, right: ConstantValueType) {
-  let result;
+function applyOperator(operator: OperatorSymbol, left: ConstantValueType, right: ConstantValueType): ConstantValueType {
+  let result: ConstantValueType;
   if (left === undefined) {
     left = 0;
   }
@@ -102,12 +102,18 @@ function applyOperator(operator: OperatorSymbol, left: ConstantValueType, right:
     right = 0;
   }
   switch (operator) {
-    // Typescript might complain about these, but they return NaN as expected
+    // @ts-expect-error unsafe add
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     case '+': result = left + right; break;
+    // @ts-expect-error unsafe subtract
     case '-': result = left - right; break;
+    // @ts-expect-error unsafe multiply
     case '*': result = left * right; break;
+    // @ts-expect-error unsafe divide
     case '/': result = left / right; break;
+    // @ts-expect-error unsafe power
     case '^': result = Math.pow(left, right); break;
+    // @ts-expect-error unsafe mod
     case '%': result = left % right; break;
     case '&':
     case '&&': result = left && right; break;

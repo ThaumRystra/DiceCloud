@@ -18,7 +18,8 @@ import recalculateInlineCalculations from '/imports/api/engine/action/functions/
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import INLINE_CALCULATION_REGEX from '/imports/constants/INLINE_CALCULATION_REGEX';
 import { applyAfterTasksSkipChildren } from '/imports/api/engine/action/functions/applyTaskGroups';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default async function applyBuffProperty(
   task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
@@ -100,7 +101,7 @@ async function logBuff(prop, targetIds, action, userInput, result) {
  * except variables of the form `~target.thing.total` become `thing.total`
  */
 async function crystallizeVariables(
-  action: EngineAction, propList: any[], task: PropTask, result: TaskResult
+  action: EngineAction, propList: CreatureProperty[], task: PropTask, result: TaskResult
 ) {
   const scope = await getEffectiveActionScope(action);
   for (const prop of propList) {

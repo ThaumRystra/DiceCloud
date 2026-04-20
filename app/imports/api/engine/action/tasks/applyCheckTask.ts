@@ -4,7 +4,7 @@ import { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import { getFromScope } from '../../shared/scope';
 import { getVariables } from '/imports/api/engine/loadCreatures';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 

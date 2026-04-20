@@ -1,6 +1,6 @@
 import grammar from '/imports/parser/grammar';
 import { Parser, Grammar } from 'nearley';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import errorToString from '/imports/api/utility/errorToString';
 
 const nearleyGrammar = Grammar.fromCompiled(grammar);

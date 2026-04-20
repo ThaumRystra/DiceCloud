@@ -1,5 +1,5 @@
 import factories from './parseTree';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 
 export default function toString(node: ParseNode) {
   if (!node) return '';

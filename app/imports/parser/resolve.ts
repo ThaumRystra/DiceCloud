@@ -1,19 +1,20 @@
 import '/imports/parser/parseTree/array';
 import factories from '/imports/parser/parseTree';
-import InputProvider, { CastSpellParams, CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { InputProvider, CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import rollDice from '/imports/parser/rollDice';
-import ResolveLevel from './types/ResolveLevel';
-import ResolvedResult from './types/ResolvedResult';
+import type { ResolveLevel } from './types/ResolveLevel';
+import type { ResolvedResult } from './types/ResolvedResult';
 import Context from './types/Context';
-import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
+import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
+import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 
 // Takes a parse node and computes it to a set detail level
 // returns {result, context}
 export default async function resolve(
   fn: ResolveLevel,
   node: ParseNode,
-  scope: Record<string, any> = {},
+  scope: Variables = {},
   context = new Context(),
   inputProvider = computationInputProvider,
 ): Promise<ResolvedResult> {
@@ -24,13 +25,13 @@ export default async function resolve(
   }
   const handlerFunction = getHandlerFunction(fn, factory);
   if ('resolve' in factory) {
-    return factory.resolve(fn, node as any, scope, context, inputProvider, resolve);
+    return factory.resolve(fn, node as never, scope, context, inputProvider, resolve);
   } else if (handlerFunction) {
     return handlerFunction(node, scope, context, inputProvider, resolve);
   } else if (fn === 'reduce' && 'roll' in factory) {
-    return factory.roll(node as any, scope, context, inputProvider, resolve)
+    return factory.roll(node as never, scope, context, inputProvider, resolve)
   } else if (factory.compile) {
-    return factory.compile(node as any, scope, context, inputProvider, resolve)
+    return factory.compile(node as never, scope, context, inputProvider, resolve)
   } else {
     throw new Meteor.Error('Compile not implemented on ' + node.parseType);
   }
@@ -49,6 +50,7 @@ function getHandlerFunction<T extends ParseNode>(
   }
 }
 
+/* eslint-disable @typescript-eslint/require-await */
 const computationInputProvider: InputProvider = {
   /**
    * By default, just roll the dice as usual

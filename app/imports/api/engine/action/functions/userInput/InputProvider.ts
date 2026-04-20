@@ -1,6 +1,6 @@
-import Task from '/imports/api/engine/action/tasks/Task';
+import type { Task } from '/imports/api/engine/action/tasks/Task';
 
-type InputProvider = {
+export type InputProvider = {
   /**
    * Get the ids of the creatures being targeted
    */
@@ -24,7 +24,7 @@ type InputProvider = {
    * @param quantity Number of choices to make [min, max] inclusive, where -1 means no limit
    */
   choose(
-    choices: ({ _id: string } & Record<string, any>)[],
+    choices: ({ _id: string } & Record<string, unknown>)[],
     quantity?: [min: number, max: number],
   ): Promise<string[]>;
   /**
@@ -48,5 +48,3 @@ export type CheckParams = {
   targetSkillVariableName?: string;
   targetAbilityVariableName?: string;
 }
-
-export default InputProvider;

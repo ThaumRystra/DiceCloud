@@ -1,5 +1,5 @@
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 /**
  * Create a new version of the user input function, that saves the user's choices to an array

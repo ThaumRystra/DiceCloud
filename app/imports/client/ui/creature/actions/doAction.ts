@@ -1,8 +1,8 @@
 import { Store } from 'vuex';
 import { insertAction } from '/imports/api/engine/action/methods/insertAction';
-import Task from '/imports/api/engine/action/tasks/Task';
+import type { Task } from '/imports/api/engine/action/tasks/Task';
 import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
 import { runAction } from '/imports/api/engine/action/methods/runAction';
 import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';

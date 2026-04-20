@@ -1,5 +1,5 @@
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
 
 export type ConstantValueType = number | string | boolean
 
@@ -34,7 +34,7 @@ const constant: ConstantFactory = {
     }
   },
   async compile(node, scope, context) {
-    return { result: node, context };
+    return Promise.resolve({ result: node, context });
   },
   toString(node) {
     return `${node.value}`;

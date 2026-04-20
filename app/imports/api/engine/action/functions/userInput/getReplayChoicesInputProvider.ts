@@ -1,4 +1,4 @@
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import getDeterministicDiceRoller from '/imports/api/engine/action/functions/userInput/getDeterministicDiceRoller';
 
 // This assumes the user's choices are in exactly the order they will be requested

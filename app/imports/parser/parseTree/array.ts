@@ -1,10 +1,10 @@
 import { serialMap } from '/imports/api/utility/asyncMap';
 import constant from '/imports/parser/parseTree/constant';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
 
 export type ArrayNode = {
   parseType: 'array';

@@ -1,8 +1,8 @@
-
+type RollMade = { number: number; diceSize: number; values: number[]; };
 export default class Context {
   errors: { type: string; message: string }[];
-  rolls: { number: number; diceSize: number; values: number[]; }[];
-  options: { [key: string]: any; };
+  rolls: RollMade[];
+  options: { [key: string]: unknown; };
 
   constructor({ errors = [], rolls = [], options = {} } = {}) {
     this.errors = errors;
@@ -25,7 +25,7 @@ export default class Context {
     }
   }
 
-  roll(r) {
+  roll(r: RollMade) {
     this.rolls.push(r);
   }
 }

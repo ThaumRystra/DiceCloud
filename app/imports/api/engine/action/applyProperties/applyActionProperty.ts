@@ -8,7 +8,7 @@ import { getEffectiveActionScope } from '/imports/api/engine/action/functions/ge
 import recalculateCalculation from '/imports/api/engine/action/functions/recalculateCalculation';
 import recalculateInlineCalculations from '/imports/api/engine/action/functions/recalculateInlineCalculations';
 import spendResources from '/imports/api/engine/action/functions/spendResources';
-import type InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
 import { getVariables } from '/imports/api/engine/loadCreatures';
 import type { CalculatedField } from '/imports/api/properties/subSchemas/computedField';

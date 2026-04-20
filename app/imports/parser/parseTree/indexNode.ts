@@ -1,11 +1,11 @@
 import error from '/imports/parser/parseTree/error';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import toString from '/imports/parser/toString';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 export type IndexNode = {
   parseType: 'index';

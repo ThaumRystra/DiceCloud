@@ -1,4 +1,4 @@
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import { ConstantValueType } from '/imports/parser/parseTree/constant';
 import toString from './toString';
 

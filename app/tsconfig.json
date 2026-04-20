@@ -44,6 +44,8 @@
     "**/node_modules/*",
     ".meteor",
     "_build",
-    "./packages/**"
+    "./packages/**",
+    "public/sw.js",
+    "imports/parser/grammar.js"
   ]
 }

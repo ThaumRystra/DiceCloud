@@ -1,10 +1,11 @@
 import constant from '/imports/parser/parseTree/constant';
-import ResolveLevelFunction from '/imports/parser/types/ResolveLevelFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 type RollValue = {
   value: number,
   disabled?: true,
+  disabledBy?: string,
   italics?: true,
   bold?: true,
   underline?: true,
@@ -35,26 +36,26 @@ const rollArray: RollArrayFactory = {
       diceNum,
     };
   },
-  async compile(node, scope, context) {
-    return {
+  compile(node, scope, context) {
+    return Promise.resolve({
       result: node,
       context
-    };
+    });
   },
   toString(node) {
     return `${node.diceNum || ''}d${node.diceSize} [${valuesToString(node.values)}]`;
   },
-  async reduce(node, scope, context) {
+  reduce(node, scope, context) {
     const total = node.values.reduce((a, b) => {
       if (b.disabled) return a;
       return a + b.value;
     }, 0);
-    return {
+    return Promise.resolve({
       result: constant.create({
         value: total,
       }),
       context,
-    };
+    });
   },
 }
 

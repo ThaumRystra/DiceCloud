@@ -8,9 +8,9 @@ import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import resolve from '/imports/parser/resolve';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import ResolveLevel from '/imports/parser/types/ResolveLevel';
+import type { ResolveLevel } from '/imports/parser/types/ResolveLevel';
 import constant from '/imports/parser/parseTree/constant';
 
 export default async function recalculateCalculation(

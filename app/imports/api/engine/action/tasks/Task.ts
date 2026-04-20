@@ -1,9 +1,7 @@
-import { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { type CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
 
-type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask | ResetTask | CastSpellTask;
-
-export default Task;
+export type Task = PropTask | DamagePropTask | ItemAsAmmoTask | CheckTask | ResetTask | CastSpellTask;
 
 type BaseTask = {
   targetIds: string[];

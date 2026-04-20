@@ -1,4 +1,4 @@
-import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 const inputProviderForTests: InputProvider = {
   async targetIds(target, currentTargetIds = []) {

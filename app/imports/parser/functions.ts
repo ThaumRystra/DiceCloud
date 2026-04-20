@@ -1,16 +1,26 @@
-import { ResolveLevel } from '/imports/parser/parseTree/NodeFactory';
-import resolve from '/imports/parser/resolve'
+import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
+import type { ArrayNode } from '/imports/parser/parseTree/array';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { RollArrayNode } from '/imports/parser/parseTree/rollArray';
+import resolve from '/imports/parser/resolve';
 import rollDice from '/imports/parser/rollDice';
+import type Context from '/imports/parser/types/Context';
+import type { ResolveLevel } from '/imports/parser/types/ResolveLevel';
+
+type ArgumentArray = string[] & {
+  anyLength?: boolean;
+}
 
 export type ParserFunction = {
   comment: string;
   examples: { input: string, result: string }[];
-  arguments: string[];
+  arguments: ArgumentArray;
   maxResolveLevels?: ResolveLevel[];
   minArguments?: number,
   maxArguments?: number,
   resultType: string;
-  fn: (...args: any[]) => any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fn: (...args: any[]) => unknown;
 }
 
 const parserFunctions: { [name: string]: ParserFunction } = {
@@ -116,12 +126,11 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     ],
     arguments: ['array', 'number'],
     resultType: 'number',
-    fn: function tableLookup(arrayNode, number) {
-      for (const i in arrayNode.values) {
-        const node = arrayNode.values[i];
-        if (node.value > number) return +i;
-      }
-      return arrayNode.values.length;
+    fn: function tableLookup(arrayNode: ArrayNode, number: number) {
+      const index = arrayNode.values.findIndex((node) => {
+        return 'value' in node && typeof node.value === 'number' && node.value > number
+      });
+      return index !== -1 ? index : arrayNode.values.length;
     }
   },
   'resolve': {
@@ -132,7 +141,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     ],
     arguments: ['parseNode'],
     resultType: 'parseNode',
-    fn: async function resolveFn(node) {
+    fn: async function resolveFn(this: { scope: Variables, context: Context }, node: ParseNode) {
       const { result } = await resolve('reduce', node, this.scope, this.context);
       return result;
     }
@@ -146,7 +155,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     minArguments: 1,
     maxArguments: 2,
     resultType: 'rollArray',
-    fn: function dropLowestFn(rollArray, numberToDrop = 1) {
+    fn: function dropLowestFn(rollArray: RollArrayNode, numberToDrop = 1) {
       // Create a new array where the values are sorted in ascending order 
       const sortedArray = [...rollArray.values].sort(function (a, b) {
         return a.value - b.value;
@@ -169,7 +178,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     minArguments: 1,
     maxArguments: 2,
     resultType: 'rollArray',
-    fn: function dropHighestFn(rollArray, numberToDrop = 1) {
+    fn: function dropHighestFn(rollArray: RollArrayNode, numberToDrop = 1) {
       // Create a new array where the values are sorted in ascending order 
       const sortedArray = [...rollArray.values].sort(function (a, b) {
         return b.value - a.value;
@@ -192,7 +201,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     minArguments: 1,
     maxArguments: 3,
     resultType: 'rollArray',
-    fn: function rerollFn(rollArray, numberToReroll = 1, keepNewRoll = false) {
+    fn: function rerollFn(this: { context: Context }, rollArray: RollArrayNode, numberToReroll = 1, keepNewRoll = false) {
       const rollValues = rollArray.values
       // Iterate through the roll values
       for (let i = 0; i < rollValues.length; i += 1) {
@@ -227,7 +236,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
     minArguments: 1,
     maxArguments: 3,
     resultType: 'rollArray',
-    fn: function explodeFn(rollArray, depth = 1, numberToReroll = rollArray.diceSize) {
+    fn: function explodeFn(this: { context: Context }, rollArray: RollArrayNode, depth = 1, numberToReroll = rollArray.diceSize) {
       let overflowErrored = false;
       if (depth > 99) depth = 99;
       const rollValues = rollArray.values
@@ -253,7 +262,7 @@ const parserFunctions: { [name: string]: ParserFunction } = {
             explodeRoll = rollDice(1, rollArray.diceSize)[0];
             const rollObj = {
               value: explodeRoll,
-              italics: true,
+              italics: true as const,
             };
             // Insert the roll
             rollValues.splice(i + 1, 0, rollObj);
@@ -266,8 +275,8 @@ const parserFunctions: { [name: string]: ParserFunction } = {
   },
 }
 
-function anyNumberOf(type) {
-  const argumentArray: any = [type];
+function anyNumberOf(type: string) {
+  const argumentArray: ArgumentArray = [type];
   argumentArray.anyLength = true;
   return argumentArray;
 }

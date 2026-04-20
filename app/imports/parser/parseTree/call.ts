@@ -1,15 +1,16 @@
-import error from '/imports/parser/parseTree/error';
-import constant from '/imports/parser/parseTree/constant';
-import functions, { ParserFunction } from '/imports/parser/functions';
-import Context from '../types/Context';
-import ResolvedResult from '../types/ResolvedResult';
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type Context from '../types/Context';
+import type { ResolvedResult } from '../types/ResolvedResult';
 import { serialMap } from '/imports/api/utility/asyncMap';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import ResolveLevel from '/imports/parser/types/ResolveLevel';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import errorToString from '/imports/api/utility/errorToString';
+import functions, { type ParserFunction } from '/imports/parser/functions';
+import constant from '/imports/parser/parseTree/constant';
+import error from '/imports/parser/parseTree/error';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { ResolveLevel } from '/imports/parser/types/ResolveLevel';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
 
 export type CallNode = {
   parseType: 'call';
@@ -50,7 +51,7 @@ const call: CallFactory = {
     }
 
     // Resolve a given node to a maximum depth of resolution
-    const resolveToLevel = (node, maxResolveFn = 'reduce'): Promise<ResolvedResult> => {
+    const resolveToLevel = (node: ParseNode, maxResolveFn: ResolveLevel = 'reduce'): Promise<ResolvedResult> => {
       // Determine the actual depth to resolve to
       let resolveFn: ResolveLevel = 'reduce';
       if (fn === 'compile' || maxResolveFn === 'compile') {
@@ -112,8 +113,7 @@ const call: CallFactory = {
         context,
       }, mappedArgs);
 
-      const valueType = typeof value;
-      if (valueType === 'number' || valueType === 'string' || valueType === 'boolean') {
+      if (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean') {
         // Convert constant results into constant nodes
         return {
           result: constant.create({ value }),
@@ -121,14 +121,15 @@ const call: CallFactory = {
         };
       } else {
         // Resolve the return value
-        return resolveOthers(fn, value, scope, context, inputProvider);
+        return resolveOthers(fn, value as ParseNode, scope, context, inputProvider);
       }
     } catch (err) {
-      context.error(`Internal error: ${err.message || err}`);
+      const message = errorToString(err);
+      context.error(`Internal error: ${message}`);
       return {
         result: error.create({
           node: node,
-          error: `Internal error: ${err.message || err}`,
+          error: `Internal error: ${message}`,
         }),
         context,
       }
@@ -149,7 +150,7 @@ const call: CallFactory = {
     return resultingNode;
   },
   checkArguments(callNode, fn, func, resolvedArgs, context) {
-    const argumentsExpected = func.arguments as any;
+    const argumentsExpected = func.arguments;
     // Check that the number of arguments matches the number expected
     if (
       !argumentsExpected.anyLength &&
@@ -177,10 +178,9 @@ const call: CallFactory = {
         || (node.parseType === 'constant' && node.valueType === expectedType)
       );
       if (argFailed && fn === 'reduce') {
-        const typeName = typeof expectedType === 'string' ? expectedType : expectedType.constructor.name;
         const nodeName = node.parseType === 'constant' ? node.valueType : node.parseType;
         context.error(`Incorrect arguments to ${callNode.functionName} function` +
-          `expected ${typeName} got ${nodeName}`);
+          `expected ${expectedType} got ${nodeName}`);
       }
       failed = failed || argFailed;
     });

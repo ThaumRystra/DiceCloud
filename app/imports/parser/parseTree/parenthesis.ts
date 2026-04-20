@@ -1,8 +1,8 @@
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 export type ParenthesisNode = {
   parseType: 'parenthesis';

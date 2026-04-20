@@ -1,15 +1,13 @@
-import ParseNode from '/imports/parser/parseTree/ParseNode';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 
-type TraverseFunction<T extends ParseNode> = {
+export type TraverseFunction<T extends ParseNode> = {
   (
     node: T,
-    fn: (node: ParseNode) => any,
+    fn: (node: ParseNode) => unknown,
     traverseOthers: TraverseOthersFunction
-  ): any;
+  ): unknown;
 }
 
-export default TraverseFunction;
-
 type TraverseOthersFunction = {
-  (node: ParseNode, fn: (node: ParseNode) => any): any
+  (node: ParseNode, fn: (node: ParseNode) => unknown): unknown
 }

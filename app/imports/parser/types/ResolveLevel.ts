@@ -1,3 +1,1 @@
-type ResolveLevel = 'compile' | 'roll' | 'reduce';
-
-export default ResolveLevel;
+export type ResolveLevel = 'compile' | 'roll' | 'reduce';

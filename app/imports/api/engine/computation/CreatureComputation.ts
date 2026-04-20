@@ -18,7 +18,7 @@ type DenormalizedVariable = {
   type: '_variable';
 }
 
-export type Variables = Record<string, CreatureProperty | { _propId: string }> & { _creatureId: string };
+export type Variables = Record<string, CreatureProperty | { _propId: string }> & { _creatureId?: string };
 
 export type DependencyGraphNode = CreatureProperty | DenormalizedVariable
 

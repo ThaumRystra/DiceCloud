@@ -1,9 +1,9 @@
-import ParseNode from '/imports/parser/parseTree/ParseNode';
-import ResolvedResult from '../types/ResolvedResult';
-import TraverseFunction from '/imports/parser/types/TraverseFunction';
-import MapFunction from '/imports/parser/types/MapFunction';
-import ResolveFunction from '/imports/parser/types/ResolveFunction';
-import ToStringFunction from '/imports/parser/types/ToStringFunction';
+import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ResolvedResult } from '../types/ResolvedResult';
+import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
+import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
+import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 export type IfNode = {
   parseType: 'if';
@@ -34,7 +34,6 @@ const ifNode: IfFactory = {
   },
   toString(node, stringOthers) {
     const { condition, consequent, alternative } = node;
-    condition.parseType
     return `${stringOthers(condition)} ? ${stringOthers(consequent)} : ${stringOthers(alternative)}`
   },
   async resolve(fn, node, scope, context, inputProvider, resolveOthers): Promise<ResolvedResult> {
