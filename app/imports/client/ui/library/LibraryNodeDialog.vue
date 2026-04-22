@@ -3,13 +3,13 @@ import { ref, reactive, computed, watch, nextTick, provide } from 'vue';
 import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import LibraryNodes, {
-  updateLibraryNode,
   pushToLibraryNode,
   pullFromLibraryNode,
   softRemoveLibraryNode,
   restoreLibraryNode,
-  insertNode,
 } from '/imports/api/library/LibraryNodes';
+import { insertLibraryNode } from '/imports/api/library/methods/insertLibraryNode';
+import { updateLibraryNode } from '/imports/api/library/methods/updateLibraryNode';
 import duplicateLibraryNode from '/imports/api/library/methods/duplicateLibraryNode';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
@@ -26,9 +26,10 @@ import PropertyForm from '/imports/client/ui/properties/PropertyForm.vue';
 import PropertyViewer from '/imports/client/ui/properties/shared/PropertyViewer.vue';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
 import { key } from '/imports/client/ui/vuexStore';
+import errorToString from '/imports/api/utility/errorToString';
 
 const props = defineProps<{
-  _id?: string;
+  _id: string;
   startInEditTab?: boolean;
   embedded?: boolean;
   selection?: boolean;
@@ -103,7 +104,7 @@ async function makeReference() {
     return;
   }
   try {
-    const docId = await insertNode.callAsync({
+    const docId = await insertLibraryNode.callAsync({
       libraryNode: {
         type: 'reference',
         ref: {
@@ -111,12 +112,12 @@ async function makeReference() {
           id: model.value._id,
         },
       },
-      parentRef: model.value.parentId,
+      parentId: model.value.parentId,
     });
     if (props.embedded) {
       emit('duplicated', docId);
     } else {
-      store.dispatch('popDialogStack');
+      await store.dispatch('popDialogStack');
     }
   } catch (error) {
     console.error(error);
@@ -171,9 +172,9 @@ function copy() {
           parent: { collection: 'libraryNodes', id: parentId },
         });
         snackbar({ text: 'Copied successfully' });
-      } catch (error: any) {
+      } catch (error) {
         console.error(error);
-        snackbar({ text: error.reason || error.message || error.toString() });
+        snackbar({ text: errorToString(error) });
       }
     },
   });
@@ -181,11 +182,15 @@ function copy() {
 
 async function change({ path, value, ack }: { path: string[]; value: any; ack?: Function }) {
   try {
+    if (!currentId.value) {
+      ack?.();
+      return;
+    }
     await updateLibraryNode.callAsync({ _id: currentId.value, path, value });
-    if (ack) ack();
-  } catch (error: any) {
-    if (ack) ack(error.reason || error);
-    else console.error(error);
+    ack?.();
+  } catch (error: unknown) {
+    ack?.(errorToString(error));
+    console.error(error);
   }
 }
 

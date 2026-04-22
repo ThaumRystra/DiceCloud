@@ -1,6 +1,6 @@
 import { findLast } from 'lodash';
 import getEntitledCents from '/imports/api/users/patreon/getEntitledCents';
-import Invites from '/imports/api/users/Invites';
+import Invites, { type Invite } from '/imports/api/users/Invites';
 const patreonDisabled = !!Meteor.settings?.public?.disablePatreon;
 
 const TIERS = Object.freeze([
@@ -94,15 +94,16 @@ export function getTierByEntitledCents(entitledCents = 0) {
   return findLast(TIERS, tier => entitledCents >= tier.minimumEntitledCents) || TIERS[0];
 }
 
-export async function getUserTierAsync(user) {
-  if (!user) throw 'user must be provided';
+export async function getUserTierAsync(user: Meteor.User | string) {
+  if (!user) throw new Error('user must be provided');
   if (typeof user === 'string') {
-    user = await Meteor.users.findOneAsync(user, {
+    const foundUser = await Meteor.users.findOneAsync(user, {
       fields: {
         'services.patreon': 1,
       }
     });
-    if (!user) throw 'User not found';
+    if (!foundUser) throw new Meteor.Error('not-found', 'User not found');
+    user = foundUser;
   }
   if (patreonDisabled) return PATREON_DISABLED_TIER;
   const entitledCents = getEntitledCents(user);
@@ -116,11 +117,66 @@ export async function getUserTierAsync(user) {
   }
 }
 
-export async function assertUserHasPaidBenefits(user) {
+export async function assertUserHasPaidBenefits(user: Meteor.User) {
   const tier = await getUserTierAsync(user);
   if (!tier.paidBenefits) {
     throw new Meteor.Error('no paid benefits',
       `The ${tier.name} tier does not have the required benefits`);
+  }
+}
+
+if (Meteor.isServer) {
+  Accounts.onLogin(function ({ user }: { user: Meteor.User }) {
+    alignInvitesWithPatreonTier(user).catch((e) => {
+      console.error(e);
+    });
+  });
+}
+
+async function alignInvitesWithPatreonTier(user: Meteor.User | undefined) {
+  if (!user) return;
+  const tier = await getUserTierAsync(user);
+  const availableInvites = tier.invites;
+  const currentlyFundedInvites: Invite[] = [];
+  const currenltyUnfundedInvites: Invite[] = [];
+  await Invites.find({
+    inviter: user._id
+  }).forEachAsync(invite => {
+    if (invite.isFunded) {
+      currentlyFundedInvites.push(invite);
+    } else {
+      currenltyUnfundedInvites.push(invite);
+    }
+  });
+
+  // Return early if no work needs doing to skip sorting
+  if (currentlyFundedInvites.length === availableInvites) return;
+
+  // Sort the invites by date forwards and backwards
+  currentlyFundedInvites.sort((a, b) => a.dateConfirmed - b.dateConfirmed);
+  currenltyUnfundedInvites.sort((a, b) => b.dateConfirmed - a.dateConfirmed);
+
+  // Defund or delete excess invites
+  while (currentlyFundedInvites.length > availableInvites) {
+    const inviteToDefund = currentlyFundedInvites.pop();
+    if (!inviteToDefund) break;
+    if (inviteToDefund.invitee) {
+      await Invites.updateAsync(inviteToDefund._id, { $set: { isFunded: false } });
+    } else {
+      await Invites.removeAsync(inviteToDefund._id);
+    }
+  }
+  // Fund unfunded invites or insert new ones
+  while (currentlyFundedInvites.length < availableInvites) {
+    if (currenltyUnfundedInvites.length) {
+      const inviteToFund = currenltyUnfundedInvites.pop();
+      if (!inviteToFund) break;
+      currentlyFundedInvites.push(inviteToFund);
+      await Invites.updateAsync(inviteToFund._id, { $set: { isFunded: true } });
+    } else {
+      const inviteId = await Invites.insertAsync({ inviter: user._id, isFunded: true });
+      currentlyFundedInvites.push({ _id: inviteId, inviter: user._id, isFunded: true });
+    }
   }
 }
 

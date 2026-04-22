@@ -46,7 +46,7 @@ Migrations.add({
 });
 
 export function migrateCollection(collectionName: string) {
-  const collection = Mongo.Collection.get(collectionName);
+  const collection = Mongo.getCollection(collectionName);
   // Copy the parent id field and the root ancestor to the new structure
   // Using the mongo aggregation API
   // Waring: This will destroy parenting data if the old parenting fields are deleted

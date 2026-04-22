@@ -2,11 +2,9 @@ type SimpleSchema = import('simpl-schema').default;
 type TypedSimpleSchema<T> = import('/imports/api/utility/TypedSimpleSchema').TypedSimpleSchema<T>;
 
 declare namespace Mongo {
-  interface CollectionStatic {
-    get: (
-      collectionName: string, options?: { connection: Meteor.Connection }
-    ) => Mongo.Collection<unknown>;
-  }
+  function getCollection(
+    collectionName: string, options?: { connection: Meteor.Connection }
+  ): Mongo.Collection<unknown>;
   type SchemaOptions = {
     /**
      * Set to `true` if your document must be passed through the collection's transform to properly validate

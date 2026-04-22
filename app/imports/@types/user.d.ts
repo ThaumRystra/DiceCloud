@@ -11,4 +11,10 @@ declare namespace Meteor {
       hidePropertySelectDialogHelp?: boolean | undefined;
     } | undefined;
   }
+  interface UserServices {
+    patreon?: {
+      entitledCents?: number;
+      entitledCentsOverride?: number;
+    }
+  }
 }

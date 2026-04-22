@@ -18,6 +18,9 @@ import '/imports/api/creature/creatures/methods/index';
 import '/imports/api/engine/action/methods/index';
 import '/imports/api/sharing/sharing';
 import '/imports/server/config/publicationStrategies';
+
+// Methods
 import '/imports/api/creature/creatureFolders/methods/index';
+import '/imports/api/library/methods/index';
 
 console.log('\nMain loaded\n')

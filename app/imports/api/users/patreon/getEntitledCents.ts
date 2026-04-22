@@ -1,4 +1,4 @@
-export default function getEntitledCents(user){
+export default function getEntitledCents(user: Meteor.User) {
   if (!user) return 0;
   const patreon = user.services && user.services.patreon;
   if (!patreon) return 0;

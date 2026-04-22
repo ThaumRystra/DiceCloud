@@ -1,17 +1,16 @@
 import { debounce } from 'lodash';
 import type { Creature } from '/imports/api/creature/creatures/Creatures';
-// TODO this import is causing a lot of circular dependencies
 import type { CreatureProperty, CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeCreature from './computeCreature';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
 
-const Creatures = Mongo.Collection.get('creatures') as Mongo.Collection<Creature>;
-const CreatureProperties = Mongo.Collection.get('creatureProperties') as Mongo.Collection<CreatureProperty>
+const Creatures = Mongo.getCollection('creatures') as Mongo.Collection<Creature>;
+const CreatureProperties = Mongo.getCollection('creatureProperties') as Mongo.Collection<CreatureProperty>
 
 const COMPUTE_DEBOUNCE_TIME = 100; // ms
-export const loadedCreatures: Map<string, LoadedCreature> = new Map(); // creatureId => {creature, properties, etc.}
+export const loadedCreatures: Map<string, LoadedCreature> = new Map();
 
 function logLoadedCreatures() {
   let creatureLoadString = '';

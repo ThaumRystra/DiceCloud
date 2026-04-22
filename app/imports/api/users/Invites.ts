@@ -1,11 +1,12 @@
-import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
 
-const Invites = new Mongo.Collection('invites');
-
-const InviteSchema = new SimpleSchema({
+const InviteSchema = TypedSimpleSchema.from({
+  _id: {
+    type: String,
+    max: 32,
+  },
   inviter: {
     type: String,
     max: 32,
@@ -30,59 +31,12 @@ const InviteSchema = new SimpleSchema({
   },
 });
 
-if (Meteor.isServer) {
-  Accounts.onLogin(function ({ user }) {
-    alignInvitesWithPatreonTier(user);
-  });
-}
-
-async function alignInvitesWithPatreonTier(user) {
-  const tier = getUserTierAsync(user);
-  const availableInvites = tier.invites;
-  const currentlyFundedInvites = [];
-  const currenltyUnfundedInvites = [];
-  await Invites.find({
-    inviter: user._id
-  }).forEachAsync(invite => {
-    if (invite.isFunded) {
-      currentlyFundedInvites.push(invite);
-    } else {
-      currenltyUnfundedInvites.push(invite);
-    }
-  });
-
-  // Return early if no work needs doing to skip sorting
-  if (currentlyFundedInvites.length === availableInvites) return;
-
-  // Sort the invites by date forwards and backwards
-  currentlyFundedInvites.sort((a, b) => a.dateConfirmed - b.dateConfirmed);
-  currenltyUnfundedInvites.sort((a, b) => b.dateConfirmed - a.dateConfirmed);
-
-  // Defund or delete excess invites
-  while (currentlyFundedInvites.length > availableInvites) {
-    const inviteToDefund = currentlyFundedInvites.pop();
-    if (inviteToDefund.invitee) {
-      await Invites.updateAsync(inviteToDefund._id, { $set: { isFunded: false } });
-    } else {
-      await Invites.removeAsync(inviteToDefund._id);
-    }
-  }
-  // Fund unfunded invites or insert new ones
-  while (currentlyFundedInvites.length < availableInvites) {
-    if (currenltyUnfundedInvites.length) {
-      const inviteToFund = currenltyUnfundedInvites.pop();
-      currentlyFundedInvites.push(inviteToFund);
-      await Invites.updateAsync(inviteToFund._id, { $set: { isFunded: true } });
-    } else {
-      const inviteId = await Invites.insertAsync({ inviter: user._id, isFunded: true });
-      currentlyFundedInvites.push({ _id: inviteId });
-    }
-  }
-}
+export type Invite = InferType<typeof InviteSchema>;
+const Invites = new Mongo.Collection<Invite>('invites');
 
 const getInviteToken = new ValidatedMethod({
   name: 'invites.getToken',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     inviteId: {
       type: String,
       max: 32,
@@ -95,8 +49,12 @@ const getInviteToken = new ValidatedMethod({
   },
   async run({ inviteId }) {
     const invite = await Invites.findOneAsync(inviteId);
+    if (!invite) {
+      throw new Meteor.Error('invites.getToken.notFound',
+        'No invite could be found for this id');
+    }
     if (this.userId !== invite.inviter) {
-      throw new Meteor.Error('Invites.methods.getToken.denied',
+      throw new Meteor.Error('invites.getToken.denied',
         'You need to be the inviter of the invite to create a token');
     }
     if (invite.inviteToken) {
@@ -111,7 +69,7 @@ const getInviteToken = new ValidatedMethod({
 
 const acceptInviteToken = new ValidatedMethod({
   name: 'invites.acceptToken',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     inviteToken: {
       type: String,
     },
@@ -123,13 +81,13 @@ const acceptInviteToken = new ValidatedMethod({
   },
   async run({ inviteToken }) {
     if (!this.userId) {
-      throw new Meteor.Error('Invites.methods.acceptToken.denied',
+      throw new Meteor.Error('invites.acceptToken.denied',
         'You need to be the logged in to accept a token');
     }
     if (Meteor.isClient) return;
     const invite = await Invites.findOneAsync({ inviteToken });
     if (!invite) {
-      throw new Meteor.Error('Invites.methods.acceptToken.notFound',
+      throw new Meteor.Error('invites.acceptToken.notFound',
         'No invite could be found for this link, maybe it has already been claimed');
     }
     // If the invitee is already filled, fix unexpected case by deleting the token
@@ -153,7 +111,7 @@ const acceptInviteToken = new ValidatedMethod({
 
 const revokeInvite = new ValidatedMethod({
   name: 'invites.revokeInvite',
-  validate: new SimpleSchema({
+  validate: TypedSimpleSchema.from({
     inviteId: {
       type: String,
       max: 32,
@@ -193,4 +151,4 @@ const revokeInvite = new ValidatedMethod({
 Invites.attachSchema(InviteSchema);
 
 export default Invites;
-export { alignInvitesWithPatreonTier, getInviteToken, acceptInviteToken, revokeInvite };
+export { getInviteToken, acceptInviteToken, revokeInvite };

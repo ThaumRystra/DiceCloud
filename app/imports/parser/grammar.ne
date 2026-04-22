@@ -1,6 +1,16 @@
 @preprocessor esmodule
 @{%
-  import node from '/imports/parser/parseTree/_index';
+  import accessor from '/imports/parser/parseTree/accessor';
+  import array from '/imports/parser/parseTree/array';
+  import call from '/imports/parser/parseTree/call';
+  import constant from '/imports/parser/parseTree/constant';
+  import ifNode from '/imports/parser/parseTree/if';
+  import index from '/imports/parser/parseTree/indexNode';
+  import not from '/imports/parser/parseTree/not';
+  import operatorNode from '/imports/parser/parseTree/operator';
+  import parenthesis from '/imports/parser/parseTree/parenthesis';
+  import roll from '/imports/parser/parseTree/roll';
+  import unaryOperator from '/imports/parser/parseTree/unaryOperator';
 
   import moo from 'moo';
 
@@ -40,7 +50,7 @@
 
   function nuller() { return null; }
   function operator([left, _1, operator, _2, right], fn){
-    return node.operator.create({
+    return operatorNode.create({
       left,
       right,
       operator: operator.value,
@@ -60,7 +70,7 @@ expression ->
 
 ifStatement ->
   orExpression _ %ifOperator _ orExpression _ %elseOperator _ ifStatement {%
-     d => node.if.create({condition: d[0], consequent: d[4], alternative: d[8]})
+     d => ifNode.create({condition: d[0], consequent: d[4], alternative: d[8]})
   %}
 | orExpression {% id %}
 
@@ -93,11 +103,11 @@ multiplicativeExpression ->
 | rollExpression {% id %}
 
 rollExpression ->
-  rollExpression _ %diceOperator _ exponentExpression {% d => node.roll.create({left: d[0], right: d[4]}) %}
+  rollExpression _ %diceOperator _ exponentExpression {% d => roll.create({left: d[0], right: d[4]}) %}
 | singleRollExpression {% id %}
 
 singleRollExpression ->
-  "d" _ singleRollExpression {% d => node.roll.create({left: node.constant.create({value: 1}), right: d[2]}) %}
+  "d" _ singleRollExpression {% d => roll.create({left: constant.create({value: 1}), right: d[2]}) %}
 | exponentExpression {% id %}
 
 exponentExpression ->
@@ -105,16 +115,16 @@ exponentExpression ->
 | unaryExpression {% id %}
 
 unaryExpression ->
-  %additiveOperator _ unaryExpression {% d => node.unaryOperator.create({operator: d[0].value, right: d[2]})%}
+  %additiveOperator _ unaryExpression {% d => unaryOperator.create({operator: d[0].value, right: d[2]})%}
 | notExpression {% id %}
 
 notExpression ->
-  %notOperator _ notExpression {% d => node.not.create({right: d[2]})%}
+  %notOperator _ notExpression {% d => not.create({right: d[2]})%}
 | callExpression {% id %}
 
 callExpression ->
   name _ arguments {%
-    d => node.call.create({functionName: d[0].name, args: d[2]})
+    d => call.create({functionName: d[0].name, args: d[2]})
   %}
 | indexExpression {% id %}
 
@@ -125,23 +135,23 @@ arguments ->
 | "(" _ ")" {% d => [] %}
 
 indexExpression ->
-  indexExpression "[" _ expression _ "]" {% d => node.index.create({array: d[0], index: d[3]}) %}
+  indexExpression "[" _ expression _ "]" {% d => index.create({array: d[0], index: d[3]}) %}
 | arrayExpression {% id %}
 
 arrayExpression ->
   "[" _ (expression {% d => d[0] %}) ( _ %separator _ expression {% d => d[3] %} ):* _ "]" {%
-    d => node.array.create({ values: [d[2], ...d[3]] })
+    d => array.create({ values: [d[2], ...d[3]] })
   %}
-| "[" _ "]" {% d => node.array.create({ values: [] }) %}
+| "[" _ "]" {% d => array.create({ values: [] }) %}
 | parenthesizedExpression {% id %}
 
 parenthesizedExpression ->
-  "(" _ expression _ ")" {% d => node.parenthesis.create({content: d[2]}) %}
+  "(" _ expression _ ")" {% d => parenthesis.create({content: d[2]}) %}
 | accessorExpression {% id %}
 
 accessorExpression ->
   (%name {% d => d[0].value %}) ( "." keyExpression {% d => d[1] %} ):+ {%
-    d=> node.accessor.create({name: d[0], path: d[1]})
+    d=> accessor.create({name: d[0], path: d[1]})
   %}
 | valueExpression {% id %}
 
@@ -156,17 +166,17 @@ valueExpression ->
 
 # A number or a function of a number
 number ->
-  %number {% d => node.constant.create({value: +d[0].value}) %}
+  %number {% d => constant.create({value: +d[0].value}) %}
 
 name ->
-  %name {% d => node.accessor.create({name: d[0].value}) %}
+  %name {% d => accessor.create({name: d[0].value}) %}
 
 string ->
-  %string {% d => node.constant.create({value: d[0].value}) %}
+  %string {% d => constant.create({value: d[0].value}) %}
 
 boolean ->
-  "true" {% d => node.constant.create({value: true}) %}
-| "false" {% d => node.constant.create({value: false}) %}
+  "true" {% d => constant.create({value: true}) %}
+| "false" {% d => constant.create({value: false}) %}
 
 _ ->
   null

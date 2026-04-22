@@ -27,7 +27,7 @@ const { result: breadcrumbProps } = autorun(() => {
   if (col === 'creatureProperties') {
     filter.type = { $ne: 'propertySlot' };
   }
-  return (Mongo.Collection.get(col) as any).find(filter).fetch();
+  return (Mongo.getCollection(col) as any).find(filter).fetch();
 });
 
 function click(id: string) {

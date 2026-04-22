@@ -5,19 +5,15 @@ import SimpleSchema from 'simpl-schema';
 import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
 import ChildSchema from '/imports/api/parenting/ChildSchema';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex';
-import { assertDocEditPermission, assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { softRemove } from '/imports/api/parenting/softRemove';
 import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
 import { storedIconsSchema } from '/imports/api/icons/Icons';
-import '/imports/api/library/methods/index';
-import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
-import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
 import { type ConvertToUnion, type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 import type { Simplify } from 'type-fest';
-import { getDocByRefAsync } from '/imports/api/parenting/reference';
 
 const LibraryNodeSchema = TypedSimpleSchema.from({
   _id: {

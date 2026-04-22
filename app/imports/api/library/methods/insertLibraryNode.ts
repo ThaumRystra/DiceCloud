@@ -1,12 +1,12 @@
-import { ValidatedMethod } from "meteor/mdg:validated-method";
-import { TypedSimpleSchema } from "/imports/api/utility/TypedSimpleSchema";
-import type { LibraryNode, LibraryNodeTypes } from "/imports/api/library/LibraryNodes";
-import { RateLimiterMixin } from "ddp-rate-limiter-mixin";
-import { getDocByRefAsync } from "/imports/api/parenting/reference";
-import { assertEditPermission } from "/imports/api/sharing/sharingPermissions";
-import { updateReferenceNodeWork } from "/imports/api/library/methods/updateReferenceNode";
-import { rebuildNestedSets } from "/imports/api/parenting/parentingFunctions";
-import LibraryNodes from "/imports/api/library/LibraryNodes";
+import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import type { LibraryNode, LibraryNodeTypes } from '/imports/api/library/LibraryNodes';
+import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
+import { getDocByRefAsync } from '/imports/api/parenting/reference';
+import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import { updateReferenceNodeWork } from '/imports/api/library/methods/updateReferenceNode';
+import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
+import LibraryNodes from '/imports/api/library/LibraryNodes';
 
 export const insertLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.insert',
@@ -17,6 +17,7 @@ export const insertLibraryNode = new ValidatedMethod({
     },
     parentId: {
       type: String,
+      optional: true,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -24,7 +25,7 @@ export const insertLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ libraryNode }: { libraryNode: Mongo.OptionalId<LibraryNode>, parentId: string }) {
+  async run({ libraryNode }: { libraryNode: Partial<LibraryNode>, parentId: string | undefined }) {
 
     if (!libraryNode.root) {
       throw new Meteor.Error('no-root', 'Root must be defined');

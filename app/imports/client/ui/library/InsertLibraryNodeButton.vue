@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useStore } from 'vuex';
 import { Meteor } from 'meteor/meteor';
-import { insertNode } from '/imports/api/library/LibraryNodes';
 import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import { key } from '/imports/client/ui/vuexStore';
+import { insertLibraryNode } from '/imports/api/library/methods/insertLibraryNode';
 
 const props = defineProps<{
   libraryId: string;
@@ -14,7 +14,7 @@ const props = defineProps<{
 const emit = defineEmits<{ (e: 'selected', id: string): void }>();
 const store = useStore(key);
 
-function insertLibraryNode() {
+function insertNode() {
   const libraryId = props.libraryId;
   const tier = getUserTierAsync(Meteor.userId());
   if (!(tier && tier.paidBenefits)) {
@@ -37,7 +37,7 @@ function insertLibraryNode() {
     async callback(libraryNode: any) {
       if (!libraryNode) return;
       libraryNode.order = -1;
-      const libraryNodeId = await insertNode.callAsync({ libraryNode, parentRef });
+      const libraryNodeId = await insertLibraryNode.callAsync({ libraryNode, parentRef });
       emit('selected', libraryNodeId);
       return `tree-node-${libraryNodeId}`;
     },
@@ -52,7 +52,7 @@ function insertLibraryNode() {
     size="small"
     color="primary"
     data-id="insert-library-node-button"
-    @click="insertLibraryNode"
+    @click="insertNode"
   >
     <v-icon>mdi-plus</v-icon>
     <slot />

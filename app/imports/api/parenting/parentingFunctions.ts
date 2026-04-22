@@ -6,7 +6,7 @@ import type { AnyBulkWriteOperation, Collection as MongoCollection } from 'mongo
 import type { Reference, ReferenceCollection } from '/imports/api/parenting/reference';
 
 export function getCollectionByName(name: string): Mongo.Collection<unknown> {
-  const collection = Mongo.Collection.get(name)
+  const collection = Mongo.getCollection(name)
   if (!collection) {
     throw new Meteor.Error('bad-collection-reference',
       `Parent references collection ${name}, which does not exist`

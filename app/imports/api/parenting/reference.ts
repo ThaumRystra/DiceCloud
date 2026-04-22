@@ -19,6 +19,6 @@ export async function getDocByRefAsync(ref: { id: string, collection: 'docs' }):
 export async function getDocByRefAsync(ref: { id: string, collection: 'creatures' | 'libraries' }): Promise<Creature | Library | undefined>
 export async function getDocByRefAsync(ref: Reference): Promise<Creature | CreatureProperty | Library | LibraryNode | undefined>
 export async function getDocByRefAsync(ref: Reference): Promise<Creature | CreatureProperty | Library | LibraryNode | undefined> {
-  const collection = Mongo.Collection.get(ref.collection);
+  const collection = Mongo.getCollection(ref.collection);
   return collection.findOneAsync(ref.id) as any;
 }
