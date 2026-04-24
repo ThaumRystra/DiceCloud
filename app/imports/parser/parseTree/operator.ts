@@ -1,9 +1,7 @@
 import constant, { type ConstantValueType, isFiniteNode } from '/imports/parser/parseTree/constant';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 
 type OperatorSymbol = '*' | '/' | '^' | '+' | '-' | '%' | '&' | '&&' | '|' | '||' | '=' |
   '==' | '===' | '!=' | '!==' | '>' | '<' | '>=' | '<=';
@@ -15,13 +13,9 @@ export type OperatorNode = {
   operator: OperatorSymbol;
 }
 
-type OperatorFactory = {
-  create(node: Partial<OperatorNode>): OperatorNode;
+type OperatorFactory = ParseNodeFactory<OperatorNode> & {
   resolve: ResolveFunction<OperatorNode>;
-  toString: ToStringFunction<OperatorNode>;
-  traverse: TraverseFunction<OperatorNode>;
-  map: MapFunction<OperatorNode>;
-}
+};
 
 // Which operators can be considered commutative by the parser
 // i.e. 1 + 2 + 3 === 2 + 3 + 1

@@ -1,52 +1,39 @@
 import '/imports/parser/parseTree/array';
-import factories from '/imports/parser/parseTree';
 import type { InputProvider, CheckParams } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import rollDice from '/imports/parser/rollDice';
 import type { ResolveLevel } from './types/ResolveLevel';
 import type { ResolvedResult } from './types/ResolvedResult';
 import Context from './types/Context';
-import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
 import type { Variables } from '/imports/api/engine/computation/CreatureComputation';
+import accessor from '/imports/parser/parseTree/accessor';
+import constant from '/imports/parser/parseTree/constant';
+import error from '/imports/parser/parseTree/error';
+import rollArray from '/imports/parser/parseTree/rollArray';
+import unaryOperator from '/imports/parser/parseTree/unaryOperator';
+import array from '/imports/parser/parseTree/array';
+import call from '/imports/parser/parseTree/call';
+import ifNode from '/imports/parser/parseTree/if';
+import indexNode from '/imports/parser/parseTree/indexNode';
+import not from '/imports/parser/parseTree/not';
+import operator from '/imports/parser/parseTree/operator';
+import parenthesis from '/imports/parser/parseTree/parenthesis';
+import rollNode from '/imports/parser/parseTree/roll';
 
 // Takes a parse node and computes it to a set detail level
 // returns {result, context}
-export default async function resolve(
+export default async function resolve<T extends ParseNode>(
   fn: ResolveLevel,
-  node: ParseNode,
+  node: T,
   scope: Variables = {},
   context = new Context(),
   inputProvider = computationInputProvider,
 ): Promise<ResolvedResult> {
   if (!node) throw new Error('Node must be supplied');
-  const factory = factories[node.parseType];
-  if (!factory) {
-    throw new Meteor.Error(`Parse node type: ${node.parseType} not implemented`);
-  }
-  const handlerFunction = getHandlerFunction(fn, factory);
-  if ('resolve' in factory) {
-    return factory.resolve(fn, node as never, scope, context, inputProvider, resolve);
-  } else if (handlerFunction) {
-    return handlerFunction(node, scope, context, inputProvider, resolve);
-  } else if (fn === 'reduce' && 'roll' in factory) {
-    return factory.roll(node as never, scope, context, inputProvider, resolve)
-  } else if (factory.compile) {
-    return factory.compile(node as never, scope, context, inputProvider, resolve)
-  } else {
-    throw new Meteor.Error('Compile not implemented on ' + node.parseType);
-  }
-}
-
-function getHandlerFunction<T extends ParseNode>(
-  fn: ResolveLevel, factory: typeof factories[T['parseType']]
-): ResolveLevelFunction<T> | undefined {
-  if (!(fn in factory)) return;
-  if (fn === 'roll' && 'roll' in factory) {
-    return factory.roll as ResolveLevelFunction<T>;
-  } else if (fn === 'reduce' && 'reduce' in factory) {
-    return factory.reduce as ResolveLevelFunction<T>;
-  } else if (fn === 'compile' && 'compile' in factory) {
-    return factory.compile as ResolveLevelFunction<T>;
+  switch (fn) {
+    case 'compile': return compile(node, scope, context, inputProvider);
+    case 'roll': return roll(node, scope, context, inputProvider);
+    case 'reduce': return reduce(node, scope, context, inputProvider);
   }
 }
 
@@ -78,7 +65,112 @@ const computationInputProvider: InputProvider = {
   async check(input: CheckParams) {
     return input;
   },
-  async castSpell(input: CastSpellParams) {
-    return input;
-  },
+  // async castSpell(input: CastSpellParams) {
+  //   return input;
+  // },
+}
+
+function reduce(node: ParseNode, scope: Variables, context: Context, inputProvider: InputProvider): Promise<ResolvedResult> {
+  if (!node) return node;
+  const fn = 'reduce' as const;
+  switch (node.parseType) {
+    case 'accessor':
+      return accessor.reduce(node, scope, context, inputProvider, resolve);
+    case 'array':
+      return array.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'call':
+      return call.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'constant':
+      return constant.compile(node, scope, context, inputProvider, resolve);
+    case 'error':
+      return error.compile(node, scope, context, inputProvider, resolve);
+    case 'if':
+      return ifNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'index':
+      return indexNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'not':
+      return not.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'operator':
+      return operator.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'parenthesis':
+      return parenthesis.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'roll':
+      return rollNode.reduce(node, scope, context, inputProvider, resolve);
+    case 'rollArray':
+      return rollArray.reduce(node, scope, context, inputProvider, resolve);
+    case 'symbol':
+      return accessor.reduce(node, scope, context, inputProvider, resolve);
+    case 'unaryOperator':
+      return unaryOperator.resolve(fn, node, scope, context, inputProvider, resolve);
+  }
+}
+
+function roll(node: ParseNode, scope: Variables, context: Context, inputProvider: InputProvider): Promise<ResolvedResult> {
+  if (!node) return node;
+  const fn = 'roll' as const;
+  switch (node.parseType) {
+    case 'accessor':
+      return accessor.compile(node, scope, context, inputProvider, resolve);
+    case 'array':
+      return array.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'call':
+      return call.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'constant':
+      return constant.compile(node, scope, context, inputProvider, resolve);
+    case 'error':
+      return error.compile(node, scope, context, inputProvider, resolve);
+    case 'if':
+      return ifNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'index':
+      return indexNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'not':
+      return not.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'operator':
+      return operator.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'parenthesis':
+      return parenthesis.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'roll':
+      return rollNode.roll(node, scope, context, inputProvider, resolve);
+    case 'rollArray':
+      return rollArray.compile(node, scope, context, inputProvider, resolve);
+    case 'symbol':
+      return accessor.compile(node, scope, context, inputProvider, resolve);
+    case 'unaryOperator':
+      return unaryOperator.resolve(fn, node, scope, context, inputProvider, resolve);
+  }
+}
+
+function compile(node: ParseNode, scope: Variables, context: Context, inputProvider: InputProvider): Promise<ResolvedResult> {
+  if (!node) return node;
+  const fn = 'compile' as const;
+  switch (node.parseType) {
+    case 'accessor':
+      return accessor.compile(node, scope, context, inputProvider, resolve);
+    case 'array':
+      return array.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'call':
+      return call.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'constant':
+      return constant.compile(node, scope, context, inputProvider, resolve);
+    case 'error':
+      return error.compile(node, scope, context, inputProvider, resolve);
+    case 'if':
+      return ifNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'index':
+      return indexNode.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'not':
+      return not.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'operator':
+      return operator.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'parenthesis':
+      return parenthesis.resolve(fn, node, scope, context, inputProvider, resolve);
+    case 'roll':
+      return rollNode.compile(node, scope, context, inputProvider, resolve);
+    case 'rollArray':
+      return rollArray.compile(node, scope, context, inputProvider, resolve);
+    case 'symbol':
+      return accessor.compile(node, scope, context, inputProvider, resolve);
+    case 'unaryOperator':
+      return unaryOperator.resolve(fn, node, scope, context, inputProvider, resolve);
+  }
 }

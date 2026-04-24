@@ -1,9 +1,7 @@
 import constant from '/imports/parser/parseTree/constant';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 
 type UnaryOperatorSymbol = '+' | '-';
 
@@ -13,12 +11,8 @@ export type UnaryOperatorNode = {
   right: ParseNode;
 }
 
-type UnaryOperatorFactory = {
-  create(node: Partial<UnaryOperatorNode>): UnaryOperatorNode;
+type UnaryOperatorFactory = ParseNodeFactory<UnaryOperatorNode> & {
   resolve: ResolveFunction<UnaryOperatorNode>;
-  toString: ToStringFunction<UnaryOperatorNode>;
-  traverse: TraverseFunction<UnaryOperatorNode>;
-  map: MapFunction<UnaryOperatorNode>;
 }
 
 const unaryOperator: UnaryOperatorFactory = {

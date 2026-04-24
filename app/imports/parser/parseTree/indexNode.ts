@@ -3,9 +3,7 @@ import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import toString from '/imports/parser/toString';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
 import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 
 export type IndexNode = {
   parseType: 'index';
@@ -13,12 +11,8 @@ export type IndexNode = {
   index: ParseNode;
 }
 
-type IndexFactory = {
-  create(node: Partial<IndexNode>): IndexNode;
+type IndexFactory = ParseNodeFactory<IndexNode> & {
   resolve: ResolveFunction<IndexNode>;
-  toString: ToStringFunction<IndexNode>;
-  traverse: TraverseFunction<IndexNode>;
-  map: MapFunction<IndexNode>;
 }
 
 const indexNode: IndexFactory = {

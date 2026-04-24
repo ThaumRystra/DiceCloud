@@ -29,8 +29,6 @@ export default defineConfig(
       '@typescript-eslint/switch-exhaustiveness-check': 'error'
     }
   },
-  pluginVue.configs['flat/recommended'],
-  vuetifyPlugin.configs['flat/recommended'],
   {
     plugins: {
       'typescript-eslint': tseslint.plugin,
@@ -48,4 +46,6 @@ export default defineConfig(
       }]
     },
   },
+  pluginVue.configs['flat/recommended'],
+  vuetifyPlugin.configs['flat/recommended'],
 );

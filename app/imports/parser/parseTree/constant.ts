@@ -1,4 +1,5 @@
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
 
 export type ConstantValueType = number | string | boolean
@@ -18,10 +19,10 @@ export type FiniteNumberConstantNode = {
   valueType: 'number';
 }
 
-type ConstantFactory = {
-  create({ value, isUndefined }: { value: ConstantValueType, isUndefined?: true }): ConstantNode;
+type ConstantFactory = ParseNodeFactory<ConstantNode, {
+  value: ConstantValueType, isUndefined?: true
+}> & {
   compile: ResolveLevelFunction<ConstantNode>;
-  toString(node: ConstantNode): string;
 }
 
 const constant: ConstantFactory = {
@@ -29,16 +30,22 @@ const constant: ConstantFactory = {
     return {
       parseType: 'constant',
       valueType: typeof value as 'number' | 'string' | 'boolean',
-      value,
+      value: value ?? 0,
       ...isUndefined && { isUndefined: true }
     }
   },
   async compile(node, scope, context) {
     return Promise.resolve({ result: node, context });
   },
+  traverse(node, fn) {
+    return fn(node);
+  },
   toString(node) {
     return `${node.value}`;
   },
+  map(node, fn) {
+    return fn(node);
+  }
 }
 
 export function isFiniteNode(node: ParseNode | undefined): node is FiniteNumberConstantNode {

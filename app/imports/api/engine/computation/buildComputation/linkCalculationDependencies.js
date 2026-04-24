@@ -1,4 +1,4 @@
-import traverse from '/imports/parser/traverse';
+import { traverse } from '/imports/parser/traverse';
 
 export default function linkCalculationDependencies(dependencyGraph, prop, { propsById }) {
   prop._computationDetails.calculations.forEach(calcObj => {

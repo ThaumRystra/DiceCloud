@@ -3,10 +3,8 @@ import rollArray from '/imports/parser/parseTree/rollArray';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 import Context from '/imports/parser/types/Context';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 
 export type RollNode = {
   parseType: 'roll';
@@ -14,14 +12,10 @@ export type RollNode = {
   right: ParseNode;
 }
 
-type RollNodeFactory = {
-  create(node: Partial<RollNode>): RollNode;
+type RollNodeFactory = ParseNodeFactory<RollNode> & {
   compile: ResolveLevelFunction<RollNode>;
   roll: ResolveLevelFunction<RollNode>;
   reduce: ResolveLevelFunction<RollNode>;
-  toString: ToStringFunction<RollNode>;
-  traverse: TraverseFunction<RollNode>;
-  map: MapFunction<RollNode>;
 }
 
 const rollNode: RollNodeFactory = {

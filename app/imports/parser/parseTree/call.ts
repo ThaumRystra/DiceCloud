@@ -6,11 +6,9 @@ import functions, { type ParserFunction } from '/imports/parser/functions';
 import constant from '/imports/parser/parseTree/constant';
 import error from '/imports/parser/parseTree/error';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
 import type { ResolveLevel } from '/imports/parser/types/ResolveLevel';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
 
 export type CallNode = {
   parseType: 'call';
@@ -18,14 +16,15 @@ export type CallNode = {
   args: ParseNode[];
 }
 
-type CallFactory = {
-  create(node: Partial<CallNode>): CallNode;
+type CallFactory = ParseNodeFactory<CallNode> & {
+  checkArguments(
+    node: CallNode,
+    fn: ResolveLevel,
+    func: ParserFunction,
+    resolvedArgs: ParseNode[],
+    context: Context,
+  ): boolean;
   resolve: ResolveFunction<CallNode>;
-  toString: ToStringFunction<CallNode>;
-  traverse: TraverseFunction<CallNode>;
-  map: MapFunction<CallNode>;
-  checkArguments(node: CallNode, fn: ResolveLevel, func: ParserFunction,
-    resolvedArgs: ParseNode[], context: Context): boolean;
 }
 
 const call: CallFactory = {

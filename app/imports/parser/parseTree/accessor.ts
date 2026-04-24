@@ -1,6 +1,7 @@
 import array from '/imports/parser/parseTree/array';
 import constant from '/imports/parser/parseTree/constant';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 import type { ResolvedResult } from '/imports/parser/types/ResolvedResult';
 import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
 
@@ -13,11 +14,9 @@ export type AccessorNode = {
   isUndefined?: true,
 }
 
-type AccessorFactory = {
-  create(node: Partial<AccessorNode>): AccessorNode;
+type AccessorFactory = ParseNodeFactory<AccessorNode> & {
   compile: ResolveLevelFunction<AccessorNode>;
   reduce: ResolveLevelFunction<AccessorNode>;
-  toString(node: AccessorNode): string;
 }
 
 type ValueType = undefined | Record<string, unknown> | number | string | boolean | unknown[];
@@ -101,7 +100,7 @@ const accessor: AccessorFactory = {
       };
     }
     // The type being accessed isn't supported above, make an error and return a copy of the node
-    context.error(`Accessing ${accessor.toString(node)} is not supported yet`);
+    context.error(`Accessing ${accessor.toString(node, () => '')} is not supported yet`);
     return {
       result: accessor.create({
         name: node.name,
@@ -128,6 +127,12 @@ const accessor: AccessorFactory = {
   toString(node) {
     if (!node.path?.length) return `${node.name}`;
     return `${node.name}.${node.path.join('.')}`;
+  },
+  traverse(node, fn) {
+    return fn(node);
+  },
+  map(node, fn) {
+    return fn(node);
   }
 }
 

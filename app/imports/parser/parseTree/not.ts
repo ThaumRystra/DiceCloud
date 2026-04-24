@@ -1,21 +1,15 @@
 import constant from '/imports/parser/parseTree/constant';
 import type { ParseNode } from '/imports/parser/parseTree/ParseNode';
 import type { ResolveFunction } from '/imports/parser/types/ResolveFunction';
-import type { TraverseFunction } from '/imports/parser/types/TraverseFunction';
-import type { MapFunction } from '/imports/parser/types/MapFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 
 export type NotNode = {
   parseType: 'not';
   right: ParseNode;
 }
 
-type NotFactory = {
-  create(node: Partial<NotNode>): NotNode;
+type NotFactory = ParseNodeFactory<NotNode> & {
   resolve: ResolveFunction<NotNode>;
-  toString: ToStringFunction<NotNode>;
-  traverse: TraverseFunction<NotNode>;
-  map: MapFunction<NotNode>;
 }
 
 const not: NotFactory = {

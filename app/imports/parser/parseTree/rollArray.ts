@@ -1,6 +1,6 @@
 import constant from '/imports/parser/parseTree/constant';
+import type { ParseNodeFactory } from '/imports/parser/types/ParseNodeFactory';
 import type { ResolveLevelFunction } from '/imports/parser/types/ResolveLevelFunction';
-import type { ToStringFunction } from '/imports/parser/types/ToStringFunction';
 
 type RollValue = {
   value: number,
@@ -18,11 +18,11 @@ export type RollArrayNode = {
   diceNum: number,
 }
 
-type RollArrayFactory = {
-  create(input: { values: number[], diceSize: number, diceNum: number }): RollArrayNode;
+type RollArrayFactory = ParseNodeFactory<RollArrayNode, {
+  values: number[], diceSize: number, diceNum: number
+}> & {
   compile: ResolveLevelFunction<RollArrayNode>;
   reduce: ResolveLevelFunction<RollArrayNode>;
-  toString: ToStringFunction<RollArrayNode>;
 }
 
 const rollArray: RollArrayFactory = {
@@ -57,6 +57,12 @@ const rollArray: RollArrayFactory = {
       context,
     });
   },
+  traverse(node, fn) {
+    return fn(node);
+  },
+  map(node, fn) {
+    return fn(node);
+  }
 }
 
 function valuesToString(values: RollValue[]) {

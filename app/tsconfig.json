@@ -8,6 +8,7 @@
       "dom.iterable"
     ],
     "jsx": "preserve",
+    "jsxImportSource": "vue",
     "strict": true,
     "preserveSymlinks": true,
     "allowJs": true,
