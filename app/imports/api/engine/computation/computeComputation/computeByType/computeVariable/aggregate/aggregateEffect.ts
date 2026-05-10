@@ -1,5 +1,13 @@
-export default function aggregateEffect({ node, linkedNode, link }) {
+import type { Link } from 'ngraph.graph';
+import type { TraversedNode } from '/imports/api/engine/computation/computeCreatureComputation';
+
+export default function aggregateEffect({ node, linkedNode, link }: {
+  node: TraversedNode;
+  linkedNode: TraversedNode;
+  link: Link<string>;
+}) {
   if (link.data !== 'effect') return;
+  if (linkedNode.data.type !== 'effect') return;
   // store the effect aggregator, its presence indicates that the variable is
   // targeted by effects
   if (!node.data.effectAggregator) node.data.effectAggregator = {
@@ -24,7 +32,7 @@ export default function aggregateEffect({ node, linkedNode, link }) {
   // get a shorter reference to the aggregator document
   const aggregator = node.data.effectAggregator;
   // Get the result of the effect
-  let result = linkedNode.data.amount?.value;
+  let result = 'amount' in linkedNode.data && linkedNode.data.amount?.value;
   if (typeof result !== 'number') result = undefined;
 
   // Aggregate the effect based on its operation
@@ -32,8 +40,8 @@ export default function aggregateEffect({ node, linkedNode, link }) {
     case 'base':
       // Take the largest base value
       if (Number.isFinite(result)) {
-        if (Number.isFinite(aggregator.base)) {
-          aggregator.base = Math.max(aggregator.base, result);
+        if (aggregator.base !== undefined && Number.isFinite(aggregator.base)) {
+          aggregator.base = result !== undefined ? Math.max(aggregator.base, result) : aggregator.base;
         } else {
           aggregator.base = result;
         }
@@ -49,15 +57,15 @@ export default function aggregateEffect({ node, linkedNode, link }) {
       break;
     case 'min':
       // Take the largest min value
-      aggregator.min = result > aggregator.min ? result : aggregator.min;
+      aggregator.min = result !== undefined && result > aggregator.min ? result : aggregator.min;
       break;
     case 'max':
       // Take the smallest max value
-      aggregator.max = result < aggregator.max ? result : aggregator.max;
+      aggregator.max = result !== undefined && result < aggregator.max ? result : aggregator.max;
       break;
     case 'set':
       // Take the highest set value
-      aggregator.set = aggregator.set === undefined || (result > aggregator.set) ?
+      aggregator.set = aggregator.set === undefined || (result !== undefined && result > aggregator.set) ?
         result :
         aggregator.set;
       break;
@@ -71,7 +79,7 @@ export default function aggregateEffect({ node, linkedNode, link }) {
       break;
     case 'passiveAdd':
       // Add all passive adds together
-      aggregator.passiveAdd = (aggregator.passiveAdd || 0) + result;
+      aggregator.passiveAdd = (aggregator.passiveAdd || 0) + (result ?? 0);
       break;
     case 'fail':
       // Sum number of fails
@@ -79,7 +87,7 @@ export default function aggregateEffect({ node, linkedNode, link }) {
       break;
     case 'conditional':
       // Store array of conditionals
-      aggregator.conditional.push(linkedNode.data.text);
+      if (linkedNode.data.text) aggregator.conditional.push(linkedNode.data.text);
       break;
   }
 }

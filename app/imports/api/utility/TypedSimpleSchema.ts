@@ -61,6 +61,10 @@ export function cleanAndValidate<T extends { _id?: string }>(schema: TypedSimple
   return cleanDoc;
 }
 
+export function oneOf<T extends SchemaDefinitionType[]>(...types: T): TypedSimpleSchema<InferTypeInner<T[number]>> {
+  return SimpleSchema.oneOf(...types) as unknown as TypedSimpleSchema<InferTypeInner<T[number]>>;
+}
+
 // If this type emerges anywhere in calculations, congratulations!
 // You've just hit an unimplemented corner case :D
 type NotImplementedMarker = { readonly NotImplementedMarker: unique symbol };

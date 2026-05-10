@@ -1,5 +1,5 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import { DamagePropTask } from '/imports/api/engine/action/tasks/Task';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
+import type { DamagePropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { applyTriggers } from '/imports/api/engine/action/functions/applyTaskGroups';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
@@ -7,12 +7,20 @@ import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { lowerCase, upperFirst } from 'lodash';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
+import { getNumberFromScope } from '/imports/api/engine/shared/scope';
+import type { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default async function applyDamagePropTask(
-  task: DamagePropTask, action: EngineAction, result: TaskResult, userInput
-): Promise<number> {
+  task: DamagePropTask,
+  action: EngineAction,
+  result: TaskResult,
+  userInput: InputProvider,
+  applyTask: ApplyTask,
+): Promise<number | undefined> {
   if (task.targetIds.length > 1) {
-    throw 'This subtask can only be called on a single target';
+    throw new Meteor.Error('incorrect targeting', 'This subtask can only be called on a single target');
   }
   const targetId = task.targetIds[0];
 
@@ -41,7 +49,7 @@ export default async function applyDamagePropTask(
   }
 
   // Run the before triggers which may change scope properties
-  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.before', userInput);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.before', userInput, applyTask);
 
   // Create a new result after triggers have run
   result = new TaskResult(task.targetIds);
@@ -55,15 +63,16 @@ export default async function applyDamagePropTask(
   value = +value;
   if (operation === 'increment') {
     if (value >= 0) {
-      value = scope['~damage']?.value;
+      value = await getNumberFromScope('~damage', scope) ?? value;
     } else {
-      value = -scope['~healing']?.value;
+      value = -(await getNumberFromScope('~healing', scope) ?? value);
     }
   } else {
-    value = scope['~set']?.value;
+    value = await getNumberFromScope('~set', scope) ?? value
   }
-  const targetPropId = scope['~attributeDamaged']?._propId ??
-    scope['~attributeDamaged']?._id;
+  const targetPropRefetched = scope['~attributeDamaged'];
+  const targetPropId = '_propId' in targetPropRefetched ? targetPropRefetched._propId :
+    '_id' in targetPropRefetched ? targetPropRefetched._id : null;
 
   // If there are no targets, just log the result that would apply and end
   if (!task.targetIds?.length) {
@@ -79,12 +88,12 @@ export default async function applyDamagePropTask(
   }
 
   let damage, newValue, increment;
-  targetProp = await getSingleProperty(targetId, targetPropId);
+  targetProp = targetPropId && await getSingleProperty(targetId, targetPropId) || targetProp;
 
   if (!targetProp) return value;
 
-  if (operation === 'set') {
-    const total = targetProp.total || 0;
+  if (operation === 'set' && targetProp.type === 'attribute') {
+    const total = Number(targetProp.total) || 0;
     // Set represents what we want the value to be after damage
     // So we need the actual damage to get to that value
     damage = total - value;
@@ -92,7 +101,7 @@ export default async function applyDamagePropTask(
     if (damage > total && !targetProp.ignoreLowerLimit) damage = total;
     // Damage must be positive
     if (damage < 0 && !targetProp.ignoreUpperLimit) damage = 0;
-    newValue = targetProp.total - damage;
+    newValue = total - damage;
     // Write the results
     result.mutations.push({
       targetIds: [targetId],
@@ -109,9 +118,10 @@ export default async function applyDamagePropTask(
       }]
     });
     if (targetId === action.creatureId) setScope(result, targetProp, newValue, damage);
-  } else if (operation === 'increment') {
-    const currentValue = targetProp.value || 0;
-    const currentDamage = targetProp.damage || 0;
+  } else if (operation === 'increment' && targetProp.type === 'attribute') {
+    const currentValue = Number(targetProp.value) || 0;
+    const currentDamage = Number(targetProp.damage) || 0;
+    const total = Number(targetProp.total) || 0;
     increment = value;
     // Can't increase damage above the remaining value
     if (increment > currentValue && !targetProp.ignoreLowerLimit) increment = currentValue;
@@ -120,7 +130,7 @@ export default async function applyDamagePropTask(
     // Only increment if the increment is non-zero
     if (increment !== 0) {
       damage = currentDamage + increment;
-      newValue = targetProp.total - damage;
+      newValue = total - damage;
       const attributeTypeName = upperFirst(lowerCase(targetProp.attributeType));
       // Write the results
       result.mutations.push({
@@ -140,8 +150,8 @@ export default async function applyDamagePropTask(
       if (targetId === action.creatureId) setScope(result, targetProp, newValue, damage);
     }
   }
-  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.after', userInput);
-  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.afterChildren', userInput);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.after', userInput, applyTask);
+  await applyTriggers(action, targetProp, [targetId], 'damageTriggerIds.afterChildren', userInput, applyTask);
   return increment;
 }
 
@@ -149,7 +159,12 @@ export default async function applyDamagePropTask(
 // TODO ideally we re-write the getEffectiveActionScope code to be more
 // getSomethingFromScope which does the same work, but for a single key, and includes all
 // updates to the doc returned that are already applied in the result array
-function setScope(result, targetProp, newValue, damage) {
+function setScope(
+  result: TaskResult,
+  targetProp: CreaturePropertyTypes['attribute'],
+  newValue: number | undefined,
+  damage: number | undefined
+) {
   // This isn't the defining property, don't bother
   if (targetProp.overridden) return;
   const key = targetProp.variableName;

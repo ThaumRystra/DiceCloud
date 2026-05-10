@@ -14,9 +14,15 @@ import { getVariables } from '/imports/api/engine/loadCreatures';
 import type { CalculatedField } from '/imports/api/properties/subSchemas/computedField';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
+import type { Scope, Variables } from '/imports/api/engine/computation/CreatureComputation';
 
 export default async function applyActionProperty(
-  task: PropTask, action: EngineAction, result: TaskResult, userInput: InputProvider
+  task: PropTask,
+  action: EngineAction,
+  result: TaskResult,
+  userInput: InputProvider,
+  applyTask: ApplyTask,
 ): Promise<void> {
   const prop = task.prop;
   if (prop.type !== 'action' && prop.type !== 'spell') {
@@ -74,17 +80,17 @@ export default async function applyActionProperty(
     if (targetIds.length) {
       for (const targetId of targetIds) {
         await applyAttackToTarget(task, action, attack, targetId, result, userInput);
-        await applyAfterTriggers(action, prop, [targetId], userInput);
-        await applyChildren(action, prop, [targetId], userInput);
+        await applyAfterTriggers(action, prop, [targetId], userInput, applyTask);
+        await applyChildren(action, prop, [targetId], userInput, applyTask);
       }
     } else {
       await applyAttackWithoutTarget(action, prop, attack, result, userInput);
-      await applyAfterTriggers(action, prop, targetIds, userInput);
-      await applyChildren(action, prop, targetIds, userInput);
+      await applyAfterTriggers(action, prop, targetIds, userInput, applyTask);
+      await applyChildren(action, prop, targetIds, userInput, applyTask);
     }
   } else {
-    await applyAfterTriggers(action, prop, targetIds, userInput);
-    await applyChildren(action, prop, targetIds, userInput);
+    await applyAfterTriggers(action, prop, targetIds, userInput, applyTask);
+    await applyChildren(action, prop, targetIds, userInput, applyTask);
   }
   if (prop.actionType === 'event' && prop.variableName) {
     await applyResetTask({
@@ -95,21 +101,24 @@ export default async function applyActionProperty(
   }
 
   // Finish
-  return await applyAfterChildrenTriggers(action, prop, targetIds, userInput);
+  return await applyAfterChildrenTriggers(action, prop, targetIds, userInput, applyTask);
 }
 
 async function applyAttackToTarget(
   task: PropTask, action: EngineAction, attack: CalculatedField, targetId: string,
   taskResult: TaskResult, userInput: InputProvider
 ) {
-  const prop = task.prop as CreaturePropertyTypes['action'] | CreaturePropertyTypes['spell'];
+  const prop = task.prop;
+  if (prop.type !== 'action' && prop.type !== 'spell') {
+    throw new Meteor.Error('not-an-attack', 'Only attacks and spells can be applied as attacks');
+  }
 
   taskResult.pushScope = {
-    '~attackHit': {},
-    '~attackMiss': {},
-    '~criticalHit': {},
-    '~criticalMiss': {},
-    '~attackRoll': {},
+    '~attackHit': { value: false },
+    '~attackMiss': { value: false },
+    '~criticalHit': { value: false },
+    '~criticalMiss': { value: false },
+    '~attackRoll': { value: 0 },
   }
 
   await recalculateCalculation(attack, action, 'reduce', userInput);
@@ -125,7 +134,7 @@ async function applyAttackToTarget(
   } = await rollAttack(attack, scope, taskResult.pushScope, userInput);
 
   const targetScope = getVariables(targetId);
-  const targetArmor = getNumberFromScope('armor', targetScope)
+  const targetArmor = await getNumberFromScope('armor', targetScope)
 
   if (targetArmor !== undefined) {
     let name = criticalHit ? 'Critical Hit!' :
@@ -170,13 +179,19 @@ async function applyAttackToTarget(
   }
 }
 
-async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskResult, userInput: InputProvider) {
+async function applyAttackWithoutTarget(
+  action: EngineAction,
+  prop: CreaturePropertyTypes['action'] | CreaturePropertyTypes['spell'],
+  attack: NonNullable<CreaturePropertyTypes['action']['attackRoll']>,
+  taskResult: TaskResult,
+  userInput: InputProvider,
+) {
   taskResult.pushScope = {
-    '~attackHit': {},
-    '~attackMiss': {},
-    '~criticalHit': {},
-    '~criticalMiss': {},
-    '~attackRoll': {},
+    '~attackHit': { value: false },
+    '~attackMiss': { value: false },
+    '~criticalHit': { value: false },
+    '~criticalMiss': { value: false },
+    '~attackRoll': { value: 0 },
   }
   await recalculateCalculation(attack, action, 'reduce', userInput);
   const scope = await getEffectiveActionScope(action);
@@ -193,6 +208,7 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
   } else if (advantage === -1) {
     name += ' (Disadvantage)';
   }
+  taskResult.pushScope ??= {};
   if (!criticalMiss) {
     taskResult.pushScope['~attackHit'] = { value: true }
   }
@@ -210,7 +226,12 @@ async function applyAttackWithoutTarget(action, prop, attack, taskResult: TaskRe
   });
 }
 
-async function rollAttack(attack, scope: any, resultPushScope, userInput: InputProvider) {
+async function rollAttack(
+  attack: NonNullable<CreaturePropertyTypes['action']['attackRoll']>,
+  scope: Scope,
+  resultPushScope: Scope,
+  userInput: InputProvider
+) {
   const advantage: 0 | 1 | -1 = await userInput.advantage(
     (!!attack.advantage && !attack.disadvantage) ? 1 :
       (!attack.advantage && !!attack.disadvantage) ? -1 :
@@ -242,18 +263,19 @@ async function rollAttack(attack, scope: any, resultPushScope, userInput: InputP
     resultPrefix = `1d20 [${value}] ${rollModifierText}`
   }
   resultPushScope['~attackDiceRoll'] = { value };
-  const result = value + attack.value;
+  const attackBonus = typeof attack.value === 'number' ? attack.value : 0;
+  const result = value + attackBonus;
   resultPushScope['~attackRoll'] = { value: result };
-  const { criticalHit, criticalMiss } = applyCrits(value, scope, resultPushScope);
+  const { criticalHit, criticalMiss } = await applyCrits(value, scope, resultPushScope);
   return { resultPrefix, result, value, criticalHit, criticalMiss, advantage };
 }
 
-function applyCrits(value, scope, resultPushScope) {
-  const scopeCritTarget = getNumberFromScope('~criticalHitTarget', scope);
+async function applyCrits(value: number, scope: Scope, resultPushScope: Scope) {
+  const scopeCritTarget = await getNumberFromScope('~criticalHitTarget', scope as Variables);
   const criticalHitTarget = scopeCritTarget !== undefined &&
     Number.isFinite(scopeCritTarget) ? scopeCritTarget : 20;
 
-  const scopeCritMissTarget = getNumberFromScope('~criticalMissTarget', scope);
+  const scopeCritMissTarget = await getNumberFromScope('~criticalMissTarget', scope as Variables);
   const criticalMissTarget = scopeCritMissTarget !== undefined &&
     Number.isFinite(scopeCritMissTarget) ? scopeCritMissTarget : 1;
 

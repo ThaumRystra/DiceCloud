@@ -1,8 +1,9 @@
 import { EJSON } from 'meteor/ejson';
-import createGraph, { type Graph } from 'ngraph.graph';
+import createGraph, { type Graph, type NodeId } from 'ngraph.graph';
 import getEffectivePropTags from '/imports/api/engine/computation/utility/getEffectivePropTags';
 import type { Creature } from '/imports/api/creature/creatures/Creatures';
 import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { PointBuyRow } from '/imports/api/properties/PointBuys';
 
 export type ComputationProperty = CreatureProperty & {
   _computationDetails: {
@@ -18,18 +19,50 @@ type DenormalizedVariable = {
   type: '_variable';
 }
 
-export type Variables = Record<string, CreatureProperty | { _propId: string }> & { _creatureId?: string };
+type PointBuyRowDep = PointBuyRow & {
+  type: 'pointBuyRow',
+  tableName: string,
+  tableId: string,
+  rowIndex: number,
+}
 
-export type DependencyGraphNode = CreatureProperty | DenormalizedVariable
+export type ImplicitVariable = {
+  type: '_implicit',
+}
+
+export type Aggregator = {
+  base: number | undefined,
+  add: number,
+  mul: number,
+  min: number,
+  max: number,
+  advantage: number,
+  disadvantage: number,
+  passiveAdd: number | undefined,
+  fail: number,
+  set: number | undefined,
+  conditional: string[],
+  rollBonus: number[],
+}
+
+export type DependencyGraphNode = (CreatureProperty | DenormalizedVariable | PointBuyRowDep) & {
+  effectAggregator?: Aggregator;
+  effectIds?: string[];
+}
+
+type CreaturePropertyReference = { _propId: string };
+type ScopeValue = CreatureProperty | CreaturePropertyReference | { value: number | boolean } | DenormalizedVariable | PointBuyRowDep;
+export type Scope = Record<string, ScopeValue>
+export type Variables = Scope & { _creatureId: string };
 
 export default class CreatureComputation {
   originalPropsById: Record<string, CreatureProperty>;
   propsById: Record<string, CreatureProperty>;
   propsWithTag: Record<string, string[]>;
-  scope: Record<string, CreatureProperty>;
+  scope: Scope;
   props: ComputationProperty[];
   dependencyGraph: Graph<DependencyGraphNode, string>;
-  errors: Array<Meteor.Error>;
+  errors: Array<Meteor.Error | { type: string, message?: string, details: { error: string } } | { type: 'dependencyLoop', details: { nodes: NodeId[] } }>;
   creature: Creature;
   variables: Variables;
 

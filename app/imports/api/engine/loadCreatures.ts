@@ -92,7 +92,7 @@ export async function getProperties(creatureId: string): Promise<CreaturePropert
   return props;
 }
 
-export function getPropertiesOfType<T extends PropertyType>(creatureId: string, propType: T): CreaturePropertyTypes[T][] {
+export async function getPropertiesOfType<T extends PropertyType>(creatureId: string, propType: T): Promise<CreaturePropertyTypes[T][]> {
   const creature = loadedCreatures.get(creatureId);
   if (creature) {
     const props = Array.from(creature.properties.values())
@@ -101,13 +101,13 @@ export function getPropertiesOfType<T extends PropertyType>(creatureId: string, 
     return EJSON.clone(props);
   }
   console.time(`Cache miss on creature properties: ${creatureId}`)
-  const props: CreaturePropertyTypes[T][] = CreatureProperties.find({
+  const props: CreaturePropertyTypes[T][] = await CreatureProperties.find({
     'root.id': creatureId,
     'removed': { $ne: true },
     'type': propType as never,
   }, {
     sort: { left: 1 },
-  }).fetch() as CreaturePropertyTypes[T][];
+  }).fetchAsync() as CreaturePropertyTypes[T][];
   console.timeEnd(`Cache miss on creature properties: ${creatureId}`);
   return props;
 }
@@ -160,7 +160,7 @@ export function getVariables(creatureId: string): Variables {
   if (loadedVariables) {
     return EJSON.clone(loadedVariables);
   } else {
-    return {}
+    return {} as Variables;
   };
 }
 

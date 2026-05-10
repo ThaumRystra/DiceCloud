@@ -1,10 +1,10 @@
 import { get } from 'lodash';
-
 import { getPropertyChildren, getSingleProperty } from '/imports/api/engine/loadCreatures';
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import applyTask from '../tasks/applyTask';
-import { PropTask } from '../tasks/Task';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
+import type { PropTask } from '../tasks/Task';
 import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
 
 /**
  * Get all the child tasks of a given property
@@ -14,7 +14,11 @@ import type { InputProvider } from '/imports/api/engine/action/functions/userInp
  * @returns 
  */
 export async function applyChildren(
-  action: EngineAction, prop, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
   const children = await getPropertyChildren(action.creatureId, prop);
   for (const childProp of children) {
@@ -29,7 +33,11 @@ export async function applyChildren(
  * @returns 
  */
 export async function applyAfterChildrenTriggers(
-  action: EngineAction, prop, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
   if (!prop.triggerIds?.afterChildren) return;
   for (const triggerId of prop.triggerIds.afterChildren) {
@@ -40,7 +48,11 @@ export async function applyAfterChildrenTriggers(
 }
 
 export async function applyAfterTriggers(
-  action: EngineAction, prop, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
   if (!prop.triggerIds?.after) return;
   for (const triggerId of prop.triggerIds.after) {
@@ -61,11 +73,15 @@ export async function applyAfterTriggers(
  * @returns 
  */
 export async function applyDefaultAfterPropTasks(
-  action: EngineAction, prop, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
-  await applyAfterTriggers(action, prop, targetIds, inputProvider);
-  await applyChildren(action, prop, targetIds, inputProvider);
-  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterTriggers(action, prop, targetIds, inputProvider, applyTask);
+  await applyChildren(action, prop, targetIds, inputProvider, applyTask);
+  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider, applyTask);
 }
 
 /**
@@ -78,10 +94,14 @@ export async function applyDefaultAfterPropTasks(
  * @returns 
  */
 export async function applyAfterTasksSkipChildren(
-  action: EngineAction, prop, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
-  await applyAfterTriggers(action, prop, targetIds, inputProvider);
-  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterTriggers(action, prop, targetIds, inputProvider, applyTask);
+  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider, applyTask);
 }
 
 /**
@@ -94,11 +114,16 @@ export async function applyAfterTasksSkipChildren(
  * @returns 
  */
 export async function applyAfterPropTasksForSingleChild(
-  action: EngineAction, prop, childProp, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  childProp: CreatureProperty,
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
-  await applyAfterTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterTriggers(action, prop, targetIds, inputProvider, applyTask);
   await applyTask(action, { prop: childProp, targetIds }, inputProvider);
-  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider, applyTask);
 }
 
 /**
@@ -111,13 +136,18 @@ export async function applyAfterPropTasksForSingleChild(
  * @returns 
  */
 export async function applyAfterPropTasksForSomeChildren(
-  action: EngineAction, prop, children, targetIds: string[], inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  children: CreatureProperty[],
+  targetIds: string[],
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
-  await applyAfterTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterTriggers(action, prop, targetIds, inputProvider, applyTask);
   for (const childProp of children) {
     await applyTask(action, { prop: childProp, targetIds }, inputProvider);
   }
-  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider);
+  await applyAfterChildrenTriggers(action, prop, targetIds, inputProvider, applyTask);
 }
 
 /**
@@ -129,7 +159,12 @@ export async function applyAfterPropTasksForSomeChildren(
  * @returns 
  */
 export async function applyTriggers(
-  action: EngineAction, prop, targetIds: string[], triggerPath: string, inputProvider: InputProvider
+  action: EngineAction,
+  prop: CreatureProperty,
+  targetIds: string[],
+  triggerPath: string,
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
   const triggerIds = get(prop, triggerPath);
   if (!triggerIds) return;
@@ -147,7 +182,11 @@ export async function applyTriggers(
  * @returns Copies of the task, but with a single target each
  */
 export async function applyTaskToEachTarget(
-  action: EngineAction, task: PropTask, targetIds: string[] = task.targetIds, inputProvider: InputProvider
+  action: EngineAction,
+  task: PropTask,
+  targetIds: string[] = task.targetIds,
+  inputProvider: InputProvider,
+  applyTask: ApplyTask,
 ) {
   if (targetIds.length <= 1) throw 'Must have multiple targets to split a task';
   // If there are targets, apply a new task to each target

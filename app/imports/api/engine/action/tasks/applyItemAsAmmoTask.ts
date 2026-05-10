@@ -1,28 +1,37 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
 import {
   applyDefaultAfterPropTasks, applyAfterTasksSkipChildren, applyTriggers
 } from '/imports/api/engine/action/functions/applyTaskGroups';
 import {
   getEffectiveActionScope
 } from '/imports/api/engine/action/functions/getEffectiveActionScope';
-import { ItemAsAmmoTask } from '/imports/api/engine/action/tasks/Task';
+import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
+import type { ItemAsAmmoTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { getPropertyChildren } from '/imports/api/engine/loadCreatures';
+import { getNumberFromScope } from '/imports/api/engine/shared/scope';
 import getPropertyTitle from '/imports/api/utility/getPropertyTitle';
 
-export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: EngineAction, result: TaskResult, userInput): Promise<void> {
+export default async function applyItemAsAmmoTask(
+  task: ItemAsAmmoTask,
+  action: EngineAction,
+  result: TaskResult,
+  userInput: InputProvider,
+  applyTask: ApplyTask,
+): Promise<void> {
   const prop = task.prop;
   const { item } = task.params
   let { value } = task.params;
 
-  if (item.type !== 'item') throw 'Must use an item as ammo';
+  if (item.type !== 'item') throw new Meteor.Error('wrong-ammo-property', 'Only items can be used as ammo');
 
   // Store the ammo item and value in the scope
-  result.scope['#ammo'] = { propId: item._id };
+  result.scope['#ammo'] = { _propId: item._id };
   result.pushScope = { ['~ammoConsumed']: { value } };
 
   // Apply the before triggers
-  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.before', userInput);
+  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.before', userInput, applyTask);
 
   // Create a new result after before triggers have run
   result = new TaskResult(task.targetIds);
@@ -33,7 +42,7 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
   result.popScope = {
     '~ammoConsumed': 1,
   };
-  value = scope['~ammoConsumed']?.value || 0;
+  value = await getNumberFromScope('~ammoConsumed', scope) || 0;
 
   const itemChildren = task.params.skipChildren ? [] : await getPropertyChildren(action.creatureId, item);
 
@@ -51,17 +60,17 @@ export default async function applyItemAsAmmoTask(task: ItemAsAmmoTask, action: 
       contents: [{
         name: getPropertyTitle(item) || 'Ammo',
         inline: false,
-        ...prop?.silent && { silenced: true },
+        ...'silent' in prop && prop?.silent && { silenced: true },
       }]
     },
   });
 
-  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.after', userInput);
+  await applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.after', userInput, applyTask);
 
   if (task.params.skipChildren) {
-    await applyAfterTasksSkipChildren(action, item, task.targetIds, userInput);
+    await applyAfterTasksSkipChildren(action, item, task.targetIds, userInput, applyTask);
   } else {
-    await applyDefaultAfterPropTasks(action, item, task.targetIds, userInput);
+    await applyDefaultAfterPropTasks(action, item, task.targetIds, userInput, applyTask);
   }
-  return applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.afterChildren', userInput);
+  return applyTriggers(action, item, task.targetIds, 'ammoTriggerIds.afterChildren', userInput, applyTask);
 }

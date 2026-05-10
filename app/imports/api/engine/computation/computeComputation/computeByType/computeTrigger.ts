@@ -1,9 +1,10 @@
 import { getEffectTagTargets } from '/imports/api/engine/computation/buildComputation/linkTypeDependencies';
 import CreatureComputation from '/imports/api/engine/computation/CreatureComputation';
-import { CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { TraversedNode } from '/imports/api/engine/computation/computeCreatureComputation';
 
-export default function computeTrigger(computation: CreatureComputation, node: { data: CreaturePropertyTypes['trigger'] }) {
+export default function computeTrigger(computation: CreatureComputation, node: TraversedNode) {
   const prop = node.data;
+  if (prop.type !== 'trigger') throw new Meteor.Error('unexpected-prop', 'Attempted to compute a non-trigger as a trigger');
 
   // Triggers that aren't active aren't linked to properties
   if (prop.inactive) return;

@@ -1,13 +1,13 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import { CastSpellTask } from '/imports/api/engine/action/tasks/Task';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
+import type { CastSpellTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from './TaskResult';
 import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import { getSingleProperty } from '/imports/api/engine/loadCreatures';
-import applyTask from '/imports/api/engine/action/tasks/applyTask';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
 import applyActionProperty from '../applyProperties/applyActionProperty';
 
 export default async function applySpellProperty(
-  task: CastSpellTask, action: EngineAction, result: TaskResult, userInput: InputProvider
+  task: CastSpellTask, action: EngineAction, result: TaskResult, userInput: InputProvider, applyTask: ApplyTask,
 ): Promise<void> {
   const prop = task.prop;
   const targetIds = prop.target === 'self' ? [action.creatureId] : task.targetIds;
@@ -29,7 +29,7 @@ export default async function applySpellProperty(
     message = `Ritual casting at level ${slotLevel}`
   } else {
     // Get the slot being cast with
-    const spellSlot = task.params.slotId && getSingleProperty(action.creatureId, task.params.slotId) || undefined;
+    const spellSlot = task.params.slotId && await getSingleProperty(action.creatureId, task.params.slotId) || undefined;
     // Ensure the slot exists
     if (!spellSlot) {
       result.appendLog({
@@ -78,5 +78,5 @@ export default async function applySpellProperty(
   return applyActionProperty({
     prop,
     targetIds: targetIds,
-  }, action, result, userInput);
+  }, action, result, userInput, applyTask);
 }

@@ -1,18 +1,23 @@
 import { applyTriggers } from '/imports/api/engine/action/functions/applyTaskGroups';
-import { CheckTask } from '/imports/api/engine/action/tasks/Task';
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
+import type { CheckTask } from '/imports/api/engine/action/tasks/Task';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
 import { getEffectiveActionScope } from '/imports/api/engine/action/functions/getEffectiveActionScope';
 import { getFromScope } from '../../shared/scope';
 import { getVariables } from '/imports/api/engine/loadCreatures';
 import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
+import type { ApplyTask } from '/imports/api/engine/action/tasks/applyTask';
 
 /**
  * A skill property is applied as a check or a saving throw
  */
 export default async function applyCheckTask(
-  task: CheckTask, action: EngineAction, result: TaskResult, userInput: InputProvider
+  task: CheckTask,
+  action: EngineAction,
+  result: TaskResult,
+  userInput: InputProvider,
+  applyTask: ApplyTask,
 ): Promise<void> {
   const targetIds = task.targetIds;
 
@@ -31,16 +36,17 @@ export default async function applyCheckTask(
     const checkParams = await userInput.check(task);
     const advantage = checkParams.advantage;
 
-    const skill = checkParams.skillVariableName && getFromScope(checkParams.skillVariableName, scope) || null;
+    let skill = checkParams.skillVariableName && await getFromScope(checkParams.skillVariableName, scope) || null;
+    if (!skill || !('type' in skill) || skill.type !== 'skill') skill = null;
     const skillBonus = (skill?.value || 0) - (skill?.abilityMod || 0);
 
-    const ability = checkParams.abilityVariableName && getFromScope(checkParams.abilityVariableName, scope) || null;
+    let ability = checkParams.abilityVariableName && await getFromScope(checkParams.abilityVariableName, scope) || null;
+    if (!ability || !('type' in ability) || ability.type !== 'attribute') ability = null;
     const abilityModifier = ability?.modifier || 0;
 
-
     // Run the before triggers which may change scope properties
-    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.before', userInput);
-    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.before', userInput);
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.before', userInput, applyTask);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.before', userInput, applyTask);
 
     if (skill || ability) {
       // Create a new result after before triggers have run
@@ -112,12 +118,12 @@ export default async function applyCheckTask(
     }, [targetId]);
 
     // After check triggers
-    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.after', userInput);
-    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.after', userInput);
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.after', userInput, applyTask);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.after', userInput, applyTask);
 
     // After children check triggers
-    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.afterChildren', userInput);
-    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.afterChildren', userInput);
+    if (skill) await applyTriggers(action, skill, [targetId], 'checkTriggerIds.afterChildren', userInput, applyTask);
+    if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.afterChildren', userInput, applyTask);
   }
 }
 

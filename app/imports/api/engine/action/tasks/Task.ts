@@ -23,7 +23,7 @@ export type DamagePropTask = BaseTask & {
     title?: string;
     operation: 'increment' | 'set';
     value: number;
-    targetProp: CreatureProperty | { name: string, };
+    targetProp: CreatureProperty,// | { name: string, };
   };
 }
 
@@ -33,7 +33,7 @@ export type ItemAsAmmoTask = BaseTask & {
   silent?: undefined;
   params: {
     value: number;
-    item: any;
+    item: CreatureProperty;
     skipChildren: boolean;
   };
 }

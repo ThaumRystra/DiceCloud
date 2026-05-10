@@ -6,15 +6,17 @@ import computeVariableAsClass from './computeVariable/computeVariableAsClass';
 import computeVariableAsToggle from './computeVariable/computeVariableAsToggle';
 import computeImplicitVariable from './computeVariable/computeImplicitVariable';
 import VARIABLE_NAME_REGEX from '/imports/constants/VARIABLE_NAME_REGEX';
+import type CreatureComputation from '/imports/api/engine/computation/CreatureComputation';
+import type { TraversedNode } from '/imports/api/engine/computation/computeCreatureComputation';
+import type { DependencyGraphNode } from '/imports/api/engine/computation/CreatureComputation';
 
-export default function computeVariable(computation, node) {
+export default function computeVariable(computation: CreatureComputation, node: TraversedNode) {
   const scope = computation.scope;
-  if (!node.data) node.data = {};
-  aggregateLinks(computation, node);
-  combineAggregations(computation, node);
   // Don't add to the scope if the node id is not a legitimate variable name
   // Without this `some.thing` could break the entire sheet as a database key
-  if (!VARIABLE_NAME_REGEX.test(node.id)) return;
+  if (typeof node.id === 'number' || !VARIABLE_NAME_REGEX.test(node.id)) return;
+  aggregateLinks(computation, node);
+  combineAggregations(computation, node);
   if (node.data.definingProp) {
     // Add the defining variable to the scope
     scope[node.id] = node.data.definingProp
@@ -24,16 +26,16 @@ export default function computeVariable(computation, node) {
   }
 }
 
-function aggregateLinks(computation, node) {
+function aggregateLinks(computation: CreatureComputation, node: TraversedNode) {
   computation.dependencyGraph.forEachLinkedNode(
     node.id,
     (linkedNode, link) => {
-      if (!linkedNode.data) linkedNode.data = {};
       // Ignore inactive props
-      if (linkedNode.data.inactive) return;
+      if ('inactive' in linkedNode.data && linkedNode.data.inactive) return;
       // Ignore point buy rows if their base table is inactive
       if (
-        linkedNode.data.tableId
+        'tableId' in linkedNode.data
+        && linkedNode.data.tableId
         && computation.propsById[linkedNode.data.tableId]?.inactive
       ) return;
       // Apply all the aggregations
@@ -50,15 +52,12 @@ function aggregateLinks(computation, node) {
   );
 }
 
-function combineAggregations(computation, node) {
+function combineAggregations(computation: CreatureComputation, node: TraversedNode) {
   combineMultiplierAggregator(node);
-  node.data.overridenProps?.forEach(prop => {
-    computeVariableProp(computation, node, prop);
-  });
   computeVariableProp(computation, node, node.data.definingProp);
 }
 
-function computeVariableProp(computation, node, prop) {
+function computeVariableProp(computation: CreatureComputation, node: TraversedNode, prop: DependencyGraphNode | undefined) {
   if (!prop) return;
 
   // Combine damage multipliers in all props so that they can't be overridden

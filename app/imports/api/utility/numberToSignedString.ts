@@ -1,4 +1,6 @@
-export default function numberToSignedString(number, spaced) {
+import type { ConstantValueType } from '/imports/parser/parseTree/constant';
+
+export default function numberToSignedString(number: ConstantValueType | undefined, spaced?: boolean) {
   if (typeof number !== 'number') return number;
   if (number === 0) {
     return spaced ? '+ 0' : '+0';

@@ -1,12 +1,15 @@
 import computeToggles from '/imports/api/engine/computation/computeComputation/computeToggles';
-import computeByType from '/imports/api/engine/computation/computeComputation/computeByType';
+import { computeByType } from '/imports/api/engine/computation/computeComputation/computeByType';
 import embedInlineCalculations from './utility/embedInlineCalculations';
 import { removeEmptyCalculations } from './buildComputation/parseCalculationFields';
 import path from 'ngraph.path';
 import type CreatureComputation from './CreatureComputation';
 import type { Graph, Node, NodeId } from 'ngraph.graph';
+import type { DependencyGraphNode } from './CreatureComputation';
 
-type TraversedNode = Node<any> & {
+export type TraversedNode = Node<DependencyGraphNode & {
+  definingProp?: DependencyGraphNode,
+}> & {
   _visited?: boolean,
   _visitedChildren?: boolean,
 }
@@ -56,7 +59,7 @@ async function compute(computation: CreatureComputation, node: TraversedNode) {
   // Determine the prop's active status by its toggles
   computeToggles(computation, node);
   // Compute the property by type
-  await computeByType[node.data?.type || '_variable']?.(computation, node);
+  await computeByType(computation, node);
 }
 
 function pushDependenciesToStack(nodeId: NodeId, graph: Graph, stack: TraversedNode[], computation: CreatureComputation) {

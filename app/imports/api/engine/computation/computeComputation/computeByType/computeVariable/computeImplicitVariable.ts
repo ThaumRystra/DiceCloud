@@ -1,14 +1,18 @@
 import getAggregatorResult from './getAggregatorResult';
+import type { TraversedNode } from '/imports/api/engine/computation/computeCreatureComputation';
+import type { ImplicitVariable } from '/imports/api/engine/computation/CreatureComputation';
 
 /*
  * Variables with effects, proficiencies, or damage multipliers but no defining
  * properties are added to the scope as implicit variables
  */
-export default function computeImplicitVariable(node) {
-  const prop = {};
+export default function computeImplicitVariable(node: TraversedNode) {
+  const prop: ImplicitVariable = {
+    type: '_implicit',
+  };
 
   // Combine damage multipliers
-  if (node.data.immunity) {
+  if ('immunity' in node.data && node.data.immunity) {
     prop.immunity = node.data.immunity;
     prop.immunities = node.data.immunities;
   }

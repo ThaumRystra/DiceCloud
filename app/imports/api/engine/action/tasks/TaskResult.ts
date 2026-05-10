@@ -1,4 +1,7 @@
 import Context from '../../../../parser/types/Context';
+import type { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import type { Scope } from '/imports/api/engine/computation/CreatureComputation';
+import type { LibraryNode } from '/imports/api/library/LibraryNodes';
 
 /**
  * The result of running a task containing all the changes that need to be made to the listed
@@ -8,9 +11,9 @@ import Context from '../../../../parser/types/Context';
 export default class TaskResult {
   // The targets of the original task
   targetIds: string[];
-  scope: any;
+  scope: Scope;
   // Consume pushed changes from the local scope, every change pushed must be popped later
-  popScope?: any;
+  popScope?: Partial<Record<string, 1>>;
   // Push changes to the scope if the same task intends to consume them in later steps
   // These changes will be marked as _busy until they are consumed
   // This allows a property to run in between steps of the same property type without
@@ -18,7 +21,7 @@ export default class TaskResult {
   // those variables to triggers that need to change them
   // If multiple properties use the same variable at once, the values used by outer
   // properties can be found on variable.previous
-  pushScope?: any;
+  pushScope?: Scope;
   mutations: Mutation[];
   constructor(targetIds: string[]) {
     this.targetIds = targetIds;
@@ -68,18 +71,20 @@ export type Mutation = {
   updates?: Update[];
   // What properties get added
   // TODO make these properties a LibraryNode type
-  inserts?: any[];
+  inserts?: LibraryNode[];
   // What properties get deleted
   removals?: Removal[];
   // Logged when this is applied
   contents?: LogContent[];
 }
 
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+
 export type Update = {
   propId: string;
   type: string,
-  set?: any;
-  inc?: any;
+  set?: Partial<CreatureProperty>;
+  inc?: Partial<Record<KeysOfUnion<CreatureProperty>, number>>;
 }
 
 export type Removal = {
@@ -90,6 +95,6 @@ export type LogContent = {
   name?: string;
   value?: string;
   inline?: boolean;
-  context?: any;
+  //context?: any;
   silenced?: boolean;
 }

@@ -10,7 +10,7 @@ import constant, { isFiniteNode } from '/imports/parser/parseTree/constant';
  * Get the property from the given scope, respecting properties that are just a link to the actual
  * property document
  */
-export async function getFromScope(name: string, scope: Variables): Promise<CreatureProperty | PointBuyRow | undefined> {
+export async function getFromScope(name: string, scope: Variables): Promise<CreatureProperty | PointBuyRow | { value: number | boolean } | undefined> {
   if (name === '_creatureId') return;
   const scopeValue = scope?.[name];
   if (scopeValue && '_propId' in scopeValue) {
@@ -40,14 +40,14 @@ export async function getConstantValueFromScope(name: string, scope: Variables) 
   return parseNode.value;
 }
 
-export async function getParseNodeFromScope(name, scope): Promise<ParseNode | undefined> {
-  let value = await getFromScope(name, scope);
+export async function getParseNodeFromScope(name: string, scope: Variables): Promise<ParseNode | undefined> {
+  const value = await getFromScope(name, scope);
   if (!value) return;
   let valueType = getType(value);
   // Iterate into object.values
   while (valueType === 'object') {
     // Prefer the valueNode over the value
-    if (value.valueNode) {
+    if (value && 'valueNode' in value && value?.valueNode) {
       value = value.valueNode;
     } else {
       value = value.value;
@@ -75,9 +75,9 @@ export async function getParseNodeFromScope(name, scope): Promise<ParseNode | un
   }
 }
 
-function getType(val) {
+function getType(val: Awaited<ReturnType<typeof getFromScope>>) {
   if (!val) return typeof val;
   if (Array.isArray(val)) return 'array';
-  if (val.parseType) return 'parseNode';
+  if ((typeof val === 'object') && 'parseType' in val && val.parseType) return 'parseNode';
   return typeof val;
 }

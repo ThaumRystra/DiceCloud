@@ -1,14 +1,14 @@
-import { EngineAction } from '/imports/api/engine/action/EngineActions';
-import Task, { CheckTask, DamagePropTask, ItemAsAmmoTask, PropTask } from './Task';
-import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
-import applyDamagePropTask from '/imports/api/engine/action/tasks/applyDamagePropTask';
-import applyItemAsAmmoTask from '/imports/api/engine/action/tasks/applyItemAsAmmoTask';
-import { getSingleProperty } from '/imports/api/engine/loadCreatures';
+import type { CheckTask, DamagePropTask, ItemAsAmmoTask, PropTask, Task } from './Task';
+import type { EngineAction } from '/imports/api/engine/action/EngineActions';
 import applyProperties from '/imports/api/engine/action/applyProperties';
 import type { InputProvider } from '/imports/api/engine/action/functions/userInput/InputProvider';
-import applyCheckTask from '/imports/api/engine/action/tasks/applyCheckTask';
-import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
+import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import applyCastSpellTask from '/imports/api/engine/action/tasks/applyCastSpellTask';
+import applyCheckTask from '/imports/api/engine/action/tasks/applyCheckTask';
+import applyDamagePropTask from '/imports/api/engine/action/tasks/applyDamagePropTask';
+import applyItemAsAmmoTask from '/imports/api/engine/action/tasks/applyItemAsAmmoTask';
+import applyResetTask from '/imports/api/engine/action/tasks/applyResetTask';
+import { getSingleProperty } from '/imports/api/engine/loadCreatures';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
 
 // DamagePropTask promises a number of actual damage done
@@ -36,24 +36,24 @@ export default async function applyTask(
 
   // Ensure no more than 100 tasks are performed by a single action
   action.taskCount += 1;
-  if (action.taskCount > 100) throw 'Only 100 properties can be applied at once';
+  if (action.taskCount > 100) throw new Meteor.Error('too-many-action-properties', 'Only 100 properties can be applied at once');
 
   if (task.subtaskFn) {
     const result = new TaskResult(task.targetIds);
     action.results.push(result);
     switch (task.subtaskFn) {
       case 'damageProp':
-        return applyDamagePropTask(task, action, result, inputProvider);
+        return applyDamagePropTask(task, action, result, inputProvider, applyTask);
       case 'consumeItemAsAmmo':
-        return applyItemAsAmmoTask(task, action, result, inputProvider);
+        return applyItemAsAmmoTask(task, action, result, inputProvider, applyTask);
       case 'check':
-        return applyCheckTask(task, action, result, inputProvider);
+        return applyCheckTask(task, action, result, inputProvider, applyTask);
       case 'reset':
-        return applyResetTask(task, action, result, inputProvider);
+        return applyResetTask(task, action, result, inputProvider, applyTask);
       case 'castSpell':
-        return applyCastSpellTask(task, action, result, inputProvider);
+        return applyCastSpellTask(task, action, result, inputProvider, applyTask);
       default:
-        throw 'No case defined for the given subtaskFn';
+        throw new Meteor.Error('unknown-subtaskFn', 'No case defined for the given subtaskFn');
     }
   } else {
     // Get property
@@ -91,3 +91,5 @@ export default async function applyTask(
     return applyProperties[prop.type](task, action, result, inputProvider);
   }
 }
+
+export type ApplyTask = typeof applyTask;

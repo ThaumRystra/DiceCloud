@@ -1,4 +1,15 @@
-const PROPERTIES = Object.freeze({
+import type { PropertyType } from '/imports/api/properties/PropertyType.type';
+
+type PropertyTypeDetails = {
+  icon: string;
+  name: string;
+  docsPath?: string;
+  helpText: string;
+  examples?: string;
+  suggestedParents: PropertyType[];
+};
+
+const PROPERTIES: Record<PropertyType, PropertyTypeDetails> = Object.freeze({
   action: {
     icon: '$vuetify.icons.action',
     name: 'Action',
@@ -19,28 +30,28 @@ const PROPERTIES = Object.freeze({
     name: 'Attribute damage',
     docsPath: 'property/attribute-damage',
     helpText: 'Attribute damage reduces the current value of an attribute when it is applied by an action. A negative value causes the attribute to increase instead, up to its normal maximum.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+    suggestedParents: ['action', 'savingThrow', 'spell', 'branch'],
   },
   buff: {
     icon: '$vuetify.icons.buff',
     name: 'Buff',
     docsPath: 'property/buff',
     helpText: 'When a buff is activated as a child of an action, it will copy the properties under itself onto a target character.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+    suggestedParents: ['action', 'savingThrow', 'spell', 'branch'],
   },
   buffRemover: {
     icon: '$vuetify.icons.buffRemover',
     name: 'Remove Buff',
     docsPath: 'property/remove-buff',
     helpText: 'Removes a buff from the target character',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+    suggestedParents: ['action', 'savingThrow', 'spell', 'branch'],
   },
   branch: {
     icon: 'mdi-file-tree',
     name: 'Branch',
     docsPath: 'property/branch',
     helpText: 'When a branch is activated as a child of an action, it can control which of its children get activated.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell'],
+    suggestedParents: ['action', 'savingThrow', 'spell'],
   },
   class: {
     icon: 'mdi-card-account-details',
@@ -84,7 +95,7 @@ const PROPERTIES = Object.freeze({
     name: 'Damage',
     docsPath: 'property/damage',
     helpText: 'When damage is activated by an action it reduces the hit points of the target creature by the calculated amount.',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+    suggestedParents: ['action', 'savingThrow', 'spell', 'branch'],
   },
   damageMultiplier: {
     icon: '$vuetify.icons.damage_multiplier',
@@ -148,7 +159,7 @@ const PROPERTIES = Object.freeze({
     name: 'Roll',
     docsPath: 'property/roll',
     helpText: 'When activated by an action, rolls perform a calculation and temporarily store the result for other properties under the same action to use',
-    suggestedParents: ['action', 'attack', 'savingThrow', 'spell', 'branch'],
+    suggestedParents: ['action', 'savingThrow', 'spell', 'branch'],
   },
   reference: {
     icon: 'mdi-vector-link',
@@ -162,7 +173,7 @@ const PROPERTIES = Object.freeze({
     name: 'Saving throw',
     docsPath: 'property/saving-throw',
     helpText: 'When a saving throw is activated by an action, it causes the target to make a saving throw, if the saving throw fails, the children properties of the saving throw are activated.',
-    suggestedParents: ['action', 'attack', 'spell'],
+    suggestedParents: ['action', 'spell'],
   },
   skill: {
     icon: '$vuetify.icons.skill',
@@ -206,37 +217,37 @@ const PROPERTIES = Object.freeze({
     helpText: 'Triggers apply their children in response to events on the character sheet, such as taking an action or receiving damage',
     suggestedParents: [],
   },
-});
+} as const);
 
 export default PROPERTIES;
 
-export function getPropertyName(type) {
+export function getPropertyName(type: keyof typeof PROPERTIES) {
   return (type && PROPERTIES[type] && PROPERTIES[type].name) || type;
 }
 
-export function getPropertyIcon(type) {
+export function getPropertyIcon(type: keyof typeof PROPERTIES) {
   return type && PROPERTIES[type] && PROPERTIES[type].icon;
 }
 
-export function getSuggestedChildren(type) {
+export function getSuggestedChildren(type: keyof typeof PROPERTIES) {
   const suggestions = [];
   for (const key in PROPERTIES) {
-    const prop = PROPERTIES[key];
-    if (prop.suggestedParents.includes(type)) {
+    const prop = PROPERTIES[key as keyof typeof PROPERTIES];
+    if (prop.suggestedParents.includes(type as never)) {
       suggestions.push({ type: key, details: prop });
     }
   }
   return suggestions;
 }
 
-const propsByDocsPath = new Map();
+const propsByDocsPath = new Map<string, PropertyTypeDetails & { type: PropertyType }>();
 
 for (const key in PROPERTIES) {
-  const prop = PROPERTIES[key];
-  if (prop.docsPath) {
+  const prop = PROPERTIES[key as keyof typeof PROPERTIES];
+  if ('docsPath' in prop && prop.docsPath) {
     propsByDocsPath.set(prop.docsPath, {
       ...prop,
-      type: key,
+      type: key as keyof typeof PROPERTIES,
     });
   }
 }
