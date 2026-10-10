@@ -1,18 +1,10 @@
 <template>
   <div class="d-flex flex-wrap">
     <div class="d-flex flex-column justify-center align-center ma-2">
-      <v-btn-toggle
+      <advantage-stepper
         :value="value.advantage"
-        color="accent"
-        @change="changeAdvantage"
-      >
-        <v-btn :value="-1">
-          Disadvantage
-        </v-btn>
-        <v-btn :value="1">
-          Advantage
-        </v-btn>
-      </v-btn-toggle>
+        @input="changeAdvantage"
+      />
       <div style="position: relative;">
         <v-scale-transition
           origin="center center"
@@ -21,7 +13,7 @@
             v-if="value.advantage"
             id="extra-hex"
             style="position:absolute; transition: margin-left 0.3s ease;"
-            :style="{marginLeft: value.advantage == 1 ? '24px' : '-24px'}"
+            :style="{marginLeft: Math.sign(value.advantage) * 24 + 'px'}"
             disable-hover
           />
         </v-scale-transition>
@@ -59,15 +51,17 @@
 
 <script lang="js">
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
+import AdvantageStepper from '/imports/client/ui/creature/actions/input/AdvantageStepper.vue';
 import createListOfProperties from '/imports/client/ui/properties/forms/shared/lists/createListOfProperties';
 
 export default {
   components: {
-    VerticalHex
+    VerticalHex,
+    AdvantageStepper,
   },
   props: {
     /**
-      advantage: 0 | 1 | -1;
+      advantage: number;
       skillVariableName?: string;
       abilityVariableName?: string;
       dc: number | null;

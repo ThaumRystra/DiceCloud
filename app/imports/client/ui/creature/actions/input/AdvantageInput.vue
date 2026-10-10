@@ -1,17 +1,9 @@
 <template>
   <div class="d-flex flex-column justify-center align-center">
-    <v-btn-toggle
+    <advantage-stepper
       :value="value"
-      color="accent"
-      @change="emitInput"
-    >
-      <v-btn :value="-1">
-        Disadvantage
-      </v-btn>
-      <v-btn :value="1">
-        Advantage
-      </v-btn>
-    </v-btn-toggle>
+      @input="emitInput"
+    />
     <div style="position: relative;">
       <v-scale-transition
         origin="center center"
@@ -20,7 +12,7 @@
           v-if="value"
           id="extra-hex"
           style="position:absolute; transition: margin-left 0.3s ease;"
-          :style="{marginLeft: value == 1 ? '24px' : '-24px'}"
+          :style="{marginLeft: Math.sign(value) * 24 + 'px'}"
           disable-hover
         />
       </v-scale-transition>
@@ -38,10 +30,12 @@
 
 <script lang="js">
 import VerticalHex from '/imports/client/ui/components/VerticalHex.vue';
+import AdvantageStepper from '/imports/client/ui/creature/actions/input/AdvantageStepper.vue';
 
 export default {
   components: {
-    VerticalHex
+    VerticalHex,
+    AdvantageStepper,
   },
   props: {
     value: {
