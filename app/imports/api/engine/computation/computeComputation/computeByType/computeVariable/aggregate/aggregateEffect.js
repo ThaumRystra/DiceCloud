@@ -62,12 +62,12 @@ export default function aggregateEffect({ node, linkedNode, link }) {
         aggregator.set;
       break;
     case 'advantage':
-      // Sum number of advantages
-      aggregator.advantage++;
+      // Sum advantage amounts, a blank amount counts as 1
+      aggregator.advantage += (typeof result === 'number' ? result : 1);
       break;
     case 'disadvantage':
-      // Sum number of disadvantages
-      aggregator.disadvantage++;
+      // Sum disadvantage amounts, a blank amount counts as 1
+      aggregator.disadvantage += (typeof result === 'number' ? result : 1);
       break;
     case 'passiveAdd':
       // Add all passive adds together

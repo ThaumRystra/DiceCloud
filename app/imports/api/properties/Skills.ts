@@ -91,7 +91,6 @@ const ComputedOnlySkillSchema = createPropertySchema({
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
-    allowedValues: [-1, 0, 1] as const,
     removeBeforeCompute: true,
   },
   // Computed bonus to passive checks

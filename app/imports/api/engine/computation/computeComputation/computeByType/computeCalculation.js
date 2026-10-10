@@ -80,9 +80,15 @@ export function aggregateCalculationEffects(calcObj, getEffectFromId) {
         if (!aggregator[op]) aggregator[op] = [];
         aggregator[op].push(effect.text);
         break;
-      // Adv/Dis and Fails just count instances
+      // Adv/Dis sum their amounts, a blank amount counts as 1
       case 'advantage':
-      case 'disadvantage':
+      case 'disadvantage': {
+        const amount = effect.amount?.value;
+        if (calcObj[op] === undefined) calcObj[op] = 0;
+        calcObj[op] += (typeof amount === 'number' ? amount : 1);
+        break;
+      }
+      // Fails just count instances
       case 'fail':
         if (calcObj[op] === undefined) calcObj[op] = 0;
         calcObj[op]++;

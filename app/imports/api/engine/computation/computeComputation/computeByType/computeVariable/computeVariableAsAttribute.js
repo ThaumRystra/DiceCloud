@@ -22,13 +22,7 @@ export default function computeVariableAsAttribute(computation, node, prop) {
   // Advantage/disadvantage
   const aggregator = node.data.effectAggregator;
   if (aggregator) {
-    if (aggregator.advantage && !aggregator.disadvantage) {
-      prop.advantage = 1;
-    } else if (aggregator.disadvantage && !aggregator.advantage) {
-      prop.advantage = -1;
-    } else {
-      prop.advantage = 0;
-    }
+    prop.advantage = (aggregator.advantage || 0) - (aggregator.disadvantage || 0);
   }
 
   // Ability scores get modifiers

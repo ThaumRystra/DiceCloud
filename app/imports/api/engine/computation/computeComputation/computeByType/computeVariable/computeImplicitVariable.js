@@ -38,13 +38,7 @@ export default function computeImplicitVariable(node) {
   // denormalise the effect aggregator fields
   const aggregator = node.data.effectAggregator;
   if (aggregator) {
-    if (aggregator.advantage && !aggregator.disadvantage) {
-      prop.advantage = 1;
-    } else if (aggregator.disadvantage && !aggregator.advantage) {
-      prop.advantage = -1;
-    } else {
-      prop.advantage = 0;
-    }
+    prop.advantage = (aggregator.advantage || 0) - (aggregator.disadvantage || 0);
     // Passive bonus
     prop.passiveBonus = aggregator.passiveAdd;
     // conditional benefits
