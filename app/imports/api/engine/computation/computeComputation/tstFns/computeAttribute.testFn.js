@@ -11,10 +11,11 @@ export default async function () {
   assert.equal(prop('emptyId').value, 0, 'calculates empty props to zero');
   assert.equal(prop('noVariableNameId').value, 8, 'Calculates props without a variable name');
   assert.equal(prop('strengthId').value, 12, 'applies base values');
-  assert.equal(prop('strengthId').modifier, 1, 'calculates modifiers for basic properties');
-  assert.equal(scope('strength').modifier, 1, 'Access properties via variables');
-  assert.equal(prop('referencesDexId').value, 4, 'Access variable properties in calculations');
-  assert.equal(prop('hitDiceId').constitutionMod, 5, 'Hit dice get constitution modifier');
+  // Reverent Abyss modifiers: 12 → +3, 15 → +4, 21 → +6
+  assert.equal(prop('strengthId').modifier, 3, 'calculates modifiers for basic properties');
+  assert.equal(scope('strength').modifier, 3, 'Access properties via variables');
+  assert.equal(prop('referencesDexId').value, 6, 'Access variable properties in calculations');
+  assert.equal(prop('hitDiceId').constitutionMod, 6, 'Hit dice get constitution modifier');
   assert.equal(prop('overriddenDexId').overridden, true, 'override properties with the same variable name');
   assert.equal(
     prop('parseErrorId').baseValue.value, null,

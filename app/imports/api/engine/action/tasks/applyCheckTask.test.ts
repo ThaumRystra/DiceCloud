@@ -66,13 +66,14 @@ describe('Apply check tasks', function () {
   });
 
   it('rolls 2d10 plus the skill and ability modifiers', async function () {
+    // Athletics 3 + Reverent Abyss strength 14 → +4
     const action = await runCheck(0);
     assert.deepEqual(allLogContent(action), [{
       name: 'Strength (Athletics)',
       inline: true,
     }, {
       name: 'Roll',
-      value: '2d10 [ 5, 6 ] + 5\n**16**',
+      value: '2d10 [ 5, 6 ] + 7\n**18**',
       inline: true,
     }]);
   });
@@ -83,7 +84,7 @@ describe('Apply check tasks', function () {
       '~checkDie1': { value: 5 },
       '~checkDie2': { value: 6 },
       '~checkDiceRoll': { value: 11 },
-      '~checkRoll': { value: 16 },
+      '~checkRoll': { value: 18 },
     });
   });
 
@@ -91,14 +92,14 @@ describe('Apply check tasks', function () {
     const action = await runCheck(2);
     assert.deepEqual(allLogContent(action)[1], {
       name: 'Roll (Advantage +2)',
-      value: 'Advantage +2\n2d10 [ ~~5~~, ~~6~~, 7, 8 ] + 5\n**20**',
+      value: 'Advantage +2\n2d10 [ ~~5~~, ~~6~~, 7, 8 ] + 7\n**22**',
       inline: true,
     });
     assert.deepEqual(checkScope(action), {
       '~checkDie1': { value: 7 },
       '~checkDie2': { value: 8 },
       '~checkDiceRoll': { value: 15 },
-      '~checkRoll': { value: 20 },
+      '~checkRoll': { value: 22 },
     });
   });
 });

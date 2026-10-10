@@ -14,15 +14,15 @@ export default async function () {
     'The proficiency bonus should not change the strength score'
   );
   assert.equal(
-    prop('strengthId').modifier, -1,
+    prop('strengthId').modifier, 1,
     'The proficiency bonus should not change the strength modifier'
   );
   assert.exists(prop('actionId').attackRoll.proficiencyIds, 'The proficiency aggregator should be here')
   assert.exists(prop('actionId').attackRoll.proficiencyIds[0], 'The proficiency should be here')
   // attack roll = strength.mod + proficiencyBonus/2 rounded down
-  // = -1 + 13/2 = -1 + 6 = 5
+  // = 1 + 13/2 = 1 + 6 = 7 (Reverent Abyss: strength 8 → +1)
   assert.equal(
-    prop('actionId').attackRoll.value, 5,
+    prop('actionId').attackRoll.value, 7,
     'The proficiency should apply correctly to modify the attack roll'
   );
 }

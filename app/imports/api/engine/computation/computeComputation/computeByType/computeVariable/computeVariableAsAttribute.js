@@ -1,4 +1,5 @@
 import getAggregatorResult from './getAggregatorResult';
+import { abilityModifier } from '/imports/constants/RA_ABILITY';
 
 export default function computeVariableAsAttribute(computation, node, prop) {
   let result = getAggregatorResult(node) || 0;
@@ -27,7 +28,7 @@ export default function computeVariableAsAttribute(computation, node, prop) {
 
   // Ability scores get modifiers
   if (prop.attributeType === 'ability') {
-    prop.modifier = Math.floor((prop.value - 10) / 2);
+    prop.modifier = abilityModifier(prop.value);
   }
 
   // Hit dice denormalise constitution modifier
