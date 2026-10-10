@@ -12,6 +12,8 @@ import {
 import { LogContent, Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import inputProviderForTests, { critInputProvider } from '/imports/api/engine/action/functions/userInput/inputProviderForTests.testFn';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 const [
   creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,

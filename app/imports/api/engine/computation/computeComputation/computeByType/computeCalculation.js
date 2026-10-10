@@ -68,6 +68,10 @@ function linkCalculationEffects(node, computation) {
 export function aggregateCalculationEffects(calcObj, getEffectFromId) {
   // dictionary of {[operation]: parseNode}
   const aggregator = {};
+  // Advantage is summed below, so clear the totals from any previous aggregation,
+  // actions re-aggregate effects on already computed calculations
+  delete calcObj.advantage;
+  delete calcObj.disadvantage;
   // Store all effect values
   calcObj.effectIds?.forEach(effectId => {
     const effect = getEffectFromId(effectId);
