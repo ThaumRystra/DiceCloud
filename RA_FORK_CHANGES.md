@@ -36,7 +36,7 @@ All new logic lives in these files, so upstream merges stay cheap.
 ### Computation
 
 - `api/engine/computation/computeComputation/computeByType/computeVariable/aggregate/aggregateEffect.js`: advantage and disadvantage effects sum their amount instead of counting instances. A blank amount counts as 1.
-- `api/engine/computation/computeComputation/computeByType/computeCalculation.js`: the same summing for effects on calculations, such as attack rolls. `fail` still counts instances.
+- `api/engine/computation/computeComputation/computeByType/computeCalculation.js`: the same summing for effects on calculations, such as attack rolls. `fail` still counts instances. The advantage and disadvantage totals are cleared before summing, because actions re-run this aggregation on an already computed calculation (`recalculateCalculation`), which used to count every effect twice.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsSkill.js`: stores net advantage, and the 5e passive ±5 advantage bonus is removed.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsAttribute.js`: stores net advantage instead of collapsing it to −1, 0 or 1.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/computeImplicitVariable.js`: stores net advantage instead of collapsing it to −1, 0 or 1.
@@ -98,6 +98,7 @@ Effects stack numerically. Advantage 2, advantage (blank) and disadvantage 1 on 
 - **Log format:** all three rolls now use `2d10 [ 5, 6 ] + 3`. Checks previously printed an unspaced modifier (`+3`), and attacks printed `[10]` without inner spaces. When the roll has advantage, the log text is prefixed with `Advantage +N` or `Disadvantage −N`.
 - **New saving throw decision:** saves now call `advantage()`, which adds one entry per save target to an action's saved `_decisions`. An action saved by older client code that contains a save would replay out of order. Actions replay immediately when they run, so this only matters for actions that were in flight across a deploy.
 - **Non-finite modifiers:** a non-finite modifier, such as a save stat with no value, is treated as 0. Upstream produced a total of 0 for saves in this case.
+- **Double-counted effects (upstream bug):** during an action, upstream counted advantage effects on calculations twice. The 0/1/−1 collapse hid this until amounts became numeric. Advantage is fixed. `fail` on calculations is still double-counted, but it's only checked for truthiness, so it's left as upstream.
 - **Non-integer amounts:** an advantage amount that is not an integer is truncated toward zero when rolled. The computed `advantage` field on attributes and skills is still a `SimpleSchema.Integer`, so authors should use whole numbers.
 
 ## Merge-conflict hotspots when pulling upstream
