@@ -161,8 +161,8 @@ export default {
         case 'min': return true;
         case 'max': return true;
         case 'set': return true;
-        case 'advantage': return false;
-        case 'disadvantage': return false;
+        case 'advantage': return true;
+        case 'disadvantage': return true;
         case 'passiveAdd': return true;
         case 'fail': return false;
         case 'conditional': return false;
@@ -177,8 +177,8 @@ export default {
         case 'min': return 'The stat will be at least this value';
         case 'max': return 'The stat will not exceed this value';
         case 'set': return 'The stat will be set to this value';
-        case 'advantage': return 'If this stat is the basis for a check, that check will be at advantage';
-        case 'disadvantage': return 'If this stat is the basis for a check, that check will be at advantage';
+        case 'advantage': return 'If this stat is the basis for a roll, that roll gains this many extra dice of advantage (blank = 1)';
+        case 'disadvantage': return 'If this stat is the basis for a roll, that roll gains this many extra dice of disadvantage (blank = 1)';
         case 'passiveAdd': return 'This value will be added to the passive check';
         case 'fail': return 'Targeted skills and checks will always fail';
         case 'conditional': return 'Add a text note to this stat';

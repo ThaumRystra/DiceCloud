@@ -7,8 +7,8 @@ import recalculateCalculation from '/imports/api/engine/action/functions/recalcu
 import { PropTask } from '/imports/api/engine/action/tasks/Task';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
 import { getVariables } from '/imports/api/engine/loadCreatures';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import { isFiniteNode } from '/imports/parser/parseTree/constant';
+import rollCoreDice, { writeCoreDiceScope } from '/imports/api/engine/action/functions/rollCoreDice';
 
 export default async function applySavingThrowProperty(
   task: PropTask, action: EngineAction, result: TaskResult, inputProvider: InputProvider
@@ -71,36 +71,12 @@ export default async function applySavingThrowProperty(
     return applyDefaultAfterPropTasks(action, prop, [targetId], inputProvider);
   }
 
-  const rollModifierText = numberToSignedString(save.value, true);
-  const rollModifier = save.value;
-
-  let value, resultPrefix;
-  if (save.advantage === 1) {
-    const [[a, b]] = await inputProvider.rollDice([{ number: 2, diceSize: 20 }]);
-    if (a >= b) {
-      value = a;
-      resultPrefix = `Advantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
-    } else {
-      value = b;
-      resultPrefix = `Advantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
-    }
-  } else if (save.advantage === -1) {
-    const [[a, b]] = await inputProvider.rollDice([{ number: 2, diceSize: 20 }]);
-    if (a <= b) {
-      value = a;
-      resultPrefix = `Disadvantage\n1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
-    } else {
-      value = b;
-      resultPrefix = `Disadvantage\n1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
-    }
-  } else {
-    const [[rolledValue]] = await inputProvider.rollDice([{ number: 1, diceSize: 20 }]);
-    value = rolledValue;
-    resultPrefix = `1d20 [ ${value} ] ${rollModifierText}`
-  }
+  const advantage = await inputProvider.advantage(save.advantage ?? 0);
+  const roll = await rollCoreDice(inputProvider, advantage, save.value);
+  const resultPrefix = roll.logText;
   result.pushScope = {};
-  result.pushScope['~saveDiceRoll'] = { value };
-  const resultValue = value + rollModifier || 0;
+  writeCoreDiceScope(result.pushScope, '~save', roll);
+  const resultValue = roll.total;
   result.pushScope['~saveRoll'] = { value: resultValue };
   const saveSuccess = resultValue >= dc;
   if (saveSuccess) {

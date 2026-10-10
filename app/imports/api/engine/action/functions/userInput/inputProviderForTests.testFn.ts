@@ -1,4 +1,5 @@
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
+import RA_DICE from '/imports/constants/RA_DICE';
 
 const inputProviderForTests: InputProvider = {
   async targetIds(target, currentTargetIds = []) {
@@ -47,9 +48,19 @@ const inputProviderForTests: InputProvider = {
 export const critInputProvider: InputProvider = {
   ...inputProviderForTests,
   async rollDice(dice = []) {
-    // when rolling 1d20, crit, otherwise use the normal test roll provider
-    if (dice.length === 1 && dice[0].diceSize === 20 && dice[0].number === 1) {
-      return [[20]];
+    // when rolling the 2d10 core roll (with or without advantage), crit by rolling two 10s,
+    // otherwise use the normal test roll provider.
+    // Note: this also matches any other lone roll of 2+ d10s, such as 2d10 damage,
+    // because they can't be told apart from the core roll here
+    if (
+      dice.length === 1
+      && dice[0].diceSize === RA_DICE.diceSize
+      && dice[0].number >= RA_DICE.keep
+    ) {
+      const [roll] = await inputProviderForTests.rollDice(dice);
+      roll[0] = RA_DICE.diceSize;
+      roll[1] = RA_DICE.diceSize;
+      return [roll];
     }
     return inputProviderForTests.rollDice(dice);
   },

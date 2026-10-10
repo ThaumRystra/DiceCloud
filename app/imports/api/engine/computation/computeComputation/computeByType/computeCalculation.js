@@ -68,6 +68,10 @@ function linkCalculationEffects(node, computation) {
 export function aggregateCalculationEffects(calcObj, getEffectFromId) {
   // dictionary of {[operation]: parseNode}
   const aggregator = {};
+  // Advantage is summed below, so clear the totals from any previous aggregation,
+  // actions re-aggregate effects on already computed calculations
+  delete calcObj.advantage;
+  delete calcObj.disadvantage;
   // Store all effect values
   calcObj.effectIds?.forEach(effectId => {
     const effect = getEffectFromId(effectId);
@@ -80,9 +84,15 @@ export function aggregateCalculationEffects(calcObj, getEffectFromId) {
         if (!aggregator[op]) aggregator[op] = [];
         aggregator[op].push(effect.text);
         break;
-      // Adv/Dis and Fails just count instances
+      // Adv/Dis sum their amounts, a blank amount counts as 1
       case 'advantage':
-      case 'disadvantage':
+      case 'disadvantage': {
+        const amount = effect.amount?.value;
+        if (calcObj[op] === undefined) calcObj[op] = 0;
+        calcObj[op] += (typeof amount === 'number' ? amount : 1);
+        break;
+      }
+      // Fails just count instances
       case 'fail':
         if (calcObj[op] === undefined) calcObj[op] = 0;
         calcObj[op]++;

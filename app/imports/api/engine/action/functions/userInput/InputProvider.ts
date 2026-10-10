@@ -28,7 +28,7 @@ type InputProvider = {
     quantity?: [min: number, max: number],
   ): Promise<string[]>;
   /**
-   * Get advantage, natural, or disadvantage for a d20 roll
+   * Get the net advantage (+N) or disadvantage (−N) for a 2d10 core roll, 0 is a normal roll
    */
   advantage(suggestedAdvantage: Advantage): Promise<Advantage>;
   /**
@@ -37,7 +37,7 @@ type InputProvider = {
   check(suggestedParams: CheckParams): Promise<CheckParams>;
 }
 
-export type Advantage = 0 | 1 | -1;
+export type Advantage = number;
 
 export type CheckParams = {
   advantage: Advantage;

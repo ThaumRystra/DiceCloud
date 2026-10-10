@@ -87,7 +87,7 @@ const actionTestCreature = {
     {
       _id: attackMissId,
       type: 'action',
-      attackRoll: { calculation: '-1' },
+      attackRoll: { calculation: '-2' },
       children: [
         {
           type: 'branch',
@@ -285,7 +285,7 @@ describe('Apply Branch Properties', function () {
       contents: [{ name: 'Action' }],
       targetIds: [targetCreatureId],
     }, {
-      contents: [{ inline: true, name: 'Hit!', value: '1d20 [10] + 1\n**11**' }],
+      contents: [{ inline: true, name: 'Hit!', value: '2d10 [ 5, 6 ] + 1\n**12**' }],
       targetIds: [targetCreatureId],
     }, {
       contents: [{ value: 'attack hit branch' }],
@@ -298,7 +298,7 @@ describe('Apply Branch Properties', function () {
       contents: [{ name: 'Action' }],
       targetIds: [targetCreatureId],
     }, {
-      contents: [{ inline: true, name: 'Miss!', value: '1d20 [10] − 1\n**9**' }],
+      contents: [{ inline: true, name: 'Miss!', value: '2d10 [ 5, 6 ] − 2\n**9**' }],
       targetIds: [targetCreatureId],
     }, {
       contents: [{ value: 'attack miss branch' }],
@@ -316,7 +316,7 @@ describe('Apply Branch Properties', function () {
         inline: true
       }, {
         name: 'Successful save',
-        value: '1d20 [ 10 ] + 3\n**13**',
+        value: '2d10 [ 5, 6 ] + 3\n**14**',
         inline: true
       }],
       targetIds: [targetCreatureId],
@@ -334,7 +334,7 @@ describe('Apply Branch Properties', function () {
         inline: true
       }, {
         name: 'Failed save',
-        value: '1d20 [ 10 ] + 3\n**13**',
+        value: '2d10 [ 5, 6 ] + 3\n**14**',
         inline: true
       }],
       targetIds: [targetCreatureId],

@@ -178,7 +178,6 @@ const ComputedOnlyAttributeSchema = createPropertySchema({
   advantage: {
     type: SimpleSchema.Integer,
     optional: true,
-    allowedValues: [-1, 0, 1],
     removeBeforeCompute: true,
   },
   // The computed creature constitution modifier for hit dice

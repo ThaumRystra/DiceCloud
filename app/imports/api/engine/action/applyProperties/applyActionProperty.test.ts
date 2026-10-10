@@ -12,13 +12,57 @@ import {
 import { LogContent, Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
 import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import inputProviderForTests, { critInputProvider } from '/imports/api/engine/action/functions/userInput/inputProviderForTests.testFn';
+import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
 
 const [
   creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,
   usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId,
   consumeAmmoId, consumeResourceId, noUsesActionId, insufficientResourcesActionId,
   attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId, disadvantageAttackId, disadvantageEffectId,
+  stackedAdvantageAttackId, critCreatureId, critAttackId, critChanceCreatureId, critChanceAttackId,
 ] = getRandomIds(100);
+
+// Returns fixed values for every roll of the 2d10 core dice
+function fixedCoreRollProvider(values: number[]): InputProvider {
+  return {
+    ...inputProviderForTests,
+    async rollDice(dice) {
+      if (dice.length === 1 && dice[0].diceSize === 10) return [[...values]];
+      return inputProviderForTests.rollDice(dice);
+    },
+  };
+}
+
+// A creature with no crit overrides
+const critTestCreature: TestCreature = {
+  _id: critCreatureId,
+  props: [
+    {
+      _id: critAttackId,
+      type: 'action',
+      attackRoll: { calculation: '0' },
+    },
+  ],
+}
+
+// A creature with crit chance +2
+const critChanceTestCreature: TestCreature = {
+  _id: critChanceCreatureId,
+  props: [
+    {
+      type: 'attribute',
+      attributeType: 'stat',
+      variableName: 'critChance',
+      baseValue: { calculation: '2' },
+    },
+    {
+      _id: critChanceAttackId,
+      type: 'action',
+      attackRoll: { calculation: '0' },
+    },
+  ],
+}
 
 const actionTestCreature: TestCreature = {
   _id: creatureId,
@@ -74,6 +118,33 @@ const actionTestCreature: TestCreature = {
       operation: 'disadvantage',
       targetByTags: true,
       targetTags: ['hasDisadvantage'],
+    },
+    // Attack with stacked advantage: +2, +1 (blank amount) and −1 nets +2
+    {
+      _id: stackedAdvantageAttackId,
+      type: 'action',
+      attackRoll: { calculation: '0' },
+      tags: ['stackedAdvantage'],
+    },
+    {
+      type: 'effect',
+      operation: 'advantage',
+      amount: { calculation: '2' },
+      targetByTags: true,
+      targetTags: ['stackedAdvantage'],
+    },
+    {
+      type: 'effect',
+      operation: 'advantage',
+      targetByTags: true,
+      targetTags: ['stackedAdvantage'],
+    },
+    {
+      type: 'effect',
+      operation: 'disadvantage',
+      amount: { calculation: '1' },
+      targetByTags: true,
+      targetTags: ['stackedAdvantage'],
     },
     // Attack that has no target
     {
@@ -209,6 +280,8 @@ describe('Apply Action Properties', function () {
     await createTestCreature(actionTestCreature);
     await createTestCreature(actionTargetCreature);
     await createTestCreature(actionTargetCreature2);
+    await createTestCreature(critTestCreature);
+    await createTestCreature(critChanceTestCreature);
   });
 
   it('should generate random numbers reliably given consistent seeds', function () {
@@ -251,7 +324,7 @@ describe('Apply Action Properties', function () {
       }, {
         contents: [{
           name: 'To Hit',
-          value: '1d20 [10] + 1\n**11**',
+          value: '2d10 [ 5, 6 ] + 1\n**12**',
           inline: true,
         }],
         targetIds: [],
@@ -273,14 +346,14 @@ describe('Apply Action Properties', function () {
         contents: [{
           inline: true,
           name: 'Hit!',
-          value: '1d20 [10] + 10\n**20**',
+          value: '2d10 [ 5, 6 ] + 10\n**21**',
         }],
         targetIds: [targetCreatureId],
       }, {
         contents: [{
           inline: true,
           name: 'Hit!',
-          value: '1d20 [10] + 10\n**20**',
+          value: '2d10 [ 5, 6 ] + 10\n**21**',
         }],
         targetIds: [targetCreature2Id],
       },
@@ -323,7 +396,7 @@ describe('Apply Action Properties', function () {
         contents: [{
           inline: true,
           name: 'Miss!',
-          value: '1d20 [10] − 5\n**5**', // DiceCloud uses unicode minus
+          value: '2d10 [ 5, 6 ] − 5\n**6**', // DiceCloud uses unicode minus
         }],
         targetIds: [targetCreatureId],
       }
@@ -344,8 +417,8 @@ describe('Apply Action Properties', function () {
       }, {
         contents: [{
           inline: true,
-          name: 'Hit! (Advantage)',
-          value: '1d20 [ ~~10~~, 11 ] + 0\n**11**',
+          name: 'Hit! (Advantage +1)',
+          value: 'Advantage +1\n2d10 [ ~~5~~, 6, 7 ] + 0\n**13**',
         }],
         targetIds: [targetCreatureId],
       }
@@ -366,13 +439,70 @@ describe('Apply Action Properties', function () {
       }, {
         contents: [{
           inline: true,
-          name: 'Hit! (Disadvantage)',
-          value: '1d20 [ 10, ~~11~~ ] + 0\n**10**',
+          name: 'Hit! (Disadvantage −1)',
+          value: 'Disadvantage −1\n2d10 [ 5, 6, ~~7~~ ] + 0\n**11**',
         }],
         targetIds: [targetCreatureId],
       }
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
+  });
+
+  it('should sum stacked advantage and disadvantage on attack rolls', async function () {
+    const prop = await CreatureProperties.findOneAsync(stackedAdvantageAttackId);
+    assert(prop);
+    assert(prop.type === 'action');
+    assert.equal(prop.attackRoll?.advantage, 3, 'Advantage amounts 2 and blank should sum to 3');
+    assert.equal(prop.attackRoll?.disadvantage, 1, 'Disadvantage amount should be 1');
+    const action = await runActionById(stackedAdvantageAttackId, [targetCreatureId]);
+    assert.deepEqual(allMutations(action)[1].contents, [{
+      inline: true,
+      name: 'Hit! (Advantage +2)',
+      value: 'Advantage +2\n2d10 [ ~~5~~, ~~6~~, 7, 8 ] + 0\n**15**',
+    }]);
+  });
+
+  it('should crit on a kept sum of 20 with no crit chance', async function () {
+    const action = await runActionById(critAttackId, [targetCreatureId], critInputProvider);
+    assert.deepEqual(allMutations(action)[1].contents, [{
+      inline: true,
+      name: 'Critical Hit!',
+      value: '2d10 [ 10, 10 ] + 0\n**20**',
+    }]);
+    const noCrit = await runActionById(critAttackId, [targetCreatureId], fixedCoreRollProvider([10, 9]));
+    assert.equal(allMutations(noCrit)[1].contents?.[0].name, 'Hit!', '19 should not crit without crit chance');
+  });
+
+  it('should crit on a kept sum of 18 with crit chance 2', async function () {
+    const action = await runActionById(critChanceAttackId, [targetCreatureId], fixedCoreRollProvider([9, 9]));
+    assert.deepEqual(allMutations(action)[1].contents, [{
+      inline: true,
+      name: 'Critical Hit!',
+      value: '2d10 [ 9, 9 ] + 0\n**18**',
+    }]);
+    const noCrit = await runActionById(critChanceAttackId, [targetCreatureId], fixedCoreRollProvider([9, 8]));
+    assert.equal(allMutations(noCrit)[1].contents?.[0].name, 'Hit!', '17 should not crit with crit chance 2');
+  });
+
+  it('should not critically miss on a low roll', async function () {
+    const action = await runActionById(critAttackId, [targetCreatureId], fixedCoreRollProvider([1, 1]));
+    assert.deepEqual(allMutations(action)[1].contents, [{
+      inline: true,
+      name: 'Miss!',
+      value: '2d10 [ 1, 1 ] + 0\n**2**',
+    }]);
+    const noTarget = await runActionById(critAttackId, [], fixedCoreRollProvider([1, 1]));
+    assert.equal(allMutations(noTarget)[1].contents?.[0].name, 'To Hit');
+  });
+
+  it('should let ~criticalHitTarget override the crit target', async function () {
+    // The test creature sets ~criticalHitTarget to 21
+    const action = await runActionById(attackActionId, [targetCreatureId], critInputProvider);
+    assert.deepEqual(allMutations(action)[1].contents, [{
+      inline: true,
+      name: 'Hit!',
+      value: '2d10 [ 10, 10 ] + 10\n**30**',
+    }]);
   });
 
   it('actions should consume resources', async function () {
