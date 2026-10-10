@@ -5,8 +5,8 @@ import { getEffectiveActionScope } from '/imports/api/engine/action/functions/ge
 import { getFromScope } from '/imports/api/creature/creatures/CreatureVariables';
 import { getVariables } from '/imports/api/engine/loadCreatures';
 import InputProvider from '/imports/api/engine/action/functions/userInput/InputProvider';
-import numberToSignedString from '/imports/api/utility/numberToSignedString';
 import TaskResult from '/imports/api/engine/action/tasks/TaskResult';
+import rollCoreDice, { advantageSuffix, clampAdvantage, writeCoreDiceScope } from '/imports/api/engine/action/functions/rollCoreDice';
 
 /**
  * A skill property is applied as a check or a saving throw
@@ -49,7 +49,6 @@ export default async function applyCheckTask(
     }
 
     const totalModifier = skillBonus + abilityModifier;
-    const rollModifierText = numberToSignedString(totalModifier);
 
     // Get the name of the check
     let checkName = 'Check';
@@ -62,11 +61,7 @@ export default async function applyCheckTask(
     let rollName = 'Roll'
 
     // Append advantage/disadvantage to the check name
-    if (advantage === 1) {
-      rollName += ' (Advantage)'
-    } else if (advantage === -1) {
-      rollName += ' (Disadvantage)'
-    }
+    rollName += advantageSuffix(clampAdvantage(advantage));
 
     // Print check name and DC if present
     const dc = checkParams.dc;
@@ -78,31 +73,14 @@ export default async function applyCheckTask(
     }, [targetId]);
 
     // Roll the dice
-    let rolledValue, resultPrefix;
-    if (advantage === 1) {
-      const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
-      if (a >= b) {
-        rolledValue = a;
-        resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
-      } else {
-        rolledValue = b;
-        resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
-      }
-    } else if (advantage === -1) {
-      const [[a, b]] = await userInput.rollDice([{ number: 2, diceSize: 20 }]);
-      if (a <= b) {
-        rolledValue = a;
-        resultPrefix = `1d20 [ ${a}, ~~${b}~~ ] ${rollModifierText}`;
-      } else {
-        rolledValue = b;
-        resultPrefix = `1d20 [ ~~${a}~~, ${b} ] ${rollModifierText}`;
-      }
-    } else {
-      [[rolledValue]] = await userInput.rollDice([{ number: 1, diceSize: 20 }]);
-      resultPrefix = `1d20 [${rolledValue}] ${rollModifierText}`
-    }
+    const roll = await rollCoreDice(userInput, advantage, totalModifier);
+    const resultPrefix = roll.logText;
+    const totalValue = roll.total;
 
-    const totalValue = rolledValue + totalModifier;
+    // Expose the check result to triggers and branches
+    result.pushScope = {};
+    writeCoreDiceScope(result.pushScope, '~check', roll);
+    result.pushScope['~checkRoll'] = { value: totalValue };
 
     result.appendLog({
       name: rollName,
@@ -120,12 +98,3 @@ export default async function applyCheckTask(
     if (ability) await applyTriggers(action, ability, [targetId], 'checkTriggerIds.afterChildren', userInput);
   }
 }
-
-// TODO set these and potentially read them again if triggers can change them
-/*
-'~checkAdvantage'
-'~checkAdvantage'
-'~checkDiceRoll'
-'~checkRoll'
-'~checkModifier'
-*/
