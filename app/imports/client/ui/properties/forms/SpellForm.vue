@@ -195,7 +195,7 @@
           <computed-field
             v-else
             label="To Hit"
-            prefix="1d20 + "
+            prefix="2d10 + "
             hint="The bonus to attack if this action has an attack roll"
             :model="model.attackRoll"
             :error-messages="errors.attackRoll"
