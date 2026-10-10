@@ -9,7 +9,9 @@ Tier 1 (branch `ra/2d10-core`, based on upstream `develop` @ `88fc9c83`) replace
 - **Crits (attacks only):** a crit is a kept sum ≥ `20 − critChance`. There are no critical misses.
 - **Saves:** succeed when total ≥ DC. Saves now show the same advantage prompt as checks and attacks.
 
-All tunables live in `app/imports/constants/RA_DICE.ts`.
+- **Ability modifiers:** an ability score's modifier comes from the Reverent Abyss stat table, using the highest threshold it meets: 2–3 is −3, 7 is 0, 8 is +1, 9–10 is +2, up to 70+ at +15. Scores below 2 get −4. This replaces D&D's `floor((score − 10) / 2)`.
+
+Dice tunables live in `app/imports/constants/RA_DICE.ts`, and the stat table lives in `app/imports/constants/RA_ABILITY.ts`.
 
 ## New files
 
@@ -18,6 +20,8 @@ All new logic lives in these files, so upstream merges stay cheap.
 | File | Purpose |
 |---|---|
 | `app/imports/constants/RA_DICE.ts` | Dice config: `diceSize`, `keep`, `critBase`, `maxAdvantage` |
+| `app/imports/constants/RA_ABILITY.ts` | Stat → modifier table (`STAT_THRESHOLDS`, `STAT_MODIFIERS`) and `abilityModifier(stat)` |
+| `app/imports/constants/RA_ABILITY.test.ts` | Tests for every row of the table and its edges |
 | `app/imports/api/engine/action/functions/rollCoreDice.ts` | Shared roller (`rollCoreDice`), plus `clampAdvantage`, `advantageSuffix` and `writeCoreDiceScope` |
 | `app/imports/api/engine/action/functions/rollCoreDice.test.ts` | Roller unit tests |
 | `app/imports/api/engine/action/tasks/applyCheckTask.test.ts` | Check task tests, the first for this file |
@@ -38,7 +42,7 @@ All new logic lives in these files, so upstream merges stay cheap.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/aggregate/aggregateEffect.js`: advantage and disadvantage effects sum their amount instead of counting instances. A blank amount counts as 1.
 - `api/engine/computation/computeComputation/computeByType/computeCalculation.js`: the same summing for effects on calculations, such as attack rolls. `fail` still counts instances. The advantage and disadvantage totals are cleared before summing, because actions re-run this aggregation on an already computed calculation (`recalculateCalculation`), which used to count every effect twice.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsSkill.js`: stores net advantage, and the 5e passive ±5 advantage bonus is removed.
-- `api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsAttribute.js`: stores net advantage instead of collapsing it to −1, 0 or 1.
+- `api/engine/computation/computeComputation/computeByType/computeVariable/computeVariableAsAttribute.js`: stores net advantage instead of collapsing it to −1, 0 or 1, and ability modifiers come from `abilityModifier()` in `RA_ABILITY.ts`. That computed `modifier` field is the only place the modifier is calculated; the sheet, skills, checks, spell lists and `.modifier` calculations all read it.
 - `api/engine/computation/computeComputation/computeByType/computeVariable/computeImplicitVariable.js`: stores net advantage instead of collapsing it to −1, 0 or 1.
 
 ### Schemas
@@ -60,7 +64,9 @@ All new logic lives in these files, so upstream merges stay cheap.
 - `api/engine/action/applyProperties/applySavingThrowProperty.test.ts`: expectations updated to 2d10 (the DC is now 14), plus new advantage tests.
 - `api/engine/action/applyProperties/applyBranchProperty.test.ts`: expectations updated to 2d10. The miss fixture's attack bonus changed from −1 to −2 so it still misses.
 - `api/engine/action/applyProperties/applyDamageProperty.test.ts`: the crit attack line now reads 2d10.
-- `api/engine/computation/computeComputation/tstFns/computeSkills.testFn.js`: new tests for stacked advantage and for no passive bonus from advantage.
+- `api/engine/computation/computeComputation/tstFns/computeSkills.testFn.js`: new tests for stacked advantage and for no passive bonus from advantage. Skill values updated for RA modifiers.
+- `api/engine/computation/computeComputation/tstFns/computeAttribute.testFn.js`: expected modifiers updated for the RA table (12 → +3, 15 → +4, 21 → +6).
+- `api/engine/computation/computeComputation/tstFns/computeProficiencies.testFn.js`: expected modifier updated for the RA table (8 → +1).
 
 Paths are relative to `app/imports/`.
 
@@ -106,7 +112,8 @@ Effects stack numerically. Advantage 2, advantage (blank) and disadvantage 1 on 
 1. **`applyActionProperty.ts`, `rollAttack` and `applyCrits`:** the most likely place for conflicts. If upstream changes crit or advantage handling, keep our versions of these two functions and port their other changes around them.
 2. **`applySavingThrowProperty.ts`, the roll block:** about 6 lines, between the missing-save error and `~saveRoll`.
 3. **`applyCheckTask.ts`:** the roll block, plus the removed TODO at the bottom of the file. If upstream implements `~check*` itself, keep only one version.
-4. **The computation `advantage` lines** in `computeVariableAsSkill.js`, `computeVariableAsAttribute.js`, `computeImplicitVariable.js`, `aggregateEffect.js` and `computeCalculation.js`. Each is a one-line swap. Any new upstream code that compares `advantage === 1` or `advantage === -1` must become `> 0` or `< 0`.
-5. **`AdvantageInput.vue` and `CheckInput.vue`:** if upstream restyles these inputs, re-apply the `<advantage-stepper>` swap.
-6. **Tests:** upstream test expectations that contain `1d20 [...]` strings need converting. With the test roller, a normal roll is `2d10 [ 5, 6 ]`, or 11.
-7. **New d20 call sites:** search upstream diffs for `diceSize: 20`. Any new hardcoded d20 roll should go through `rollCoreDice`.
+4. **The ability modifier line** in `computeVariableAsAttribute.js` (`prop.modifier = abilityModifier(prop.value)`). Any new upstream code that recomputes `(score - 10) / 2` should call `abilityModifier()` instead.
+5. **The computation `advantage` lines** in `computeVariableAsSkill.js`, `computeVariableAsAttribute.js`, `computeImplicitVariable.js`, `aggregateEffect.js` and `computeCalculation.js`. Each is a one-line swap. Any new upstream code that compares `advantage === 1` or `advantage === -1` must become `> 0` or `< 0`.
+6. **`AdvantageInput.vue` and `CheckInput.vue`:** if upstream restyles these inputs, re-apply the `<advantage-stepper>` swap.
+7. **Tests:** upstream test expectations that contain `1d20 [...]` strings need converting. With the test roller, a normal roll is `2d10 [ 5, 6 ]`, or 11.
+8. **New d20 call sites:** search upstream diffs for `diceSize: 20`. Any new hardcoded d20 roll should go through `rollCoreDice`.
