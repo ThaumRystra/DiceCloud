@@ -1,0 +1,36 @@
+# Stage 1 of the ARM proof of concept: build the Meteor server bundle on x86_64.
+#
+# Meteor 2.16 has no Linux ARM tooling, so the bundle is built here and its
+# native npm modules are rebuilt later on the arm64 host (see Dockerfile.arm64).
+#
+# Run from the repository root:
+#   docker build --platform linux/amd64 -f deploy/arm-poc/Dockerfile.bundle \
+#     --target export --output type=local,dest=deploy/arm-poc/dist .
+# Result: deploy/arm-poc/dist/app.tar.gz
+
+FROM --platform=linux/amd64 ubuntu:22.04 AS build
+
+ARG METEOR_RELEASE=2.16
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends ca-certificates curl git python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+
+# Meteor refuses to install as root
+RUN useradd --create-home mt
+USER mt
+RUN curl -fsSL "https://install.meteor.com/?release=${METEOR_RELEASE}" | sh
+ENV PATH=/home/mt/.meteor:$PATH
+# The client build is memory hungry
+ENV TOOL_NODE_FLAGS=--max-old-space-size=4096
+
+# Install npm dependencies first so they cache between source changes
+WORKDIR /home/mt/app
+COPY --chown=mt app/package.json app/package-lock.json ./
+RUN meteor npm ci
+
+COPY --chown=mt app/ ./
+RUN meteor build /home/mt/out --server-only --architecture os.linux.x86_64
+
+FROM scratch AS export
+COPY --from=build /home/mt/out/ /

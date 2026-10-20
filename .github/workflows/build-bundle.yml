@@ -1,0 +1,28 @@
+# Builds the x86_64 Meteor server bundle for the ARM proof of concept
+# (deploy/arm-poc) and uploads it as a workflow artifact. Run it manually from
+# the Actions tab, then download app-bundle and copy app.tar.gz to the A1 host.
+name: Build server bundle
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build bundle
+        run: >
+          docker buildx build --platform linux/amd64
+          -f deploy/arm-poc/Dockerfile.bundle
+          --target export --output type=local,dest=deploy/arm-poc/dist .
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-bundle
+          path: deploy/arm-poc/dist/app.tar.gz
+          retention-days: 7

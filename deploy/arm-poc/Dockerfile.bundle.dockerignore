@@ -1,0 +1,6 @@
+# Build context is the repo root; only app/ source is needed
+**
+!app/
+app/node_modules/
+app/.meteor/local/
+app/settings.json

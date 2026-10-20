@@ -1,0 +1,44 @@
+# Stage 2 of the ARM proof of concept: run the x86-built bundle on arm64.
+#
+# Build this ON the A1 instance (it is native arm64, no emulation), with
+# dist/app.tar.gz from Dockerfile.bundle next to this file.
+#
+# Node 14 is unpacked from nodejs.org onto Debian 12, because the official
+# node:14 images are based on Debian releases that are out of support.
+
+FROM debian:bookworm-slim
+
+ARG NODE_VERSION=14.21.3
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+  && apt-get install --yes --no-install-recommends ca-certificates curl xz-utils python3 make g++ \
+  && rm -rf /var/lib/apt/lists/*
+
+RUN set -eu; \
+  arch="$(dpkg --print-architecture)"; \
+  [ "$arch" = arm64 ] || { echo "Expected arm64, got $arch"; exit 1; }; \
+  file="node-v${NODE_VERSION}-linux-arm64.tar.xz"; \
+  cd /tmp; \
+  curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/${file}"; \
+  curl -fsSLO "https://nodejs.org/dist/v${NODE_VERSION}/SHASUMS256.txt"; \
+  grep " ${file}\$" SHASUMS256.txt | sha256sum -c -; \
+  tar -xJf "$file" -C /usr/local --strip-components=1 --no-same-owner; \
+  rm "$file" SHASUMS256.txt; \
+  node --version
+
+RUN useradd --create-home --uid 1000 dicecloud
+WORKDIR /opt/dicecloud
+COPY dist/app.tar.gz /tmp/app.tar.gz
+RUN tar -xzf /tmp/app.tar.gz -C /opt/dicecloud --strip-components=1 \
+  && rm /tmp/app.tar.gz \
+  && chown -R dicecloud:dicecloud /opt/dicecloud
+
+COPY rebuild-native.sh verify-native.js /opt/tools/
+USER dicecloud
+RUN sh /opt/tools/rebuild-native.sh /opt/dicecloud
+# Fails the build if fibers or bcrypt cannot load on arm64
+RUN node /opt/tools/verify-native.js /opt/dicecloud
+
+ENV PORT=3000 NODE_ENV=production
+EXPOSE 3000
+CMD ["node", "main.js"]

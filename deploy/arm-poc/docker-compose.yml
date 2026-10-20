@@ -1,0 +1,48 @@
+# ARM proof of concept on the A1 instance. Run from deploy/arm-poc:
+#   docker compose up -d --build
+# Nothing is published to the internet: the app listens on 127.0.0.1 only
+# and is reached through an SSH tunnel (see README.md).
+services:
+  mongo:
+    image: mongo:7.0
+    # Single-node replica set so Meteor can tail the oplog instead of polling.
+    # No auth for the proof of concept; the port is never published.
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      # Initiates the replica set on first start, then reports its status
+      test: >
+        mongosh --quiet --eval
+        "try { rs.status().ok } catch (e) { rs.initiate({_id: 'rs0', members: [{_id: 0, host: 'mongo:27017'}]}).ok }"
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+    restart: unless-stopped
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  dicecloud:
+    build:
+      context: .
+      dockerfile: Dockerfile.arm64
+    depends_on:
+      mongo:
+        condition: service_healthy
+    environment:
+      ROOT_URL: ${ROOT_URL:-http://localhost:3000}
+      MONGO_URL: mongodb://mongo:27017/dicecloud?replicaSet=rs0
+      MONGO_OPLOG_URL: mongodb://mongo:27017/local?replicaSet=rs0
+      PORT: "3000"
+      METEOR_SETTINGS: ${METEOR_SETTINGS:?copy .env.example to .env}
+    ports:
+      - "127.0.0.1:3000:3000"
+    restart: unless-stopped
+    logging: *logging
+
+volumes:
+  mongo-data:
