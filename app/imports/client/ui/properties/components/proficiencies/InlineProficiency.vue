@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
 import ProficiencyIcon from '/imports/client/ui/properties/shared/ProficiencyIcon.vue';
 import numberToSignedString from '/imports/api/utility/numberToSignedString';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const props = defineProps<{
   proficiencyId: string;

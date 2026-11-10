@@ -5,7 +5,7 @@ import { autorun } from 'vue-meteor-tracker';
 import numberToSignedString from '../../../../api/utility/numberToSignedString';
 import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
 import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import sortEffects from '/imports/client/ui/utility/sortEffects';

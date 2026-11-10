@@ -7,7 +7,7 @@ import TreeDetailLayout from '/imports/client/ui/components/TreeDetailLayout.vue
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import CreaturePropertyDialog from '/imports/client/ui/creature/creatureProperties/CreaturePropertyDialog.vue';
 import TreeSearchInput from '/imports/client/ui/components/tree/TreeSearchInput.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { key } from '/imports/client/ui/vuexStore';
 
 const props = defineProps<{ creatureId: string }>();

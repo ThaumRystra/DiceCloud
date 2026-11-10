@@ -5,18 +5,23 @@ import { assertUserInTabletop } from './shared/tabletopPermissions';
 import { assertUserHasPaidBenefits } from '/imports/api/users/patreon/tiers';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
-import { getFilter, renewDocIds } from '/imports/api/parenting/parentingFunctions';
-import { reifyNodeReferences, storeLibraryNodeReferences } from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  getFilter,
+  renewDocIds,
+} from '/imports/api/parenting/parentingFunctions';
+import {
+  reifyNodeReferences,
+  storeLibraryNodeReferences,
+} from '/imports/api/creature/creatureProperties/methods/insertPropertyFromLibraryNode';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import Tabletops from '/imports/api/tabletop/Tabletops';
-import { assertTabletopHasPropSpace } from '/imports/api/tabletop/methods/shared/tabletopLimits'
+import { assertTabletopHasPropSpace } from '/imports/api/tabletop/methods/shared/tabletopLimits';
 
 const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
-
   name: 'tabletops.addCreaturesFromLibraryToTabletop',
 
   validate: new SimpleSchema({
-    'libraryNodeIds': {
+    libraryNodeIds: {
       type: Array,
     },
     'libraryNodeIds.$': {
@@ -37,8 +42,10 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
 
   async run({ libraryNodeIds, tabletopId }) {
     if (!this.userId) {
-      throw new Meteor.Error('tabletops.addCreatures.denied',
-        'You need to be logged in to remove a tabletop');
+      throw new Meteor.Error(
+        'tabletops.addCreatures.denied',
+        'You need to be logged in to remove a tabletop',
+      );
     }
     assertUserHasPaidBenefits(this.userId);
     const tabletop = await Tabletops.findOneAsync(tabletopId);
@@ -57,7 +64,7 @@ const addCreaturesFromLibraryToTabletop = new ValidatedMethod({
         else {
           throw new Meteor.Error(
             'Insert property from library failed',
-            `No library creature with id '${nodeId}' was found`
+            `No library creature with id '${nodeId}' was found`,
           );
         }
       }
@@ -103,7 +110,7 @@ async function insertSubProperties(node, creatureId: string) {
   // Give the docs new IDs without breaking internal references
   renewDocIds({
     docArray: nodes,
-    collectionMap: { 'libraryNodes': 'creatureProperties' }
+    collectionMap: { libraryNodes: 'creatureProperties' },
   });
 
   // Insert the creature properties

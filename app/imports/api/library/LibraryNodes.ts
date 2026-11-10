@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
+import colorSchema from '../properties/subSchemas/color.schema';
 import ChildSchema from '/imports/api/parenting/ChildSchema';
 import propertySchemasIndex from '/imports/api/properties/propertySchemasIndex';
 import { assertDocEditPermission } from '/imports/api/sharing/sharingPermissions';
@@ -11,7 +11,11 @@ import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
 import { storedIconsSchema } from '/imports/api/icons/Icons';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { restore } from '/imports/api/parenting/softRemove';
-import { type ConvertToUnion, type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import {
+  type ConvertToUnion,
+  type InferType,
+  TypedSimpleSchema,
+} from '/imports/api/utility/TypedSimpleSchema';
 import type { PropertyType } from '/imports/api/properties/PropertyType.type';
 import type { Simplify } from 'type-fest';
 
@@ -97,15 +101,19 @@ export const libraryNodeRootCollections = ['libraries' as const];
 
 export type LibraryNodeTypes = {
   [T in PropertyType]: Simplify<
-    { type: T }
-    & InferType<typeof propertySchemasIndex[T]>
-  > & Simplify<
-    Exclude<InferType<typeof LibraryNodeSchema>, 'type'>
-    & InferType<typeof ColorSchema>
-    & InferType<ReturnType<typeof ChildSchema<typeof libraryNodeRootCollections[number]>>>
-    & InferType<typeof SoftRemovableSchema>
-  >
-}
+    { type: T } & InferType<(typeof propertySchemasIndex)[T]>
+  > &
+    Simplify<
+      Exclude<InferType<typeof LibraryNodeSchema>, 'type'> &
+        InferType<typeof colorSchema> &
+        InferType<
+          ReturnType<
+            typeof ChildSchema<(typeof libraryNodeRootCollections)[number]>
+          >
+        > &
+        InferType<typeof SoftRemovableSchema>
+    >;
+};
 
 export type LibraryNode = ConvertToUnion<LibraryNodeTypes>;
 
@@ -114,14 +122,14 @@ const LibraryNodes = new Mongo.Collection<LibraryNode>('libraryNodes');
 // Set up server side search index
 if (Meteor.isServer) {
   await LibraryNodes.createIndexAsync({
-    'name': 'text',
-    'tags': 'text',
+    name: 'text',
+    tags: 'text',
   });
 }
 
 const genericLibraryNodeSchema = TypedSimpleSchema.from({})
   .extend(LibraryNodeSchema)
-  .extend(ColorSchema)
+  .extend(colorSchema)
   .extend(ChildSchema(libraryNodeRootCollections))
   .extend(SoftRemovableSchema);
 
@@ -135,7 +143,7 @@ for (key in propertySchemasIndex) {
     .extend(propertySchemasIndex[key])
     .extend(genericLibraryNodeSchema);
   LibraryNodes.attachSchema(schema, {
-    selector: { type: key }
+    selector: { type: key },
   });
 }
 
@@ -147,15 +155,27 @@ const pushToLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, value }: { _id: string, path: string[], value: unknown }) {
+  async run({
+    _id,
+    path,
+    value,
+  }: {
+    _id: string;
+    path: string[];
+    value: unknown;
+  }) {
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
-    return await LibraryNodes.updateAsync(_id, {
-      $push: { [path.join('.')]: value },
-    }, {
-      selector: { type: node!.type },
-    });
-  }
+    return await LibraryNodes.updateAsync(
+      _id,
+      {
+        $push: { [path.join('.')]: value },
+      },
+      {
+        selector: { type: node!.type },
+      },
+    );
+  },
 });
 
 const pullFromLibraryNode = new ValidatedMethod({
@@ -166,22 +186,34 @@ const pullFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, itemId }: { _id: string, path: string[], itemId: string }) {
+  async run({
+    _id,
+    path,
+    itemId,
+  }: {
+    _id: string;
+    path: string[];
+    itemId: string;
+  }) {
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
-    return await LibraryNodes.updateAsync(_id, {
-      $pull: { [path.join('.')]: { _id: itemId } },
-    }, {
-      selector: { type: node!.type },
-      getAutoValues: false,
-    });
-  }
+    return await LibraryNodes.updateAsync(
+      _id,
+      {
+        $pull: { [path.join('.')]: { _id: itemId } },
+      },
+      {
+        selector: { type: node!.type },
+        getAutoValues: false,
+      },
+    );
+  },
 });
 
 const softRemoveLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.softRemove',
   validate: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id
+    _id: SimpleSchema.RegEx.Id,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
@@ -192,13 +224,13 @@ const softRemoveLibraryNode = new ValidatedMethod({
     const node = await LibraryNodes.findOneAsync(_id);
     await assertDocEditPermission(node, this.userId);
     return softRemove(LibraryNodes, node);
-  }
+  },
 });
 
 const restoreLibraryNode = new ValidatedMethod({
   name: 'libraryNodes.restore',
   validate: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id
+    _id: SimpleSchema.RegEx.Id,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
@@ -212,7 +244,7 @@ const restoreLibraryNode = new ValidatedMethod({
     await assertDocEditPermission(node, this.userId);
     // Do work
     await restore(LibraryNodes, node);
-  }
+  },
 });
 
 export default LibraryNodes;

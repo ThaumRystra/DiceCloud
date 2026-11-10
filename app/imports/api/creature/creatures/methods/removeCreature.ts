@@ -1,6 +1,6 @@
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertOwnership } from '/imports/api/creature/creatures/creaturePermissions';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import Experiences from '/imports/api/creature/experience/Experiences';
@@ -28,9 +28,9 @@ const removeCreature = new ValidatedMethod({
     timeInterval: 5000,
   },
   async run({ charId }) {
-    await assertOwnership(charId, this.userId)
+    await assertOwnership(charId, this.userId);
     this.unblock();
-    await removeCreatureWork(charId)
+    await removeCreatureWork(charId);
   },
 });
 

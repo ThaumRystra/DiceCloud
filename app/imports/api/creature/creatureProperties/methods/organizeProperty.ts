@@ -1,13 +1,23 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import { assertDocEditPermission, assertDocExists, assertEditPermission } from '/imports/api/sharing/sharingPermissions';
+import {
+  assertDocEditPermission,
+  assertDocExists,
+  assertEditPermission,
+} from '/imports/api/sharing/sharingPermissions';
 import { compact } from 'lodash';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import { moveDocBetweenRoots, moveDocWithinRoot } from '/imports/api/parenting/parentingFunctions';
+import {
+  moveDocBetweenRoots,
+  moveDocWithinRoot,
+} from '/imports/api/parenting/parentingFunctions';
 import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
-import CreatureProperties, { creaturePropertyRootCollections } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  CreatureProperties,
+  creaturePropertyRootCollections,
+} from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const moveBetweenRoots = new ValidatedMethod({
   name: 'creatureProperties.organize.moveDocBetweenRoots',
@@ -65,17 +75,20 @@ const moveBetweenRoots = new ValidatedMethod({
 
     // Figure out which creatures need to be recalculated after this move
     const creatureIdsToRecalculate = compact([
-      ...newRoot.collection === 'creatures' ? [newRoot.id] : [],
-      ...prop.root.collection === 'creatures' ? [prop.root.id] : [],
+      ...(newRoot.collection === 'creatures' ? [newRoot.id] : []),
+      ...(prop.root.collection === 'creatures' ? [prop.root.id] : []),
     ]);
 
     // Mark the creatures for recompute
     if (!skipRecompute && creatureIdsToRecalculate.length) {
-      await Creatures.updateAsync({
-        _id: { $in: creatureIdsToRecalculate },
-      }, {
-        $set: { dirty: true },
-      });
+      await Creatures.updateAsync(
+        {
+          _id: { $in: creatureIdsToRecalculate },
+        },
+        {
+          $set: { dirty: true },
+        },
+      );
     }
   },
 });
@@ -117,11 +130,14 @@ const moveWithinRoot = new ValidatedMethod({
 
     // Mark the creatures for recompute
     if (!skipRecompute && prop.root.collection === 'creatures') {
-      await Creatures.updateAsync({
-        _id: prop.root.id,
-      }, {
-        $set: { dirty: true },
-      });
+      await Creatures.updateAsync(
+        {
+          _id: prop.root.id,
+        },
+        {
+          $set: { dirty: true },
+        },
+      );
     }
   },
 });

@@ -4,7 +4,7 @@ import { autorun } from 'vue-meteor-tracker';
 import propertyViewerIndex from '/imports/client/ui/properties/viewers/shared/propertyViewerIndex';
 import CreaturePropertiesTree from '/imports/client/ui/creature/creatureProperties/CreaturePropertiesTree.vue';
 import { getPropertyName } from '/imports/constants/PROPERTIES';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import DescendantPropertiesTree from '/imports/client/ui/creature/creatureProperties/DescendantPropertiesTree.vue';
 
 const props = withDefaults(defineProps<{

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import ItemTreeNode from '/imports/client/ui/properties/treeNodeViews/ItemTreeNode.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import selectAmmoItem from '/imports/api/creature/creatureProperties/methods/selectAmmoItem';
 import { findIndex } from 'lodash';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';

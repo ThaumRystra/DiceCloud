@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import { SyncedCron } from 'meteor/quave:synced-cron';

@@ -9,7 +9,9 @@ import '/imports/api/users/methods/addEmail';
 import '/imports/api/users/methods/removeEmail';
 import '/imports/api/users/methods/updateFileStorageUsed';
 import { some } from 'lodash';
-import { TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
+import type { Simplify } from 'type-fest';
+import type {z} from 'zod';
 const defaultLibraries = process.env.DEFAULT_LIBRARIES && process.env.DEFAULT_LIBRARIES.split(',') || [];
 const defaultLibraryCollections = process.env.DEFAULT_LIBRARY_COLLECTIONS && process.env.DEFAULT_LIBRARY_COLLECTIONS.split(',') || [];
 
@@ -124,6 +126,9 @@ const userSchema = TypedSimpleSchema.from({
     optional: true,
   },
 });
+
+export type UserId = string & z.BRAND<'UserId'>;
+export type User = Simplify<{ _id: UserId } & InferType<typeof userSchema>>;
 
 Meteor.users.attachSchema(userSchema);
 

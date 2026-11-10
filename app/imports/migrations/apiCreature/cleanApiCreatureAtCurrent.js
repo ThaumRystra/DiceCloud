@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 export default function cleanApiCreatureAtCurrent(apiCreature) {
   apiCreature.creatureProperties = apiCreature.creatureProperties.map(prop => {

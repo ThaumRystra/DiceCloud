@@ -3,19 +3,15 @@ import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import Experiences from '/imports/api/creature/experience/Experiences';
 import { removeCreatureWork } from '/imports/api/creature/creatures/methods/removeCreature';
-import ArchiveCreatureFiles from '/imports/api/creature/archive/ArchiveCreatureFiles';
+import { ArchiveCreatureFiles } from '/imports/api/creature/archive/ArchiveCreatureFiles';
 import assertHasCharactersSlots from '/imports/api/creature/creatures/methods/assertHasCharacterSlots';
 import { incrementFileStorageUsed } from '/imports/api/users/methods/updateFileStorageUsed';
 import verifyArchiveSafety from '/imports/api/creature/archive/methods/verifyArchiveSafety';
-
-let migrateArchive;
-if (Meteor.isServer) {
-  migrateArchive = require('/imports/migrations/archive/migrateArchive').default;
-}
+const { migrateArchive } = Meteor.isServer ? await import('/imports/migrations/archive/migrateArchive') : {};
 
 async function restoreCreature(archive, userId) {
   if (SCHEMA_VERSION < archive.meta.schemaVersion) {

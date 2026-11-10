@@ -5,7 +5,7 @@ import cleanAtCurrent from './cleanArchiveAtCurrent';
 
 /* eslint no-fallthrough: "off" -- Using switch fallthrough to run all
 migration steps after the current version of the file. */
-export default function migrateArchive(archive) {
+export function migrateArchive(archive) {
   switch (archive.meta.schemaVersion) {
     // V1 of DiceCloud
     case 'version1':

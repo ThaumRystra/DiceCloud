@@ -1,7 +1,10 @@
 import computeCreatureComputation from './computeCreatureComputation';
 import { buildComputationFromProps } from './buildCreatureComputation';
 import { assert } from 'chai';
-import CreatureProperties, { CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  CreatureProperties,
+  CreatureProperty,
+} from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeTests from '/imports/api/engine/computation/computeComputation/tstFns';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import { cleanAndValidate } from '/imports/api/utility/TypedSimpleSchema';
@@ -18,7 +21,7 @@ describe('Compute computation', function () {
     computeCreatureComputation(computation);
     assert.exists(computation);
   });
-  computeTests.forEach(test => it(test.text, test.fn));
+  computeTests.forEach((test) => it(test.text, test.fn));
 });
 
 const testProperties = [
@@ -31,8 +34,8 @@ const testProperties = [
       calculation: '1 + 2 + 3',
     },
     description: {
-      text: 'strength is {strength}'
-    }
+      text: 'strength is {strength}',
+    },
   }),
 ];
 

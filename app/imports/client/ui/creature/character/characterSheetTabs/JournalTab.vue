@@ -6,7 +6,7 @@ import Creatures from '/imports/api/creature/creatures/Creatures';
 import NoteCard from '/imports/client/ui/properties/components/persona/NoteCard.vue';
 import CreatureSummary from '/imports/client/ui/creature/character/CreatureSummary.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties, type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';

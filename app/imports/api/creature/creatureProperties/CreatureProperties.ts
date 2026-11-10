@@ -1,177 +1,73 @@
-import SimpleSchema from 'simpl-schema';
-import ColorSchema from '/imports/api/properties/subSchemas/ColorSchema';
-import ChildSchema from '/imports/api/parenting/ChildSchema';
-import SoftRemovableSchema from '/imports/api/parenting/SoftRemovableSchema';
-import propertySchemasIndex from '/imports/api/properties/computedPropertySchemasIndex';
-import { storedIconsSchema } from '/imports/api/icons/Icons';
+import { propertySchema } from '/imports/api/properties/property.schema';
+import { z } from 'zod';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { type ConvertToUnion, type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
-import { type Simplify } from 'type-fest';
-import type { PropertyType } from '/imports/api/properties/PropertyType.type';
+import { storedIconsSchema } from '/imports/api/icons/icons.schema';
+import colorSchema from '/imports/api/properties/subSchemas/color.schema';
+import childSchema from '/imports/api/parenting/childSchema.schema';
+import { softRemovableSchema } from '/imports/api/parenting/softRemovable.schema';
 
-const PreComputeCreaturePropertySchema = TypedSimpleSchema.from({
-  _id: {
-    type: String,
-    max: 32,
-  },
-  _migrationError: {
-    type: String,
-    optional: true,
-  },
-  type: {
-    type: String,
-    allowedValues: Object.keys(propertySchemasIndex),
-  },
-  tags: {
-    type: Array,
-    defaultValue: [],
-    maxCount: STORAGE_LIMITS.tagCount,
-  },
-  'tags.$': {
-    type: String,
-    max: STORAGE_LIMITS.tagLength,
-  },
-  disabled: {
-    type: Boolean,
-    optional: true,
-  },
-  icon: {
-    type: storedIconsSchema,
-    optional: true,
-    max: STORAGE_LIMITS.icon,
-  },
+export const creaturePropertyRootCollections: ['creatures'] = ['creatures'];
+
+export const genericCreaturePropertySchema = z.object({
+  _id: z.string().brand('CreatureId'),
+  ...colorSchema.shape,
+  ...childSchema(creaturePropertyRootCollections).shape,
+  ...softRemovableSchema.shape,
+  _migrationError: z.string().optional(),
+  // allowedValues are the dynamic keys of propertySchemasIndex
+  type: z.string(),
+  tags: z
+    .array(z.string().max(STORAGE_LIMITS.tagLength))
+    .max(STORAGE_LIMITS.tagCount)
+    .default([]),
+  disabled: z.boolean().optional(),
+  icon: storedIconsSchema.optional(),
   // Reference to the library node that this property was copied from
-  libraryNodeId: {
-    type: String,
-    max: 32,
-    optional: true,
-  },
-  // Fill more than one quantity in a slot, like feats and ability score
-  // improvements, filtered out of UI if there isn't space in quantityExpected
-  slotQuantityFilled: {
-    type: SimpleSchema.Integer,
-    optional: true, // Undefined implies 1
-  },
+  libraryNodeId: z.string().max(32).optional(),
+  // Fill more than one quantity in a slot
+  slotQuantityFilled: z.int().optional(),
 });
 
-const DenormalisedOnlyCreaturePropertySchema = TypedSimpleSchema.from({
-  // Denormalised flag if this property is inactive on the sheet for any reason
-  // Including being disabled, or a descendant of a disabled property
-  inactive: {
-    type: Boolean,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  // Denormalised flag if this property was made inactive by an inactive
-  // ancestor. True if this property has an inactive ancestor even if this
-  // property is itself inactive
-  deactivatedByAncestor: {
-    type: Boolean,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  // Denormalised flag if this property was made inactive because of its own
-  // state
-  deactivatedBySelf: {
-    type: Boolean,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  // Denormalised flag if this property was made inactive because of a toggle
-  // calculation. Either an ancestor toggle calculation or its own.
-  deactivatedByToggle: {
-    type: Boolean,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  deactivatingToggleId: {
-    type: String,
-    max: 32,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  // Triggers that fire when this property is applied
-  'triggerIds': {
-    type: Object,
-    optional: true,
-    removeBeforeCompute: true,
-  },
-  'triggerIds.before': {
-    type: Array,
-    optional: true,
-  },
-  'triggerIds.before.$': {
-    type: String,
-    max: 32,
-  },
-  'triggerIds.after': {
-    type: Array,
-    optional: true,
-  },
-  'triggerIds.after.$': {
-    type: String,
-    max: 32,
-  },
-  'triggerIds.afterChildren': {
-    type: Array,
-    optional: true,
-  },
-  'triggerIds.afterChildren.$': {
-    type: String,
-    max: 32,
-  },
-  // When this is true on any property, the creature needs to be recomputed
-  dirty: {
-    type: Boolean,
-    // Default to true because new properties cause a recomputation
-    defaultValue: true,
-    optional: true,
-  },
+export const computedGenericCreaturePropertySchema = z.object({
+  ...genericCreaturePropertySchema.shape,
+  inactive: z.boolean().optional(),
+  deactivatedByAncestor: z.boolean().optional(),
+  deactivatedBySelf: z.boolean().optional(),
+  deactivatedByToggle: z.boolean().optional(),
+  deactivatingToggleId: z.string().max(32).optional(),
+  triggerIds: z
+    .object({
+      before: z.array(z.string().max(32)).optional(),
+      after: z.array(z.string().max(32)).optional(),
+      afterChildren: z.array(z.string().max(32)).optional(),
+    })
+    .optional(),
 });
 
-const CreaturePropertySchema = PreComputeCreaturePropertySchema.extend(DenormalisedOnlyCreaturePropertySchema);
+export type GenericCreatureProperty = z.infer<
+  typeof genericCreaturePropertySchema
+>;
 
-export const creaturePropertyRootCollections = ['creatures' as const];
+export type ComputedGenericCreatureProperty = z.infer<
+  typeof computedGenericCreaturePropertySchema
+>;
 
-export type CreaturePropertyTypes = {
-  [T in PropertyType]: Simplify<
-    { type: T }
-    & InferType<typeof propertySchemasIndex[T]>
-  > & Simplify<
-    Exclude<InferType<typeof CreaturePropertySchema>, 'type'>
-    & InferType<typeof ColorSchema>
-    & InferType<ReturnType<typeof ChildSchema<typeof creaturePropertyRootCollections[number]>>>
-    & InferType<typeof SoftRemovableSchema>
-  >
-}
+export const creaturePropertySchema =
+  genericCreaturePropertySchema.and(propertySchema);
 
-export type CreatureProperty = Simplify<ConvertToUnion<CreaturePropertyTypes>>;
+export type CreatureProperty = z.infer<typeof creaturePropertySchema>;
 
-const CreatureProperties = new Mongo.Collection<CreatureProperty>('creatureProperties');
-
-const genericCreaturePropertySchema = TypedSimpleSchema.from({})
-  .extend(CreaturePropertySchema)
-  .extend(ColorSchema)
-  .extend(ChildSchema(creaturePropertyRootCollections))
-  .extend(SoftRemovableSchema);
+export const CreatureProperties = new Mongo.Collection<CreatureProperty>(
+  'creatureProperties',
+);
 
 // Attach the default schema
 CreatureProperties.attachSchema(genericCreaturePropertySchema);
 
 // Attach the schemas for each type
-let key: keyof typeof propertySchemasIndex;
-for (key in propertySchemasIndex) {
-  if (key === 'reference') continue;
-  const schema = new SimpleSchema({})
-    .extend(propertySchemasIndex[key])
-    .extend(genericCreaturePropertySchema)
-  CreatureProperties.attachSchema(schema, {
-    selector: { type: key }
-  });
-}
-
-export default CreatureProperties;
-export {
-  DenormalisedOnlyCreaturePropertySchema,
-  CreaturePropertySchema,
-};
+propertySchema.options.forEach((option) => {
+  const type = option.shape.type.value;
+  if (type === 'reference') return;
+  const schema = genericCreaturePropertySchema.and(option);
+  CreatureProperties.attachSchema(schema, { selector: { type } });
+});

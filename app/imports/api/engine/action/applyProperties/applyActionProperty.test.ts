@@ -7,17 +7,39 @@ import {
   getRandomIds,
   removeAllCreaturesAndProps,
   runActionById,
-  TestCreature
+  TestCreature,
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
-import { LogContent, Mutation, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import {
+  LogContent,
+  Mutation,
+  Update,
+} from '/imports/api/engine/action/tasks/TaskResult';
 import Alea from 'alea';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const [
-  creatureId, targetCreatureId, targetCreature2Id, emptyActionId, selfActionId, attackActionId,
-  usesActionId, attackMissId, attackNoTargetId, usesResourcesActionId, ammoId, resourceAttId,
-  consumeAmmoId, consumeResourceId, noUsesActionId, insufficientResourcesActionId,
-  attributeResetByEventId, eventActionId, advantageAttackId, advantageEffectId, disadvantageAttackId, disadvantageEffectId,
+  creatureId,
+  targetCreatureId,
+  targetCreature2Id,
+  emptyActionId,
+  selfActionId,
+  attackActionId,
+  usesActionId,
+  attackMissId,
+  attackNoTargetId,
+  usesResourcesActionId,
+  ammoId,
+  resourceAttId,
+  consumeAmmoId,
+  consumeResourceId,
+  noUsesActionId,
+  insufficientResourcesActionId,
+  attributeResetByEventId,
+  eventActionId,
+  advantageAttackId,
+  advantageEffectId,
+  disadvantageAttackId,
+  disadvantageEffectId,
 ] = getRandomIds(100);
 
 const actionTestCreature: TestCreature = {
@@ -27,7 +49,7 @@ const actionTestCreature: TestCreature = {
     {
       _id: emptyActionId,
       type: 'action',
-      summary: { text: 'Summary text 1 + 1 = {1 + 1}' }
+      summary: { text: 'Summary text 1 + 1 = {1 + 1}' },
     },
     // Attack that targets self
     {
@@ -115,7 +137,7 @@ const actionTestCreature: TestCreature = {
       _id: ammoId,
       type: 'item',
       quantity: 12,
-      tags: ['ammo']
+      tags: ['ammo'],
     },
     {
       _id: resourceAttId,
@@ -129,32 +151,38 @@ const actionTestCreature: TestCreature = {
       _id: usesResourcesActionId,
       type: 'action',
       resources: {
-        itemsConsumed: [{
-          _id: consumeAmmoId,
-          tag: 'ammo',
-          quantity: { calculation: '3' },
-          itemId: ammoId,
-        }],
-        attributesConsumed: [{
-          _id: consumeResourceId,
-          variableName: 'resourceVar',
-          quantity: { calculation: '2' },
-        }],
+        itemsConsumed: [
+          {
+            _id: consumeAmmoId,
+            tag: 'ammo',
+            quantity: { calculation: '3' },
+            itemId: ammoId,
+          },
+        ],
+        attributesConsumed: [
+          {
+            _id: consumeResourceId,
+            variableName: 'resourceVar',
+            quantity: { calculation: '2' },
+          },
+        ],
         conditions: [],
-      }
+      },
     },
     {
       _id: insufficientResourcesActionId,
       type: 'action',
       resources: {
-        attributesConsumed: [{
-          _id: consumeResourceId,
-          variableName: 'resourceVar',
-          quantity: { calculation: '9001' },
-        }],
+        attributesConsumed: [
+          {
+            _id: consumeResourceId,
+            variableName: 'resourceVar',
+            quantity: { calculation: '9001' },
+          },
+        ],
         itemsConsumed: [],
         conditions: [],
-      }
+      },
     },
     // Events and resetting attributes
     {
@@ -165,7 +193,7 @@ const actionTestCreature: TestCreature = {
       baseValue: { calculation: '27' },
       damage: 13,
       variableName: 'resetByEventAtt',
-      reset: 'testEvent'
+      reset: 'testEvent',
     },
     {
       _id: eventActionId,
@@ -174,7 +202,7 @@ const actionTestCreature: TestCreature = {
       variableName: 'testEvent',
     },
   ],
-}
+};
 
 const actionTargetCreature: TestCreature = {
   _id: targetCreatureId,
@@ -184,9 +212,9 @@ const actionTargetCreature: TestCreature = {
       attributeType: 'stat',
       variableName: 'armor',
       baseValue: { calculation: '10' },
-    }
-  ]
-}
+    },
+  ],
+};
 
 const actionTargetCreature2: TestCreature = {
   _id: targetCreature2Id,
@@ -196,9 +224,9 @@ const actionTargetCreature2: TestCreature = {
       attributeType: 'stat',
       variableName: 'armor',
       baseValue: { calculation: '10' },
-    }
-  ]
-}
+    },
+  ],
+};
 
 describe('Apply Action Properties', function () {
   // Increase timeout
@@ -214,32 +242,41 @@ describe('Apply Action Properties', function () {
   it('should generate random numbers reliably given consistent seeds', function () {
     const aleaFraction = Alea('test', 'seeds');
     const randomNumbers = [aleaFraction(), aleaFraction(), aleaFraction()];
-    assert.deepEqual(randomNumbers, [
-      0.19889510236680508, 0.9176857066340744, 0.042551583144813776
-    ]);
+    assert.deepEqual(
+      randomNumbers,
+      [0.19889510236680508, 0.9176857066340744, 0.042551583144813776],
+    );
   });
 
   it('should run empty actions', async function () {
     const action = await runActionById(emptyActionId);
     assert.exists(action);
-    assert.deepEqual(allMutations(action), [{
-      contents: [{
-        name: 'Action',
-        value: 'Summary text 1 + 1 = 2',
-      }],
-      targetIds: [],
-    }]);
+    assert.deepEqual(allMutations(action), [
+      {
+        contents: [
+          {
+            name: 'Action',
+            value: 'Summary text 1 + 1 = 2',
+          },
+        ],
+        targetIds: [],
+      },
+    ]);
   });
 
   it('should target self when set', async function () {
     const action = await runActionById(selfActionId);
     assert.exists(action);
-    assert.deepEqual(allMutations(action), [{
-      contents: [{
-        name: 'Action',
-      }],
-      targetIds: [creatureId],
-    }]);
+    assert.deepEqual(allMutations(action), [
+      {
+        contents: [
+          {
+            name: 'Action',
+          },
+        ],
+        targetIds: [creatureId],
+      },
+    ]);
   });
 
   it('should make attack rolls against no targets', async function () {
@@ -248,17 +285,20 @@ describe('Apply Action Properties', function () {
       {
         contents: [{ name: 'Action' }],
         targetIds: [],
-      }, {
-        contents: [{
-          name: 'To Hit',
-          value: '1d20 [10] + 1\n**11**',
-          inline: true,
-        }],
+      },
+      {
+        contents: [
+          {
+            name: 'To Hit',
+            value: '1d20 [10] + 1\n**11**',
+            inline: true,
+          },
+        ],
         targetIds: [],
-      }
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
-  })
+  });
 
   it('should make attack rolls against multiple creatures', async function () {
     const action = await runActionById(attackActionId, [
@@ -268,20 +308,26 @@ describe('Apply Action Properties', function () {
     const expectedMutations: Mutation[] = [
       {
         contents: [{ name: 'Action' }],
-        targetIds: [targetCreatureId, targetCreature2Id]
-      }, {
-        contents: [{
-          inline: true,
-          name: 'Hit!',
-          value: '1d20 [10] + 10\n**20**',
-        }],
+        targetIds: [targetCreatureId, targetCreature2Id],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Hit!',
+            value: '1d20 [10] + 10\n**20**',
+          },
+        ],
         targetIds: [targetCreatureId],
-      }, {
-        contents: [{
-          inline: true,
-          name: 'Hit!',
-          value: '1d20 [10] + 10\n**20**',
-        }],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Hit!',
+            value: '1d20 [10] + 10\n**20**',
+          },
+        ],
         targetIds: [targetCreature2Id],
       },
     ];
@@ -295,8 +341,8 @@ describe('Apply Action Properties', function () {
         propId: usesActionId,
         type: 'action',
         inc: { usesUsed: 1, usesLeft: -1 },
-      }
-    ]
+      },
+    ];
     assert.deepEqual(allUpdates(action), expectedUpdates);
   });
 
@@ -304,12 +350,13 @@ describe('Apply Action Properties', function () {
     const action = await runActionById(noUsesActionId, [targetCreatureId]);
     const expectedContent: LogContent[] = [
       {
-        name: 'Action'
-      }, {
+        name: 'Action',
+      },
+      {
         name: 'Error',
-        value: 'Action does not have enough uses left'
-      }
-    ]
+        value: 'Action does not have enough uses left',
+      },
+    ];
     assert.deepEqual(allLogContent(action), expectedContent);
   });
 
@@ -319,14 +366,17 @@ describe('Apply Action Properties', function () {
       {
         contents: [{ name: 'Action' }],
         targetIds: [targetCreatureId],
-      }, {
-        contents: [{
-          inline: true,
-          name: 'Miss!',
-          value: '1d20 [10] − 5\n**5**', // DiceCloud uses unicode minus
-        }],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Miss!',
+            value: '1d20 [10] − 5\n**5**', // DiceCloud uses unicode minus
+          },
+        ],
         targetIds: [targetCreatureId],
-      }
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });
@@ -334,21 +384,28 @@ describe('Apply Action Properties', function () {
   it('should make attack rolls that roll with advantage', async function () {
     const prop = await CreatureProperties.findOneAsync(advantageAttackId);
     assert(prop);
-    assert(prop.type === 'action')
-    assert.equal(prop.attackRoll?.advantage, 1, 'The attack roll should have advantage');
+    assert(prop.type === 'action');
+    assert.equal(
+      prop.attackRoll?.advantage,
+      1,
+      'The attack roll should have advantage',
+    );
     const action = await runActionById(advantageAttackId, [targetCreatureId]);
     const expectedMutations: Mutation[] = [
       {
         contents: [{ name: 'Action' }],
         targetIds: [targetCreatureId],
-      }, {
-        contents: [{
-          inline: true,
-          name: 'Hit! (Advantage)',
-          value: '1d20 [ ~~10~~, 11 ] + 0\n**11**',
-        }],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Hit! (Advantage)',
+            value: '1d20 [ ~~10~~, 11 ] + 0\n**11**',
+          },
+        ],
         targetIds: [targetCreatureId],
-      }
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });
@@ -357,20 +414,29 @@ describe('Apply Action Properties', function () {
     const prop = await CreatureProperties.findOneAsync(disadvantageAttackId);
     assert(prop);
     assert(prop.type === 'action');
-    assert.equal(prop.attackRoll?.disadvantage, 1, 'The attack roll should have disadvantage');
-    const action = await runActionById(disadvantageAttackId, [targetCreatureId]);
+    assert.equal(
+      prop.attackRoll?.disadvantage,
+      1,
+      'The attack roll should have disadvantage',
+    );
+    const action = await runActionById(disadvantageAttackId, [
+      targetCreatureId,
+    ]);
     const expectedMutations: Mutation[] = [
       {
         contents: [{ name: 'Action' }],
         targetIds: [targetCreatureId],
-      }, {
-        contents: [{
-          inline: true,
-          name: 'Hit! (Disadvantage)',
-          value: '1d20 [ 10, ~~11~~ ] + 0\n**10**',
-        }],
+      },
+      {
+        contents: [
+          {
+            inline: true,
+            name: 'Hit! (Disadvantage)',
+            value: '1d20 [ 10, ~~11~~ ] + 0\n**10**',
+          },
+        ],
         targetIds: [targetCreatureId],
-      }
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });
@@ -380,36 +446,40 @@ describe('Apply Action Properties', function () {
     const expectedMutations: Mutation[] = [
       {
         contents: [{ name: 'Action' }],
-        targetIds: []
+        targetIds: [],
       },
       {
-        contents: [{
-          inline: true,
-          name: 'Stat damaged',
-          value: '−2 Resource Name',
-        }],
-        targetIds: [creatureId],
-        updates: [{
-          inc: {
-            damage: 2,
-            value: -2
+        contents: [
+          {
+            inline: true,
+            name: 'Stat damaged',
+            value: '−2 Resource Name',
           },
-          propId: resourceAttId,
-          type: 'attribute'
-        }],
+        ],
+        targetIds: [creatureId],
+        updates: [
+          {
+            inc: {
+              damage: 2,
+              value: -2,
+            },
+            propId: resourceAttId,
+            type: 'attribute',
+          },
+        ],
       },
       {
         targetIds: [],
         updates: [
           {
             inc: {
-              quantity: -3
+              quantity: -3,
             },
             propId: ammoId,
             type: 'item',
-          }
-        ]
-      }
+          },
+        ],
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });
@@ -418,12 +488,16 @@ describe('Apply Action Properties', function () {
     const action = await runActionById(insufficientResourcesActionId, []);
     const expectedMutations: Mutation[] = [
       {
-        contents: [{
-          name: 'Action'
-        }, {
-          name: 'Error',
-          value: 'This creature doesn\'t have sufficient resources to perform this action',
-        }],
+        contents: [
+          {
+            name: 'Action',
+          },
+          {
+            name: 'Error',
+            value:
+              "This creature doesn't have sufficient resources to perform this action",
+          },
+        ],
         targetIds: [],
       },
     ];
@@ -434,9 +508,11 @@ describe('Apply Action Properties', function () {
     const action = await runActionById(eventActionId, []);
     const expectedMutations: Mutation[] = [
       {
-        contents: [{
-          name: 'Action'
-        }],
+        contents: [
+          {
+            name: 'Action',
+          },
+        ],
         targetIds: [],
       },
       {
@@ -458,9 +534,8 @@ describe('Apply Action Properties', function () {
             type: 'attribute',
           },
         ],
-      }
+      },
     ];
     assert.deepEqual(allMutations(action), expectedMutations);
   });
-
 });

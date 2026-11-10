@@ -6,7 +6,7 @@ import adjustQuantity from '/imports/api/creature/creatureProperties/methods/adj
 import IncrementButton from '/imports/client/ui/components/IncrementButton.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const props = withDefaults(defineProps<{
   itemId: string;

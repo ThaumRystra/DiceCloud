@@ -4,7 +4,7 @@ import {
   getRandomIds,
   removeAllCreaturesAndProps,
 } from '/imports/api/engine/action/functions/actionEngineTest.testFn';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 describe('Apply Action Properties', function () {
   // Increase timeout

@@ -54,7 +54,6 @@
     "pretty-bytes": "^6.1.1",
     "qrcode.vue": "^3.8.0",
     "sharp": "^0.33.2",
-    "simpl-schema": "^1.13.1",
     "source-map-support": "^0.5.21",
     "speakingurl": "^14.0.1",
     "thumbhash": "^0.1.1",
@@ -65,7 +64,8 @@
     "vue-meteor-tracker": "^3.0.0-beta.7",
     "vue-router": "^4.5.0",
     "vuetify": "^3.12.5",
-    "vuex": "^4.1.0"
+    "vuex": "^4.1.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@meteorjs/rspack": "^1.1.0-beta.35",

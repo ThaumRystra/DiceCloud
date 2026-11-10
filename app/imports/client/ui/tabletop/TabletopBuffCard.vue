@@ -9,7 +9,7 @@ import PropertyIcon from '/imports/client/ui/properties/shared/PropertyIcon.vue'
 import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import getPropertyTitle from '/imports/client/ui/properties/shared/getPropertyTitle';

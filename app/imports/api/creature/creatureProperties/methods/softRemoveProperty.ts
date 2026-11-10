@@ -1,14 +1,17 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  assertDocEditPermission,
+  assertDocExists,
+} from '/imports/api/sharing/sharingPermissions';
 import { softRemove } from '/imports/api/parenting/softRemove';
 
 const softRemoveProperty = new ValidatedMethod({
   name: 'creatureProperties.softRemove',
   validate: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id
+    _id: SimpleSchema.RegEx.Id,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
@@ -23,7 +26,7 @@ const softRemoveProperty = new ValidatedMethod({
 
     // Do work
     return await softRemove(CreatureProperties, property);
-  }
+  },
 });
 
 export default softRemoveProperty;

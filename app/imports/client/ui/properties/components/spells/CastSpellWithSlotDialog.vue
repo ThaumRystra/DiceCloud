@@ -6,7 +6,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { assertEditPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';
 import SplitListLayout from '/imports/client/ui/properties/components/attributes/SplitListLayout.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';

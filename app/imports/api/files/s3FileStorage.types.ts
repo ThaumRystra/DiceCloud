@@ -3,7 +3,7 @@ import type { ContextUpload, ContextUser, FileData, FileObj } from 'meteor/ostri
 export type S3FileStorageOptions = {
   collectionName: string,
   storagePath: string,
-  onBeforeUpload: (this: ContextUpload & ContextUser, fileData: FileData) => string | boolean,
+  onBeforeUpload: (this: ContextUpload & ContextUser, fileData: FileData) => Promise<string | boolean> | string | boolean,
   onAfterUpload: (fileObj: FileObj) => void,
   debug?: boolean,
   allowClientCode?: boolean,

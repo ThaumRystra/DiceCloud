@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propertySchemasIndex from '/imports/api/properties/computedOnlyPropertySchemasIndex';
 import bulkWrite, { addSetOp, addUnsetOp, newOperation } from '/imports/api/engine/shared/bulkWrite';
 import updateTabletopPropCount from '/imports/api/tabletop/functions/denormalizeTabletopPropCount'

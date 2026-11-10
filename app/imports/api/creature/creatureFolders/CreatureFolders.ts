@@ -1,37 +1,15 @@
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
+import { z } from 'zod';
 
-
-const creatureFolderSchema = TypedSimpleSchema.from({
-  name: {
-    type: String,
-    trim: false,
-    optional: true,
-    max: STORAGE_LIMITS.name,
-  },
-  creatures: {
-    type: Array,
-    defaultValue: [],
-  },
-  'creatures.$': {
-    type: String,
-    max: 32,
-  },
-  owner: {
-    type: String,
-    max: 32,
-  },
-  archived: {
-    type: Boolean,
-    optional: true,
-  },
-  order: {
-    type: Number,
-    defaultValue: 0,
-  },
+export const creatureFolderSchema = z.object({
+  name: z.string().max(STORAGE_LIMITS.name).optional(),
+  creatures: z.array(z.string().max(32)).default([]),
+  owner: z.string().max(32),
+  archived: z.boolean().optional(),
+  order: z.number().default(0),
 });
 
-export type CreatureFolder = InferType<typeof creatureFolderSchema>
+export type CreatureFolder = z.infer<typeof creatureFolderSchema>;
 
 const CreatureFolders = new Mongo.Collection<CreatureFolder>('creatureFolders');
 

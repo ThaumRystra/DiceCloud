@@ -1,6 +1,6 @@
 import SimpleSchema from 'simpl-schema';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { assertViewPermission } from '/imports/api/creature/creatures/creaturePermissions';
 import computeCreature from '/imports/api/engine/computeCreature';
@@ -25,23 +25,25 @@ Meteor.publish('singleCharacter', async function (creatureId: string) {
     return this.error(e as Error);
   }
   const userId = this.userId;
-  const permissionCreature = await Creatures.findOneAsync({
-    _id: creatureId,
-  }, {
-    fields: {
-      owner: 1,
-      readers: 1,
-      writers: 1,
-      public: 1,
-      computeVersion: 1,
-      tabletopId: 1,
-    }
-  });
+  const permissionCreature = await Creatures.findOneAsync(
+    {
+      _id: creatureId,
+    },
+    {
+      fields: {
+        owner: 1,
+        readers: 1,
+        writers: 1,
+        public: 1,
+        computeVersion: 1,
+        tabletopId: 1,
+      },
+    },
+  );
   try {
     assertDocExists(permissionCreature);
     await assertViewPermission(permissionCreature, userId);
-  }
-  catch (e) {
+  } catch (e) {
     console.warn(e);
     return this.error(e as Error);
   }
@@ -61,12 +63,15 @@ Meteor.publish('singleCharacter', async function (creatureId: string) {
     CreatureProperties.find({
       'root.id': creatureId,
     }),
-    CreatureLogs.find({
-      creatureId,
-    }, {
-      limit: 20,
-      sort: { date: -1 },
-    }),
+    CreatureLogs.find(
+      {
+        creatureId,
+      },
+      {
+        limit: 20,
+        sort: { date: -1 },
+      },
+    ),
     EngineActions.find({
       creatureId,
     }),

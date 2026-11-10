@@ -28,7 +28,7 @@ declare namespace Mongo {
      * @param options Options
      *
      */
-    attachSchema(ss: SimpleSchema | TypedSimpleSchema<T>, options?: SchemaOptions): void;
+    attachSchema(ss: SimpleSchema | TypedSimpleSchema<T> | import('zod').ZodType , options?: SchemaOptions): void;
     update(
       selector: Selector<T> | ObjectID | string,
       modifier: Modifier<T>,

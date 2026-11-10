@@ -1,5 +1,5 @@
-import { migrateCollection } from './dbv3'
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { migrateCollection } from './dbv3';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assert } from 'chai';
 
 describe('dbv3 Migrate parenting structure', function () {
@@ -14,24 +14,23 @@ describe('dbv3 Migrate parenting structure', function () {
     // Use raw collection to bypass all schemas and validation
     await collection.rawCollection().insertMany([
       {
-        '_id': 'classId',
-        'type': 'class',
-        'parent': { 'collection': 'creatures', 'id': 'creatureId' },
-        'ancestors': [
-          { 'collection': 'creatures', 'id': 'creatureId' }
+        _id: 'classId',
+        type: 'class',
+        parent: { collection: 'creatures', id: 'creatureId' },
+        ancestors: [{ collection: 'creatures', id: 'creatureId' }],
+        order: 0,
+        tags: [],
+      },
+      {
+        _id: 'noteId',
+        type: 'note',
+        parent: { collection: 'creatureProperties', id: 'classId' },
+        ancestors: [
+          { collection: 'creatures', id: 'creatureId' },
+          { collection: 'creatureProperties', id: 'classId' },
         ],
-        'order': 0,
-        'tags': [],
-      }, {
-        '_id': 'noteId',
-        'type': 'note',
-        'parent': { 'collection': 'creatureProperties', 'id': 'classId' },
-        'ancestors': [
-          { 'collection': 'creatures', 'id': 'creatureId' },
-          { 'collection': 'creatureProperties', 'id': 'classId' }
-        ],
-        'order': 1,
-        'tags': [],
+        order: 1,
+        tags: [],
       },
     ]);
   });
@@ -50,20 +49,28 @@ describe('dbv3 Migrate parenting structure', function () {
     const childDoc = await collection.findOneAsync('noteId');
 
     assert.deepEqual(
-      parentDoc.root, { collection: 'creatures', id: 'creatureId' },
-      'parent root should be the creature'
+      parentDoc.root,
+      { collection: 'creatures', id: 'creatureId' },
+      'parent root should be the creature',
     );
     assert.deepEqual(
-      childDoc.root, { collection: 'creatures', id: 'creatureId' },
-      'child root should be the creature'
+      childDoc.root,
+      { collection: 'creatures', id: 'creatureId' },
+      'child root should be the creature',
     );
 
-    assert.doesNotHaveAnyKeys(parentDoc, ['parentId'], 'Parent should not have parentId set');
-    assert.equal(childDoc.parentId, 'classId', 'child parentId should match parent\'s id');
+    assert.doesNotHaveAnyKeys(
+      parentDoc,
+      ['parentId'],
+      'Parent should not have parentId set',
+    );
+    assert.equal(
+      childDoc.parentId,
+      'classId',
+      "child parentId should match parent's id",
+    );
 
     assert.equal(parentDoc.left, 0, 'Parent left should be its old order');
     assert.equal(childDoc.left, 1, 'Child left should be its old order');
-
   });
-
 });

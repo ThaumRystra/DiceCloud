@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, useAttrs } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import HealthBarProgress from '/imports/client/ui/properties/components/attributes/HealthBarProgress.vue';
 
 const props = defineProps<{

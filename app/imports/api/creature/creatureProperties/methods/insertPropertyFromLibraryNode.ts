@@ -1,13 +1,19 @@
 import SimpleSchema from 'simpl-schema';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties, { creaturePropertyRootCollections, type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
-import LibraryNodes, { type LibraryNode } from '/imports/api/library/LibraryNodes';
+import {
+  CreatureProperties,
+  creaturePropertyRootCollections,
+  type CreatureProperty,
+} from '/imports/api/creature/creatureProperties/CreatureProperties';
+import LibraryNodes, {
+  type LibraryNode,
+} from '/imports/api/library/LibraryNodes';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import {
   renewDocIds,
   rebuildNestedSets,
-  getFilter
+  getFilter,
 } from '/imports/api/parenting/parentingFunctions';
 import { union } from 'lodash';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
@@ -38,7 +44,11 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ nodeIds, root, parentId }: {
+  async run({
+    nodeIds,
+    root,
+    parentId,
+  }: {
     nodeIds: string[];
     root: CreatureProperty['root'];
     parentId: string | null;
@@ -48,17 +58,25 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
 
     let parent: CreatureProperty | null = null;
     if (parentId) {
-      parent = await CreatureProperties.findOneAsync(parentId) ?? null;
-      if (!parent) throw new Meteor.Error('not-found', 'The parent you are tyring to add a property to could not be found');
+      parent = (await CreatureProperties.findOneAsync(parentId)) ?? null;
+      if (!parent)
+        throw new Meteor.Error(
+          'not-found',
+          'The parent you are tyring to add a property to could not be found',
+        );
     }
 
-    const insertedIds = await Promise.all(nodeIds.map((nodeId, index) => insertPropertyFromNode({
-      nodeId,
-      root,
-      parentId,
-      // Add the properties to the end of the parent's children, in nodeId order
-      left: (parent?.right || 1) - 0.5 + (0.001 * index)
-    })));
+    const insertedIds = await Promise.all(
+      nodeIds.map((nodeId, index) =>
+        insertPropertyFromNode({
+          nodeId,
+          root,
+          parentId,
+          // Add the properties to the end of the parent's children, in nodeId order
+          left: (parent?.right || 1) - 0.5 + 0.001 * index,
+        }),
+      ),
+    );
 
     // Tree structure changed by inserts, reorder the tree
     await rebuildNestedSets(CreatureProperties, rootDoc!._id);
@@ -67,11 +85,16 @@ const insertPropertyFromLibraryNode = new ValidatedMethod({
   },
 });
 
-async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
-  nodeId: string,
-  root: CreatureProperty['root'],
-  parentId: string | null,
-  left: number,
+async function insertPropertyFromNode({
+  nodeId,
+  root,
+  parentId,
+  left,
+}: {
+  nodeId: string;
+  root: CreatureProperty['root'];
+  parentId: string | null;
+  left: number;
 }): Promise<string> {
   // Fetch the library node and its descendants, provided they have not been
   // removed
@@ -84,7 +107,7 @@ async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
     else {
       throw new Meteor.Error(
         'Insert property from library failed',
-        `No library document with id '${nodeId}' was found`
+        `No library document with id '${nodeId}' was found`,
       );
     }
   }
@@ -107,7 +130,7 @@ async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
   // Give the docs new IDs without breaking internal references
   renewDocIds({
     docArray: nodes,
-    collectionMap: { 'libraryNodes': 'creatureProperties' }
+    collectionMap: { libraryNodes: 'creatureProperties' },
   });
 
   const props: CreatureProperty[] = nodes as unknown as CreatureProperty[];
@@ -122,7 +145,7 @@ async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
   rootProp.parentId = parentId ?? undefined;
 
   //set the roots
-  props.forEach(prop => {
+  props.forEach((prop) => {
     prop.root = root;
   });
 
@@ -133,8 +156,10 @@ async function insertPropertyFromNode({ nodeId, root, parentId, left }: {
   return rootProp._id;
 }
 
-export function storeLibraryNodeReferences(nodes: (LibraryNode & { libraryNodeId?: string })[]) {
-  nodes.forEach(node => {
+export function storeLibraryNodeReferences(
+  nodes: (LibraryNode & { libraryNodeId?: string })[],
+) {
+  nodes.forEach((node) => {
     if (node.libraryNodeId) return;
     node.libraryNodeId = node._id;
   });
@@ -142,7 +167,11 @@ export function storeLibraryNodeReferences(nodes: (LibraryNode & { libraryNodeId
 
 // Covert node references into actual nodes
 // TODO: check permissions for each library a reference node references
-export async function reifyNodeReferences(nodes: LibraryNode[], visitedRefs = new Set<string>(), depth = 0) {
+export async function reifyNodeReferences(
+  nodes: LibraryNode[],
+  visitedRefs = new Set<string>(),
+  depth = 0,
+) {
   depth += 1;
   // New nodes added this function
   const newNodes: LibraryNode[] = [];
@@ -167,8 +196,12 @@ export async function reifyNodeReferences(nodes: LibraryNode[], visitedRefs = ne
     let referencedNode: LibraryNode | undefined;
     try {
       if (!node.ref.collection || !node.ref.id) continue;
-      referencedNode = await getDocByRefAsync({ id: node.ref.id, collection: node.ref.collection });
-      if (!referencedNode) throw new Error('The referenced library property does not exist');
+      referencedNode = await getDocByRefAsync({
+        id: node.ref.id,
+        collection: node.ref.collection,
+      });
+      if (!referencedNode)
+        throw new Error('The referenced library property does not exist');
       referencedNode.tags = union(node.tags, referencedNode.tags);
       // We are definitely replacing this node, so add it to the list
       visitedRefs.add(node._id);
@@ -179,18 +212,21 @@ export async function reifyNodeReferences(nodes: LibraryNode[], visitedRefs = ne
     }
 
     // Get all the descendants of the referenced node
-    const descendants = await LibraryNodes.find({
-      ...getFilter.descendants(referencedNode),
-      removed: { $ne: true },
-    }, {
-      sort: { left: 1 },
-    }).fetchAsync();
+    const descendants = await LibraryNodes.find(
+      {
+        ...getFilter.descendants(referencedNode),
+        removed: { $ne: true },
+      },
+      {
+        sort: { left: 1 },
+      },
+    ).fetchAsync();
 
     // We are adding the referenced node and its descendants
     let addedNodes = [referencedNode, ...descendants];
 
     // Filter all the looped references
-    addedNodes = addedNodes.filter(addedNode => {
+    addedNodes = addedNodes.filter((addedNode) => {
       // Add all non-reference nodes
       if (addedNode.type !== 'reference') {
         return true;

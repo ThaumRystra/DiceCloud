@@ -4,7 +4,7 @@ import { useStore } from 'vuex';
 import { autorun, subscribe } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
 import { CreatureVariables } from '/imports/client/localCollections/CreatureVariables';
-import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties, type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import LibraryNodes from '/imports/api/library/LibraryNodes';
 import Libraries from '/imports/api/library/Libraries';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';

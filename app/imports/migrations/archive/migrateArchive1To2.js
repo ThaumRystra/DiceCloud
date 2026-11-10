@@ -1,4 +1,4 @@
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import applyFnToKey from '/imports/api/engine/computation/utility/applyFnToKey';
 import { get } from 'lodash';
 

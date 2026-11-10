@@ -1,6 +1,9 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  CreatureProperties,
+  type CreatureProperty,
+} from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SimpleSchema from 'simpl-schema';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { rebuildNestedSets } from '/imports/api/parenting/parentingFunctions';
@@ -20,17 +23,23 @@ const insertProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ creatureProperty }: {
-    creatureProperty: Partial<CreatureProperty>,
+  async run({
+    creatureProperty,
+  }: {
+    creatureProperty: Partial<CreatureProperty>;
   }) {
     if (!creatureProperty.root) {
-      throw new Meteor.Error('no-root-set', 'A property must be inserted with a root already set');
+      throw new Meteor.Error(
+        'no-root-set',
+        'A property must be inserted with a root already set',
+      );
     }
     const rootDoc = await getDocByRefAsync(creatureProperty.root);
 
     if (!rootDoc) {
-      throw new Meteor.Error('not-found',
-        'Could not find the root to insert this property into'
+      throw new Meteor.Error(
+        'not-found',
+        'Could not find the root to insert this property into',
       );
     }
     await assertEditPermission(rootDoc, this.userId);
@@ -64,19 +73,27 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ creatureProperty, tag, tagDefaultName }: {
+  async run({
+    creatureProperty,
+    tag,
+    tagDefaultName,
+  }: {
     creatureProperty: Partial<CreatureProperty>;
     tag: string;
     tagDefaultName: string;
   }) {
     if (!creatureProperty.root) {
-      throw new Meteor.Error('no-root-set', 'A property must be inserted with a root already set');
+      throw new Meteor.Error(
+        'no-root-set',
+        'A property must be inserted with a root already set',
+      );
     }
     const rootDoc = await getDocByRefAsync(creatureProperty.root);
 
     if (!rootDoc) {
-      throw new Meteor.Error('not-found',
-        'Could not find the root to insert this property into'
+      throw new Meteor.Error(
+        'not-found',
+        'Could not find the root to insert this property into',
       );
     }
     await assertEditPermission(rootDoc, this.userId);
@@ -87,7 +104,7 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
     if (!parent) {
       const id = await CreatureProperties.insertAsync({
         type: 'folder',
-        name: tagDefaultName || (tag.charAt(0).toUpperCase() + tag.slice(1)),
+        name: tagDefaultName || tag.charAt(0).toUpperCase() + tag.slice(1),
         tags: [tag],
         // parentId: undefined,
         root: creatureProperty.root,
@@ -97,7 +114,10 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
       parent = await CreatureProperties.findOneAsync(id);
     }
     if (!parent) {
-      throw new Meteor.Error('no-folder-with-tag', `The folder with the tag '${tag}' could not be found or created`);
+      throw new Meteor.Error(
+        'no-folder-with-tag',
+        `The folder with the tag '${tag}' could not be found or created`,
+      );
     }
     creatureProperty.parentId = parent._id;
 
@@ -106,10 +126,16 @@ const insertPropertyAsChildOfTag = new ValidatedMethod({
 });
 
 export async function insertPropertyWork(property: Partial<CreatureProperty>) {
-  if (!property.root?.id) throw new Meteor.Error('no-orphans', 'Can\'t insert a property without a root')
+  if (!property.root?.id)
+    throw new Meteor.Error(
+      'no-orphans',
+      "Can't insert a property without a root",
+    );
   delete property._id;
   property.dirty = true;
-  const _id = await CreatureProperties.insertAsync(property as CreatureProperty);
+  const _id = await CreatureProperties.insertAsync(
+    property as CreatureProperty,
+  );
   // Tree structure changed by insert, reorder the tree
   await rebuildNestedSets(CreatureProperties, property.root.id);
   return _id;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter, docsToForest } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 

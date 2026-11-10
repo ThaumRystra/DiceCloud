@@ -12,7 +12,7 @@ import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 import { key } from '/imports/client/ui/vuexStore';
 

@@ -1,7 +1,10 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  assertDocEditPermission,
+  assertDocExists,
+} from '/imports/api/sharing/sharingPermissions';
 import { get } from 'lodash';
 
 const pushToProperty = new ValidatedMethod({
@@ -12,7 +15,15 @@ const pushToProperty = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, path, value }: { _id: string, path: string[], value: unknown }) {
+  async run({
+    _id,
+    path,
+    value,
+  }: {
+    _id: string;
+    path: string[];
+    value: unknown;
+  }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
     assertDocExists(property);
@@ -27,25 +38,32 @@ const pushToProperty = new ValidatedMethod({
     if (Number.isFinite(maxCount)) {
       const array = get(property, path) as unknown;
       if (array !== undefined && !Array.isArray(array)) {
-        throw new Meteor.Error('invalid-path', 'The path does not lead to an array on the property');
+        throw new Meteor.Error(
+          'invalid-path',
+          'The path does not lead to an array on the property',
+        );
       }
       const currentCount = array ? array.length : 0;
       if (currentCount >= maxCount) {
         throw new Meteor.Error(
           'Array is full',
-          `Cannot have more than ${maxCount} values`
+          `Cannot have more than ${maxCount} values`,
         );
       }
     }
 
     // Do work
-    await CreatureProperties.updateAsync(_id, {
-      $push: { [joinedPath]: value },
-      $set: { dirty: true },
-    }, {
-      selector: { type: property.type },
-    });
-  }
+    await CreatureProperties.updateAsync(
+      _id,
+      {
+        $push: { [joinedPath]: value },
+        $set: { dirty: true },
+      },
+      {
+        selector: { type: property.type },
+      },
+    );
+  },
 });
 
 export default pushToProperty;

@@ -2,7 +2,10 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import { assertAdmin } from '/imports/api/sharing/sharingPermissions';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { type InferType, TypedSimpleSchema } from '/imports/api/utility/TypedSimpleSchema';
+import {
+  type InferType,
+  TypedSimpleSchema,
+} from '/imports/api/utility/TypedSimpleSchema';
 import type { Collection as MongoCollection } from 'mongodb';
 
 const iconsSchema = TypedSimpleSchema.from({
@@ -37,9 +40,9 @@ Icons.attachSchema(iconsSchema);
 
 if (Meteor.isServer) {
   await Icons.createIndexAsync({
-    'name': 'text',
-    'description': 'text',
-    'tags': 'text',
+    name: 'text',
+    description: 'text',
+    tags: 'text',
   });
 }
 
@@ -71,9 +74,11 @@ const writeIcons = new ValidatedMethod({
     await assertAdmin(this.userId);
     if (Meteor.isServer) {
       this.unblock();
-      await (Icons.rawCollection() as MongoCollection<Icon>).insertMany(icons, { ordered: false });
+      await (Icons.rawCollection() as MongoCollection<Icon>).insertMany(icons, {
+        ordered: false,
+      });
     }
-  }
+  },
 });
 
 const findIcons = new ValidatedMethod({
@@ -99,17 +104,17 @@ const findIcons = new ValidatedMethod({
         // relevant documents have a higher score.
         fields: {
           // @ts-expect-error don't have types for meta text scoring
-          score: { $meta: 'textScore' }
+          score: { $meta: 'textScore' },
         },
         // `score` property specified in the projection fields above.
         sort: {
-          score: { $meta: 'textScore' }
+          score: { $meta: 'textScore' },
         },
         limit: 120,
-      }
+      },
     ).fetchAsync();
-  }
-})
+  },
+});
 
 export { writeIcons, findIcons, storedIconsSchema };
 export default Icons;

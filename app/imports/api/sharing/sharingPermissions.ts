@@ -1,5 +1,5 @@
 import { includes } from 'lodash';
-import type { Shared } from '/imports/api/sharing/SharingSchema';
+import type { Shared } from './sharing.schema';
 import type { TreeDoc } from '/imports/api/parenting/ChildSchema';
 import { Roles } from 'meteor/roles';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
@@ -8,27 +8,38 @@ import type { Creature } from '/imports/api/creature/creatures/Creatures';
 
 function assertIdValid(userId: string | undefined | null): asserts userId {
   if (!userId || typeof userId !== 'string') {
-    throw new Meteor.Error('Permission denied',
-      'No user ID. Are you logged in?');
+    throw new Meteor.Error(
+      'Permission denied',
+      'No user ID. Are you logged in?',
+    );
   }
 }
 
-export function assertDocExists(doc: Record<string, unknown> | undefined): asserts doc {
+export function assertDocExists(
+  doc: Record<string, unknown> | undefined,
+): asserts doc {
   if (!doc) {
-    throw new Meteor.Error('Permission denied',
-      'Permission denied: No such document exists');
+    throw new Meteor.Error(
+      'Permission denied',
+      'Permission denied: No such document exists',
+    );
   }
 }
 
-export function assertOwnership(doc: Shared | undefined, userId: string | undefined | null): asserts doc {
+export function assertOwnership(
+  doc: Shared | undefined,
+  userId: string | undefined | null,
+): asserts doc {
   assertIdValid(userId);
   assertDocExists(doc);
 
   if (doc.owner === userId) {
     return;
   } else {
-    throw new Meteor.Error('Permission denied',
-      'You are not the owner of this document');
+    throw new Meteor.Error(
+      'Permission denied',
+      'You are not the owner of this document',
+    );
   }
 }
 
@@ -38,13 +49,15 @@ export function assertOwnership(doc: Shared | undefined, userId: string | undefi
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertEditPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
+export async function assertEditPermission(
+  doc: Shared | undefined,
+  userId: string | undefined | null,
+): Promise<void> {
   assertIdValid(userId);
   assertDocExists(doc);
   const user = await Meteor.users.findOneAsync(userId);
   if (!user) {
-    throw new Meteor.Error('Edit permission denied',
-      'No such user exists');
+    throw new Meteor.Error('Edit permission denied', 'No such user exists');
   }
 
   // Admin override
@@ -53,14 +66,13 @@ export async function assertEditPermission(doc: Shared | undefined, userId: stri
   }
 
   // Ensure the user is authorized for this specific document
-  if (
-    doc.owner === userId ||
-    includes(doc.writers, userId)
-  ) {
+  if (doc.owner === userId || includes(doc.writers, userId)) {
     return;
   } else {
-    throw new Meteor.Error('Edit permission denied',
-      'You do not have permission to edit this document');
+    throw new Meteor.Error(
+      'Edit permission denied',
+      'You do not have permission to edit this document',
+    );
   }
 }
 
@@ -70,18 +82,20 @@ export async function assertEditPermission(doc: Shared | undefined, userId: stri
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertCopyPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
+export async function assertCopyPermission(
+  doc: Shared | undefined,
+  userId: string | undefined | null,
+): Promise<void> {
   assertIdValid(userId);
   assertDocExists(doc);
   const user = await Meteor.users.findOneAsync(userId, {
     fields: {
-      'roles': 1,
-    }
+      roles: 1,
+    },
   });
 
   if (!user) {
-    throw new Meteor.Error('Edit permission denied',
-      'No such user exists');
+    throw new Meteor.Error('Edit permission denied', 'No such user exists');
   }
 
   // Admin override
@@ -90,10 +104,7 @@ export async function assertCopyPermission(doc: Shared | undefined, userId: stri
   }
 
   // Ensure the user is authorized for this specific document
-  if (
-    doc.owner === userId ||
-    includes(doc.writers, userId)
-  ) {
+  if (doc.owner === userId || includes(doc.writers, userId)) {
     return;
   } else if (
     (includes(doc.readers, userId) || doc.public) &&
@@ -101,15 +112,19 @@ export async function assertCopyPermission(doc: Shared | undefined, userId: stri
   ) {
     return;
   } else {
-    throw new Meteor.Error('Copy permission denied',
-      'You do not have permission to copy this document');
+    throw new Meteor.Error(
+      'Copy permission denied',
+      'You do not have permission to copy this document',
+    );
   }
 }
 
-async function getRoot(doc: TreeDoc | Shared | undefined): Promise<Shared | undefined> {
+async function getRoot(
+  doc: TreeDoc | Shared | undefined,
+): Promise<Shared | undefined> {
   assertDocExists(doc);
   if ('root' in doc) {
-    return await getDocByRefAsync(doc.root) as Library | Creature;
+    return (await getDocByRefAsync(doc.root)) as Library | Creature;
   } else {
     return doc;
   }
@@ -121,7 +136,10 @@ async function getRoot(doc: TreeDoc | Shared | undefined): Promise<Shared | unde
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertDocEditPermission(doc: TreeDoc | Shared | undefined, userId: string | null): Promise<void> {
+export async function assertDocEditPermission(
+  doc: TreeDoc | Shared | undefined,
+  userId: string | null,
+): Promise<void> {
   const root = await getRoot(doc);
   await assertEditPermission(root, userId);
 }
@@ -132,12 +150,18 @@ export async function assertDocEditPermission(doc: TreeDoc | Shared | undefined,
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertDocCopyPermission(doc: TreeDoc, userId: string | undefined | null): Promise<void> {
+export async function assertDocCopyPermission(
+  doc: TreeDoc,
+  userId: string | undefined | null,
+): Promise<void> {
   const root = await getRoot(doc);
   await assertCopyPermission(root, userId);
 }
 
-export async function assertViewPermission(doc: Shared | undefined, userId: string | undefined | null): Promise<void> {
+export async function assertViewPermission(
+  doc: Shared | undefined,
+  userId: string | undefined | null,
+): Promise<void> {
   assertDocExists(doc);
   if (doc.public) return;
   assertIdValid(userId);
@@ -155,9 +179,10 @@ export async function assertViewPermission(doc: Shared | undefined, userId: stri
     return;
   }
 
-  throw new Meteor.Error('View permission denied',
-    'You do not have permission to view this document');
-
+  throw new Meteor.Error(
+    'View permission denied',
+    'You do not have permission to view this document',
+  );
 }
 
 /**
@@ -166,16 +191,23 @@ export async function assertViewPermission(doc: Shared | undefined, userId: stri
  *
  * Warning: the doc and userId must be set by a trusted source
  */
-export async function assertDocViewPermission(doc: Shared | TreeDoc | undefined, userId: string | undefined | null): Promise<void> {
+export async function assertDocViewPermission(
+  doc: Shared | TreeDoc | undefined,
+  userId: string | undefined | null,
+): Promise<void> {
   const root = await getRoot(doc);
   await assertViewPermission(root, userId);
 }
 
-export async function assertAdmin(userId: string | undefined | null): Promise<void> {
+export async function assertAdmin(
+  userId: string | undefined | null,
+): Promise<void> {
   assertIdValid(userId);
   const isAdmin = await Roles.userIsInRoleAsync(userId, 'admin');
   if (!isAdmin) {
-    throw new Meteor.Error('permission-denied',
-      'User does not have the admin role');
+    throw new Meteor.Error(
+      'permission-denied',
+      'User does not have the admin role',
+    );
   }
 }

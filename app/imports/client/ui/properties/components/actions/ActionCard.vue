@@ -13,7 +13,7 @@ import MarkdownText from '/imports/client/ui/components/MarkdownText.vue';
 import CardHighlight from '/imports/client/ui/components/CardHighlight.vue';
 import TreeNodeList from '/imports/client/ui/components/tree/TreeNodeList.vue';
 import { getFilter, docsToForest as nodeArrayToTree } from '/imports/api/parenting/parentingFunctions';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { some } from 'lodash';
 import { key } from '/imports/client/ui/vuexStore';
 

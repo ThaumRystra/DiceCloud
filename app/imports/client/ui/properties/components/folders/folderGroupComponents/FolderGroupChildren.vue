@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import propComponents from '/imports/client/ui/properties/components/folders/propertyComponentIndex';
 
 const props = defineProps<{

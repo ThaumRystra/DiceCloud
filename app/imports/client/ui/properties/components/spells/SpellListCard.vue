@@ -4,7 +4,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { useStore } from 'vuex';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';
 import { key } from '/imports/client/ui/vuexStore';
 

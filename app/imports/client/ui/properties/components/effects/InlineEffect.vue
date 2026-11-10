@@ -3,7 +3,7 @@ import { computed, useAttrs } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 import { isFinite } from 'lodash';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const props = defineProps<{
   hideBreadcrumbs?: boolean;

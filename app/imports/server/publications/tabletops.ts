@@ -1,6 +1,6 @@
 import Tabletops from '/imports/api/tabletop/Tabletops';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CreatureLogs from '/imports/api/creature/log/CreatureLogs';
 import { loadCreature } from '/imports/api/engine/loadCreatures';
 import EngineActions from '/imports/api/engine/action/EngineActions';
@@ -30,48 +30,57 @@ Meteor.publish('tabletopUsers', async function (tabletopId: string) {
     ...tabletop.gameMasters,
     ...tabletop.players,
     ...tabletop.spectators,
-  ]
-  return Meteor.users.find({
-    _id: { $in: userIds },
-  }, {
-    fields: {
-      username: 1,
+  ];
+  return Meteor.users.find(
+    {
+      _id: { $in: userIds },
     },
-    limit: 500,
-  });
+    {
+      fields: {
+        username: 1,
+      },
+      limit: 500,
+    },
+  );
 });
 
 Meteor.publish('otherTabletopCreatures', async function (creatureId: string) {
   const userId = this.userId;
   if (!userId) return [];
-  const permissionCreature = await Creatures.findOneAsync({
-    _id: creatureId,
-  }, {
-    fields: {
-      owner: 1,
-      readers: 1,
-      writers: 1,
-      public: 1,
-      computeVersion: 1,
-      tabletopId: 1,
-    }
-  });
-  await assertViewPermission(creatureId, this.userId);
-  return Creatures.find({
-    tabletopId: permissionCreature?.tabletopId,
-  }, {
-    fields: {
-      _id: 1,
-      name: 1,
-      picture: 1,
-      avatarPicture: 1,
-      tabletopId: 1,
-      initiativeRoll: 1,
-      settings: 1,
-      propCount: 1,
+  const permissionCreature = await Creatures.findOneAsync(
+    {
+      _id: creatureId,
     },
-    limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
-  });
+    {
+      fields: {
+        owner: 1,
+        readers: 1,
+        writers: 1,
+        public: 1,
+        computeVersion: 1,
+        tabletopId: 1,
+      },
+    },
+  );
+  await assertViewPermission(creatureId, this.userId);
+  return Creatures.find(
+    {
+      tabletopId: permissionCreature?.tabletopId,
+    },
+    {
+      fields: {
+        _id: 1,
+        name: 1,
+        picture: 1,
+        avatarPicture: 1,
+        tabletopId: 1,
+        initiativeRoll: 1,
+        settings: 1,
+        propCount: 1,
+      },
+      limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
+    },
+  );
 });
 
 Meteor.publish('tabletop', async function (tabletopId: string) {
@@ -86,7 +95,7 @@ Meteor.publish('tabletop', async function (tabletopId: string) {
       { players: userId },
       { gameMasters: userId },
       { spectators: userId },
-    ]
+    ],
   });
   const tabletop = tabletopCursor.fetch()[0];
   if (!tabletop) {
@@ -96,43 +105,52 @@ Meteor.publish('tabletop', async function (tabletopId: string) {
   // Warning, this leaks data to users of the same tabletop who may not have
   // read permission of this specific creature, so publish as few fields as
   // possible
-  const creatureSummariesCursor = Creatures.find({
-    tabletopId,
-  }, {
-    fields: {
-      _id: 1,
-      name: 1,
-      picture: 1,
-      avatarPicture: 1,
-      tabletopId: 1,
-      initiativeRoll: 1,
-      settings: 1,
-      propCount: 1,
-      readers: 1,
-      writers: 1,
-      owner: 1,
-      public: 1,
+  const creatureSummariesCursor = Creatures.find(
+    {
+      tabletopId,
     },
-    limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
-  });
-  const creatureIds = creatureSummariesCursor.map(c => c._id);
+    {
+      fields: {
+        _id: 1,
+        name: 1,
+        picture: 1,
+        avatarPicture: 1,
+        tabletopId: 1,
+        initiativeRoll: 1,
+        settings: 1,
+        propCount: 1,
+        readers: 1,
+        writers: 1,
+        owner: 1,
+        public: 1,
+      },
+      limit: 110, // Party vs 100 creatures was a fun encounter to run, so let's support that
+    },
+  );
+  const creatureIds = creatureSummariesCursor.map((c) => c._id);
 
   // Load all the creatures into memory
   for (const creatureId of creatureIds) {
     await loadCreature(creatureId, this);
   }
-  const propertiesCursor = CreatureProperties.find({
-    'root.id': { $in: creatureIds },
-    removed: { $ne: true },
-  }, {
-    limit: 10_000,
-  });
-  const logsCursor = CreatureLogs.find({
-    tabletopId,
-  }, {
-    limit: 100,
-    sort: { date: -1 },
-  });
+  const propertiesCursor = CreatureProperties.find(
+    {
+      'root.id': { $in: creatureIds },
+      removed: { $ne: true },
+    },
+    {
+      limit: 10_000,
+    },
+  );
+  const logsCursor = CreatureLogs.find(
+    {
+      tabletopId,
+    },
+    {
+      limit: 100,
+      sort: { date: -1 },
+    },
+  );
   const actionsCursor = EngineActions.find({
     tabletopId,
   });
@@ -142,6 +160,6 @@ Meteor.publish('tabletop', async function (tabletopId: string) {
     creatureSummariesCursor,
     propertiesCursor,
     logsCursor,
-    actionsCursor
+    actionsCursor,
   ];
 });

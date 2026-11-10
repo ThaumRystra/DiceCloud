@@ -1,14 +1,17 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  assertDocEditPermission,
+  assertDocExists,
+} from '/imports/api/sharing/sharingPermissions';
 import { restore } from '/imports/api/parenting/softRemove';
 
 const restoreProperty = new ValidatedMethod({
   name: 'creatureProperties.restore',
   validate: new SimpleSchema({
-    _id: SimpleSchema.RegEx.Id
+    _id: SimpleSchema.RegEx.Id,
   }).validator(),
   mixins: [RateLimiterMixin],
   rateLimit: {
@@ -23,7 +26,7 @@ const restoreProperty = new ValidatedMethod({
 
     // Do work
     return restore(CreatureProperties, property, { $set: { dirty: true } });
-  }
+  },
 });
 
 export default restoreProperty;

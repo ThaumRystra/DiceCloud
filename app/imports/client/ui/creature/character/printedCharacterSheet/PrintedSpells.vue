@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import PrintedSpell from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpell.vue';
 import PrintedSpellList from '/imports/client/ui/creature/character/printedCharacterSheet/components/PrintedSpellList.vue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';

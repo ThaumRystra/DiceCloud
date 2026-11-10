@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ContainerCard from '/imports/client/ui/properties/components/inventory/ContainerCard.vue';

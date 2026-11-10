@@ -1,9 +1,13 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  CreatureProperties,
+  type CreatureProperty,
+} from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { assertEditPermission } from '/imports/api/sharing/sharingPermissions';
 import { getDocByRefAsync } from '/imports/api/parenting/reference';
+import { propertySchema } from '/imports/api/properties/property.schema';
 
 const adjustQuantity = new ValidatedMethod({
   name: 'creatureProperties.adjustQuantity',
@@ -11,7 +15,7 @@ const adjustQuantity = new ValidatedMethod({
     _id: SimpleSchema.RegEx.Id,
     operation: {
       type: String,
-      allowedValues: ['set', 'increment']
+      allowedValues: ['set', 'increment'],
     },
     value: Number,
   }).validator(),
@@ -20,10 +24,22 @@ const adjustQuantity = new ValidatedMethod({
     numRequests: 5,
     timeInterval: 5000,
   },
-  async run({ _id, operation, value }: { _id: string, operation: 'set' | 'increment', value: number }) {
+  async run({
+    _id,
+    operation,
+    value,
+  }: {
+    _id: string;
+    operation: 'set' | 'increment';
+    value: number;
+  }) {
     // Permissions
     const property = await CreatureProperties.findOneAsync(_id);
-    if (!property) throw new Meteor.Error('not-found', 'The property to adjust the quantity of was not found')
+    if (!property)
+      throw new Meteor.Error(
+        'not-found',
+        'The property to adjust the quantity of was not found',
+      );
     const rootDoc = await getDocByRefAsync(property.root);
     await assertEditPermission(rootDoc, this.userId);
 
@@ -32,36 +48,50 @@ const adjustQuantity = new ValidatedMethod({
   },
 });
 
-export async function adjustQuantityWork({ property, operation, value }: {
-  property: CreatureProperty,
-  operation: 'set' | 'increment',
-  value: number
+export async function adjustQuantityWork({
+  property,
+  operation,
+  value,
+}: {
+  property: CreatureProperty;
+  operation: 'set' | 'increment';
+  value: number;
 }) {
   // Check if property has quantity
-  const schema = CreatureProperties.simpleSchema(property);
-  if (!schema.allowsKey('quantity')) {
+  const schema = propertySchema.options.find(
+    (option) => option.shape.type.value === property.type,
+  );
+  if (!schema || !('quantity' in schema.shape)) {
     throw new Meteor.Error(
       'Adjust quantity failed',
-      `Property of type "${property.type}" doesn't have a quantity`
+      `Property of type "${property.type}" doesn't have a quantity`,
     );
   }
   if (operation === 'set') {
-    await CreatureProperties.updateAsync(property._id, {
-      $set: { quantity: value, dirty: true }
-    }, {
-      selector: property
-    });
+    await CreatureProperties.updateAsync(
+      property._id,
+      {
+        $set: { quantity: value, dirty: true },
+      },
+      {
+        selector: property,
+      },
+    );
   } else if (operation === 'increment') {
     // value here is 'damage'
     value = -value;
     const currentQuantity = 'quantity' in property ? property.quantity : 0;
     if (currentQuantity + value < 0) value = -currentQuantity;
-    await CreatureProperties.updateAsync(property._id, {
-      $inc: { quantity: value },
-      $set: { dirty: true }
-    }, {
-      selector: property
-    });
+    await CreatureProperties.updateAsync(
+      property._id,
+      {
+        $inc: { quantity: value },
+        $set: { dirty: true },
+      },
+      {
+        selector: property,
+      },
+    );
   }
 }
 

@@ -3,7 +3,7 @@ import { computed, useAttrs } from 'vue';
 import { autorun } from 'vue-meteor-tracker';
 import getEffectIcon from '/imports/client/ui/utility/getEffectIcon';
 import Breadcrumbs from '/imports/client/ui/creature/creatureProperties/Breadcrumbs.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { isFinite } from 'lodash';
 
 const props = defineProps<{

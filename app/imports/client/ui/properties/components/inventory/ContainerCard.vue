@@ -4,7 +4,7 @@ import { autorun } from 'vue-meteor-tracker';
 import { useStore } from 'vuex';
 import ToolbarCard from '/imports/client/ui/components/ToolbarCard.vue';
 import ItemList from '/imports/client/ui/properties/components/inventory/ItemList.vue';
-import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties, type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import CoinValue from '/imports/client/ui/components/CoinValue.vue';
 import stripFloatingPointOddities from '/imports/api/engine/computation/utility/stripFloatingPointOddities';
 import { key } from '/imports/client/ui/vuexStore';

@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import TabletopActionCard from '/imports/client/ui/tabletop/TabletopActionCard.vue';
 import TabletopBuffCard from '/imports/client/ui/tabletop/TabletopBuffCard.vue';
 import CreatureBarIcon from '/imports/client/ui/tabletop/selectedCreatureBar/CreatureBarIcon.vue';

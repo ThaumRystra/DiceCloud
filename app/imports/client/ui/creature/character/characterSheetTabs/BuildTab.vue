@@ -3,7 +3,7 @@ import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import Creatures from '/imports/api/creature/creatures/Creatures';
-import CreatureProperties, { type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties, type CreatureProperty } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { docsToForest, getFilter } from '/imports/api/parenting/parentingFunctions';
 import BuildTreeNodeList from '/imports/client/ui/creature/buildTree/BuildTreeNodeList.vue';
 import SlotCardsToFill from '/imports/client/ui/creature/slots/SlotCardsToFill.vue';

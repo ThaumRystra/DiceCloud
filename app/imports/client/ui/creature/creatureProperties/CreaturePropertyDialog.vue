@@ -3,7 +3,7 @@ import { ref, computed, watch, reactive, provide, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import { Meteor } from 'meteor/meteor';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import pushToProperty from '/imports/api/creature/creatureProperties/methods/pushToProperty';
 import pullFromProperty from '/imports/api/creature/creatureProperties/methods/pullFromProperty';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';

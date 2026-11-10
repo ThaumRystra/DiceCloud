@@ -4,7 +4,7 @@ import { autorun } from 'vue-meteor-tracker';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
 import ActionCard from '/imports/client/ui/properties/components/actions/ActionCard.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import softRemoveProperty from '/imports/api/creature/creatureProperties/methods/softRemoveProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
 import { getFilter } from '/imports/api/parenting/parentingFunctions';

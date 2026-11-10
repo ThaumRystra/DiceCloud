@@ -2,7 +2,7 @@
 import { ref, computed, watch, provide, reactive, nextTick } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import PropertyToolbar from '/imports/client/ui/components/propertyToolbar.vue';
 import DialogBase from '/imports/client/ui/dialogStack/DialogBase.vue';

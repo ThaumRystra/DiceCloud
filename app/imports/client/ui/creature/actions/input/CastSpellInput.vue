@@ -4,7 +4,7 @@ import { useStore } from 'vuex';
 import { useGoTo } from 'vuetify';
 import { autorun } from 'vue-meteor-tracker';
 import SplitListLayout from '/imports/client/ui/properties/components/attributes/SplitListLayout.vue';
-import CreatureProperties, { type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties, type CreaturePropertyTypes } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import spellsWithSubheaders from '/imports/client/ui/properties/components/spells/spellsWithSubheaders';
 import SpellSlotListTile from '/imports/client/ui/properties/components/attributes/SpellSlotListTile.vue';
 import SpellListTile from '/imports/client/ui/properties/components/spells/SpellListTile.vue';

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { autorun } from 'vue-meteor-tracker';
 import HexagonProgressStack from '/imports/client/ui/components/HexagonProgressStack.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 
 const props = defineProps<{
   model: any;

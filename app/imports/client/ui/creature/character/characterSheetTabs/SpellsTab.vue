@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import ColumnLayout from '/imports/client/ui/components/ColumnLayout.vue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SpellListCard from '/imports/client/ui/properties/components/spells/SpellListCard.vue';
 import SpellList from '/imports/client/ui/properties/components/spells/SpellList.vue';
 import FolderGroupCard from '/imports/client/ui/properties/components/folders/FolderGroupCard.vue';

@@ -2,7 +2,7 @@
 import { inject } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import SlotCard from '/imports/client/ui/creature/slots/SlotCard.vue';
 import PointBuyCard from '/imports/client/ui/properties/components/pointBuy/PointBuyCard.vue';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';

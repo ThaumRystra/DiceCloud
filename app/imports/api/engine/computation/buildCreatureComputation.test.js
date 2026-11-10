@@ -1,7 +1,7 @@
 import '/imports/api/simpleSchemaConfig';
 import { buildComputationFromProps } from './buildCreatureComputation';
 import { assert } from 'chai';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import computeInactiveStatus from './buildComputation/tests/computeInactiveStatus.testFn';
 import computeSlotQuantityFilled from './buildComputation/tests/computeSlotQuantityFilled.testFn';
 import computeToggleDependencies from './buildComputation/tests/computeToggleDependencies.testFn';

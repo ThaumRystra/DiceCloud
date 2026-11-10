@@ -1,11 +1,17 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
 import SimpleSchema from 'simpl-schema';
-import SharingSchema from '/imports/api/sharing/SharingSchema';
-import { assertEditPermission, assertOwnership } from '/imports/api/sharing/sharingPermissions';
-import { getUserTierAsync } from '/imports/api/users/patreon/tiers'
+import SharingSchema from '../sharing/sharing.schema';
+import {
+  assertEditPermission,
+  assertOwnership,
+} from '/imports/api/sharing/sharingPermissions';
+import { getUserTierAsync } from '/imports/api/users/patreon/tiers';
 import STORAGE_LIMITS from '/imports/constants/STORAGE_LIMITS';
-import { TypedSimpleSchema, type InferType } from '/imports/api/utility/TypedSimpleSchema';
+import {
+  TypedSimpleSchema,
+  type InferType,
+} from '/imports/api/utility/TypedSimpleSchema';
 
 const BaseLibraryCollectionSchema = TypedSimpleSchema.from({
   _id: {
@@ -41,15 +47,17 @@ const BaseLibraryCollectionSchema = TypedSimpleSchema.from({
   },
 });
 
-const LibraryCollectionSchema = BaseLibraryCollectionSchema.extend(SharingSchema);
+const LibraryCollectionSchema =
+  BaseLibraryCollectionSchema.extend(SharingSchema);
 
 type LibraryCollection = InferType<typeof LibraryCollectionSchema>;
 
 /**
  * LibraryCollections are groups of libraries that are subscribed together at once
  */
-const LibraryCollections = new Mongo.Collection<LibraryCollection>('libraryCollections');
-
+const LibraryCollections = new Mongo.Collection<LibraryCollection>(
+  'libraryCollections',
+);
 
 LibraryCollections.attachSchema(LibraryCollectionSchema);
 
@@ -60,13 +68,17 @@ const insertLibraryCollection = new ValidatedMethod({
   validate: LibraryCollectionSchema.omit('owner', '_id').validator(),
   async run(libraryCollection) {
     if (!this.userId) {
-      throw new Meteor.Error('LibraryCollections.methods.insert.denied',
-        'You need to be logged in to insert a library');
+      throw new Meteor.Error(
+        'LibraryCollections.methods.insert.denied',
+        'You need to be logged in to insert a library',
+      );
     }
     const tier = await getUserTierAsync(this.userId);
     if (!tier.paidBenefits) {
-      throw new Meteor.Error('LibraryCollections.methods.insert.denied',
-        `The ${tier.name} tier does not allow you to insert a library collection`);
+      throw new Meteor.Error(
+        'LibraryCollections.methods.insert.denied',
+        `The ${tier.name} tier does not allow you to insert a library collection`,
+      );
     }
     return await LibraryCollections.insertAsync({
       ...libraryCollection,
@@ -83,9 +95,13 @@ const updateLibraryCollection = new ValidatedMethod({
       max: 32,
     },
     update: {
-      type: LibraryCollectionSchema
-        .pick('name', 'description', 'showInMarket')
-        .extend(TypedSimpleSchema.from({ //make libraries optional
+      type: LibraryCollectionSchema.pick(
+        'name',
+        'description',
+        'showInMarket',
+      ).extend(
+        TypedSimpleSchema.from({
+          //make libraries optional
           libraries: {
             type: Array,
             maxCount: STORAGE_LIMITS.libraryCollectionCount,
@@ -96,8 +112,9 @@ const updateLibraryCollection = new ValidatedMethod({
             type: String,
             max: 32,
           },
-        })),
-    }
+        }),
+      ),
+    },
   }).validator(),
   rateLimit: {
     numRequests: 5,
@@ -108,7 +125,7 @@ const updateLibraryCollection = new ValidatedMethod({
       fields: {
         owner: 1,
         writers: 1,
-      }
+      },
     });
     await assertEditPermission(libraryCollection, this.userId);
     return await LibraryCollections.updateAsync(_id, { $set: update });
@@ -120,7 +137,7 @@ const removeLibraryCollection = new ValidatedMethod({
   validate: TypedSimpleSchema.from({
     _id: {
       type: String,
-      regEx: SimpleSchema.RegEx.Id
+      regEx: SimpleSchema.RegEx.Id,
     },
   }).validator(),
   mixins: [RateLimiterMixin],
@@ -132,15 +149,16 @@ const removeLibraryCollection = new ValidatedMethod({
     const libraryCollection = await LibraryCollections.findOneAsync(_id, {
       fields: {
         owner: 1,
-      }
+      },
     });
     assertOwnership(libraryCollection, this.userId);
     return await LibraryCollections.removeAsync(_id);
-  }
+  },
 });
 
 async function getLibraryIdsByCollectionId(libraryCollectionId: string) {
-  const libraryCollection = await LibraryCollections.findOneAsync(libraryCollectionId)
+  const libraryCollection =
+    await LibraryCollections.findOneAsync(libraryCollectionId);
   return libraryCollection?.libraries || [];
 }
 

@@ -1,12 +1,24 @@
 import '/imports/api/simpleSchemaConfig.js';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import propsFromForest, { ForestProp } from '/imports/api/engine/computation/utility/propsFromForest.testFn';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import propsFromForest, {
+  ForestProp,
+} from '/imports/api/engine/computation/utility/propsFromForest.testFn';
 import Creatures from '/imports/api/creature/creatures/Creatures';
 import computeCreature from '/imports/api/engine/computeCreature';
-import { loadCreature, unloadAllCreatures } from '/imports/api/engine/loadCreatures';
-import EngineActions, { EngineAction } from '/imports/api/engine/action/EngineActions';
+import {
+  loadCreature,
+  unloadAllCreatures,
+} from '/imports/api/engine/loadCreatures';
+import EngineActions, {
+  EngineAction,
+} from '/imports/api/engine/action/EngineActions';
 import applyAction from '/imports/api/engine/action/functions/applyAction';
-import { LogContent, Mutation, Removal, Update } from '/imports/api/engine/action/tasks/TaskResult';
+import {
+  LogContent,
+  Mutation,
+  Removal,
+  Update,
+} from '/imports/api/engine/action/tasks/TaskResult';
 import inputProvider from './userInput/inputProviderForTests.testFn';
 /**
  * Removes all creatures, properties, and creatureVariable documents from the database
@@ -19,8 +31,10 @@ export async function removeAllCreaturesAndProps() {
       Creatures.removeAsync({}),
     ]);
   } else {
-    CreatureProperties.find({}).forEach(doc => CreatureProperties.remove(doc._id));
-    Creatures.find({}).forEach(doc => Creatures.remove(doc._id));
+    CreatureProperties.find({}).forEach((doc) =>
+      CreatureProperties.remove(doc._id),
+    );
+    Creatures.find({}).forEach((doc) => Creatures.remove(doc._id));
   }
 }
 
@@ -30,31 +44,34 @@ export async function removeAllCreaturesAndProps() {
  * as it is inserting and reading potentially many database documents
  */
 export async function createTestCreature(creature: TestCreature) {
-  const dummySubscription = Tracker.autorun(() => undefined)
+  const dummySubscription = Tracker.autorun(() => undefined);
   await Creatures.insertAsync({
     _id: creature._id,
     name: creature.name || 'Test Creature',
     owner: Random.id(),
     dirty: true,
   } as any);
-  const propsInserted = propsFromForest(creature.props, creature._id).map(prop => {
-    return CreatureProperties.insertAsync(prop);
-  });
+  const propsInserted = propsFromForest(creature.props, creature._id).map(
+    (prop) => {
+      return CreatureProperties.insertAsync(prop);
+    },
+  );
   await Promise.all(propsInserted);
   await loadCreature(creature._id, dummySubscription);
-  await computeCreature(creature._id,);
+  await computeCreature(creature._id);
 }
 
 export type TestCreature = {
   _id: string;
   name?: string;
   props: ForestProp[];
-}
+};
 
 /**
  * get a list of random Ids
  */
-export const getRandomIds = (count: number) => new Array(count).fill(undefined).map(() => Random.id());
+export const getRandomIds = (count: number) =>
+  new Array(count).fill(undefined).map(() => Random.id());
 
 /**
  * Creates a new Engine Action and applies the specified creature property
@@ -62,7 +79,11 @@ export const getRandomIds = (count: number) => new Array(count).fill(undefined).
  * @param userInputFn A function that simulates user input
  * @returns The Engine Action with mutations resulting from running the action
  */
-export async function runActionById(propId: string, targetIds?: string[], userInput = inputProvider) {
+export async function runActionById(
+  propId: string,
+  targetIds?: string[],
+  userInput = inputProvider,
+) {
   const prop = await CreatureProperties.findOneAsync(propId);
   const actionId = await createAction(prop, targetIds);
   const action = await EngineActions.findOneAsync(actionId);
@@ -85,7 +106,7 @@ function createAction(prop: any, targetIds?: string[]) {
     task: {
       prop,
       targetIds: targetIds || [],
-    }
+    },
   };
   return EngineActions.insertAsync(action);
 }
@@ -95,8 +116,8 @@ function createAction(prop: any, targetIds?: string[]) {
  */
 export function allMutations(action: EngineAction) {
   const mutations: Mutation[] = [];
-  action.results.forEach(result => {
-    result.mutations.forEach(mutation => {
+  action.results.forEach((result) => {
+    result.mutations.forEach((mutation) => {
       mutations.push(mutation);
     });
   });
@@ -108,8 +129,8 @@ export function allMutations(action: EngineAction) {
  */
 export function allUpdates(action: EngineAction) {
   const updates: Update[] = [];
-  allMutations(action).forEach(mutation => {
-    mutation.updates?.forEach(update => {
+  allMutations(action).forEach((mutation) => {
+    mutation.updates?.forEach((update) => {
       updates.push(update);
     });
   });
@@ -120,8 +141,8 @@ export function allUpdates(action: EngineAction) {
  */
 export function allInserts(action: EngineAction) {
   const inserts: any[] = [];
-  allMutations(action).forEach(mutation => {
-    mutation.inserts?.forEach(update => {
+  allMutations(action).forEach((mutation) => {
+    mutation.inserts?.forEach((update) => {
       inserts.push(update);
     });
   });
@@ -133,12 +154,12 @@ export function allInserts(action: EngineAction) {
  */
 export function allRemovals(action: EngineAction) {
   const removals: Removal[] = [];
-  allMutations(action).forEach(mutation => {
-    mutation.removals?.forEach(update => {
+  allMutations(action).forEach((mutation) => {
+    mutation.removals?.forEach((update) => {
       removals.push(update);
     });
   });
-  return removals
+  return removals;
 }
 
 /**
@@ -146,8 +167,8 @@ export function allRemovals(action: EngineAction) {
  */
 export function allLogContent(action: EngineAction) {
   const contents: LogContent[] = [];
-  allMutations(action).forEach(mutation => {
-    mutation.contents?.forEach(logContent => {
+  allMutations(action).forEach((mutation) => {
+    mutation.contents?.forEach((logContent) => {
       contents.push(logContent);
     });
   });

@@ -3,7 +3,7 @@ import { computed, inject } from 'vue';
 import { useStore } from 'vuex';
 import { autorun } from 'vue-meteor-tracker';
 import numberToSignedString from '../../../../api/utility/numberToSignedString';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import AttributeEffect from '/imports/client/ui/properties/components/attributes/AttributeEffect.vue';
 import SkillProficiency from '/imports/client/ui/properties/components/skills/SkillProficiency.vue';
 import getProficiencyIcon from '/imports/client/ui/utility/getProficiencyIcon';

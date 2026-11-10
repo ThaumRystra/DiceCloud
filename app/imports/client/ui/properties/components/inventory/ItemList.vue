@@ -6,7 +6,7 @@ import ItemListTile from '/imports/client/ui/properties/components/inventory/Ite
 import { moveWithinRoot } from '../../../../../api/creature/creatureProperties/methods/organizeProperty';
 import updateCreatureProperty from '/imports/api/creature/creatureProperties/methods/updateCreatureProperty';
 import { snackbar } from '/imports/client/ui/components/snackbars/SnackbarQueue';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
 import { key } from '/imports/client/ui/vuexStore';
 
 const props = withDefaults(defineProps<{

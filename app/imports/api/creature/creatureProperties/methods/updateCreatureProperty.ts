@@ -1,13 +1,19 @@
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { RateLimiterMixin } from 'ddp-rate-limiter-mixin';
-import CreatureProperties from '/imports/api/creature/creatureProperties/CreatureProperties';
-import { assertDocEditPermission, assertDocExists } from '/imports/api/sharing/sharingPermissions';
+import { CreatureProperties } from '/imports/api/creature/creatureProperties/CreatureProperties';
+import {
+  assertDocEditPermission,
+  assertDocExists,
+} from '/imports/api/sharing/sharingPermissions';
 
-const updateCreatureProperty = new ValidatedMethod<{
-  _id: string,
-  path: string[],
-  value: unknown,
-}, Promise<number>>({
+const updateCreatureProperty = new ValidatedMethod<
+  {
+    _id: string;
+    path: string[];
+    value: unknown;
+  },
+  Promise<number>
+>({
   name: 'creatureProperties.update',
   validate({ _id, path }) {
     if (!_id) throw new Meteor.Error('No _id', '_id is required');
@@ -18,8 +24,10 @@ const updateCreatureProperty = new ValidatedMethod<{
       case 'left':
       case 'right':
       case 'parentId':
-        throw new Meteor.Error('Permission denied',
-          'This property can\'t be updated directly');
+        throw new Meteor.Error(
+          'Permission denied',
+          "This property can't be updated directly",
+        );
     }
   },
   mixins: [RateLimiterMixin],
@@ -30,7 +38,7 @@ const updateCreatureProperty = new ValidatedMethod<{
   async run({ _id, path, value }) {
     // Permission
     const property = await CreatureProperties.findOneAsync(_id, {
-      fields: { type: 1, root: 1 }
+      fields: { type: 1, root: 1 },
     });
     assertDocExists(property);
     await assertDocEditPermission(property, this.userId);
